@@ -1,0 +1,284 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"ba",
+				"background-color"
+			],
+			[
+				"s",
+				"swim"
+			],
+			[
+				"prio",
+				"priority_queue"
+			],
+			[
+				"pri",
+				"priority_queue"
+			],
+			[
+				"idx",
+				"idx2"
+			],
+			[
+				"valo",
+				"valores"
+			],
+			[
+				"val",
+				"valores"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "grails-app/views/layouts/main.gsp",
+			"settings":
+			{
+				"buffer_size": 906,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/views/index.gsp",
+			"settings":
+			{
+				"buffer_size": 1132,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 174.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/lsimaocosta/Programming/arrasa-amiga/web-app/css/main.css",
+		"/home/lsimaocosta/Programming/insatisfeitos/app/views/home/index.html.ejs",
+		"/home/lsimaocosta/Dropbox/travel/index.html",
+		"/home/lsimaocosta/Programming/insatisfeitos/app/views/insatisfacao/new.html.ejs",
+		"/home/lsimaocosta/Programming/arrasa-amiga/web-app/js/application.js",
+		"/home/lsimaocosta/Dropbox/algoritmos/src/parte1/week4/PriorityQueue.java",
+		"/home/lsimaocosta/Programming/algoritmos/denovo/priority_queue2",
+		"/home/lsimaocosta/Programming/algoritmos/denovo/priority_queue2.c",
+		"/home/lsimaocosta/Programming/algoritmos/priority_queue.c",
+		"/home/lsimaocosta/Programming/algoritmos/denovo/priority_queue.c",
+		"/home/lsimaocosta/Programming/algoritmos/denovo/merge_sort.c",
+		"/home/lsimaocosta/Programming/algoritmos/merge_sort.c",
+		"/home/lsimaocosta/Programming/algoritmos/quick_sort.c",
+		"/home/lsimaocosta/Dropbox/algoritmos/src/parte1/week2/ShellSort.java",
+		"/home/lsimaocosta/Programming/algoritmos/shell_sort.c",
+		"/home/lsimaocosta/Dropbox/TODO.txt",
+		"/home/lsimaocosta/Programming/algoritmos/selection_sort.c",
+		"/home/lsimaocosta/Programming/algoritmos/insertion_sort.c",
+		"/home/lsimaocosta/Programming/algoritmos/heapsort.c",
+		"/home/lsimaocosta/Dropbox/algoritmos/src/parte1/week3/QuickSort.java",
+		"/home/lsimaocosta/Programming/algoritmos/quick_sort",
+		"/home/lsimaocosta/Programming/algoritmos/selection_sort.out",
+		"/home/lsimaocosta/Dropbox/algoritmos/src/parte1/week3/MergeSort.java",
+		"/home/lsimaocosta/ProgrammingTools/riak/vendas.rb",
+		"/home/lsimaocosta/ProgrammingTools/riak/data.json",
+		"/home/lsimaocosta/ProgrammingTools/riak/pkg.vars.config"
+	],
+	"find":
+	{
+		"height": 23.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"=\"${",
+			"function",
+			"css"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "grails-app/views/layouts/main.gsp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 906,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								882,
+								882
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "grails-app/views/index.gsp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1132,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								70,
+								70
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 315.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"project": "arrasa-amiga.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+			[
+				"",
+				"/home/lsimaocosta/Programming/servicos/servicos.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 227.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
