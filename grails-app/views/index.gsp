@@ -1,44 +1,44 @@
+<%@ page import="br.com.arrasaamiga.Produto" %>
+
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta name="layout" content="main"/>
-		<style type="text/css">
-			#main{
-				width:1197px;
-				height: 470px;
-				position:absolute; 
-				top:50%; 
-				left:50%;
-				margin:-235px 0 0 -599px;
-
-			}
-		</style>
-
-		<title>Arrasa Amiga</title>
-
 	</head>
 	<body>
 
-		<div id="fb-root"></div>
-		<script>(function(d, s, id) {
-		  var js, fjs = d.getElementsByTagName(s)[0];
-		  if (d.getElementById(id)) return;
-		  js = d.createElement(s); js.id = id;
-		  js.src = "//connect.facebook.net/pt_BR/all.js#xfbml=1";
-		  fjs.parentNode.insertBefore(js, fjs);
-		}(document, 'script', 'facebook-jssdk'));</script>
+			<hr>
+			
+      		<g:set var="count" value="${0}"/>
+
+      		<g:each in="${Produto.list()}" var="produto" status="i">
+
+      			<g:if test="${ count == 0 }">
+					<div class="row-fluid" style="margin-bottom:50px;">
+				</g:if>
+
+					
+					<div class="span3" style="padding:5px;text-align:center;height:270px;border:1px solid orange;position:relative;">
+						
+						<g:img dir="img/produtos" file="${produto.fotos[0]}"/>
+
+						<g:link action='index' controller='produto' id="${produto.id}"> 
+							<h5> ${produto.nome} </h5>
+						</g:link>
+						
+						<p style="left:35%;color:#ad96a5;font-size:20px;position:absolute;bottom: 40px;"> R$ ${produto.precoEmReais} </p>
+
+						<p><a class="btn btn-primary icon-shopping-cart"  style="left:23%;position:absolute;bottom: 10px;" href="#"> Comprar </a></p>
+					</div>
+					
+					<g:set var="count" value="${++count}"/>
 
 
-
+      			<g:if test="${ count == 4 || (i+1) == Produto.count()}">
+					</div>
+					<g:set var="count" value="${0}"/>
+				</g:if>
+			</g:each>
 		
-		<div id="main">
-			Em breve on-line, aguardem ...
-			<a href="https://www.facebook.com/arrasaamiga" target="_blank">
-				<g:img dir="img" file="top.jpg"/>	
-			</a>
-			<div class="fb-like" style="float:left;" data-href="https://www.facebook.com/arrasaamiga" data-send="true" data-width="450" data-show-faces="true" data-font="tahoma"></div>
-			<img style="float:right;" src="https://p.simg.uol.com.br/out/pagseguro/i/banners/parcelamento/468x60_pagseguro_6x.gif"> 
-		</div>
-
 	</body>
 </html>

@@ -4,6 +4,26 @@
 		"selected_items":
 		[
 			[
+				"paleta",
+				"paleta180Cores"
+			],
+			[
+				"h",
+				"height	Attr"
+			],
+			[
+				"list-sty",
+				"list-style-type"
+			],
+			[
+				"lis",
+				"list-style-image"
+			],
+			[
+				"margin",
+				"margin-top"
+			],
+			[
 				"ba",
 				"background-color"
 			],
@@ -36,18 +56,45 @@
 	"buffers":
 	[
 		{
-			"file": "grails-app/views/layouts/main.gsp",
+			"contents": "<%@ page import=\"br.com.arrasaamiga.Produto\" %>\n\n<!DOCTYPE html>\n<html>\n	<head>\n\n		<link rel=\"stylesheet\" type=\"text/css\" href=\"${resource(dir:'css',file:'bootstrap.min.css')}\"/>\n\n		<script type=\"text/javascript\" src=\"${resource(dir:'js',file:'jquery-1.10.1.min.js')}\"></script>\n		<script type=\"text/javascript\" src=\"${resource(dir:'js',file:'bootstrap.min.js')}\"></script>\n\n\n		<link href='http://fonts.googleapis.com/css?family=Mr+De+Haviland' rel='stylesheet' type='text/css'>\n		<link type=\"text/css\" rel=\"stylesheet\" href=\"${resource(dir:'css',file:'font-awesome.min.css')}\">\n		\n\n		<!--[if IE 7]>\n		  <link type=\"text/css\" rel=\"stylesheet\" href=\"${resource(dir:'css',file:'font-awesome-ie7.min.css')}\">\n		<![endif]-->\n		\n\n		 <style type=\"text/css\">\n		      body {\n			        padding-top: 20px;\n			        padding-bottom: 60px;\n			        background: url(img/backs/03.gif);\n		      }\n\n		      .container {\n		        margin: 0 auto;\n		        max-width: 800px;\n		        text-align: center;\n		      }\n\n		      .container > hr {\n		        margin: 60px 0;\n		      }\n\n		    </style>\n\n\n		<title>Arrasa Amiga</title>\n\n	</head>\n	<body>\n\n		\n		<div id=\"fb-root\"></div>\n		<script>(function(d, s, id) {\n		  var js, fjs = d.getElementsByTagName(s)[0];\n		  if (d.getElementById(id)) return;\n		  js = d.createElement(s); js.id = id;\n		  js.src = \"//connect.facebook.net/pt_BR/all.js#xfbml=1\";\n		  fjs.parentNode.insertBefore(js, fjs);\n		}(document, 'script', 'facebook-jssdk'));</script> \n\n\n		    \n\n\n\n		<div class=\"container\">\n\n			\n			<div class=\"row\">\n				<div class=\"navbar\">\n					<div class=\"navbar-inner\" >\n						<ul class=\"nav\">\n							<li>\n								<a href=\"${createLinkTo(url:'/')}\">  \n									<i class=\" icon-home  icon-large\"></i> \n									Home \n								</a>\n							</li>\n							<li class=\"divider-vertical\"></li>\n							<li>\n								<a href=\"#\">\n									<i class=\" icon-eye-open  icon-large\"></i>\n									Procurando uma maquiadora ? \n								</a>\n							</li>\n							<li class=\"divider-vertical\"></li>\n							<li>\n								<a href=\"#\">\n									<i class=\" icon-question-sign  icon-large\"></i>\n									Como comprar ?\n								</a>\n							</li>\n							<li class=\"divider-vertical\"></li>\n							<li>\n								<a href=\"#\"> \n									<i class=\"icon-shopping-cart  icon-large\"></i>\n										Carrinho de compras (0)  \n								</a>\n							</li>\n							<!--\n							<li class=\"divider-vertical\"></li>\n							<li>\n								<a href=\"#\" >\n									<i class=\"icon-credit-card  icon-large\"></i>\n										Finalizar compra\n								</a>\n							</li>\n							-->\n						</ul>\n					</div>\n				</div>\n			</div>\n			\n\n			<div class=\"row clear-fix\">\n				<g:img dir=\"img\" file=\"top.jpg\"/>\n			</div>\n\n\n      		<hr>\n\n      		<g:set var=\"count\" value=\"${0}\"/>\n\n      		<g:each in=\"${Produto.list()}\" var=\"produto\" status=\"i\">\n\n      			<g:if test=\"${ count == 0 }\">\n					<div class=\"row-fluid\" style=\"margin-bottom:50px;\">\n				</g:if>\n\n					\n					<div class=\"span3\" style=\"padding:5px;text-align:center;height:270px;border:1px solid orange;position:relative;\">\n						\n						<g:img dir=\"img/produtos\" file=\"${produto.fotos[0]}\"/>\n\n						<g:link action='show' controller='produto' id=\"${produto.id}\"> \n							<h5> ${produto.nome} </h5>\n						</g:link>\n						\n						<p style=\"left:35%;color:#ad96a5;font-size:20px;position:absolute;bottom: 40px;\"> R$ ${produto.precoEmReais} </p>\n\n						<p><a class=\"btn btn-primary icon-shopping-cart\"  style=\"left:23%;position:absolute;bottom: 10px;\" href=\"#\"> Comprar </a></p>\n					</div>\n					\n					<g:set var=\"count\" value=\"${++count}\"/>\n\n\n      			<g:if test=\"${ count == 4 || (i+1) == Produto.count()}\">\n					</div>\n					<g:set var=\"count\" value=\"${0}\"/>\n				</g:if>\n			</g:each>\n\n\n	      <hr>\n\n	      <div class=\"footer\">\n				<div class=\"fb-like\" style=\"float:left;\" data-href=\"https://www.facebook.com/arrasaamiga\" data-send=\"true\" data-width=\"450\" data-show-faces=\"true\" data-font=\"tahoma\"></div>\n				<img style=\"float:right;\" width=\"268px\" src=\"https://p.simg.uol.com.br/out/pagseguro/i/banners/parcelamento/468x60_pagseguro_6x.gif\"> \n\n\n				<div id=\"disqus_thread\" style=\"clear:both;\"></div>\n			    <script type=\"text/javascript\">\n			        \n			        var disqus_shortname = 'arrasaamiga';\n\n			        (function() {\n			            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;\n			            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';\n			            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);\n			        })();\n			    </script>\n				<noscript>Please enable JavaScript to view the <a href=\"http://disqus.com/?ref_noscript\">comments powered by Disqus.</a></noscript>\n				<a href=\"http://disqus.com\" class=\"dsq-brlink\">comments powered by <span class=\"logo-disqus\">Disqus</span></a>\n	      </div>\n\n    </div> \n\n		\n	</body>\n</html>\n",
+			"file": "grails-app/views/index.gsp",
+			"file_size": 4865,
+			"file_write_time": 130185890557103835,
 			"settings":
 			{
-				"buffer_size": 906,
+				"buffer_size": 4864,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "grails-app/views/index.gsp",
+			"file": "grails-app/views/produto/show.gsp",
 			"settings":
 			{
-				"buffer_size": 1132,
+				"buffer_size": 5072,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/conf/BootStrap.groovy",
+			"settings":
+			{
+				"buffer_size": 6207,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/domain/br/com/arrasaamiga/Produto.groovy",
+			"settings":
+			{
+				"buffer_size": 395,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/controllers/br/com/arrasaamiga/ProdutoController.groovy",
+			"settings":
+			{
+				"buffer_size": 476,
 				"line_ending": "Unix"
 			}
 		}
@@ -79,7 +126,12 @@
 	},
 	"file_history":
 	[
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/produto/list.gsp",
 		"/home/lsimaocosta/Programming/arrasa-amiga/web-app/css/main.css",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/layouts/main.gsp",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/conf/DataSource.groovy",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/conf/BuildConfig.groovy",
+		"/home/lsimaocosta/Programming/arrasa-amiga/web-app/img/backs/_readme.txt",
 		"/home/lsimaocosta/Programming/insatisfeitos/app/views/home/index.html.ejs",
 		"/home/lsimaocosta/Dropbox/travel/index.html",
 		"/home/lsimaocosta/Programming/insatisfeitos/app/views/insatisfacao/new.html.ejs",
@@ -108,7 +160,7 @@
 	],
 	"find":
 	{
-		"height": 23.0
+		"height": 34.0
 	},
 	"find_in_files":
 	{
@@ -122,6 +174,14 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"span3",
+			" \n",
+			"marketing",
+			"=\"#\"></",
+			">\n",
+			"container",
+			"' ",
+			"				\n",
 			"=\"${",
 			"function",
 			"css"
@@ -142,30 +202,112 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 2,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "grails-app/views/layouts/main.gsp",
+					"file": "grails-app/views/index.gsp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 906,
+						"buffer_size": 4864,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								882,
-								882
+								3098,
+								3098
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/HTML/HTML.tmLanguage",
 							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1725.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "grails-app/views/produto/show.gsp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5072,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2231,
+								2231
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1035.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "grails-app/conf/BootStrap.groovy",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6207,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3911,
+								3911
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 765.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "grails-app/domain/br/com/arrasaamiga/Produto.groovy",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 395,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								169,
+								169
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -174,29 +316,30 @@
 					"type": "text"
 				},
 				{
-					"buffer": 1,
-					"file": "grails-app/views/index.gsp",
+					"buffer": 4,
+					"file": "grails-app/controllers/br/com/arrasaamiga/ProdutoController.groovy",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1132,
+						"buffer_size": 476,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								70,
-								70
+								189,
+								189
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/Groovy/Groovy.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 315.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -210,7 +353,7 @@
 	},
 	"input":
 	{
-		"height": 0.0
+		"height": 31.0
 	},
 	"layout":
 	{
@@ -276,7 +419,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 227.0,
+	"side_bar_width": 248.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

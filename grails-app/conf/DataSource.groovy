@@ -26,7 +26,10 @@ environments {
     production {
         dataSource {
             dbCreate = "update"
-            url = "jdbc:h2:prodDb;MVCC=TRUE;LOCK_TIMEOUT=10000"
+            driverClassName = "com.mysql.jdbc.Driver"
+            url = "jdbc:mysql://localhost/arrasaamiga"
+            username= 'root'
+            password = '17/06/1990lucas'
             pooled = true
             properties {
                maxActive = -1
