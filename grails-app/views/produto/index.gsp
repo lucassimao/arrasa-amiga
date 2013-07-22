@@ -45,15 +45,20 @@
 
 					</small>
 
-					<h3 style="color:#39c61f;position:absolute;bottom:75px;left:0px;">  R$ ${produtoInstance.precoEmReais} <i class="icon-tag"></i> </h3>
+					<h3 style="color:#39c61f;position:absolute;bottom:60px;left:0px;">  R$ ${produtoInstance.precoEmReais} <i class="icon-tag"></i> </h3>
 
 					<p style="position:absolute;bottom:40px;font-weight:bold;left:0px;"> Quantidade:</p>
+
+					<g:form action="addToShoppingCart" controller="produto" method="post" id="${produtoInstance.id}"> 
 					
-					<g:select style="position:absolute;bottom:10px;left:0px;width:60px;" name="quantidade" from="${1..10}">
 
-					</g:select>
+						<g:select style="position:absolute;bottom:10px;left:0px;width:60px;" name="quantidade" from="${1..10}"/>
 
-					<p style="position:absolute;bottom:10px;right:0px;"><a  class="btn btn-primary btn-large icon-shopping-cart"  href="#"> Comprar </a></p>
+						<p style="position:absolute;bottom:10px;right:0px;">
+							<g:submitButton class="btn btn-primary btn-large icon-shopping-cart" name="btnSalvar" value="Comprar" />
+						</p>
+
+					</g:form>
 					
       			</div>
       		</div>

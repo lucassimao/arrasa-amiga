@@ -14,11 +14,7 @@
 
 		
 		<link rel="stylesheet" type="text/css" href="${resource(dir:'css',file:'bootstrap.min.css')}"/>
-		<link type="text/css" rel="stylesheet" href="${resource(dir:'css',file:'font-awesome.min.css')}">
-
-		<script type="text/javascript" src="${resource(dir:'js',file:'jquery-1.10.1.min.js')}"></script>
-		<script type="text/javascript" src="${resource(dir:'js',file:'bootstrap.min.js')}"></script>
-		
+		<link type="text/css" rel="stylesheet" href="${resource(dir:'css',file:'font-awesome.min.css')}">		
 
 		<!--[if IE 7]>
 		  <link type="text/css" rel="stylesheet" href="${resource(dir:'css',file:'font-awesome-ie7.min.css')}">
@@ -38,7 +34,7 @@
 		  }
 
 		  .container > hr {
-		    margin: 50px 0;
+		    margin: 30px 0;
 		  }
 
 		</style>
@@ -78,9 +74,9 @@
 							</li>
 							<li class="divider-vertical"></li>
 							<li>
-								<a href="#"> 
-									<i class="icon-shopping-cart  icon-large"></i>	Carrinho de compras (0)  
-								</a>
+								<g:link controller="checkout">
+									<i class="icon-shopping-cart  icon-large"></i>	Carrinho de compras ( <cart:qtdeTotalItens/> )  
+								</g:link>
 							</li>
 							<li class="divider-vertical"></li>
 							<li>
@@ -135,6 +131,9 @@
 
 
 		<g:javascript library="application"/>
+		<script type="text/javascript" src="${resource(dir:'js',file:'jquery-1.10.1.min.js')}"></script>
+		<script type="text/javascript" src="${resource(dir:'js',file:'bootstrap.min.js')}"></script>
+		<g:setProvider library="jquery"/>
 		<r:layoutResources />
 	</body>
 </html>

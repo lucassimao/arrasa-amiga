@@ -1,6 +1,6 @@
 package br.com.arrasaamiga
 
-class Produto {
+class Produto extends com.metasieve.shoppingcart.Shoppable  {
 
 	String nome
 	List fotos
