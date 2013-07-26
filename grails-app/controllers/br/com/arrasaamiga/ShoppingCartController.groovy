@@ -24,9 +24,11 @@ class ShoppingCartController {
 
     def add1(Long id){
     	def produtoInstance = Produto.get(id)
+        def qtdeAnterior = shoppingCartService.getQuantity(produtoInstance)
+
     	produtoInstance.addQuantityToShoppingCart(1)
 
-    	if (shoppingCartService.getQuantity(produtoInstance) == 1){
+    	if (qtdeAnterior == null || qtdeAnterior == 0 ){
     		flash.message = "${produtoInstance.nome} adicionado(a) ao seu carrinho de compras"
     	}else{
     		flash.message = "Mais 1 ${produtoInstance.nome} adicionado(a) ao seu carrinho de compras"
@@ -37,12 +39,15 @@ class ShoppingCartController {
 
     def add(Long id,Integer quantidade){
     	def produtoInstance = Produto.get(id)
+        def qtdeAnterior = shoppingCartService.getQuantity(produtoInstance)
+
+
     	produtoInstance.addQuantityToShoppingCart(quantidade)
 
-    	if (shoppingCartService.getQuantity(produtoInstance) == 1){
-    		flash.message = "${produtoInstance.nome} adicionado(a) ao seu carrinho de compras"
+    	if (qtdeAnterior == null || qtdeAnterior == 0 ){
+    		flash.message = " ${quantidade} ${produtoInstance.nome} adicionados(as) ao seu carrinho de compras"
     	}else{
-    		flash.message = "Mais ${quantidade} ${produtoInstance.nome} adicionado(a) ao seu carrinho de compras"
+    		flash.message = "Mais ${quantidade} ${produtoInstance.nome} adicionados(as) ao seu carrinho de compras"
     	}
     	
     	redirect(action: "index")
@@ -51,6 +56,8 @@ class ShoppingCartController {
 
     def remover1(Long id){
     	def produtoInstance = Produto.get(id)
+        def qtdeAnterior = shoppingCartService.getQuantity(produtoInstance)
+
     	produtoInstance.removeQuantityFromShoppingCart(1)
     	
     	if (shoppingCartService.getQuantity(produtoInstance) == 0){
