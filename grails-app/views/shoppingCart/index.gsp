@@ -58,7 +58,7 @@
 							<tr>
 								<td style="text-align:left !important;">
 									<g:img dir="img/produtos" file="${produto.fotos[0]}"/>
-									<a class="item-name" href="javascript: void(0);" title="Link to product page">${produto.nome }</a>
+									<a href="${createLink(controller:'produto',action:'show',id:produto.id)}">${produto.nome }</a>
 								</td>
 
 								<td style="position:relative;">
