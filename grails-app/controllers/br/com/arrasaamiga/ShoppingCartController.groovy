@@ -2,12 +2,23 @@ package br.com.arrasaamiga
 
 import org.springframework.dao.DataIntegrityViolationException
 import grails.converters.*
+import com.metasieve.shoppingcart.Shoppable
+
 
 class ShoppingCartController {
 
 	def shoppingCartService
 
     def index(){
+    	def total = 0
+
+
+    	shoppingCartService.getItems().each{item ->
+    		def produto = Shoppable.findByShoppingItem(item)
+    		total += produto.precoEmReais * shoppingCartService.getQuantity(produto)
+    	}
+
+    	['valorTotal':total]
 
     }
 
@@ -23,6 +34,20 @@ class ShoppingCartController {
     	
     	redirect(action: "index")
     }
+
+    def add(Long id,Integer quantidade){
+    	def produtoInstance = Produto.get(id)
+    	produtoInstance.addQuantityToShoppingCart(quantidade)
+
+    	if (shoppingCartService.getQuantity(produtoInstance) == 1){
+    		flash.message = "${produtoInstance.nome} adicionado(a) ao seu carrinho de compras"
+    	}else{
+    		flash.message = "Mais ${quantidade} ${produtoInstance.nome} adicionado(a) ao seu carrinho de compras"
+    	}
+    	
+    	redirect(action: "index")
+    }
+
 
     def remover1(Long id){
     	def produtoInstance = Produto.get(id)

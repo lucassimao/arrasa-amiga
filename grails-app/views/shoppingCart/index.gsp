@@ -97,7 +97,12 @@
 
 			<hr>
 
-			Valor Total da Compra
+			
+
+			<div class="well">
+			  <h4 style="display:inline;">Valor Total da Compra</h4>
+			  <span style="float:right;font-weight:bold;"> R$ ${valorTotal} </span>
+			</div>
 
 			<hr>
 

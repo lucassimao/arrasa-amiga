@@ -48,7 +48,7 @@
 
 					<p style="position:absolute;bottom:40px;font-weight:bold;left:0px;"> Quantidade:</p>
 
-					<g:form action="addToShoppingCart" controller="produto" method="post" id="${produtoInstance.id}"> 
+					<g:form action="add" controller="shoppingCart" method="post" id="${produtoInstance.id}"> 
 					
 
 						<g:select style="position:absolute;bottom:10px;left:0px;width:60px;" name="quantidade" from="${1..10}"/>

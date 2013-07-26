@@ -29,7 +29,7 @@
 						
 						<g:img dir="img/produtos" file="${produto.fotos[0]}"/>
 
-						<g:link action='index' controller='produto' id="${produto.id}"> 
+						<g:link action='show' controller='produto' id="${produto.id}"> 
 							<h5> ${produto.nome} </h5>
 						</g:link>
 						
