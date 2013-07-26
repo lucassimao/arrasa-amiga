@@ -8,13 +8,12 @@
 	<body>
 
 
-			<div class="row" style="text-align:left;font-family:museo-slab,'Helvetica Neue',Helvetica,Arial,sans-serif;" >
-				<h3 style="color:#01A8DD;"> ${produtoInstance.nome} </h3>
-			</div>
+			
+			<h3 style="color:#01A8DD;"> ${produtoInstance.nome} </h3>
 	
 
-      		<div class="row" style="border:2px dotted pink;padding-top:10px;clear:both;">
-      			<div class="span4" style="height:380px;">
+      		<div class="row-fluid" style="border:2px dotted pink;padding:10px;clear:both;">
+      			<div class="span5" style="height:380px;">
 					<div id="myCarousel" class="carousel slide">
 					  
 					  <div class="carousel-inner">
@@ -29,7 +28,7 @@
       			</div>
 
 
-      			<div class="span4" style="text-align:justify;position:relative;height:380px;">
+      			<div class="span7" style="text-align:justify;position:relative;height:380px;">
 
 					<small style="font-size:16;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">Sed ut perspiciatis unde omnis iste natus
 					 error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, 

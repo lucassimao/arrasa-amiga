@@ -118,6 +118,34 @@ class BootStrap {
     	esponja.save()
 
 
+    	def aplicadorRimel = new Produto(nome:'Aplicador de Rimel 3 em 1',preco:700)
+    	aplicadorRimel.descricao = 'Ele possui 3 funções maravilhosas: Aplicar o rímel nos cílios superiores, cílios inferiores e ainda possui um pente para fazer o acabamento e deixá-los alinhados (FOTO). É o fim de um problemão. Como o rímel é, praticamente, o último item deve ser aplicado com muito cuidado e esse acessório te ajuda a não sofrer qualquer "acidente", que acabe derrubando toda sua produção (e olha que isso acontece até com as mais experientes), adquira o seu! Ele é pequeno e leve, cabe em qualquer lugar!!!'
+    	aplicadorRimel.fotos = ['rsz-aplicador-rimel.png','aplicador-rimel-1.jpg',
+    							'aplicador-rimel-2.jpg','aplicador-rimel-3.jpg',
+    							'aplicador-rimel-4.jpg','aplicador-rimel-5.jpg']
+
+    	aplicadorRimel.save() 
+
+    	def ecoTools = new Produto(nome:'Kit de Pincéis Ecotools',preco:3200)
+    	ecoTools.descricao = 'Temos novo produto disponível para vocês. É o kit de pincéis Ecotools.' + 
+    					'A marca é conhecida mundialmente pelos seus produtos sustentáveis de alta ' +
+    					'qualidade, fabricados sem o uso de qualquer produto de origem animal ou de derivados ' +
+    					'do petróleo, feitos com cabos de bambu, e cerdas suuuuper macias.' +
+    					'Esse pincéis são super lindos, básicos, práticos e por isso, mega ' + 
+    					'necessários na bolsa de todas as mulheres. Vem com: 1 Pincel para aplicar sombra;'+
+    					'1 Pincel para blush ou pó;1 Pincel para aplicar corretivo;1 Pincel chanfrado;' +
+    					'1 Pincel com pente e escova para sobrancelhas;Além de um lindo estojo de fibras ' +
+    					'naturais. Adquira o seu.'
+
+    	ecoTools.fotos = ['rsz-eco-tools.png','eco-tools-1.jpg',
+    						'eco-tools-2.jpg','eco-tools-3.jpg',
+    						'eco-tools-4.jpg','eco-tools-5.jpg','eco-tools-6.jpg']
+
+    	ecoTools.save()
+
+
+
+
 
 
     }

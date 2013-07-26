@@ -4,14 +4,6 @@
 <html>
 	<head>
 		<meta name="layout" content="main"/>
-
-		<g:javascript>
-			$(function(){
-				$(".alert.alert-success").fadeOut(4000);
-			});
-			
-		</g:javascript>
-
 	</head>
 
 
@@ -19,19 +11,17 @@
 
 			<hr>
 
-			<g:if test="${flash.message}">
-				<div class="alert alert-success">
-					${flash.message} 
+			<div id="toast">
+				<img />
+				<label/>
+			</div>
 
-				</div>
-			</g:if>
-			
       		<g:set var="count" value="${0}"/>
 
       		<g:each in="${Produto.list()}" var="produto" status="i">
 
       			<g:if test="${ count == 0 }">
-					<div class="row-fluid" style="margin-bottom:50px;">
+					<div class="row-fluid" style="margin-bottom:20px;">
 				</g:if>
 
 					
@@ -46,8 +36,8 @@
 						<p style="left:35%;color:#ad96a5;font-size:20px;position:absolute;bottom: 40px;"> R$ ${produto.precoEmReais} </p>
 
 						<p>
-							<g:remoteLink style="left:26%;position:absolute;bottom: 10px;" params="['quantidade':1]" id="${produto.id}" onSuccess="document.location.reload();"
-							class="btn btn-primary icon-shopping-cart" controller="produto" action="addToShoppingCart"> Comprar</g:remoteLink>  
+							<g:link style="left:26%;position:absolute;bottom: 10px;" id="${produto.id}" class="btn btn-primary icon-shopping-cart" 
+									controller="shoppingCart" action="add1"> Comprar</g:link>  
 						</p>
 
 					</div>
@@ -60,7 +50,8 @@
 					<g:set var="count" value="${0}"/>
 				</g:if>
 			</g:each>
-		
+			
+
 	</body>
 </html>
 

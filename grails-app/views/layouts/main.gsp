@@ -5,7 +5,8 @@
 <!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"><!--<![endif]-->
 	<head>
-	
+
+
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<title>Arrasa Amiga</title>
@@ -29,13 +30,24 @@
 
 		  .container {
 		    margin: 0 auto;
-		    max-width: 800px;
-		    text-align: center;
+		    max-width: 890px;
+		    
 		  }
 
 		  .container > hr {
-		    margin: 30px 0;
+		    margin: 20px 0;
 		  }
+
+	      /* Customize the navbar links to be fill the entire space of the .navbar */
+	      .navbar .navbar-inner {
+	        padding: 0;
+	      }
+	      .navbar .nav {
+	        margin: 0;
+	        display: table;
+	        width: 100%;
+	      }
+    
 
 		</style>
 
@@ -54,53 +66,51 @@
 		}(document, 'script', 'facebook-jssdk'));</script> 
 
 
-		<div class="container">
-
+		<div class="container" >
 			
-			<div class="row">
-				<div class="navbar">
-					<div class="navbar-inner" >
-						<ul class="nav">
-							<li>
-								<a href="${createLinkTo(url:'/')}">  
-									<i class=" icon-home  icon-large"></i> Home 
-								</a>
-							</li>
-							<li class="divider-vertical"></li>
-							<li>
-								<a href="#">
-									<i class=" icon-eye-open  icon-large"></i>	Precisa de uma maquiadora ? 
-								</a>
-							</li>
-							<li class="divider-vertical"></li>
-							<li>
-								<g:link controller="checkout">
-									<i class="icon-shopping-cart  icon-large"></i>	Carrinho de compras ( <cart:qtdeTotalItens/> )  
-								</g:link>
-							</li>
-							<li class="divider-vertical"></li>
-							<li>
-								<a href="#" >
-									<i class="icon-credit-card  icon-large"></i> Finalizar compra
-								</a>
-							</li>
-						</ul>
-					</div>
+			<div class="navbar">
+				<div class="navbar-inner" >
+
+					<ul class="nav">
+
+						<li class="${(controllerName == null)?'active':''}">
+							<a href="${createLinkTo(url:'/')}">  
+								<i class=" icon-home  icon-large"></i> Home
+							</a>
+						</li>
+						
+						<li>
+							<a href="#">
+								<i class=" icon-eye-open  icon-large"></i>	Precisa de uma maquiadora ? 
+							</a>
+						</li>
+
+						<li>
+							<a href="#">
+								<i class="  icon-question-sign  icon-large"></i> Como comprar ? 
+							</a>
+						</li>
+
+						<li class="${(controllerName == 'shoppingCart')?'active':''}">
+							<g:link controller="shoppingCart">
+								<i class="icon-shopping-cart  icon-large"></i>	Carrinho de compras ( <cart:qtdeTotalItens/> )  
+							</g:link>
+						</li>
+
+						<li>
+							<a href="#" >
+								<i class="icon-credit-card  icon-large"></i> Finalizar compra
+							</a>
+						</li>
+
+					</ul>
 				</div>
 			</div>
 			
-
-			<div class="row clear-fix">
-				<g:img dir="img" file="top.jpg"/>
-			</div>
-
-
-      		
-
+			
+			<g:img dir="img" file="top.jpg"/>
 
 			<g:layoutBody/>
-
-
 
 			<hr>
 
@@ -133,6 +143,7 @@
 		<g:javascript library="application"/>
 		<script type="text/javascript" src="${resource(dir:'js',file:'jquery-1.10.1.min.js')}"></script>
 		<script type="text/javascript" src="${resource(dir:'js',file:'bootstrap.min.js')}"></script>
+
 		<g:setProvider library="jquery"/>
 		<r:layoutResources />
 	</body>
