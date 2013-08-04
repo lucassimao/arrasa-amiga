@@ -3,20 +3,27 @@ package br.com.arrasaamiga
 import org.springframework.dao.DataIntegrityViolationException
 import grails.converters.*
 import com.metasieve.shoppingcart.Shoppable
-
+import grails.plugins.springsecurity.Secured
 
 class ShoppingCartController {
 
 	def shoppingCartService
+    def springSecurityService
+
+    private Double somarValorTotalDoCarrinho(){
+        double total = 0
+        
+        shoppingCartService.getItems().each{item ->
+            def produto = Shoppable.findByShoppingItem(item)
+            total += produto.precoEmReais * shoppingCartService.getQuantity(produto)
+        }
+
+        return total
+
+    }
 
     def index(){
-    	def total = 0
-
-
-    	shoppingCartService.getItems().each{item ->
-    		def produto = Shoppable.findByShoppingItem(item)
-    		total += produto.precoEmReais * shoppingCartService.getQuantity(produto)
-    	}
+    	def total = somarValorTotalDoCarrinho()
 
     	['valorTotal':total]
 
@@ -74,5 +81,14 @@ class ShoppingCartController {
     	produtoInstance.removeQuantityFromShoppingCart(shoppingCartService.getQuantity(produtoInstance))
     	flash.message = "${produtoInstance.nome} removido(a) do seu carrinho de compras"
     	redirect(action: "index")
+    }
+
+    @Secured(['IS_AUTHENTICATED_FULLY'])
+    def checkout(){
+        def frete = 25
+        def total = somarValorTotalDoCarrinho() + frete
+        def cliente = Cliente.findByUsuario(springSecurityService.currentUser)
+
+        ['valorTotal':total,'enderecoEntrega': cliente.endereco, frete: frete]
     }
 }

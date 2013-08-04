@@ -18,6 +18,8 @@
 	<body>
 
 			<hr>
+			
+			<g:set var="ocultarRodape" value="${true}" scope="request"/>
 
 			<g:if test="${flash.message}">
 				<div class="alert alert-info">
@@ -32,7 +34,7 @@
 	                    <i class="icon-backward icon-white"></i>
 	                    Comprar outros produtos
 	                </a>	                
-	                <a href="" style="float:right;" class="btn btn-success">
+	                <a href="${createLink(controller:'shoppingCart',action:'checkout')}" style="float:right;" class="btn btn-success">
 	                   <i class="icon-ok-circle icon-white"></i>
 	                   Finalizar Compra
 	                </a>
@@ -99,7 +101,7 @@
 
 			
 
-			<div class="well">
+			<div class="well" style="background-color:white;">
 			  <h4 style="display:inline;">Valor Total da Compra</h4>
 			  <span style="float:right;font-weight:bold;"> R$ ${valorTotal} </span>
 			</div>
@@ -112,7 +114,7 @@
 	                    <i class="icon-backward icon-white"></i>
 	                    Comprar outros produtos
 	                </a>	                
-	                <a href="javascript: void(0);" style="float:right;" class="btn btn-success">
+	                <a href="${createLink(controller:'shoppingCart',action:'checkout')}" style="float:right;" class="btn btn-success">
 	                   <i class="icon-ok-circle icon-white"></i>
 	                   Finalizar Compra
 	                </a>

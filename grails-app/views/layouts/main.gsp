@@ -22,31 +22,38 @@
 		<![endif]-->
 
 		<style type="text/css">
-		  body {
-		        padding-top: 20px;
-		        padding-bottom: 60px;
-		        background: url(${resource(dir:'img/backs', file:'03.gif')});
-		  }
+			html {
+				overflow-y:scroll;
+			}
 
-		  .container {
-		    margin: 0 auto;
-		    max-width: 890px;
-		    
-		  }
+			body {
+			    padding-top: 20px;
+			    padding-bottom: 60px;
+			    background: url(${resource(dir:'img/backs', file:'03.gif')});
+			}
 
-		  .container > hr {
-		    margin: 20px 0;
-		  }
+			.container {
+				margin: 0 auto;
+				max-width: 890px;
 
-	      /* Customize the navbar links to be fill the entire space of the .navbar */
-	      .navbar .navbar-inner {
-	        padding: 0;
-	      }
-	      .navbar .nav {
-	        margin: 0;
-	        display: table;
-	        width: 100%;
-	      }
+			}
+
+			.container > hr {
+				margin: 20px 0;
+			}
+
+			.navbar {
+				margin-bottom:10px;
+			}
+			/* Customize the navbar links to be fill the entire space of the .navbar */
+			.navbar .navbar-inner {
+				padding: 0;
+			}
+			.navbar .nav {
+				margin: 0;
+				display: table;
+				width: 100%;
+			}
     
 
 		</style>
@@ -55,7 +62,7 @@
 		<r:layoutResources />
 	</head>
 	<body>
-		
+
 		<div id="fb-root"></div>
 		<script>(function(d, s, id) {
 		  var js, fjs = d.getElementsByTagName(s)[0];
@@ -81,61 +88,96 @@
 						
 						<li>
 							<a href="#">
-								<i class=" icon-eye-open  icon-large"></i>	Precisa de uma maquiadora ? 
+								<i class="icon-eye-open  icon-large"></i>	Precisa de uma maquiadora ? 
 							</a>
 						</li>
 
 						<li>
 							<a href="#">
-								<i class="  icon-question-sign  icon-large"></i> Como comprar ? 
+								<i class="icon-question-sign  icon-large"></i> Como comprar ? 
 							</a>
 						</li>
 
-						<li class="${(controllerName == 'shoppingCart')?'active':''}">
+						<li class="${(controllerName == 'shoppingCart' && actionName=='index')?'active':''}">
 							<g:link controller="shoppingCart">
-								<i class="icon-shopping-cart  icon-large"></i>	Carrinho de compras ( <cart:qtdeTotalItens/> )  
+								<i class="icon-shopping-cart  icon-large"></i>	
+								Carrinho de compras ( <cart:qtdeTotalItens/>  )  
 							</g:link>
 						</li>
 
-						<li>
-							<a href="#" >
-								<i class="icon-credit-card  icon-large"></i> Finalizar compra
-							</a>
+						<li class="${(controllerName == 'shoppingCart' && actionName == 'checkout')?'active':''}">
+							<g:link action="checkout" controller="shoppingCart">
+								<i class="icon-credit-card  icon-large"></i>	
+								Finalizar compra
+							</g:link>
 						</li>
+						<li class="dropdown">
+	                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+	                        	<sec:ifLoggedIn>
+	                        		<g:set var="style" value="color:#F29BF2;"/>
+	                        	</sec:ifLoggedIn>
+
+	                        	<sec:ifNotLoggedIn>
+	                        		<g:set var="style" value=""/>
+	                        	</sec:ifNotLoggedIn>
+
+	                        	<i style="${style}" class="icon-female icon-large"></i> 
+	                        	<b class="caret"></b>
+	                       	</a>
+	                        <ul class="dropdown-menu">
+	                        	<sec:ifLoggedIn>
+									<li><a href="#"> Meus Pedidos</a></li>
+									<li><a href="#"> Meus Produtos Favoritos </a></li>
+									<li class="divider"></li>
+									<li><a href="${createLink(controller:'logout')}"> Sair</a></li>
+	                        	</sec:ifLoggedIn>
+	                        	
+	                        	<sec:ifNotLoggedIn>
+									<li><a href="${createLink(controller:'login')}"> Entrar </a></li>
+									<li><a href="${createLink(controller:'cliente',action:'cadastro')}"> Quero me cadastrar ! </a></li>
+									<li><a href="#"> Esqueci minha senha! </a></li>
+	                        	</sec:ifNotLoggedIn>
+
+	                        </ul>
+                      </li>
 
 					</ul>
 				</div>
 			</div>
-			
-			
+
 			<g:img dir="img" file="top.jpg"/>
 
 			<g:layoutBody/>
 
-			<hr>
+			
 
-			<div class="footer">
-				<div class="fb-like" style="float:left;" data-href="https://www.facebook.com/arrasaamiga" 
-					data-send="true" data-width="450" data-show-faces="true" data-font="tahoma"></div>
+			<g:if test="${!ocultarRodape}">
 
-				<img style="float:right;" width="268px" src="https://p.simg.uol.com.br/out/pagseguro/i/banners/parcelamento/468x60_pagseguro_6x.gif"> 
+				<hr>
+				
+				<div class="footer">
+					<div class="fb-like" style="float:left;" data-href="https://www.facebook.com/arrasaamiga" 
+						data-send="true" data-width="450" data-show-faces="true" data-font="tahoma"></div>
+
+					<img style="float:right;" width="268px" src="https://p.simg.uol.com.br/out/pagseguro/i/banners/parcelamento/468x60_pagseguro_6x.gif"> 
 
 
-				<div id="disqus_thread" style="clear:both;"></div>
+					<div id="disqus_thread" style="clear:both;"></div>
 
-			    <script type="text/javascript">
-			        
-			        var disqus_shortname = 'arrasaamiga';
+				    <script type="text/javascript">
+				        
+				        var disqus_shortname = 'arrasaamiga';
 
-			        (function() {
-			            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-			            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-			            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-			        })();
-			    </script>
-				<noscript>Por favor, habilite o JavaScript para ver os <a href="http://disqus.com/?ref_noscript">comentários </a></noscript>
-				<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-			</div>
+				        (function() {
+				            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+				            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+				            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+				        })();
+				    </script>
+					<noscript>Por favor, habilite o JavaScript para ver os <a href="http://disqus.com/?ref_noscript">comentários </a></noscript>
+					<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+				</div>
+			</g:if>
 
     	</div> 
 

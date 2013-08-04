@@ -3,6 +3,18 @@ import br.com.arrasaamiga.*
 class BootStrap {
 
     def init = { servletContext ->
+
+
+        def adminRole = new GrupoDeUsuario(authority: 'ROLE_ADMIN').save(flush: true)
+        def userRole = new GrupoDeUsuario(authority: 'ROLE_USER').save(flush: true)
+
+        def testUser = new Usuario(username: 'me', enabled: true, password: '123')
+        testUser.save(flush: true)
+
+        UsuarioGrupoDeUsuario.create testUser, adminRole, true
+
+
+
     	
     	def paleta180Cores = new Produto(nome:'Paleta de 180 Sombras',preco:12000)
     	paleta180Cores.descricao = 'Uma paleta completa para qualquer maquiagem: seja com look casual ou de festa... Traz cores neutras, matte e shimmer... Tudo para você arrasar!'
