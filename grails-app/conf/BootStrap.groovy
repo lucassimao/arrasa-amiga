@@ -6,13 +6,14 @@ class BootStrap {
 
 
         def adminRole = new GrupoDeUsuario(authority: 'ROLE_ADMIN').save(flush: true)
-        def userRole = new GrupoDeUsuario(authority: 'ROLE_USER').save(flush: true)
+        def userRole = new GrupoDeUsuario(authority: 'ROLE_CLIENTE').save(flush: true)
 
         def testUser = new Usuario(username: 'me', enabled: true, password: '123')
         testUser.save(flush: true)
 
         UsuarioGrupoDeUsuario.create testUser, adminRole, true
 
+        /*
 
 
     	
@@ -154,7 +155,7 @@ class BootStrap {
     						'eco-tools-4.jpg','eco-tools-5.jpg','eco-tools-6.jpg']
 
     	ecoTools.save()
-
+        */
 
 
 

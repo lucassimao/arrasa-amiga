@@ -27,13 +27,15 @@
 					
 					<div class="span3" style="padding:5px;text-align:center;height:270px;border:1px solid orange;position:relative;">
 						
-						<g:img dir="img/produtos" file="${produto.fotos[0]}"/>
+						<g:img dir="img/produtos" file="${produto.fotoMiniatura}"/>
 
-						<g:link action='show' controller='produto' id="${produto.id}"> 
+						<g:set var="url" value="${produto.nome.replace(',','').split(' ').join('-') }" />
+
+						<a href="${url}-${produto.id}"> 
 							<h5> ${produto.nome} </h5>
-						</g:link>
+						</a>
 						
-						<p style="left:35%;color:#ad96a5;font-size:20px;position:absolute;bottom: 40px;"> R$ ${produto.precoEmReais} </p>
+						<p style="left:35%;color:#ad96a5;font-size:20px;position:absolute;bottom: 40px;"> R$ ${produto.precoAVistaEmReais} </p>
 
 						<p>
 							<g:link style="left:26%;position:absolute;bottom: 10px;" id="${produto.id}" class="btn btn-primary icon-shopping-cart" 

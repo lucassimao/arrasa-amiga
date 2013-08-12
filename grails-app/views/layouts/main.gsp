@@ -111,6 +111,7 @@
 								Finalizar compra
 							</g:link>
 						</li>
+
 						<li class="dropdown">
 	                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
 	                        	<sec:ifLoggedIn>
@@ -124,11 +125,24 @@
 	                        	<i style="${style}" class="icon-female icon-large"></i> 
 	                        	<b class="caret"></b>
 	                       	</a>
+
 	                        <ul class="dropdown-menu">
 	                        	<sec:ifLoggedIn>
 									<li><a href="#"> Meus Pedidos</a></li>
 									<li><a href="#"> Meus Produtos Favoritos </a></li>
 									<li class="divider"></li>
+									
+									<sec:ifAllGranted roles="ROLE_ADMIN">
+
+										<li class="nav-header"> Administrativo </li>
+											<li>
+												<a href="${createLink(controller:'produto')}">Produtos </a>
+											</li>
+
+										<li class="divider"></li>
+
+									</sec:ifAllGranted>
+
 									<li><a href="${createLink(controller:'logout')}"> Sair</a></li>
 	                        	</sec:ifLoggedIn>
 	                        	

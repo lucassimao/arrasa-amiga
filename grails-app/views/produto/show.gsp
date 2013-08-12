@@ -3,65 +3,108 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta name="layout" content="main"/>
+		<meta name="layout" content="admin">
+		<g:set var="entityName" value="${message(code: 'produto.label', default: 'Produto')}" />
+		<title><g:message code="default.show.label" args="[entityName]" /></title>
 	</head>
 	<body>
+		<a href="#show-produto" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
+		<div id="show-produto" class="content scaffold-show" role="main">
+			<h1> Detalhes do Produto </h1>
 
+			<g:if test="${flash.message}">
+			<div class="message" role="status">${flash.message}</div>
+			</g:if>
+			<ol class="property-list produto">
+			
 
 			
-			<h3 style="color:#01A8DD;"> ${produtoInstance.nome} </h3>
-	
-
-      		<div class="row-fluid" style="border:2px dotted pink;padding:10px;clear:both;">
-      			<div class="span5" style="height:380px;">
-					<div id="myCarousel" class="carousel slide">
-					  
-					  <div class="carousel-inner">
-					  	<g:each in="${produtoInstance.fotos[1..-1]}" var="pic" status="i">
-					  		<div class="item ${i==0?'active':''}"> <g:img  dir="img/produtos" file="${pic}"/></div>
-					  	</g:each>
-					  </div>
-
-					  <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
-					  <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
-					</div>
-      			</div>
-
-
-      			<div class="span7" style="text-align:justify;position:relative;height:380px;">
-
-					<small style="font-size:16;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">Sed ut perspiciatis unde omnis iste natus
-					 error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, 
-					 eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae
-					  dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur 
-					  voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia 
-					  voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia 
-					  aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione 
-					  voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia 
-					  aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione 
-					    iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae
-					     consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"
-
-					</small>
-
-					<h3 style="color:#39c61f;position:absolute;bottom:60px;left:0px;">  R$ ${produtoInstance.precoEmReais} <i class="icon-tag"></i> </h3>
-
-					<p style="position:absolute;bottom:40px;font-weight:bold;left:0px;"> Quantidade:</p>
-
-					<g:form action="add" controller="shoppingCart" method="post" id="${produtoInstance.id}"> 
+				<g:if test="${produtoInstance?.nome}">
+				<li class="fieldcontain">
+					<span id="nome-label" class="property-label"><g:message code="produto.nome.label" default="Nome" /></span>
 					
-
-						<g:select style="position:absolute;bottom:10px;left:0px;width:60px;" name="quantidade" from="${1..10}"/>
-
-						<p style="position:absolute;bottom:10px;right:0px;">
-							<g:submitButton class="btn btn-primary btn-large icon-shopping-cart" name="btnSalvar" value="Comprar" />
-						</p>
-
-					</g:form>
+						<span class="property-value" aria-labelledby="nome-label"><g:fieldValue bean="${produtoInstance}" field="nome"/></span>
 					
-      			</div>
-      		</div>
+				</li>
+				</g:if>
+			
+				<g:if test="${produtoInstance?.descricao}">
+				<li class="fieldcontain">
+					<span id="descricao-label" class="property-label"><g:message code="produto.descricao.label" default="Descricao" /></span>
+					
+						<span class="property-value" aria-labelledby="descricao-label"><g:fieldValue bean="${produtoInstance}" field="descricao"/></span>
+					
+				</li>
+				</g:if>
+			
+				<g:if test="${produtoInstance?.tipoUnitario}">
+				<li class="fieldcontain">
+					<span id="tipoUnitario-label" class="property-label"><g:message code="produto.tipoUnitario.label" default="Tipo Unitario" /></span>
+					
+						<span class="property-value" aria-labelledby="tipoUnitario-label"><g:fieldValue bean="${produtoInstance}" field="tipoUnitario"/></span>
+					
+				</li>
+				</g:if>
 
+				<g:if test="${produtoInstance?.unidades}">
+				<li class="fieldcontain">
+					<span id="unidades-label" class="property-label">Unidade(s) </span>
+					
+						<span class="property-value" aria-labelledby="unidades-label">
+							${produtoInstance.unidades.join(',')}
+						</span>
+					
+				</li>
+				</g:if>
 
+				<li class="fieldcontain">
+					<span id="precoEmCentavos-label" class="property-label"> Valor Unitario </span>
+					
+						<span class="property-value" aria-labelledby="precoEmCentavos-label">
+							R$ ${produtoInstance.precoAVistaEmReais}
+						</span>
+					
+				</li>
+			
+				<g:if test="${produtoInstance?.fotoMiniatura}">
+				<li class="fieldcontain">
+					<span id="fotoMiniatura-label" class="property-label"><g:message code="produto.fotoMiniatura.label" default="Foto Miniatura" /></span>
+					
+					<span class="property-value" aria-labelledby="fotoMiniatura-label">
+						<g:img file="${produtoInstance.fotoMiniatura}" dir="img/produtos" />
+
+					</span>
+					
+				</li>
+				</g:if>
+			
+
+			
+				<g:if test="${produtoInstance?.fotos}">
+				<li class="fieldcontain">
+					<span id="fotos-label" class="property-label"><g:message code="produto.fotos.label" default="Fotos" /></span>
+					
+						<span class="property-value" aria-labelledby="fotos-label">
+							<g:each in="${produtoInstance.fotos}" var="foto">
+								<g:img style="width:10%;" dir="img/produtos" file="${foto}"/>
+							</g:each>
+						</span>
+					
+				</li>
+				</g:if>
+			
+
+			
+			</ol>
+			<g:form>
+				<fieldset class="buttons">
+					<g:hiddenField name="id" value="${produtoInstance?.id}" />
+					<g:link style="text-indent: 25px;background-repeat: no-repeat;background-position: 0.7em center;background-image:url(../../images/skin/back.png)" action="list"> Voltar </g:link>
+					<g:link class="edit" action="edit" id="${produtoInstance?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
+					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
+				
+				</fieldset>
+			</g:form>
+		</div>
 	</body>
 </html>
