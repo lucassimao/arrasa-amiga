@@ -29,7 +29,7 @@ class Produto extends com.metasieve.shoppingcart.Shoppable  {
 
 
     public Double getPrecoAVistaEmReais(){
-    	return this.precoAVistaEmCentavos/100
+    	return this.precoAVistaEmCentavos/100.0
     }
 
     public void setPrecoAVistaEmReais(Double precoEmReais){
@@ -37,7 +37,7 @@ class Produto extends com.metasieve.shoppingcart.Shoppable  {
     } 
 
     public Double getPrecoAPrazoEmReais(){
-        return this.precoAVistaEmCentavos/100
+        return this.precoAVistaEmCentavos/100.0
     }
 
     public void setPrecoAPrazoEmReais(Double precoEmReais){

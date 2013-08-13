@@ -143,8 +143,9 @@ class ProdutoController {
 
         produtoInstance.properties = params
 
-        params.precoEmReais = params.precoEmReais.replace('.',',')
 
+        params.precoAVistaEmReais = params.precoAVistaEmReais.replace('.',',')
+        params.precoAPrazoEmReais = params.precoAPrazoEmReais.replace('.',',')
 
         produtoInstance.fotos = []
 
