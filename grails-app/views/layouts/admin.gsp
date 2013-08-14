@@ -40,7 +40,12 @@
 					</a>
 				</li>
 
-				<li><a href="${createLink(uri: '/')}"> Vendas </a></li>
+				<li>
+					<a style="${ (controllerName.equals('clienteAvulso'))?'background-color:#666;color:white;':'' }" href="${createLink(controller: 'clienteAvulso')}">
+						Contatos de Clientes
+					</a>
+				</li>
+
 
 			</ul>
 		</div>
