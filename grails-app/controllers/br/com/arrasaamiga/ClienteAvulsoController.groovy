@@ -2,6 +2,9 @@ package br.com.arrasaamiga
 
 import org.springframework.dao.DataIntegrityViolationException
 
+import grails.plugins.springsecurity.Secured
+
+@Secured(['ROLE_ADMIN'])
 class ClienteAvulsoController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
