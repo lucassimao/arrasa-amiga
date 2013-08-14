@@ -6,15 +6,35 @@
 		<meta name="layout" content="admin">
 		<g:set var="entityName" value="${message(code: 'produto.label', default: 'Produto')}" />
 		<title><g:message code="default.show.label" args="[entityName]" /></title>
+
+		<style type="text/css">
+			.go-back{
+				text-decoration:none;
+				float:right;
+				text-indent: 35px;
+				background-repeat: no-repeat;
+				background-position: 0.7em center;
+				background-image:url(${resource(dir:'images/skin',file:'back.png')});
+			}	
+		</style>
+
 	</head>
 	<body>
 		<a href="#show-produto" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
+		
 		<div id="show-produto" class="content scaffold-show" role="main">
-			<h1> Detalhes do Produto </h1>
+			<h1> 
+				Detalhes do Produto 
+				
+				<g:link class="go-back" action="list"> Voltar </g:link>
+
+			</h1>
 
 			<g:if test="${flash.message}">
-			<div class="message" role="status">${flash.message}</div>
+				<div class="message" role="status">${flash.message}</div>
 			</g:if>
+
+
 			<ol class="property-list produto">
 			
 
@@ -46,7 +66,6 @@
 				</li>
 				</g:if>
 
-				<g:if test="${produtoInstance?.unidades}">
 				<li class="fieldcontain">
 					<span id="unidades-label" class="property-label">Unidade(s) </span>
 					
@@ -55,13 +74,21 @@
 						</span>
 					
 				</li>
-				</g:if>
 
 				<li class="fieldcontain">
-					<span id="precoEmCentavos-label" class="property-label"> Valor Unitario </span>
+					<span  class="property-label"> Valor Unitario A Vista </span>
 					
-						<span class="property-value" aria-labelledby="precoEmCentavos-label">
+						<span class="property-value">
 							R$ ${produtoInstance.precoAVistaEmReais}
+						</span>
+					
+				</li>
+
+				<li class="fieldcontain">
+					<span class="property-label"> Valor Unitario A Prazo </span>
+					
+						<span class="property-value">
+							R$ ${produtoInstance.precoAPrazoEmReais}
 						</span>
 					
 				</li>
@@ -99,9 +126,7 @@
 			<g:form>
 				<fieldset class="buttons">
 					<g:hiddenField name="id" value="${produtoInstance?.id}" />
-					<g:link style="text-indent: 25px;background-repeat: no-repeat;background-position: 0.7em center;background-image:url(../../images/skin/back.png)" action="list"> Voltar </g:link>
 					<g:link class="edit" action="edit" id="${produtoInstance?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
-					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
 				
 				</fieldset>
 			</g:form>

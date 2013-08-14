@@ -35,7 +35,7 @@
 
 
 <div class="fieldcontain ${hasErrors(bean: produtoInstance, field: 'precoAVistaEmReais', 'error')} required">
-	<label for="precoEmReais">
+	<label for="precoAVistaEmReais">
 		Valor Unitário A Vista
 		<span class="required-indicator">*</span>
 	</label>
@@ -43,7 +43,7 @@
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: produtoInstance, field: 'precoAPrazoEmReais', 'error')} required">
-	<label for="precoEmReais">
+	<label for="precoAPrazoEmReais">
 		Valor Unitário A Prazo
 		<span class="required-indicator">*</span>
 	</label>
@@ -55,7 +55,7 @@
 		Foto Miniatura
 		<span class="required-indicator">*</span>
 	</label>
-	<g:field type="file" name="fotoMiniatura" required=""/>
+	<g:field type="file" name="fotoMiniatura"/>
 	
 </div>
 

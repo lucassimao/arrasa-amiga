@@ -26,7 +26,7 @@
 						<g:sortableColumn property="nome" title="Nome" />
 						<th> Valor A Vista </th>
 						<th> Valor A Prazo </th>
-						<th> Estoque </th>
+						<th> Unidades </th>
 					
 					
 					</tr>

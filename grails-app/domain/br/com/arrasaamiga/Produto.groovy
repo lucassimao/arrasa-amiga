@@ -22,7 +22,7 @@ class Produto extends com.metasieve.shoppingcart.Shoppable  {
     	nome(nullable:false,blank:false)
     	descricao(nullable:false,blank:false,maxSize:100000)
         tipoUnitario(nullable:false,blank:false)
-        fotoMiniatura(nullable:false,blank:false)
+        fotoMiniatura(nullable:true,blank:true)
     	precoAVistaEmCentavos(min:0)
         precoAPrazoEmCentavos(min:0)
     }
@@ -37,11 +37,11 @@ class Produto extends com.metasieve.shoppingcart.Shoppable  {
     } 
 
     public Double getPrecoAPrazoEmReais(){
-        return this.precoAVistaEmCentavos/100.0
+        return this.precoAPrazoEmCentavos/100.0
     }
 
     public void setPrecoAPrazoEmReais(Double precoEmReais){
-        this.precoAVistaEmCentavos = 100*precoEmReais
+        this.precoAPrazoEmCentavos = 100*precoEmReais
     } 
 
 

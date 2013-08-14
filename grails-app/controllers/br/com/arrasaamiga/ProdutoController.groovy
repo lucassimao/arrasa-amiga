@@ -29,6 +29,7 @@ class ProdutoController {
 
         params.precoAVistaEmReais = params.precoAVistaEmReais.replace('.',',')
         params.precoAPrazoEmReais = params.precoAPrazoEmReais.replace('.',',')
+        params.unidades = params.unidades.split(',')
 
 
         def produtoInstance = new Produto(params)
@@ -64,7 +65,8 @@ class ProdutoController {
             it.transferTo(new File('web-app/img/produtos/' + it.originalFilename))
         }
 
-        multipartFileMiniatura.transferTo(new File('web-app/img/produtos/' + produtoInstance.fotoMiniatura))
+        if (multipartFileMiniatura.originalFilename)
+            multipartFileMiniatura.transferTo(new File('web-app/img/produtos/' + produtoInstance.fotoMiniatura))
 
         produtoInstance.unidades.each{ un->
 
@@ -121,6 +123,8 @@ class ProdutoController {
         [produtoInstance: produtoInstance]
     }
 
+
+
     @Secured(['ROLE_ADMIN'])
     def update(Long id, Long version) {
         def produtoInstance = Produto.get(id)
@@ -141,16 +145,25 @@ class ProdutoController {
             }
         }
 
-        produtoInstance.properties = params
+        
 
 
         params.precoAVistaEmReais = params.precoAVistaEmReais.replace('.',',')
         params.precoAPrazoEmReais = params.precoAPrazoEmReais.replace('.',',')
+        params.unidades = params.unidades.split(",")
+        params.remove('')
 
-        produtoInstance.fotos = []
+        def miniaturaAnterior = produtoInstance.fotoMiniatura
+
+        produtoInstance.properties = params
+
 
         def multipartFileMiniatura = request.getFile('fotoMiniatura')
-        produtoInstance.fotoMiniatura =  multipartFileMiniatura.originalFilename
+        if (multipartFileMiniatura.originalFilename)
+            produtoInstance.fotoMiniatura =  multipartFileMiniatura.originalFilename
+        else
+             produtoInstance.fotoMiniatura = miniaturaAnterior
+             
         
         def multipartFiles = []
 
@@ -167,6 +180,20 @@ class ProdutoController {
             }
         }
 
+        produtoInstance.unidades.each{ un->
+
+            if (!Estoque.findByProdutoAndUnidade(produtoInstance,un) ){
+                def estoque = new Estoque()
+
+                estoque.produto = produtoInstance
+                estoque.unidade = un
+                estoque.quantidade = 0 // qtde inicial
+
+                estoque.save()               
+            }
+
+        }
+
 
         if (!produtoInstance.save(flush: true)) {
             render(view: "edit", model: [produtoInstance: produtoInstance])
@@ -175,11 +202,13 @@ class ProdutoController {
             return
         }
 
+        // aqui o produto foi atualizado com sucesso. Assim ele pode salvar as imagens no disco caso necessario
+
         multipartFiles.each{
             it.transferTo(new File('web-app/img/produtos/' + it.originalFilename))
         }
-
-        multipartFileMiniatura.transferTo(new File('web-app/img/produtos/' + produtoInstance.fotoMiniatura))
+        if (multipartFileMiniatura.originalFilename)
+            multipartFileMiniatura.transferTo(new File('web-app/img/produtos/' + produtoInstance.fotoMiniatura))
 
         flash.message = message(code: 'default.updated.message', args: [message(code: 'produto.label', default: 'Produto'), produtoInstance.id])
         redirect(action: "show", id: produtoInstance.id)

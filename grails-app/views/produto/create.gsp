@@ -25,7 +25,7 @@
 			<h1>
 				Cadastro de Produtos 
 
-				<g:link class="go-back"	action="list"> Voltar </g:link>
+				<g:link class="go-back" action="list"> Voltar </g:link>
 			</h1>
 			
 
