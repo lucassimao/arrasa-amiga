@@ -6,7 +6,14 @@ class Estoque  {
     String unidade
     int quantidade
 
+    List entradas
+
     static belongsTo = Produto
+    static hasMany = [entradas:EntradaEstoque]
+
+    static mapping = {
+    	entradas cascade: 'all-delete-orphan'
+    }
     
     static constraints = {
     	produto(nullable:false)

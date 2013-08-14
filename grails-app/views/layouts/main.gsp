@@ -137,6 +137,7 @@
 										<li class="nav-header"> Administrativo </li>
 											<li>
 												<a href="${createLink(controller:'produto')}">Produtos </a>
+												<a href="${createLink(controller:'estoque')}"> Estoque </a>
 												<a href="${createLink(controller:'pedido')}"> Pedidos </a>
 											</li>
 

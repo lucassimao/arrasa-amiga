@@ -27,13 +27,19 @@
 						Produtos
 					</a>
 				</li>
-				<li><a href="${createLink(uri: '/')}"> Estoque </a></li>
 
 				<li>
 					<a style="${ (controllerName.equals('pedido'))?'background-color:#666;color:white;':'' }" href="${createLink(controller: 'pedido')}">
 						Pedidos
 					</a>
 				</li>
+
+				<li>
+					<a style="${ (controllerName.equals('estoque'))?'background-color:#666;color:white;':'' }" href="${createLink(controller: 'estoque')}">
+						Estoque
+					</a>
+				</li>
+
 				<li><a href="${createLink(uri: '/')}"> Vendas </a></li>
 
 			</ul>

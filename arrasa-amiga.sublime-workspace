@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"valorEmCenta",
+				"valorEmCentavosDeReais"
+			],
+			[
+				"valor",
+				"valorEmCentavosDeDolar"
+			],
+			[
 				"produ",
 				"produtoInstance"
 			],
@@ -103,55 +111,55 @@
 			"file": "grails-app/domain/br/com/arrasaamiga/Produto.groovy",
 			"settings":
 			{
-				"buffer_size": 1129,
+				"buffer_size": 1133,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "grails-app/views/produto/list.gsp",
+			"file": "grails-app/domain/br/com/arrasaamiga/Pedido.groovy",
 			"settings":
 			{
-				"buffer_size": 1785,
+				"buffer_size": 1042,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "grails-app/controllers/br/com/arrasaamiga/ProdutoController.groovy",
+			"file": "grails-app/domain/br/com/arrasaamiga/Estoque.groovy",
 			"settings":
 			{
-				"buffer_size": 6799,
+				"buffer_size": 286,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "grails-app/views/produto/detalhes.gsp",
+			"file": "grails-app/views/estoque/show.gsp",
 			"settings":
 			{
-				"buffer_size": 2830,
+				"buffer_size": 2401,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "grails-app/views/index.gsp",
+			"file": "grails-app/controllers/br/com/arrasaamiga/EstoqueController.groovy",
 			"settings":
 			{
-				"buffer_size": 1378,
+				"buffer_size": 2379,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "grails-app/views/produto/create.gsp",
+			"file": "grails-app/views/estoque/list.gsp",
 			"settings":
 			{
-				"buffer_size": 1679,
+				"buffer_size": 1747,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "grails-app/views/layouts/admin.gsp",
+			"file": "grails-app/views/estoque/entrada.gsp",
 			"settings":
 			{
-				"buffer_size": 2037,
+				"buffer_size": 2400,
 				"line_ending": "Unix"
 			}
 		}
@@ -183,25 +191,36 @@
 	},
 	"file_history":
 	[
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/estoque/edit.gsp",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/estoque/_form.gsp",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/produto/create.gsp",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/layouts/main.gsp",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/controllers/br/com/arrasaamiga/EstoqueController.groovy",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/controllers/br/com/arrasaamiga/PedidoController.groovy",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/layouts/admin.gsp",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/controllers/br/com/arrasaamiga/ProdutoController.groovy",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/pedido/list.gsp",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/pedido/edit.gsp",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/pedido/show.gsp",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/domain/br/com/arrasaamiga/Pedido.groovy",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/pedido/_form.gsp",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/pedido/create.gsp",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/produto/list.gsp",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/index.gsp",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/produto/detalhes.gsp",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/domain/br/com/arrasaamiga/StatusPedido.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/conf/UrlMappings.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/produto/show.gsp",
-		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/produto/detalhes.gsp",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/domain/br/com/arrasaamiga/Estoque.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/produto/_form.gsp",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/produto/show2.gsp",
-		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/layouts/admin.gsp",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/produto/edit.gsp",
-		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/produto/create.gsp",
-		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/produto/list.gsp",
-		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/domain/br/com/arrasaamiga/Pedido.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/domain/br/com/arrasaamiga/Cliente.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/domain/br/com/arrasaamiga/Venda.groovy",
-		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/layouts/main.gsp",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/conf/BootStrap.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/controllers/br/com/arrasaamiga/ShoppingCartController.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/controllers/br/com/arrasaamiga/PagSeguroController.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/shoppingCart/checkout.gsp",
-		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/domain/br/com/arrasaamiga/StatusPedido.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/domain/br/com/arrasaamiga/Produto.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/domain/br/com/arrasaamiga/FormaPagamento.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/domain/br/com/arrasaamiga/Endereco.groovy",
@@ -219,8 +238,6 @@
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/domain/br/com/arrasaamiga/UsuarioGrupoDeUsuario.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/domain/br/com/arrasaamiga/GrupoDeUsuario.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/conf/BuildConfig.groovy",
-		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/index.gsp",
-		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/controllers/br/com/arrasaamiga/ProdutoController.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/checkout/index.gsp",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/controllers/br/com/arrasaamiga/CheckoutController.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/web-app/js/toastr.js",
@@ -305,7 +322,7 @@
 	"groups":
 	[
 		{
-			"selected": 3,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -314,15 +331,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1129,
+						"buffer_size": 1133,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								150,
-								150
+								1000,
+								1000
 							]
 						],
 						"settings":
@@ -332,32 +349,33 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 180.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "grails-app/views/produto/list.gsp",
+					"file": "grails-app/domain/br/com/arrasaamiga/Pedido.groovy",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1785,
+						"buffer_size": 1042,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								595,
-								595
+								190,
+								190
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/Groovy/Groovy.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -367,19 +385,74 @@
 				},
 				{
 					"buffer": 2,
-					"file": "grails-app/controllers/br/com/arrasaamiga/ProdutoController.groovy",
+					"file": "grails-app/domain/br/com/arrasaamiga/Estoque.groovy",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6799,
+						"buffer_size": 286,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3238,
-								3238
+								81,
+								81
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "grails-app/views/estoque/show.gsp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2401,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2293,
+								2293
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 18.0,
+						"translation.y": 310.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "grails-app/controllers/br/com/arrasaamiga/EstoqueController.groovy",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2379,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2312,
+								2312
 							]
 						],
 						"settings":
@@ -389,82 +462,26 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1170.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "grails-app/views/produto/detalhes.gsp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2830,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								936,
-								936
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 225.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "grails-app/views/index.gsp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1378,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								421,
-								421
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 135.0,
+						"translation.y": 495.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 5,
-					"file": "grails-app/views/produto/create.gsp",
+					"file": "grails-app/views/estoque/list.gsp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1679,
+						"buffer_size": 1747,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1142,
-								1142
+								1522,
+								1522
 							]
 						],
 						"settings":
@@ -473,35 +490,35 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 180.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 6,
-					"file": "grails-app/views/layouts/admin.gsp",
+					"file": "grails-app/views/estoque/entrada.gsp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2037,
+						"buffer_size": 2400,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1543,
-								1543
+								2196,
+								2196
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"syntax": "Packages/PHP/PHP.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 675.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -581,7 +598,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 240.0,
+	"side_bar_width": 215.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{
