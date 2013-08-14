@@ -1,5 +1,7 @@
 
 <%@ page import="br.com.arrasaamiga.Pedido" %>
+<%@ page import="br.com.arrasaamiga.StatusPedido" %>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -30,64 +32,93 @@
 			</g:if>
 			<ol class="property-list pedido">
 			
-				<g:if test="${pedidoInstance?.descricao}">
 				<li class="fieldcontain">
 					<span id="descricao-label" class="property-label"><g:message code="pedido.descricao.label" default="Descricao" /></span>
 					
 						<span class="property-value" aria-labelledby="descricao-label"><g:fieldValue bean="${pedidoInstance}" field="descricao"/></span>
 					
 				</li>
-				</g:if>
 			
-				<g:if test="${pedidoInstance?.quantidade}">
 				<li class="fieldcontain">
-					<span id="quantidade-label" class="property-label"><g:message code="pedido.quantidade.label" default="Quantidade" /></span>
+					<span id="dataPedido-label" class="property-label"><g:message code="pedido.dataPedido.label" default="Data Pedido" /></span>
+					
+						<span class="property-value" aria-labelledby="dataPedido-label">
+							<g:formatDate date="${pedidoInstance?.dataPedido}" format="dd/MM/yyyy" /></span>
+					
+				</li>
+
+
+				<li class="fieldcontain">
+					<span id="quantidade-label" class="property-label">Quantidade</span>
 					
 						<span class="property-value" aria-labelledby="quantidade-label"><g:fieldValue bean="${pedidoInstance}" field="quantidade"/></span>
 					
 				</li>
-				</g:if>
+
 			
-				<g:if test="${pedidoInstance?.dataPedido}">
-				<li class="fieldcontain">
-					<span id="dataPedido-label" class="property-label"><g:message code="pedido.dataPedido.label" default="Data Pedido" /></span>
-					
-						<span class="property-value" aria-labelledby="dataPedido-label"><g:formatDate date="${pedidoInstance?.dataPedido}" /></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${pedidoInstance?.valorEmCentavosDeDolar}">
-				<li class="fieldcontain">
-					<span id="valorEmCentavosDeDolar-label" class="property-label">
-					Valor em U$
-					</span>
-					<span class="property-value" aria-labelledby="valorEmCentavosDeDolar-label">
-						<g:fieldValue bean="${pedidoInstance}" field="valorEmDolar"/>
-					</span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${pedidoInstance?.valorEmCentavosDeReais}">
 				<li class="fieldcontain">
 					<span id="valorEmCentavosDeReais-label" class="property-label">
-						Valor em R$
+						Valor
 					</span>
 					
 					<span class="property-value" aria-labelledby="valorEmCentavosDeReais-label">
-						<g:fieldValue bean="${pedidoInstance}" field="valorEmReais"/>
+						R$ <g:fieldValue bean="${pedidoInstance}" field="valorEmReais"/>
 					</span>
 					
 				</li>
-				</g:if>
+
+				<li class="fieldcontain">
+					<span  class="property-label">
+						Frete
+					</span>
+					
+					<span class="property-value">
+						R$ <g:fieldValue bean="${pedidoInstance}" field="freteEmReais"/>
+					</span>
+					
+				</li>
+
+				<li class="fieldcontain">
+					<span  class="property-label">
+						IOF
+					</span>
+					
+					<span class="property-value">
+						R$ <g:fieldValue bean="${pedidoInstance}" field="iofEmReais"/>
+					</span>
+					
+				</li>
+
+				<li class="fieldcontain">
+					<span  class="property-label">
+						Custo Total
+					</span>
+					
+					<span class="property-value">
+						R$ <g:fieldValue bean="${pedidoInstance}" field="custoTotalEmReais"/>
+					</span>
+					
+				</li>
+
+				<li class="fieldcontain">
+					<span  class="property-label">
+						Custo Unitário
+					</span>
+					
+					<span class="property-value">
+						R$ <g:fieldValue bean="${pedidoInstance}" field="custoUnitarioEmReais"/>
+					</span>
+					
+				</li>
+
+				
 			
 				<g:if test="${pedidoInstance?.link}">
 				<li class="fieldcontain">
 					<span id="link-label" class="property-label"><g:message code="pedido.link.label" default="Link" /></span>
 					
 						<span class="property-value" aria-labelledby="link-label">
-						 <a href="${fieldValue(bean: pedidoInstance, field: 'link')}"> <g:fieldValue bean="${pedidoInstance}" field="link"/> </a>
+						 	<a target="_blank" href="${fieldValue(bean: pedidoInstance, field: 'link')}"> <g:fieldValue bean="${pedidoInstance}" field="link"/> </a>
 						</span>
 					
 				</li>
@@ -97,7 +128,9 @@
 				<li class="fieldcontain">
 					<span id="codigoRastreio-label" class="property-label"><g:message code="pedido.codigoRastreio.label" default="Codigo Rastreio" /></span>
 					
-						<span class="property-value" aria-labelledby="codigoRastreio-label"><g:fieldValue bean="${pedidoInstance}" field="codigoRastreio"/></span>
+						<span class="property-value" aria-labelledby="codigoRastreio-label">
+							<a target="_blank" href="${pedidoInstance.urlRastreioCorreios}"> ${pedidoInstance.codigoRastreio} </a>
+						</span>
 					
 				</li>
 				</g:if>
@@ -112,13 +145,15 @@
 				</g:if>
 			
 			</ol>
-			<g:form>
-				<fieldset class="buttons">
-					<g:hiddenField name="id" value="${pedidoInstance?.id}" />
-					<g:link class="edit" action="edit" id="${pedidoInstance?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
-					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
-				</fieldset>
-			</g:form>
+			<g:if test="${pedidoInstance?.status == StatusPedido.Aguardando}">
+				<g:form>
+					<fieldset class="buttons">
+						<g:hiddenField name="id" value="${pedidoInstance?.id}" />
+						<g:link class="edit" action="edit" id="${pedidoInstance?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
+						<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
+					</fieldset>
+				</g:form>
+			</g:if>
 		</div>
 	</body>
 </html>

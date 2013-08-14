@@ -10,13 +10,7 @@
 	<g:textField name="descricao" size="50" required="" value="${pedidoInstance?.descricao}"/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: pedidoInstance, field: 'quantidade', 'error')} required">
-	<label for="quantidade">
-		<g:message code="pedido.quantidade.label" default="Quantidade" />
-		<span class="required-indicator">*</span>
-	</label>
-	<g:field name="quantidade" type="number" min="1" value="${pedidoInstance.quantidade}" required=""/>
-</div>
+
 
 <div class="fieldcontain ${hasErrors(bean: pedidoInstance, field: 'dataPedido', 'error')} required">
 	<label for="dataPedido">
@@ -26,12 +20,12 @@
 	<g:datePicker name="dataPedido" precision="day"  value="${pedidoInstance?.dataPedido}"  />
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: pedidoInstance, field: 'valorEmCentavosDeDolar', 'error')} required">
-	<label for="valorEmCentavosDeDolar">
-		Valor (U$)
+<div class="fieldcontain ${hasErrors(bean: pedidoInstance, field: 'quantidade', 'error')} required">
+	<label for="quantidade">
+		<g:message code="pedido.quantidade.label" default="Quantidade" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:field name="valorEmDolar" min="0" value="${pedidoInstance.valorEmDolar}" required=""/>
+	<g:field name="quantidade" type="number" min="1" value="${pedidoInstance.quantidade}" required=""/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: pedidoInstance, field: 'valorEmCentavosDeReais', 'error')} required">
@@ -41,6 +35,20 @@
 	</label>
 	<g:field name="valorEmReais" min="0" value="${pedidoInstance.valorEmReais}" required=""/>
 </div>
+
+
+
+<div class="fieldcontain ${hasErrors(bean: pedidoInstance, field: 'freteEmCentavosDeReais', 'error')} required">
+	<label for="freteEmCentavosDeReais">
+		Frete (R$)
+		<span class="required-indicator">*</span>
+	</label>
+	<g:field name="freteEmReais" min="0" value="${pedidoInstance.freteEmReais}" required=""/>
+</div>
+
+
+
+
 
 <div class="fieldcontain ${hasErrors(bean: pedidoInstance, field: 'link', 'error')} ">
 	<label for="link">

@@ -22,7 +22,6 @@ class PedidoController {
     }
 
     def save() {
-        params.valorEmDolar = params.valorEmDolar.replace('.',',')
         params.valorEmReais = params.valorEmReais.replace('.',',')
 
         def pedidoInstance = new Pedido(params)
@@ -48,10 +47,18 @@ class PedidoController {
 
     def edit(Long id) {
         def pedidoInstance = Pedido.get(id)
+
+
         if (!pedidoInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'pedido.label', default: 'Pedido'), id])
             redirect(action: "list")
             return
+        }
+
+        if (pedidoInstance.status == StatusPedido.Recebido){
+            flash.message = "O pedido nº #${pedidoInstance.id} não pode ser mais alterado, pois ja foi recebido"
+            redirect(action: "list")
+            return           
         }
 
         [pedidoInstance: pedidoInstance]
@@ -59,10 +66,17 @@ class PedidoController {
 
     def update(Long id, Long version) {
         def pedidoInstance = Pedido.get(id)
+
         if (!pedidoInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'pedido.label', default: 'Pedido'), id])
             redirect(action: "list")
             return
+        }
+
+        if (pedidoInstance.status == StatusPedido.Recebido){
+            flash.message = "O pedido nº #${pedidoInstance.id} não pode ser mais alterado, pois ja foi recebido"
+            redirect(action: "list")
+            return           
         }
 
         if (version != null) {
@@ -75,8 +89,8 @@ class PedidoController {
             }
         }
 
-        params.valorEmDolar = params.valorEmDolar.replace('.',',')
         params.valorEmReais = params.valorEmReais.replace('.',',')
+        params.freteEmReais = params.freteEmReais.replace('.',',')
         pedidoInstance.properties = params
 
         if (!pedidoInstance.save(flush: true)) {
@@ -90,10 +104,17 @@ class PedidoController {
 
     def delete(Long id) {
         def pedidoInstance = Pedido.get(id)
+
         if (!pedidoInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'pedido.label', default: 'Pedido'), id])
             redirect(action: "list")
             return
+        }
+
+        if (pedidoInstance.status == StatusPedido.Recebido){
+            flash.message = "O pedido nº #${pedidoInstance.id} não pode ser excluído, pois ja foi recebido"
+            redirect(action: "list")
+            return           
         }
 
         try {

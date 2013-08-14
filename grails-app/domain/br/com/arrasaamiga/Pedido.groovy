@@ -7,8 +7,8 @@ class Pedido {
 	Date dataPedido
     Date dataRecebimento
 
-	int valorEmCentavosDeDolar
 	int valorEmCentavosDeReais
+    int freteEmCentavosDeReais
 
 	String link
 	String codigoRastreio
@@ -16,27 +16,37 @@ class Pedido {
 	StatusPedido status
 
 
-    static transients = ['valorEmDolar','valorEmReais']
+    static transients = ['valorEmReais','freteEmReais','iofEmReais',
+                        'custoTotalEmReais','custoUnitarioEmReais','urlRastreioCorreios']
 
     static constraints = {
     	descricao(blank:false,nullable:false)
     	quantidade(min:1)
     	dataPedido(nullable:false)
         dataRecebimento(nullable:true)
-    	valorEmCentavosDeDolar(min:0)
     	valorEmCentavosDeReais(min:0)
+        freteEmCentavosDeReais(min:0)
     	link(blank:true,nullable:true)
     	codigoRastreio(blank:true,nullable:true)
     	status(nullable:false)
     }
 
-    public void setValorEmDolar(double valor){
-        this.valorEmCentavosDeDolar = valor*100
+    public void setLink(String link){
+        if (link && !link.startsWith("http://")){
+            this.link = "http://" + link
+        }else{
+            this.link = link
+        }
     }
 
-    public double getValorEmDolar(){
-        return this.valorEmCentavosDeDolar / 100.0
+    public void setFreteEmReais(double valor){
+        this.freteEmCentavosDeReais = valor*100
     }
+
+    public double getFreteEmReais(){
+        return this.freteEmCentavosDeReais / 100.0
+    }
+
 
     public void setValorEmReais(double valor){
         this.valorEmCentavosDeReais = valor*100
@@ -44,6 +54,23 @@ class Pedido {
 
     public double getValorEmReais(){
         return this.valorEmCentavosDeReais / 100.0
+    }
+
+    public Double getIofEmReais(){
+        return  (getValorEmReais() + getFreteEmReais()) *(0.0638)
+    }
+
+    public Double getCustoTotalEmReais(){
+        return getValorEmReais() + getFreteEmReais() + getIofEmReais()
+    }
+
+
+    public Double getCustoUnitarioEmReais(){
+        return getCustoTotalEmReais()/quantidade
+    }
+
+    public String getUrlRastreioCorreios(){
+        return "http://websro.correios.com.br/sro_bin/txect01\$.Inexistente?P_LINGUA=001&P_TIPO=002&P_COD_LIS=${codigoRastreio}"
     }
 
 }
