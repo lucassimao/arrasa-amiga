@@ -35,7 +35,7 @@
 							<h5> ${produto.nome} </h5>
 						</a>
 						
-						<p style="left:35%;color:#ad96a5;font-size:20px;position:absolute;bottom: 40px;"> R$ ${produto.precoAVistaEmReais} </p>
+						<p style="left:35%;color:#ad96a5;font-size:20px;position:absolute;bottom: 40px;"> R$ ${produto.precoAPrazoEmReais} </p>
 
 						<p>
 							<g:link style="left:26%;position:absolute;bottom: 10px;" id="${produto.id}" class="btn btn-primary icon-shopping-cart" 
