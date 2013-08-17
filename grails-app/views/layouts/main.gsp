@@ -257,7 +257,7 @@
 					<div class="fb-like" style="float:left;" data-href="https://www.facebook.com/arrasaamiga" 
 						data-send="true" data-width="450" data-show-faces="true" data-font="tahoma"></div>
 
-					<img style="float:right;" width="268px" src="https://p.simg.uol.com.br/out/pagseguro/i/banners/parcelamento/468x60_pagseguro_6x.gif"> 
+					<img style="float:right;" width="268px" src="https://p.simg.uol.com.br/out/pagseguro/i/banners/parcelamento/468x60_pagseguro_5x.gif"> 
 
 
 					<div id="disqus_thread" style="clear:both;"></div>
