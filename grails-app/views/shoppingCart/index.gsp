@@ -59,7 +59,7 @@
 							
 							<tr>
 								<td style="text-align:left !important;">
-									<g:img dir="img/produtos" file="${produto.fotos[0]}"/>
+									<g:img dir="img/produtos" file="${produto.fotoMiniatura}"/>
 									<a href="${createLink(controller:'produto',action:'show',id:produto.id)}">${produto.nome }</a>
 								</td>
 
@@ -76,11 +76,11 @@
 								</td>
 								
 								<td>
-									R$ ${produto.precoEmReais}
+									R$ ${produto.precoAVistaEmReais}
 								</td>
 								
 								<td>
-									R$ ${it['qty'] * produto.precoEmReais}
+									R$ ${it['qty'] * produto.precoAVistaEmReais}
 								</td>
 
 								<td>

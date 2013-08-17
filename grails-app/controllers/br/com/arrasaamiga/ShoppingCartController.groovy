@@ -15,7 +15,7 @@ class ShoppingCartController {
         
         shoppingCartService.getItems().each{item ->
             def produto = Shoppable.findByShoppingItem(item)
-            total += produto.precoEmReais * shoppingCartService.getQuantity(produto)
+            total += produto.precoAVistaEmReais * shoppingCartService.getQuantity(produto)
         }
 
         return total
