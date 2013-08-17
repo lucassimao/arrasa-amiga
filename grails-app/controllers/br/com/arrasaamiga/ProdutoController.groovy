@@ -7,6 +7,10 @@ import grails.plugins.springsecurity.Secured
 class ProdutoController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+    def grailsApplication
+
+
+
 
     @Secured(['ROLE_ADMIN'])
     def index() {
@@ -16,6 +20,7 @@ class ProdutoController {
     @Secured(['ROLE_ADMIN'])
     def list(Integer max) {
         params.max = Math.min(max ?: 10, 100)
+        
         [produtoInstanceList: Produto.list(params), produtoInstanceTotal: Produto.count()]
     }
 
@@ -62,13 +67,15 @@ class ProdutoController {
             render(view: "create", model: [produtoInstance: produtoInstance])
             return
         }
+
+        String uploadDir =  grailsApplication.mainContext.getResource('img/produtos').file.absolutePath 
         
         multipartFiles.each{
-            it.transferTo(new File('web-app/img/produtos/' + it.originalFilename))
+            it.transferTo(new File(uploadDir + File.separator + it.originalFilename))
         }
 
         if (multipartFileMiniatura.originalFilename)
-            multipartFileMiniatura.transferTo(new File('web-app/img/produtos/' + produtoInstance.fotoMiniatura))
+            multipartFileMiniatura.transferTo(new File(uploadDir + File.separator + produtoInstance.fotoMiniatura))
 
         produtoInstance.unidades.each{ un->
 
@@ -200,6 +207,8 @@ class ProdutoController {
 
         }
 
+        String uploadDir =  grailsApplication.mainContext.getResource('img/produtos').file.absolutePath 
+
         // atualizando o produto
 
         if (!produtoInstance.save(flush: true)) {
@@ -212,10 +221,11 @@ class ProdutoController {
         // aqui o produto foi atualizado com sucesso. Assim ele pode salvar as imagens no disco caso necessario
 
         multipartFiles.each{
-            it.transferTo(new File('web-app/img/produtos/' + it.originalFilename))
+            it.transferTo(new File(uploadDir + File.separator  + it.originalFilename))
         }
+
         if (multipartFileMiniatura.originalFilename)
-            multipartFileMiniatura.transferTo(new File('web-app/img/produtos/' + produtoInstance.fotoMiniatura))
+            multipartFileMiniatura.transferTo(new File(uploadDir + File.separator + produtoInstance.fotoMiniatura))
 
         flash.message = "Produto atualizado"
         redirect(action: "show", id: produtoInstance.id)
