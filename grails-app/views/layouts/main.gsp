@@ -70,7 +70,7 @@
 							<ul class="nav">
 
 								<li class="${(controllerName == null)?'active':''}">
-									<a href="${createLinkTo(url:'/')}">  
+									<a href="${createLinkTo(url:'/',absolute:true)}">  
 										<i class=" icon-home  icon-large"></i> Home
 									</a>
 								</li>
@@ -158,90 +158,6 @@
 				</div>
 			</div>
 
-			<!--
-			<div class="navbar">
-				<div class="navbar-inner" >
-
-					<ul class="nav">
-
-						<li class="${(controllerName == null)?'active':''}">
-							<a href="${createLinkTo(url:'/')}">  
-								<i class=" icon-home  icon-large"></i> Home
-							</a>
-						</li>
-						
-						<li>
-							<a href="#">
-								<i class="icon-eye-open  icon-large"></i>	Precisa de uma maquiadora ? 
-							</a>
-						</li>
-
-						<li>
-							<a href="#">
-								<i class="icon-question-sign  icon-large"></i> Como comprar ? 
-							</a>
-						</li>
-
-						<li class="${(controllerName == 'shoppingCart' && actionName=='index')?'active':''}">
-							<g:link controller="shoppingCart">
-								<i class="icon-shopping-cart  icon-large"></i>	
-								Carrinho de compras ( <cart:qtdeTotalItens/>  )  
-							</g:link>
-						</li>
-
-						<li class="${(controllerName == 'shoppingCart' && actionName == 'checkout')?'active':''}">
-							<g:link action="checkout" controller="shoppingCart">
-								<i class="icon-credit-card  icon-large"></i>	
-								Finalizar compra
-							</g:link>
-						</li>
-
-						<li class="dropdown">
-	                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-	                        	<sec:ifLoggedIn>
-	                        		<g:set var="style" value="color:#F29BF2;"/>
-	                        	</sec:ifLoggedIn>
-
-	                        	<sec:ifNotLoggedIn>
-	                        		<g:set var="style" value=""/>
-	                        	</sec:ifNotLoggedIn>
-
-	                        	<i style="${style}" class="icon-female icon-large"></i> 
-	                        	<b class="caret"></b>
-	                       	</a>
-
-	                        <ul class="dropdown-menu">
-	                        	<sec:ifLoggedIn>
-									<li><a href="#"> Meus Pedidos</a></li>
-									<li><a href="#"> Meus Produtos Favoritos </a></li>
-									<li class="divider"></li>
-									
-									<sec:ifAllGranted roles="ROLE_ADMIN">
-
-										<li> 
-											<a href="${createLink(controller:'produto')}"> ADMINISTRATIVO </a> 
-										</li>
-
-										<li class="divider"></li>
-
-									</sec:ifAllGranted>
-
-									<li><a href="${createLink(controller:'logout')}"> Sair</a></li>
-	                        	</sec:ifLoggedIn>
-	                        	
-	                        	<sec:ifNotLoggedIn>
-									<li><a href="${createLink(controller:'login')}"> Entrar </a></li>
-									<li><a href="${createLink(controller:'cliente',action:'cadastro')}"> Quero me cadastrar ! </a></li>
-									<li><a href="#"> Esqueci minha senha! </a></li>
-	                        	</sec:ifNotLoggedIn>
-
-	                        </ul>
-                      </li>
-
-					</ul>
-				</div>
-			</div>
-			-->
 
 			<g:img style="margin-top:30px;" dir="img" file="top.jpg"/>
 
