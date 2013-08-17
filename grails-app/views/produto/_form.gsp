@@ -66,7 +66,7 @@
 
 
 	<div id="div-fotos" style="position:relative;top:-20px;left:220px;">
-		<a id="adicionar-input-file" style="margin-top:10px;" href="#"> Adicionar Foto </a>
+		<a id="adicionar-input-file" href="#"> Adicionar Foto </a>
 	</div>
 	
 </div>
@@ -78,7 +78,7 @@
 		$("#adicionar-input-file").click(function(){
 			var len = $("input[name^='fotos']").length;
 
-			var input = $("<input style='display:block;margin-bottom:5px;' type='file' />");
+			var input = $("<input style='display:block;margin-bottom:12px;' type='file' />");
 			input.attr('name',"fotos" + len);
 
 			input.click();
