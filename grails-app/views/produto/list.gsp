@@ -6,6 +6,14 @@
 		<meta name="layout" content="admin">
 		<g:set var="entityName" value="${message(code: 'produto.label', default: 'Produto')}" />
 		<title><g:message code="default.list.label" args="[entityName]" /></title>
+
+		<style type="text/css">
+			table {
+			}
+
+			table td {
+			}
+		</style>
 	</head>
 	<body>
 		<a href="#list-produto" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
@@ -13,7 +21,7 @@
 
 
 		<div id="list-produto" class="content scaffold-list" role="main">
-			<h1> Produtos cadastrados </h1>
+			<h1> Produtos </h1>
 			<g:if test="${flash.message}">
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
@@ -33,10 +41,10 @@
 				</thead>
 				<tbody>
 				<g:each in="${produtoInstanceList}" status="i" var="produtoInstance">
-					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
+					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}" >
 					
 						<td>
-							<g:link action="show" id="${produtoInstance.id}">
+							<g:link action="show" id="${produtoInstance.id}" >
 							${fieldValue(bean: produtoInstance, field: "nome")}
 							</g:link>
 						</td>
