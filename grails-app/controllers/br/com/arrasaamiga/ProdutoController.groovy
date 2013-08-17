@@ -47,8 +47,10 @@ class ProdutoController {
                 def multipartFile = request.getFile(param)
                 def originalFilename = multipartFile.originalFilename
 
-                produtoInstance.fotos << originalFilename
-                multipartFiles << multipartFile
+                if (originalFilename){
+                    produtoInstance.fotos << originalFilename
+                    multipartFiles << multipartFile
+                }
 
             }
         }
@@ -79,7 +81,7 @@ class ProdutoController {
             estoque.save()
         }
 
-        flash.message = message(code: 'default.created.message', args: [message(code: 'produto.label', default: 'Produto'), produtoInstance.id])
+        flash.message = "Produto cadastrado"
         redirect(action: "show", id: produtoInstance.id)
         
     }
@@ -174,12 +176,16 @@ class ProdutoController {
                 def multipartFile = request.getFile(param)
                 def originalFilename = multipartFile.originalFilename
 
-                produtoInstance.fotos <<  originalFilename
-                multipartFiles << multipartFile
+                if (originalFilename){
+                    produtoInstance.fotos <<  originalFilename
+                    multipartFiles << multipartFile
+                }
 
             }
         }
 
+        // cria um novo estoque para novas unidades
+        
         produtoInstance.unidades.each{ un->
 
             if (!Estoque.findByProdutoAndUnidade(produtoInstance,un) ){
@@ -194,6 +200,7 @@ class ProdutoController {
 
         }
 
+        // atualizando o produto
 
         if (!produtoInstance.save(flush: true)) {
             render(view: "edit", model: [produtoInstance: produtoInstance])
@@ -210,7 +217,7 @@ class ProdutoController {
         if (multipartFileMiniatura.originalFilename)
             multipartFileMiniatura.transferTo(new File('web-app/img/produtos/' + produtoInstance.fotoMiniatura))
 
-        flash.message = message(code: 'default.updated.message', args: [message(code: 'produto.label', default: 'Produto'), produtoInstance.id])
+        flash.message = "Produto atualizado"
         redirect(action: "show", id: produtoInstance.id)
     }
 
