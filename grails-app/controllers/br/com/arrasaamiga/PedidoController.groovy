@@ -30,7 +30,8 @@ class PedidoController {
             return
         }
 
-        flash.message = message(code: 'default.created.message', args: [message(code: 'pedido.label', default: 'Pedido'), pedidoInstance.id])
+        flash.message = "Pedido cadastrado"
+
         redirect(action: "show", id: pedidoInstance.id)
     }
 
@@ -98,7 +99,7 @@ class PedidoController {
             return
         }
 
-        flash.message = message(code: 'default.updated.message', args: [message(code: 'pedido.label', default: 'Pedido'), pedidoInstance.id])
+        flash.message = "Pedido atualizado"
         redirect(action: "show", id: pedidoInstance.id)
     }
 
