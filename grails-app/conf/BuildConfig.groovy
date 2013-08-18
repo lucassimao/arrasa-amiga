@@ -11,6 +11,11 @@ grails.project.source.level = 1.6
 //   run: [maxMemory:1024, minMemory:64, debug:false, maxPerm:256]
 //]
 
+// removendo arquivos de fotos de produtos enviados em ambiente de desenvolvimento
+grails.war.resources = { stagingDir ->
+      delete { fileset(dir: "${stagingDir}/img/produtos", includes: '*') }
+}
+
 grails.project.dependency.resolution = {
     // inherit Grails' default dependencies
     inherits("global") {
