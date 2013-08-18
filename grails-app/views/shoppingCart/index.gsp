@@ -30,7 +30,7 @@
 
 			<div  class="row-fluid">
 	            <div>
-	                <a href="${createLinkTo(url:'/')}" class="btn btn-success">
+	                <a href="${createLinkTo(uri:'/',absolute:true)}" class="btn btn-success">
 	                    <i class="icon-backward icon-white"></i>
 	                    Comprar outros produtos
 	                </a>	                
@@ -110,7 +110,7 @@
 
 			<div  class="row-fluid">
 	            <div>
-	                <a href="${createLinkTo(url:'/')}" class="btn btn-success">
+	                <a href="${createLinkTo(uri:'/',absolute:true)}" class="btn btn-success">
 	                    <i class="icon-backward icon-white"></i>
 	                    Comprar outros produtos
 	                </a>	                

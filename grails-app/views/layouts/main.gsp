@@ -70,7 +70,7 @@
 							<ul class="nav">
 
 								<li class="${(controllerName == null)?'active':''}">
-									<a href="${createLinkTo(url:'/',absolute:true)}">  
+									<a href="${createLinkTo(uri:'/',absolute:true)}">  
 										<i class=" icon-home  icon-large"></i> Home
 									</a>
 								</li>
