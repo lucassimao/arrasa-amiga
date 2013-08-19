@@ -115,9 +115,39 @@ class ProdutoController {
             return
         }
 
-        def estoque = Estoque.findByProduto(produtoInstance)
+        // procurando a unidade padrao a ser selecionada na interface: a primeira que tiver estoque
+        String unidadeComEstoque = null
 
-        [produtoInstance: produtoInstance,estoque:estoque]
+        for(String unid : produtoInstance.unidades){
+            if (produtoInstance.getQuantidadeEmEstoque(unid) > 0){
+                unidadeComEstoque = unid
+                break
+            }
+        } 
+
+        [produtoInstance: produtoInstance,estoques: produtoInstance.getEstoques(),unidadeComEstoque: unidadeComEstoque]
+    }
+
+    def quantidadeEmEstoque(Long produtoId,String unidade) {
+
+        def produtoInstance = Produto.get(produtoId)
+        
+        if (!produtoInstance) {
+            render "erro"
+            throw new Exception("Erro ao carregar produto com id ${produtoId}")
+        }
+
+        try{
+            def quantidade = produtoInstance.getQuantidadeEmEstoque(unidade)
+            
+            render quantidade
+
+        }catch(Exception e){
+            render "erro"
+            throw e
+        }
+       
+         
     }
 
     @Secured(['ROLE_ADMIN'])

@@ -29,9 +29,8 @@
 						
 						<g:img dir="img/produtos" file="${produto.fotoMiniatura}"/>
 
-						<g:set var="url" value="${produto.nome.replace(',','').split(' ').join('-') }" />
 
-						<a href="${url}-${produto.id}"> 
+						<a href="${createLink(uri:produto.nomeAsURL, absolute:true)}"> 
 							<h5> ${produto.nome} </h5>
 						</a>
 						

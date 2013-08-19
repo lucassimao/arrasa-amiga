@@ -44,8 +44,27 @@ class ShoppingCartController {
     	redirect(action: "index")
     }
 
-    def add(Long id,Integer quantidade){
+    def add(Long id,Integer quantidade,String unidade){
     	def produtoInstance = Produto.get(id)
+
+        if (!produtoInstance){
+            flash.message = "Produto ${id} desconhecido"
+            redirect(uri:produtoInstance.nomeAsURL, absolute:true)
+            return
+        }
+
+        if (!produtoInstance.unidades.contains(unidade)){
+            flash.message = "${produtoInstance.nome} não contem a unidade ${unidade}"
+            redirect(uri: produtoInstance.nomeAsURL, absolute:true)
+            return
+        }
+
+        if (produtoInstance.getQuantidadeEmEstoque(unidade) == 0){
+            flash.message = "${produtoInstance.nome} não contem estoque para a unidade ${unidade}"
+            redirect(uri: produtoInstance.nomeAsURL, absolute:true)
+            return
+        }
+
         def qtdeAnterior = shoppingCartService.getQuantity(produtoInstance)
 
 

@@ -16,7 +16,7 @@ class Produto extends com.metasieve.shoppingcart.Shoppable  {
 
 
 	static hasMany = [fotos:String,unidades:String]
-	static transients = ['precoAVistaEmReais','precoAPrazoEmReais']
+	static transients = ['precoAVistaEmReais','precoAPrazoEmReais','estoques','quantidadeEmEstoque','nomeAsURL']
 
     static constraints = {
     	nome(nullable:false,blank:false)
@@ -43,6 +43,31 @@ class Produto extends com.metasieve.shoppingcart.Shoppable  {
     public void setPrecoAPrazoEmReais(Double precoEmReais){
         this.precoAPrazoEmCentavos = 100*precoEmReais
     } 
+
+    public List getEstoques(){
+        return Estoque.findAllByProduto(this)
+    }
+
+    public int getQuantidadeEmEstoque(String unidade){
+        
+        if (this.unidades.contains(unidade)){
+            def estoque = Estoque.findByProdutoAndUnidade(this,unidade)
+            
+            if (estoque){
+                return estoque.quantidade
+            }else{
+                throw new IllegalStateException("Não existe estoque do produto ${this} com a unidade ${unidade} cadastrada no sistema! wtf !!!")
+            }
+
+        }else{
+            throw new IllegalArgumentException("A unidade ${unidade} não existe para o produto ${this}")
+        }
+
+    }
+
+    public String getNomeAsURL(){
+       return "/" + this.nome.replace(',','').split(' ').join('-') + "-" + this.id
+    }
 
 
 }
