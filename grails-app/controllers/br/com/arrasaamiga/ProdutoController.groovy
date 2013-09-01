@@ -7,8 +7,9 @@ import grails.plugins.springsecurity.Secured
 class ProdutoController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+    
     def grailsApplication
-
+    def springSecurityService
 
 
 
@@ -34,7 +35,7 @@ class ProdutoController {
 
         params.precoAVistaEmReais = params.precoAVistaEmReais.replace('.',',')
         params.precoAPrazoEmReais = params.precoAPrazoEmReais.replace('.',',')
-        params.unidades = params.unidades.split(',')
+        params.unidades = params.unidades.split(',')?.collect{un-> un.trim() }
 
 
         def produtoInstance = new Produto(params)
@@ -60,7 +61,6 @@ class ProdutoController {
             }
         }
 
-        
         if (!produtoInstance.save(flush: true)) {
             produtoInstance.fotoMiniatura = ''
             produtoInstance.fotos = []
@@ -77,7 +77,8 @@ class ProdutoController {
         if (multipartFileMiniatura.originalFilename)
             multipartFileMiniatura.transferTo(new File(uploadDir + File.separator + produtoInstance.fotoMiniatura))
 
-        produtoInstance.unidades.each{ un->
+
+       produtoInstance.unidades.each{ un->
 
             def estoque = new Estoque()
 
@@ -86,7 +87,9 @@ class ProdutoController {
             estoque.quantidade = 0 // qtde inicial
 
             estoque.save()
+
         }
+
 
         flash.message = "Produto cadastrado"
         redirect(action: "show", id: produtoInstance.id)
@@ -106,9 +109,12 @@ class ProdutoController {
         [produtoInstance: produtoInstance]
     }
 
-    //Apresenta detalhes do produto ao comprados
+    //Apresenta detalhes do produto ao comprador
     def detalhes(Long id) {
         def produtoInstance = Produto.get(id)
+        def user = springSecurityService.currentUser
+        def cliente = Cliente.findByUsuario(user)
+        
         if (!produtoInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'produto.label', default: 'Produto'), id])
             redirect(view: "/index")
@@ -125,7 +131,7 @@ class ProdutoController {
             }
         } 
 
-        [produtoInstance: produtoInstance,estoques: produtoInstance.getEstoques(),unidadeComEstoque: unidadeComEstoque]
+        [produtoInstance: produtoInstance,estoques: produtoInstance.getEstoques(),unidadeComEstoque: unidadeComEstoque, cliente:cliente]
     }
 
     def quantidadeEmEstoque(Long produtoId,String unidade) {

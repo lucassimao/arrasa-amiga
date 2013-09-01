@@ -79,7 +79,8 @@
 					<span  class="property-label"> Valor Unitario A Vista </span>
 					
 						<span class="property-value">
-							R$ ${produtoInstance.precoAVistaEmReais}
+							<g:formatNumber number="${produtoInstance.precoAVistaEmReais}" type="currency" 
+								currencyCode="BRL" />
 						</span>
 					
 				</li>
@@ -88,7 +89,8 @@
 					<span class="property-label"> Valor Unitario A Prazo </span>
 					
 						<span class="property-value">
-							R$ ${produtoInstance.precoAPrazoEmReais}
+							<g:formatNumber number="${produtoInstance.precoAPrazoEmReais}" type="currency" 
+								currencyCode="BRL" />	
 						</span>
 					
 				</li>

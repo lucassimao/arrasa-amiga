@@ -1,6 +1,6 @@
 package br.com.arrasaamiga
 
-class Produto extends com.metasieve.shoppingcart.Shoppable  {
+class Produto {
 
 	String nome
     String descricao
@@ -14,9 +14,8 @@ class Produto extends com.metasieve.shoppingcart.Shoppable  {
     int precoAVistaEmCentavos
     int precoAPrazoEmCentavos
 
-
 	static hasMany = [fotos:String,unidades:String]
-	static transients = ['precoAVistaEmReais','precoAPrazoEmReais','estoques','quantidadeEmEstoque','nomeAsURL']
+	static transients = ['precoAVistaEmReais','precoAPrazoEmReais','estoques','quantidadeEmEstoque','nomeAsURL','multiUnidade','descontoAVistaEmReais']
 
     static constraints = {
     	nome(nullable:false,blank:false)
@@ -44,6 +43,10 @@ class Produto extends com.metasieve.shoppingcart.Shoppable  {
         this.precoAPrazoEmCentavos = 100*precoEmReais
     } 
 
+    public Double getDescontoAVistaEmReais(){
+        return getPrecoAPrazoEmReais() - getPrecoAVistaEmReais()
+    }
+
     public List getEstoques(){
         return Estoque.findAllByProduto(this)
     }
@@ -67,6 +70,10 @@ class Produto extends com.metasieve.shoppingcart.Shoppable  {
 
     public String getNomeAsURL(){
        return "/" + this.nome.replace(',','').split(' ').join('-') + "-" + this.id
+    }
+
+    public boolean isMultiUnidade(){
+        return this.unidades?.size() > 1
     }
 
 

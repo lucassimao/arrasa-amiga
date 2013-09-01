@@ -54,7 +54,7 @@
 
           <div class="control-group ${hasErrors(bean: cliente, field: 'nome', 'error')}">
               <label style="font-weight:bold;"> Nome: </label>
-              <input type="text" value="${cliente.nome}" id="nome" name="nome" placeholder="Nome completo …" class="input-xxlarge">
+              <input type="text" value="${cliente.nome}" id="nome" name="nome" placeholder="Nome completo …" class="input-xxlarge" required>
 
               <g:eachError bean="${cliente}" field="nome">
                   <span class="help-inline" style="padding-bottom:10px;"> <g:message error="${it}" /></span>
@@ -62,27 +62,47 @@
             
           </div>
 
-          <div class="control-group ${hasErrors(bean: cliente, field: 'telefone', 'error')}">
+          <div class="control-group ${hasErrors(bean: cliente, field: 'telefone', 'error')} ${hasErrors(bean: cliente, field: 'dddTelefone', 'error')}">
               <label style="font-weight:bold;"> Telefone: </label>
-              <input type="text" value="${cliente.telefone}" 
-                    placeholder="DDD + numero " name="telefone" class="input-large">
+
+              
+              <input type="text" value="${cliente.dddTelefone}" placeholder="DDD" name="dddTelefone" maxlength="2" class="input-mini" required>
+              <input type="text" value="${cliente.telefone}" placeholder="numero" name="telefone" maxlength="9" class="input-large" required>
 
               <g:eachError bean="${cliente}" field="telefone">
                   <span class="help-inline" style="padding-bottom:10px;"> 
                       <g:message error="${it}" />
                   </span>
               </g:eachError>
+
+              <g:if test="${ !hasErrors(bean:cliente)}">
+                <g:eachError bean="${cliente}" field="dddTelefone">
+                    <span class="help-inline" style="padding-bottom:10px;"> 
+                        <g:message error="${it}" />
+                    </span>
+                </g:eachError>
+              </g:if>
           </div>
 
-          <div class="control-group ${hasErrors(bean: cliente, field: 'celular', 'error')}">
-              <label style="font-weight:bold;"> Celular: </label>
-              <input type="text" value="${cliente.celular}" placeholder="DDD + numero " name="celular" class="input-large">
+          <div class="control-group ${hasErrors(bean: cliente, field: 'celular', 'error')} ${hasErrors(bean: cliente, field: 'dddCelular', 'error')}">
+              <label style="font-weight:bold;"> Celular: </label> 
+
+              <input type="text" value="${cliente.dddCelular}" placeholder="DDD" maxlength="2" name="dddCelular" class="input-mini" required>
+              <input type="text" value="${cliente.celular}" placeholder="numero" maxlength="9" name="celular" class="input-large" required>
 
               <g:eachError bean="${cliente}" field="celular">
                   <span class="help-inline" style="padding-bottom:10px;"> 
                       <g:message error="${it}" />
                   </span>
               </g:eachError>
+
+              <g:if test="${ !hasErrors(bean:cliente)}">
+                <g:eachError bean="${cliente}" field="dddCelular">
+                    <span class="help-inline" style="padding-bottom:10px;"> 
+                        <g:message error="${it}" />
+                    </span>
+                </g:eachError>
+              </g:if>
 
           </div>
 
@@ -106,7 +126,7 @@
           <div class="control-group ${hasErrors(bean: cliente, field: 'endereco.cep', 'error')}">
               
               <label style="font-weight:bold;"> CEP: </label>
-              <input name="endereco.cep" value="${cliente?.endereco?.cep}" type="text" >
+              <input name="endereco.cep" value="${cliente?.endereco?.cep}" type="text" required>
 
               <g:eachError bean="${cliente}" field="endereco.cep">
                   <span class="help-inline" style="padding-bottom:10px;"> 
@@ -129,7 +149,7 @@
 
           <div class="control-group ${hasErrors(bean: cliente, field: 'endereco.cidade', 'error')}">
               <label style="font-weight:bold;"> Cidade: </label>
-              <input name="endereco.cidade" value="${cliente?.endereco?.cidade}" type="text" >
+              <input name="endereco.cidade" value="${cliente?.endereco?.cidade}" type="text" required >
 
               <g:eachError bean="${cliente}" field="endereco.cidade">
                   <span class="help-inline" style="padding-bottom:10px;"> 
@@ -140,7 +160,7 @@
 
           <div class="control-group ${hasErrors(bean: cliente, field: 'endereco.bairro', 'error')}">
               <label style="font-weight:bold;"> Bairro: </label>
-              <input name="endereco.bairro"  value="${cliente?.endereco?.bairro}" type="text" >
+              <input name="endereco.bairro"  value="${cliente?.endereco?.bairro}" type="text" required >
 
               <g:eachError bean="${cliente}" field="endereco.bairro">
                   <span class="help-inline" style="padding-bottom:10px;"> 
@@ -152,7 +172,7 @@
 
           <div class="control-group ${hasErrors(bean: cliente, field: 'endereco.endereco', 'error')}">
               <label style="font-weight:bold;"> Endereço: </label>
-              <input class="input-xxlarge" value="${cliente?.endereco?.endereco}" name="endereco.endereco" type="text" >
+              <input class="input-xxlarge" value="${cliente?.endereco?.endereco}" name="endereco.endereco" type="text" required >
 
               <g:eachError bean="${cliente}" field="endereco.endereco">
                   <span class="help-inline" style="padding-bottom:10px;"> 
@@ -172,7 +192,7 @@
 
           <div class="control-group ${hasErrors(bean: cliente, field: 'email', 'error')}">
               <label style="font-weight:bold;"> E-mail: </label>
-              <input class="input-xlarge" value="${cliente.email}" name="email" type="text" >
+              <input class="input-xlarge" value="${cliente.email}" name="email" type="text" required >
 
               <g:eachError bean="${cliente}" field="email">
                   <span class="help-inline" style="padding-bottom:10px;"> 
@@ -184,7 +204,7 @@
 
           <div class="control-group ${hasErrors(bean: cliente, field: 'senha', 'error')}">
               <label style="font-weight:bold;"> Senha: </label>
-              <input class="input-large" name="senha" type="password" >
+              <input class="input-large" name="senha" type="password" required>
 
               <g:eachError bean="${cliente}" field="senha">
                   <span class="help-inline" style="padding-bottom:10px;"> 
@@ -192,6 +212,7 @@
                   </span>
               </g:eachError>
           </div>
+
           
           <div class="form-actions">
             <button type="submit" class="btn btn-primary"> Enviar </button>

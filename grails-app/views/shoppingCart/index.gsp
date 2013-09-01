@@ -12,6 +12,20 @@
 			}
 		</style>
 
+		<g:javascript>
+					
+			$(function(){
+
+				$("form a").click(function(){
+
+					$(this).parent().submit();
+					
+				});
+			});
+
+
+		</g:javascript>
+
 	</head>
 
 
@@ -32,11 +46,13 @@
 	            <div>
 	                <a href="${createLinkTo(uri:'/',absolute:true)}" class="btn btn-success">
 	                    <i class="icon-backward icon-white"></i>
-	                    Comprar outros produtos
+	                    Escolher mais produtos
 	                </a>	                
-	                <a href="${createLink(controller:'shoppingCart',action:'checkout')}" style="float:right;" class="btn btn-success">
-	                   <i class="icon-ok-circle icon-white"></i>
-	                   Finalizar Compra
+	                <a href="${createLink(controller:'shoppingCart',action:'checkout')}" 
+	                							style="float:right;" class="btn btn-primary">
+	                  <!-- <i class="icon-credit-card icon-white"></i> -->
+	                   Pagamento
+	                   <i class="icon-forward icon-white"></i>
 	                </a>
 	            </div>
 	        </div>
@@ -54,43 +70,85 @@
 						</tr>							
 					</thead>
 					<tbody>
-						<sc:each>
-							<g:set var="produto" value="${com.metasieve.shoppingcart.Shoppable.findByShoppingItem(it['item'])}"/>
+						<g:each in="${itens}" var="item">
+
+							<g:set var="produto" value="${item.produto}"/>
 							
 							<tr>
 								<td style="text-align:left !important;">
-									<g:img dir="img/produtos" file="${produto.fotoMiniatura}"/>
-									<a href="${createLink(controller:'produto',action:'show',id:produto.id)}">${produto.nome }</a>
+									<g:img dir="img/produtos" style="float:left;" file="${produto.fotoMiniatura}"/>
+
+									<div>
+										<a href="${createLink(controller:'produto',action:'detalhes',id:produto.id)}">${produto.nome }</a>
+
+										<g:if test="${produto.isMultiUnidade()}">
+											<p> <small> ${produto.tipoUnitario}: ${item.unidade} </small> </p>
+										</g:if>
+
+									</div>
 								</td>
 
 								<td style="position:relative;">
 
-									<p style="position:absolute;top:25%;left:40%;"> <span class="badge badge-warning">${it['qty']}</span>  </p>
+									<p style="display:block;margin-left:auto;margin-right:auto;"> 
+										<span class="badge badge-warning">${item.quantidade}</span>  
+									</p>
 
-					                <a href="${createLink(controller:'shoppingCart',action:'add1',id:produto.id)}" class="btn btn-info">
-					                    <i class="icon-plus-sign icon-white"></i>
-					                </a>
-					           		<a href="${createLink(controller:'shoppingCart',action:'remover1',id:produto.id)}" class="btn btn-info">
-					                    <i class="icon-minus-sign icon-white"></i>
-					                </a>
+									<div style="width:80px;display:block;margin-left:auto;margin-right:auto;">
+										<g:form action="add" controller="shoppingCart" style="float:left;">
+											<g:hiddenField name="id" value="${produto.id}"/>
+											<g:hiddenField name="unidade" value="${item.unidade}"/>
+											<g:hiddenField name="quantidade" value="${1}"/>
+											<g:hiddenField name="origem" value="/shoppingCart/index"/>
+
+							                <a href="#" class="btn btn-info">
+							                    <i class="icon-plus-sign icon-white"></i>
+							                </a>
+						                </g:form>
+
+						                <g:form action="removerProduto" controller="shoppingCart">
+											<g:hiddenField name="id" value="${produto.id}"/>
+											<g:hiddenField name="unidade" value="${item.unidade}"/>
+											<g:hiddenField name="quantidade" value="${1}"/>
+											<g:hiddenField name="origem" value="/shoppingCart/index"/>
+
+							           		<a href="#" class="btn btn-info">
+							                    <i class="icon-minus-sign icon-white"></i>
+							                </a>
+						                </g:form>
+					                </div>
+
+
 								</td>
 								
 								<td>
-									R$ ${produto.precoAVistaEmReais}
+									<g:formatNumber number="${item.precoAPrazoEmReais}" type="currency" 
+									currencyCode="BRL" />
 								</td>
 								
 								<td>
-									R$ ${it['qty'] * produto.precoAVistaEmReais}
+									<g:formatNumber number="${item.getSubTotalAPrazo()}" type="currency" 
+									currencyCode="BRL" />
+
 								</td>
 
 								<td>
-					                <a href="${createLink(controller:'shoppingCart',action:'removerProduto',id:produto.id)}" class="btn btn-danger">
-					                    <i class="icon-trash icon-white"></i>
-					                </a>
+
+					                <g:form action="removerProduto" controller="shoppingCart">
+										<g:hiddenField name="id" value="${produto.id}"/>
+										<g:hiddenField name="unidade" value="${item.unidade}"/>
+
+						                <a href="#" class="btn btn-danger">
+						                    <i class="icon-trash icon-white"></i>
+						                </a>
+					                </g:form>
+
+
+
 								</td>
 							</tr>
 
-						</sc:each>
+						</g:each>
 									
 					</tbody>
 				</table>
@@ -102,8 +160,11 @@
 			
 
 			<div class="well" style="background-color:white;">
-			  <h4 style="display:inline;">Valor Total da Compra</h4>
-			  <span style="float:right;font-weight:bold;"> R$ ${valorTotal} </span>
+			  <h4 style="display:inline;">Valor Total </h4>
+			 
+			  <span style="float:right;font-weight:bold;"> 
+					<g:formatNumber number="${valorTotal}" type="currency" currencyCode="BRL" />	
+			  </span>
 			</div>
 
 			<hr>
@@ -112,11 +173,13 @@
 	            <div>
 	                <a href="${createLinkTo(uri:'/',absolute:true)}" class="btn btn-success">
 	                    <i class="icon-backward icon-white"></i>
-	                    Comprar outros produtos
+	                    Escolher mais produtos
 	                </a>	                
-	                <a href="${createLink(controller:'shoppingCart',action:'checkout')}" style="float:right;" class="btn btn-success">
-	                   <i class="icon-ok-circle icon-white"></i>
-	                   Finalizar Compra
+	                <a href="${createLink(controller:'shoppingCart',action:'checkout')}" 
+	                	style="float:right;" class="btn btn-primary">
+	                   <!-- <i class="icon-credit-card icon-white"></i> -->
+	                   Pagamento
+	                   <i class="icon-forward icon-white"></i>
 	                </a>
 	            </div>
 	        </div>

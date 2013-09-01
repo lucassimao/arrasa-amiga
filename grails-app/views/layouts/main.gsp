@@ -11,8 +11,6 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<title>Arrasa Amiga</title>
 		<!-- <link rel="shortcut icon" href="${resource(dir: 'images', file: 'favicon.ico')}" type="image/x-icon"> -->
-		<link rel="stylesheet" href="${resource(dir: 'css', file: 'bootstrap.min.css')}" type="text/css">
-
 		
 		<link rel="stylesheet" type="text/css" href="${resource(dir:'css',file:'bootstrap.min.css')}"/>
 		<link type="text/css" rel="stylesheet" href="${resource(dir:'css',file:'font-awesome.min.css')}">		
@@ -94,12 +92,14 @@
 									</g:link>
 								</li>
 
+								<!--
 								<li class="${(controllerName == 'shoppingCart' && actionName == 'checkout')?'active':''}">
 									<g:link action="checkout" controller="shoppingCart">
 										<i class="icon-credit-card  icon-large"></i>	
 										Finalizar Compra
 									</g:link>
 								</li>
+								-->
 							</ul>
 							<ul class="nav pull-right">
 
@@ -200,7 +200,6 @@
 		<script type="text/javascript" src="${resource(dir:'js',file:'jquery-1.10.1.min.js')}"></script>
 		<script type="text/javascript" src="${resource(dir:'js',file:'bootstrap.min.js')}"></script>
 
-		<g:setProvider library="jquery"/>
 		<r:layoutResources />
 	</body>
 </html>

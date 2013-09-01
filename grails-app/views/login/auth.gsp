@@ -49,7 +49,7 @@
 
 <form action='${postUrl}'  method='POST' id='loginForm' class="form-signin">
         <h4 class="form-signin-heading"> Já possui uma conta na Arrasa Amiga?</h4>
-        <small> Para continuar, digite seu email e senha </small>
+        <small> Para continuar, digite seu email e senha: </small>
        
         <input type='text' class="input-block-level" style="margin-top:10px;"
         		placeholder="Seu e-mail aqui" name='j_username' id='username'/>
@@ -58,33 +58,20 @@
         		class='input-block-level' name='j_password' id='password'/>
 
 
-        <button class="btn btn-large btn-primary" type="submit">Entrar</button>
+          <button class="btn btn-large btn-primary" type="submit">Entrar</button>
+
+
         <p style="text-align:center;margin-top:15px;">
-			
-			<!--
-
-				<button data-toggle="tooltip" data-title="My tooltip">Button</button>
-
-			<a href="#" class="btn btn-large btn-danger" data-toggle="popover" title="" data-content="And here's some amazing content. It's very engaging. right?" data-original-title="A Title">Click to toggle popover</a>
-			-->
-
-			<a id="pop" title="Psiu!" 
-			data-content="Clica aqui se essa for sua primeira vez na Arrasa Amiga :-)" 
-			data-placement="right" data-toggle="popover"  
-			href="${createLink(controller:'cliente',action:'cadastro')}" data-delay="500" data-animation="animation"
-			data-html="true">Ainda não criou sua conta amiga ? </a>
-
-
+    			<a id="pop" title="Psiu!" 
+    			data-content="Clica aqui se essa for sua primeira vez na Arrasa Amiga :-)" 
+    			data-placement="right" data-toggle="popover"  
+    			href="${createLink(controller:'cliente',action:'cadastro')}" data-delay="500" data-animation="animation"
+    			data-html="true">Ainda não criou sua conta amiga ? </a>
         </p>
 </form>
 
 
 <g:javascript>
-	<!--
-	(function() {
-		document.forms['loginForm'].elements['j_username'].focus();
-	})();
-	// -->
 
   $(function () {
         $('body').popover({
@@ -95,7 +82,9 @@
             selector: 'a[rel="tooltip"], [data-toggle="tooltip"]'
         });
 
-         	$("#pop").popover('show');
+        $("#pop").popover('show');
+
+        $("#username").focus();
     });
 
 </g:javascript>

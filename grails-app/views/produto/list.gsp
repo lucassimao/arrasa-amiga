@@ -50,8 +50,14 @@
 						</td>
 					
 					
-						<td>R$ ${fieldValue(bean: produtoInstance, field: "precoAVistaEmReais")}</td>
-						<td>R$ ${fieldValue(bean: produtoInstance, field: "precoAPrazoEmReais")}</td>
+						<td>
+							<g:formatNumber number="${produtoInstance.precoAVistaEmReais}" type="currency" 
+								currencyCode="BRL" />
+						</td>
+						<td> 
+							<g:formatNumber number="${produtoInstance.precoAPrazoEmReais}" type="currency" 
+								currencyCode="BRL" />							
+						</td>
 					
 						<td>${produtoInstance.unidades.join(',')}</td>
 					

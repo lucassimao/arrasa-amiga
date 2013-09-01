@@ -6,7 +6,11 @@ class Cliente {
 	Date dataNascimento
 
 	String celular
+    String dddCelular
+
+    String dddTelefone
 	String telefone
+
 	Endereco endereco
 
 	Usuario usuario
@@ -24,13 +28,31 @@ class Cliente {
     	nome(blank:false,nullable:false)
     	email(email:true,blank:false,nullable:false)
         senha(blank:false,nullable:false)
-    	celular(blank:false,nullable:false)
-    	telefone(blank:false,nullable:false)
+    	celular(blank:false,nullable:false,maxSize:9)
+        dddCelular(blank:false,nullable:false,maxSize:2)
+    	telefone(blank:false,nullable:false,maxSize:9)
+        dddTelefone(blank:false,nullable:false,maxSize:2)
     	endereco(nullable:false)
     	dataNascimento(nullable:false)
     	usuario(nullable:false)
 
 
+    }
+
+    public void setCelular(String celular){
+        this.celular = celular.trim().replace('-','')
+    }
+
+    public void setTelefone(String telefone){
+        this.telefone = telefone.trim().replace('-','')
+    }
+
+    public void setDddCelular(String dddCelular){
+        this.dddCelular = dddCelular.trim().replace('-','')
+    }
+
+    public void setDddTelefone(String dddTelefone){
+        this.dddTelefone = dddTelefone.trim().replace('-','')
     }
 
     public String getEmail(){

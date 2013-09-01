@@ -1,62 +1,60 @@
 package br.com.arrasaamiga
 
-import br.com.uol.pagseguro.domain.*
+import br.com.uol.pagseguro.domain.AccountCredentials
+import br.com.uol.pagseguro.domain.Transaction
+import br.com.uol.pagseguro.exception.PagSeguroServiceException
+import br.com.uol.pagseguro.service.TransactionSearchService  
+
+import grails.plugins.springsecurity.Secured
+
 
 class PagSeguroController {
 
-	def token = '9A9DE1A43A2045DEBBD66D629FC4F76B'
-	
-    def index() { }
+    def pagSeguroService
 
+    def index() {
+
+    	redirect(uri:'/')
+    }
+
+    @Secured(['IS_AUTHENTICATED_FULLY'])
     def retorno(){
-    	def transacao = params.transacao
 
-    	def accountCredentials = new AccountCredentials('lsimaocosta@gmail.com',token)
+    	def codigoTransacao = params.transacao
+        def transacaoPagSeguro = pagSeguroService.getTransaction(codigoTransacao)
+
+        def venda = Venda.get(params.id)
+
+        venda.transacaoPagSeguro = codigoTransacao
+        venda.status = StatusVenda.fromPagSeguroTransactionStatus(transacaoPagSeguro.status)
+        venda.descontoEmCentavos = transacaoPagSeguro.getDiscountAmount() * 100
+        venda.taxasPagSeguroEmCentavos = transacaoPagSeguro.getFeeAmount() * 100
+        venda.save()
+
+
+
+        if (venda.status != StatusVenda.Cancelada){
+
+            if (!venda.carrinho.checkedOut){
+                
+                venda.carrinho.checkedOut = true
+                venda.carrinho.save()
+            
+            }
+
+            redirect(controller:'venda',action:'show',id:venda.id)
+            return
+
+        }else{
+             redirect(controller:'venda',action:'cancelada')
+            return           
+        }
+
     	
-    	def paymentRequest = new  PaymentRequest()
-    	paymentRequest.setCurrency(Currency.BRL) 
 
+        
 
-    	// id, descrição, quantidade, valor unitário, peso e valor de frete
-		paymentRequest.addItem(  
-		    "0001",  
-		    "Notebook Prata",   
-		    new Integer(1),   
-		    new BigDecimal("2430.00"),   
-		    new Long(1000),   
-		    null  
-		);  
-		      
-		paymentRequest.addItem(  
-		    "0002",  
-		    "Notebook Rosa",   
-		    new Integer(2),   
-		    new BigDecimal("2560.00"),   
-		    new Long(750),   
-		    null  
-		); 
-
-		paymentRequest.setReference("REF1234");  
-
-		paymentRequest.setShippingType(ShippingType.SEDEX);  // NOT_SPECIFIED ou PAC
-
-		// país, estado, cidade, bairro, CEP, rua, número, complemento
-		paymentRequest.setShippingAddress(  
-		    "BRA",   
-		    "SP",   
-		    "São Paulo",   
-		    "Jardim Paulistano",   
-		    "01452002",   
-		    "Av. Brig. Faria Lima",   
-		    "1384",   
-		    "5o andar"  
-		);  
-
-		// nome completo, email, DDD e número de telefone
-		paymentRequest.setSender("José Comprador", "comprador@uol.com.br", "11", "56273440");  
-
-		URL paymentURL = paymentRequest.register(accountCredentials);  
-
+        
 
 
 
