@@ -46,7 +46,7 @@
 	bottom:0px;
 	width:60px;
 }
-#btn-comprar{
+#btn-comprar, #btn-avisar{
 	position:absolute;
 	bottom:10px;
 	right:0px
@@ -55,6 +55,7 @@
 #msg-estoque-esgotado{
 	position:absolute;
 	bottom:0px;
+	font-family: Arial, Helvetica,sans-serif;
 }
 
 #label-tipo-unitario{

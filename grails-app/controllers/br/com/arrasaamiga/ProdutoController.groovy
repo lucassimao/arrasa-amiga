@@ -2,7 +2,7 @@ package br.com.arrasaamiga
 
 import org.springframework.dao.DataIntegrityViolationException
 import grails.plugins.springsecurity.Secured
-
+import grails.converters.*
  
 class ProdutoController {
 
@@ -109,52 +109,7 @@ class ProdutoController {
         [produtoInstance: produtoInstance]
     }
 
-    //Apresenta detalhes do produto ao comprador
-    def detalhes(Long id) {
-        def produtoInstance = Produto.get(id)
-        def user = springSecurityService.currentUser
-        def cliente = Cliente.findByUsuario(user)
-        
-        if (!produtoInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'produto.label', default: 'Produto'), id])
-            redirect(view: "/index")
-            return
-        }
 
-        // procurando a unidade padrao a ser selecionada na interface: a primeira que tiver estoque
-        String unidadeComEstoque = null
-
-        for(String unid : produtoInstance.unidades){
-            if (produtoInstance.getQuantidadeEmEstoque(unid) > 0){
-                unidadeComEstoque = unid
-                break
-            }
-        } 
-
-        [produtoInstance: produtoInstance,estoques: produtoInstance.getEstoques(),unidadeComEstoque: unidadeComEstoque, cliente:cliente]
-    }
-
-    def quantidadeEmEstoque(Long produtoId,String unidade) {
-
-        def produtoInstance = Produto.get(produtoId)
-        
-        if (!produtoInstance) {
-            render "erro"
-            throw new Exception("Erro ao carregar produto com id ${produtoId}")
-        }
-
-        try{
-            def quantidade = produtoInstance.getQuantidadeEmEstoque(unidade)
-            
-            render quantidade
-
-        }catch(Exception e){
-            render "erro"
-            throw e
-        }
-       
-         
-    }
 
     @Secured(['ROLE_ADMIN'])
     def edit(Long id) {
@@ -285,5 +240,113 @@ class ProdutoController {
             flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'produto.label', default: 'Produto'), id])
             redirect(action: "show", id: id)
         }
+    }
+
+
+
+    //Apresenta detalhes do produto ao comprador
+    def detalhes(Long id) {
+        def produtoInstance = Produto.get(id)
+        def user = springSecurityService.currentUser
+        def cliente = Cliente.findByUsuario(user)
+        
+        if (!produtoInstance) {
+            flash.message = message(code: 'default.not.found.message', args: [message(code: 'produto.label', default: 'Produto'), id])
+            redirect(uri: "/", absolute:true)
+            return
+        }
+
+        // procurando a unidade padrao a ser selecionada na interface: a primeira que tiver estoque
+        String unidadeComEstoque = null
+
+        for(String unid : produtoInstance.unidades){
+            if (produtoInstance.getQuantidadeEmEstoque(unid) > 0){
+                unidadeComEstoque = unid
+                break
+            }
+        } 
+
+        [produtoInstance: produtoInstance,estoques: produtoInstance.getEstoques(),
+            unidadeComEstoque: unidadeComEstoque, cliente:cliente]
+    }
+
+    def quantidadeEmEstoque(Long produtoId,String unidade) {
+
+        def produtoInstance = Produto.get(produtoId)
+        
+        if (!produtoInstance) {
+            render "erro"
+            throw new Exception("Erro ao carregar produto com id ${produtoId} em ProdutoController#quantidadeEmEstoque")
+        }
+
+        if (!unidade){
+            render "erro"
+            throw new Exception("Alguem tentanto carregar o produto ${produtoId} sem unidade ....")
+        }
+
+        if (!produtoInstance.unidades.contains(unidade)){
+            render "erro"
+            throw new Exception("Não existe a unidade ${params.unidade} no produto ${id} ....")
+        }
+
+        try{
+            def quantidade = produtoInstance.getQuantidadeEmEstoque(unidade)
+
+            boolean marcadoParaAvisar = false
+
+            if (quantidade == 0){
+                def user = springSecurityService.currentUser
+                def cliente = Cliente.findByUsuario(user)
+                
+                marcadoParaAvisar = ( Aviso.findByProdutoAndClienteAndUnidade(produtoInstance,cliente,unidade) != null )
+            }
+
+            render (['quantidade': quantidade, 'marcadoParaAvisar': marcadoParaAvisar] as JSON)
+
+        }catch(Exception e){
+            render "erro"
+            throw e
+        }
+       
+         
+    }
+
+    @Secured(['IS_AUTHENTICATED_FULLY'])
+    def avisar(Long id){
+        def produto = Produto.get(id)
+
+        if (!produto){
+            println "Alguem tentanto carregar o produto ${id} ...."
+            redirect(uri:'/', absolute:true)
+            return
+        }
+
+        String unidade = params.un
+
+        if (!unidade){
+            println "Alguem tentanto carregar o produto ${id} sem unidade ...."
+            redirect(uri:'/', absolute:true)
+            return            
+        }
+
+        if (!produto.unidades.contains(unidade)){
+            println "Não existe a unidade ${params.unidade} no produto ${id} ...."
+            redirect(uri:'/', absolute:true)
+            return            
+        }
+
+
+        def user = springSecurityService.currentUser
+
+        def aviso = new Aviso()
+        aviso.cliente = Cliente.findByUsuario(user)
+        aviso.produto = produto
+        aviso.unidade = unidade
+
+        aviso.save()
+    
+        flash.info = 'Amiga, avisaremos você assim que novas unidades chegarem !!'
+        redirect(action:'detalhes',id:produto.id)
+
     }
 }
