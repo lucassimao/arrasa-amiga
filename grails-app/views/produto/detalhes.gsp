@@ -21,7 +21,8 @@
 							$("#select-unidade").change(function(){
 								var unidade = $(this).val();
 
-								var seletor = "img[src*='" + unidade +"']";
+								var seletor = "img[src*='" + unidade.replace(' ','-') +"']";
+								alert(seletor);
 								var idx = $(".carousel-inner").find(seletor).data('idx');
 								
 								if (idx !== null){
