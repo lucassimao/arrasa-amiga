@@ -21,6 +21,15 @@
 							$("#select-unidade").change(function(){
 								var unidade = $(this).val();
 
+								var seletor = "img[src*='" + unidade +"']";
+								var idx = $(".carousel-inner").find(seletor).data('idx');
+								
+								if (idx !== null){
+									$(".carousel").carousel(Number(idx));
+								}
+								
+
+
 								$.ajax({
 										
 										url: "${createLink(controller:'produto',action:'quantidadeEmEstoque',absolute:true)}",
@@ -169,7 +178,7 @@
 
 							<div class="carousel-inner">
 								<g:each in="${produtoInstance.fotos}" var="pic" status="i">
-									<div class="item ${i==0?'active':''}"> <g:img  dir="img/produtos" file="${pic}"/></div>
+									<div class="item ${i==0?'active':''}"> <g:img data-idx="${i}"  dir="img/produtos" file="${pic}"/></div>
 								</g:each>
 							</div>
 
