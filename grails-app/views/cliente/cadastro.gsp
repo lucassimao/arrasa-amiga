@@ -106,7 +106,7 @@
 
           </div>
 
-          <div class="control-group ${hasErrors(bean: cliente, field: 'dataNascimento', 'error')}">
+          <div style="margin-bottom:50px;" class="control-group ${hasErrors(bean: cliente, field: 'dataNascimento', 'error')}" >
               <label style="font-weight:bold;"> Data de Nascimento: </label>
               <g:datePicker value="${cliente.dataNascimento}" 
                             name="dataNascimento" precision="day"/>
@@ -119,9 +119,7 @@
           </div>
 
 
-
-
-        <legend style="font-weight:bold;"> Endereço de Entrega </legend>
+        <legend style="font-weight:bold;"> Endereço para entregas </legend>
 
           <div class="control-group ${hasErrors(bean: cliente, field: 'endereco.cep', 'error')}">
               
@@ -185,7 +183,7 @@
           <input class="input-xxlarge" value="${cliente?.endereco?.complemento}" placeholder="casa, apartamento, número ... "  name="endereco.complemento" type="text" >
 
           <label> Ponto de Referência: </label>
-          <input class="input-xlarge" placeholder="da uma dica amiga ..." value="${cliente?.endereco?.pontoDeReferencia}" name="endereco.pontoDeReferencia" type="text" >
+          <input style="margin-bottom:50px;" class="input-xlarge" placeholder="da uma dica amiga ..." value="${cliente?.endereco?.pontoDeReferencia}" name="endereco.pontoDeReferencia" type="text" >
 
 
         <legend style="font-weight:bold;"> Dados da Conta </legend>

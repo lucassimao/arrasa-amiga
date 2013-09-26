@@ -86,6 +86,7 @@
 						currencyCode="BRL" />
 					</p>
 
+					
 					<g:if test="${cliente?.endereco?.fromTeresina}">
 						
 						<p class="label-preco-a-vista"> 
@@ -94,6 +95,7 @@
 						</p>
 
 					</g:if>
+
 
 					<p>
 

@@ -12,6 +12,28 @@ class ProdutoController {
     def springSecurityService
 
 
+    def addNewUnidade(String unidade){
+        render(template:'addNewUnidade',model:[unidade:unidade])
+    }
+
+    def addNewFoto(String nomeArquivo){
+        render(template:'addNewFoto',model:[foto:nomeArquivo])
+    }
+
+    def asyncFotoUpload(){
+
+        String uploadDir =  grailsApplication.mainContext.getResource('img/produtos').file.absolutePath 
+        def multipartFile = request.getFile('foto')
+        def originalFilename = "img${System.currentTimeMillis()}${multipartFile.originalFilename}"
+
+        if (originalFilename){
+            multipartFile.transferTo(new File(uploadDir + File.separator + originalFilename))
+        }
+
+
+        render(template:'addNewFoto',model:[foto:originalFilename])
+    }
+
 
     @Secured(['ROLE_ADMIN'])
     def index() {
@@ -35,31 +57,33 @@ class ProdutoController {
 
         params.precoAVistaEmReais = params.precoAVistaEmReais.replace('.',',')
         params.precoAPrazoEmReais = params.precoAPrazoEmReais.replace('.',',')
-        params.unidades = params.unidades.split(',')?.collect{un-> un.trim() }
-
+        
+        def unidades = JSON.parse(params.unidades)
+        def fotos = JSON.parse(params.fotosUnidades)
+        def comentarios = JSON.parse(params.fotoComentario)
 
         def produtoInstance = new Produto(params)
         produtoInstance.fotos = []
+        produtoInstance.unidades = []
 
-        def multipartFileMiniatura = request.getFile('fotoMiniatura')
-        produtoInstance.fotoMiniatura =  multipartFileMiniatura.originalFilename
-        
-        def multipartFiles = []
+        unidades.each{ unidade->
+            produtoInstance.addToUnidades(unidade.trim())
 
-        params.keySet().each{ param->
+            fotos[unidade].eachWithIndex{ foto, index ->
+                def fotoProduto = new FotoProduto();
+                
+                fotoProduto.comentario = comentarios[foto]?.trim();
+                fotoProduto.posicao = index
+                fotoProduto.unidade = unidade.trim()
+                fotoProduto.arquivo = foto.trim()
 
-            if (param.startsWith('fotos')){
-
-                def multipartFile = request.getFile(param)
-                def originalFilename = multipartFile.originalFilename
-
-                if (originalFilename){
-                    produtoInstance.fotos << originalFilename
-                    multipartFiles << multipartFile
-                }
-
+                produtoInstance.addToFotos(fotoProduto)
             }
         }
+        
+
+        def multipartFileMiniatura = request.getFile('fotoMiniatura')
+        produtoInstance.fotoMiniatura = "img${System.currentTimeMillis()}${multipartFileMiniatura.originalFilename}"
 
         if (!produtoInstance.save(flush: true)) {
             produtoInstance.fotoMiniatura = ''
@@ -70,10 +94,6 @@ class ProdutoController {
 
         String uploadDir =  grailsApplication.mainContext.getResource('img/produtos').file.absolutePath 
         
-        multipartFiles.each{
-            it.transferTo(new File(uploadDir + File.separator + it.originalFilename))
-        }
-
         if (multipartFileMiniatura.originalFilename)
             multipartFileMiniatura.transferTo(new File(uploadDir + File.separator + produtoInstance.fotoMiniatura))
 
@@ -145,81 +165,78 @@ class ProdutoController {
             }
         }
 
+
         
+        produtoInstance.nome = params.nome
+        produtoInstance.descricao = params.descricao
+        produtoInstance.tipoUnitario = params.tipoUnitario
+        produtoInstance.precoAPrazoEmReais = Double.valueOf( params.precoAPrazoEmReais.replace(',','.') )
+        produtoInstance.precoAVistaEmReais = Double.valueOf( params.precoAVistaEmReais.replace(',','.') )
 
-
-        params.precoAVistaEmReais = params.precoAVistaEmReais.replace('.',',')
-        params.precoAPrazoEmReais = params.precoAPrazoEmReais.replace('.',',')
-        params.unidades = params.unidades.split(",")
-        params.remove('')
-
+        
         def miniaturaAnterior = produtoInstance.fotoMiniatura
-
-        produtoInstance.properties = params
-
-
         def multipartFileMiniatura = request.getFile('fotoMiniatura')
+
         if (multipartFileMiniatura.originalFilename)
             produtoInstance.fotoMiniatura =  multipartFileMiniatura.originalFilename
         else
              produtoInstance.fotoMiniatura = miniaturaAnterior
-             
-        
-        def multipartFiles = []
 
-        params.keySet().each{ param->
 
-            if (param.startsWith('fotos')){
+        produtoInstance.fotos*.delete()
+        produtoInstance.fotos.clear()
+        produtoInstance.unidades.clear()
 
-                def multipartFile = request.getFile(param)
-                def originalFilename = multipartFile.originalFilename
+        def unidades = JSON.parse(params.unidades)
+        def fotos = JSON.parse(params.fotosUnidades)
+        def comentarios = JSON.parse(params.fotoComentario)
 
-                if (originalFilename){
-                    produtoInstance.fotos <<  originalFilename
-                    multipartFiles << multipartFile
-                }
+        unidades.each{ unidade -> 
 
-            }
-        }
 
-        // cria um novo estoque para novas unidades
-        
-        produtoInstance.unidades.each{ un->
-
-            if (!Estoque.findByProdutoAndUnidade(produtoInstance,un) ){
+            if (!Estoque.findByProdutoAndUnidade( produtoInstance, unidade ) ){
+                
                 def estoque = new Estoque()
 
                 estoque.produto = produtoInstance
-                estoque.unidade = un
+                estoque.unidade = unidade
                 estoque.quantidade = 0 // qtde inicial
 
-                estoque.save()               
+                estoque.save()
+            }
+
+            produtoInstance.addToUnidades(unidade)
+
+            fotos[unidade].eachWithIndex{ arquivoFoto, index ->
+
+                def fotoProduto = new FotoProduto()
+                
+                fotoProduto.comentario = comentarios[arquivoFoto]?.trim()
+                fotoProduto.posicao = index
+                fotoProduto.unidade = unidade
+                fotoProduto.arquivo = arquivoFoto    
+
+                produtoInstance.addToFotos(fotoProduto)
+
             }
 
         }
 
-        String uploadDir =  grailsApplication.mainContext.getResource('img/produtos').file.absolutePath 
-
-        // atualizando o produto
-
         if (!produtoInstance.save(flush: true)) {
             render(view: "edit", model: [produtoInstance: produtoInstance])
-            produtoInstance.fotoMiniatura = ''
-            produtoInstance.fotos = []
             return
         }
 
-        // aqui o produto foi atualizado com sucesso. Assim ele pode salvar as imagens no disco caso necessario
+         
+        if (multipartFileMiniatura.originalFilename){
 
-        multipartFiles.each{
-            it.transferTo(new File(uploadDir + File.separator  + it.originalFilename))
-        }
-
-        if (multipartFileMiniatura.originalFilename)
+            String uploadDir =  grailsApplication.mainContext.getResource('img/produtos').file.absolutePath 
             multipartFileMiniatura.transferTo(new File(uploadDir + File.separator + produtoInstance.fotoMiniatura))
+        }
 
         flash.message = "Produto atualizado"
         redirect(action: "show", id: produtoInstance.id)
+
     }
 
     @Secured(['ROLE_ADMIN'])

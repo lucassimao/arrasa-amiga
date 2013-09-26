@@ -92,14 +92,6 @@
 									</g:link>
 								</li>
 
-								<!--
-								<li class="${(controllerName == 'shoppingCart' && actionName == 'checkout')?'active':''}">
-									<g:link action="checkout" controller="shoppingCart">
-										<i class="icon-credit-card  icon-large"></i>	
-										Finalizar Compra
-									</g:link>
-								</li>
-								-->
 							</ul>
 							<ul class="nav pull-right">
 

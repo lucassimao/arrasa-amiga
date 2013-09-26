@@ -16,19 +16,25 @@
 						$('form').submit();
 					});
 
+					<g:each in="${produtoInstance.fotos}" var="fotoProduto" status="i">
+						$("#img${i}").data('unidade',"${fotoProduto.unidade}");
+					</g:each>
+
 					<g:if test="${produtoInstance.isMultiUnidade()}">
 
 							$("#select-unidade").change(function(){
+
 								var unidade = $(this).val();
 
-								var seletor = "img[src*='" + unidade.replace(' ','-') +"']";
-								alert(seletor);
-								var idx = $(".carousel-inner").find(seletor).data('idx');
-								
-								if (idx !== null){
-									$(".carousel").carousel(Number(idx));
-								}
-								
+								$(".carousel-inner img").each(function(index,img){
+
+									if ( $(img).data('unidade') === unidade ){
+
+										$(".carousel").carousel(index);
+										return false;
+									}
+
+								});
 
 
 								$.ajax({
@@ -178,8 +184,8 @@
 						<div id="myCarousel" class="carousel slide">
 
 							<div class="carousel-inner">
-								<g:each in="${produtoInstance.fotos}" var="pic" status="i">
-									<div class="item ${i==0?'active':''}"> <g:img data-idx="${i}"  dir="img/produtos" file="${pic}"/></div>
+								<g:each in="${produtoInstance.fotos}" var="fotoProduto" status="i">
+									<div class="item ${i==0?'active':''}"> <g:img id="img${i}" dir="img/produtos" file="${fotoProduto.arquivo}"/> </div>
 								</g:each>
 							</div>
 
@@ -231,15 +237,15 @@
 									</p>
 											
 
-											<div style="font-size:14px;color:blue;position:absolute;display:none;bottom:5px;left:110px;" id="aviso-ativado">
-												
-													Avisaremos você assim que novas unidades chegarem ;-) 
+									<div style="font-size:14px;color:blue;position:absolute;display:none;bottom:5px;left:110px;" id="aviso-ativado">
+										
+											Avisaremos você assim que novas unidades chegarem ;-) 
 
-											</div>
+									</div>
 
-											<div style="position:absolute;display:none;bottom:5px;left:110px;" id="ativar-aviso">
-												<a id="clica-aqui" href="#"> Quer saber assim que chegar ? </a> 
-											</div>
+									<div style="position:absolute;display:none;bottom:5px;left:110px;" id="ativar-aviso">
+										<a id="clica-aqui" href="#"> Quer saber assim que chegar ? </a> 
+									</div>
 
 									<a class="btn btn-primary btn-large" id="btn-comprar"  name="btn-comprar">
 										<i class="icon-shopping-cart"> </i> Comprar

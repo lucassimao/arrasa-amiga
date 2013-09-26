@@ -69,17 +69,6 @@
 						<g:select optionKey="id" optionValue="descricao" from="${pedidosEmAberto}" required="" name="pedido.id"/>
 					</div>
 
-					<!--
-					<div class="fieldcontain ${hasErrors(bean: estoqueInstance, field: 'quantidade', 'error')} required">
-						<label for="quantidade">
-							Quantidade 
-							<span class="required-indicator">*</span>
-						</label>
-						<g:field name="quantidade" type="number" min="0" value="0" required=""/>
-					</div>
-					-->
-
-
 				</fieldset>
 
 				<fieldset class="buttons">

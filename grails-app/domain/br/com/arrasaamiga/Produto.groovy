@@ -14,7 +14,7 @@ class Produto {
     int precoAVistaEmCentavos
     int precoAPrazoEmCentavos
 
-	static hasMany = [fotos:String,unidades:String]
+	static hasMany = [fotos:FotoProduto,unidades:String]
 	static transients = ['precoAVistaEmReais','precoAPrazoEmReais','estoques','quantidadeEmEstoque','nomeAsURL','multiUnidade','descontoAVistaEmReais']
 
     static constraints = {
@@ -24,6 +24,10 @@ class Produto {
         fotoMiniatura(nullable:true,blank:true)
     	precoAVistaEmCentavos(min:0)
         precoAPrazoEmCentavos(min:0)
+    }
+
+    static mapping = {
+        fotos cascade: 'all-delete-orphan'
     }
 
 

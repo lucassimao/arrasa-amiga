@@ -95,31 +95,50 @@
 					
 				</li>
 			
-				<g:if test="${produtoInstance?.fotoMiniatura}">
-				<li class="fieldcontain">
-					<span id="fotoMiniatura-label" class="property-label"><g:message code="produto.fotoMiniatura.label" default="Foto Miniatura" /></span>
-					
-					<span class="property-value" aria-labelledby="fotoMiniatura-label">
-						<g:img file="${produtoInstance.fotoMiniatura}" dir="img/produtos" />
+					<g:if test="${produtoInstance?.fotoMiniatura}">
+						<li class="fieldcontain">
+							<span id="fotoMiniatura-label" class="property-label"><g:message code="produto.fotoMiniatura.label" default="Foto Miniatura" /></span>
+							
+							<span class="property-value" aria-labelledby="fotoMiniatura-label">
+								<g:img file="${produtoInstance.fotoMiniatura}" dir="img/produtos" />
 
-					</span>
-					
-				</li>
-				</g:if>
+							</span>
+							
+						</li>
+					</g:if>
 			
 
 			
 				<g:if test="${produtoInstance?.fotos}">
-				<li class="fieldcontain">
-					<span id="fotos-label" class="property-label"><g:message code="produto.fotos.label" default="Fotos" /></span>
-					
-						<span class="property-value" aria-labelledby="fotos-label">
-							<g:each in="${produtoInstance.fotos}" var="foto">
-								<g:img style="width:10%;" dir="img/produtos" file="${foto}"/>
+					<li class="fieldcontain">
+						<span id="fotos-label" class="property-label">Fotos</span>
+						
+
+						<div class="property-value" aria-labelledby="fotos-label">
+							<g:each in="${produtoInstance.unidades}" var="unidade">
+								<div style="padding:2px;border-bottom:1px solid black;position:relative;"> 
+									<h4> ${unidade} </h4>
+								</div>
+
+
+								<g:each in="${produtoInstance.fotos.findAll{f-> f.unidade.equals(unidade) } }" var="fotoProduto" >
+
+									<div style="height:80px;margin-top:10px;padding:5px;" class="produto-unidade-foto">
+
+										<g:img dir="img/produtos" file="${fotoProduto.arquivo}" class="produto-foto" style="margin-right:5px;border:1px solid blue;width:70px;height:70px;float:left;"/>
+
+										<div class="comentario" style="position:relative;height:70px;overflow: hidden;">
+											<p> ${fotoProduto.comentario} </p>
+										</div>
+
+									</div>	
+
+								</g:each>
 							</g:each>
-						</span>
-					
-				</li>
+						</div>
+						
+					</li>
+
 				</g:if>
 			
 
