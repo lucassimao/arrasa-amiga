@@ -9,6 +9,8 @@
 
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta property="fb:admins" content="1665191676"/>
+
 		<title>Arrasa Amiga</title>
 		<!-- <link rel="shortcut icon" href="${resource(dir: 'images', file: 'favicon.ico')}" type="image/x-icon"> -->
 		
@@ -162,27 +164,20 @@
 				<hr>
 				
 				<div class="footer">
-					<div class="fb-like" style="float:left;" data-href="https://www.facebook.com/arrasaamiga" 
+
+
+					<img style="float:left;" width="268px" src="https://p.simg.uol.com.br/out/pagseguro/i/banners/parcelamento/468x60_pagseguro_5x.gif"> </img>
+
+
+					<div class="fb-like" style="float:right;" data-href="https://www.facebook.com/arrasaamiga" 
 						data-send="true" data-width="450" data-show-faces="true" data-font="tahoma"></div>
 
-					<img style="float:right;" width="268px" src="https://p.simg.uol.com.br/out/pagseguro/i/banners/parcelamento/468x60_pagseguro_5x.gif"> 
+					
 
+					<div class="fb-comments"  data-href="${request.forwardURI}" data-width="910" style=""></div>
 
-					<div id="disqus_thread" style="clear:both;"></div>
-
-				    <script type="text/javascript">
-				        
-				        var disqus_shortname = 'arrasaamiga';
-
-				        (function() {
-				            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-				            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-				            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-				        })();
-				    </script>
-					<noscript>Por favor, habilite o JavaScript para ver os <a href="http://disqus.com/?ref_noscript">comentários </a></noscript>
-					<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 				</div>
+
 			</g:if>
 
     	</div> 
