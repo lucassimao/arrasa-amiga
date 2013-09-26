@@ -7,6 +7,8 @@
 	<head>
 		<meta name="layout" content="main"/>
 
+			<g:javascript library="detalhesProdutos"/>
+
 			<g:javascript>
 				
 				$(function(){
@@ -15,6 +17,8 @@
 					$("#btn-comprar").click(function(){
 						$('form').submit();
 					});
+
+					$(".fancybox").fancybox();
 
 					<g:each in="${produtoInstance.fotos}" var="fotoProduto" status="i">
 						$("#img${i}").data('unidade',"${fotoProduto.unidade}");
@@ -173,7 +177,7 @@
 			<div class="well well-titulo-produto">	
 				<h3> ${produtoInstance.nome} </h3>
 			</div>
-	
+		
 
       		<div class="row-fluid" style="clear:both;">
       			
@@ -185,14 +189,22 @@
 
 							<div class="carousel-inner">
 								<g:each in="${produtoInstance.fotos}" var="fotoProduto" status="i">
-									<div class="item ${i==0?'active':''}"> <g:img id="img${i}" dir="img/produtos" file="${fotoProduto.arquivo}"/> </div>
+									<div class="item ${i==0?'active':''}">	
+
+										<a class="fancybox" rel="group" title="${fotoProduto.comentario}" href="${resource(file:fotoProduto.arquivo, dir:'img/produtos')}"> 
+											<g:img id="img${i}" dir="img/produtos" file="${fotoProduto.arquivo}"/> </div>
+										</a>
+
 								</g:each>
 							</div>
+
+							Click na foto para ampliar
 
 							<a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
 							<a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
 
 						</div>
+
 	      			</div>
 
 
@@ -302,4 +314,5 @@
 
 
 	</body>
+
 </html>
