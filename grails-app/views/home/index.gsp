@@ -21,8 +21,8 @@
 				font-weight:bold;
 			}
 
-			.label-preco-a-vista{
-				left:20%;
+			.label-desconto-a-vista{
+				left:10%;
 				color:#ad96a5;
 				font-size:12px;
 				position:absolute;
@@ -87,14 +87,11 @@
 					</p>
 
 					
-					<g:if test="${cliente?.endereco?.fromTeresina}">
 						
-						<p class="label-preco-a-vista"> 
-							Desconto à vista: <g:formatNumber number="${produto.descontoAVistaEmReais}" type="currency" 
-							currencyCode="BRL" />
-						</p>
+					<p class="label-desconto-a-vista"> 
+						Desconto para pagamento à vista
+					</p>
 
-					</g:if>
 
 
 					<p>

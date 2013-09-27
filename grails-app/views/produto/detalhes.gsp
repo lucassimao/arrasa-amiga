@@ -221,12 +221,9 @@
 							<i class="icon-tag"></i> 
 						</h3>
 
-						<g:if test="${cliente?.endereco?.fromTeresina}">
-							<h3 id="label-preco-a-vista">  
-								Desconto à vista: <g:formatNumber number="${produtoInstance.descontoAVistaEmReais}" type="currency" 
-									currencyCode="BRL" />
-							</h3>
-						</g:if>
+						<h3 id="label-preco-a-vista">  
+							Desconto para pagamento à vista 
+						</h3>
 
 						
 
