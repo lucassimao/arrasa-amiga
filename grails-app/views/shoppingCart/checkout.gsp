@@ -179,7 +179,7 @@
 					<legend> <i class="icon-truck"></i> Entrega </legend>
 
 					<div class="row-fluid">
-						<div class="span5">
+						<div class="span4">
 							<label> CEP: ${enderecoEntrega.cep} </label>
 
 							<label> Estado: ${enderecoEntrega.uf}</label>
@@ -197,7 +197,7 @@
 						
 						<g:if test="${enderecoEntrega.fromTeresina}">
 
-							<div class="span7">
+							<div class="span8">
 								<p style="font-family:Arial;text-align:justify;text-indent:20px;"> 						
 								
 									Amiga, você é de Teresina - Piauí <g:img dir="img" file="bandeira-piaui.png" /> !!! 
@@ -313,7 +313,7 @@
 
 							<g:if test="${enderecoEntrega.fromTeresina}">
 
-								<div class="span5 well">
+								<div class="span5 well" style="padding-right:0px;">
 									<label class="radio">
 										<input  name="formaPagamento" type="radio" value="AVista" >
 										<span> Pagamento em Dinheiro </span>
@@ -329,7 +329,7 @@
 
 							</g:if>
 
-							<div class="span7 well">
+							<div class="span7 well" style="padding-right:0px;">
 								<label class="radio">
 									<input name="formaPagamento" type="radio" value="PagSeguro" checked > 
 									<span class="forma-pagamento-selecionado"> Cartão de Crédito / Transferência Bancária / Boleto Bancário </span>								

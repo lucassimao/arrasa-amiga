@@ -244,10 +244,45 @@
 			}
 		},
 		{
+			"contents": "\n<%@ page import=\"br.com.arrasaamiga.Produto\" %>\n<%@ page import=\"br.com.arrasaamiga.Aviso\" %>\n\n<!DOCTYPE html>\n<html>\n	<head>\n		<meta name=\"layout\" content=\"main\"/>\n\n			<g:javascript library=\"detalhesProdutos\"/>\n\n			<g:javascript>\n				\n				$(function(){\n					\n\n					$(\"#btn-comprar\").click(function(){\n						$('form').submit();\n					});\n\n					$(\".fancybox\").fancybox();\n\n					<g:each in=\"${produtoInstance.fotos}\" var=\"fotoProduto\" status=\"i\">\n						$(\"#img${i}\").data('unidade',\"${fotoProduto.unidade}\");\n					</g:each>\n\n					<g:if test=\"${produtoInstance.isMultiUnidade()}\">\n\n							$(\"#select-unidade\").change(function(){\n\n								var unidade = $(this).val();\n\n								$(\".carousel-inner img\").each(function(index,img){\n\n									if ( $(img).data('unidade') === unidade ){\n\n										$(\".carousel\").carousel(index);\n										return false;\n									}\n\n								});\n\n\n								$.ajax({\n										\n										url: \"${createLink(controller:'produto',action:'quantidadeEmEstoque',absolute:true)}\",\n										data: {'produtoId': ${produtoInstance.id} , 'unidade': unidade},\n										settings: {'cache':false}\n\n									}).success(function( data, textStatus, jqXHR ) {\n\n										var qtdeEmEstoque = parseInt(data.quantidade);\n\n										$(\"#select-quantidade\").empty();\n										$(\"#msg-estoque-esgotado\").css('display','none');\n										$(\"#aviso-ativado\").hide();\n										$(\"#ativar-aviso\").hide();\n\n										if ( qtdeEmEstoque > 0 ){\n\n											$(\"#select-quantidade\").show();\n											$(\"#label-quantidade\").show();\n											$(\"#btn-comprar\").show();\n\n											// adicionando as quantidades\n\n											for(var count=1; count <= qtdeEmEstoque;++count){\n												var option = $(\"<option/>\").text(count).attr(\"value\",count);\n												$(\"#select-quantidade\").append(option);\n											}\n\n										}else{\n\n										\n											$(\"#select-quantidade\").hide();\n											$(\"#label-quantidade\").hide();\n											$(\"#btn-comprar\").hide();\n											$(\"#msg-estoque-esgotado #unidade\").text(unidade);\n											$(\"#msg-estoque-esgotado\").show({duration:250});\n\n											var marcadoParaAvisar = Boolean(data.marcadoParaAvisar);\n											\n											if (marcadoParaAvisar){\n												$(\"#aviso-ativado\").show();\n												$(\"#ativar-aviso\").hide();\n\n											}else{\n												$(\"#aviso-ativado\").hide();\n												$(\"#ativar-aviso\").show();\n\n												var url = \"${createLink(controller:'produto',action:'avisar',id:produtoInstance.id)}\";\n												$(\"#clica-aqui\").attr(\"href\", url + \"?\" + $.param({'un':unidade}));\n											}\n\n										}\n\n\n\n									\n									}).fail(function(){\n\n\n									});\n\n\n							});\n\n							// carregando estoque para o primeiro item da lista de unidades\n							$(\"#select-unidade\").change();\n\n					</g:if>\n					<g:else>\n						$(function(){\n\n								var unidade = $(\"#unidade\").val();\n\n								$.ajax({\n									\n									url: \"${createLink(controller:'produto',action:'quantidadeEmEstoque',absolute:true)}\",\n									data: {'produtoId': ${produtoInstance.id} , 'unidade': unidade},\n									settings: {'cache':false}\n\n								}).success(function( data, textStatus, jqXHR ) {\n\n									var qtdeEmEstoque = parseInt(data.quantidade);\n									var marcadoParaAvisar = Boolean(data.marcadoParaAvisar);\n\n									\n									if ( qtdeEmEstoque == 0 ){\n\n										if (marcadoParaAvisar){\n\n											$(\"#aviso-ativado\").show({duration:250});\n\n										}else{\n										\n											$(\"#ativar-aviso\").show({duration:250});										\n										}\n									}\n\n\n\n								\n								}).fail(function(){\n\n\n								});\n\n\n						});						\n					</g:else>\n\n\n				});\n			</g:javascript>\n		\n		<link type=\"text/css\"  rel=\"stylesheet\" href=\"${resource(dir: 'css/produto', file: 'detalhes.css')}\" > </link>\n\n	</head>\n	<body>\n\n\n			<g:if test='${flash.message}'>\n				<div class='alert alert-error' style=\"margin-top:10px;\">\n					<button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>\n					${flash.message}\n				</div>\n			</g:if>\n\n			<g:if test='${flash.info}'>\n				<div class='alert alert-info' style=\"margin-top:10px;font-weight:bold;\">\n					<button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>\n					<i class=\"icon-ok\"> </i> ${flash.info}\n				</div>\n			</g:if>\n\n			<div class=\"well well-titulo-produto\">	\n				<h3> ${produtoInstance.nome} </h3>\n			</div>\n		\n\n      		<div class=\"row-fluid\" style=\"clear:both;\">\n      			\n      			<div class=\"well well-detalhes\">\n\n	      			<div id=\"produto-fotos\" class=\"span5\">\n\n						<div id=\"myCarousel\" class=\"carousel slide\">\n\n							<div class=\"carousel-inner\">\n								<g:each in=\"${produtoInstance.fotos}\" var=\"fotoProduto\" status=\"i\">\n									<div class=\"item ${i==0?'active':''}\">	\n\n										<a class=\"fancybox\" rel=\"group\" title=\"${fotoProduto.comentario}\" href=\"${resource(file:fotoProduto.arquivo, dir:'img/produtos')}\"> \n											<g:img id=\"img${i}\" dir=\"img/produtos\" file=\"${fotoProduto.arquivo}\"/> \n										</a>\n										\n									</div>\n								</g:each>\n							</div>\n\n							Click na foto para ampliar\n\n							<a class=\"carousel-control left\" href=\"#myCarousel\" data-slide=\"prev\">&lsaquo;</a>\n							<a class=\"carousel-control right\" href=\"#myCarousel\" data-slide=\"next\">&rsaquo;</a>\n\n						</div>\n\n	      			</div>\n\n\n	      			<div id=\"produto-detalhes\" class=\"span7\">\n\n						<small class=\"well-detalhes-descricao\">\n							${produtoInstance.descricao}\n						</small>\n\n						<h3 id=\"label-preco\">  \n							<g:formatNumber number=\"${produtoInstance.precoAPrazoEmReais}\" type=\"currency\" \n								currencyCode=\"BRL\" />\n							<i class=\"icon-tag\"></i> \n						</h3>\n\n						<h3 id=\"label-preco-a-vista\">  \n							oDesconto para pagamento à vista \n						</h3>\n\n						\n\n						<g:form action=\"add\" controller=\"shoppingCart\" method=\"post\" id=\"${produtoInstance.id}\"> \n						\n							<g:if test=\"${produtoInstance.isMultiUnidade()}\">\n\n									<p id=\"label-tipo-unitario\"> ${produtoInstance.tipoUnitario}: </p>\n\n\n									<g:select value=\"${ (unidadeComEstoque)?:estoques[0].unidade}\" id=\"select-unidade\" \n												name=\"unidade\"\n										 from=\"${produtoInstance.unidades}\"/>\n\n									<p id=\"label-quantidade\" style=\"left:110px;\"> Quantidade:</p>\n									<g:select style=\"left:110px;\" id=\"select-quantidade\" name=\"quantidade\" from=\"${[]}\" /> \n									\n									<p id=\"msg-estoque-esgotado\" style=\"bottom:15px;left:110px;display:none;\"> \n										Ow Amiga, por enquanto estamos sem ${produtoInstance.tipoUnitario} \n										<span style=\"font-weight:bold;\" id=\"unidade\"/> ;-(\n									</p>\n											\n\n									<div style=\"font-size:14px;color:blue;position:absolute;display:none;bottom:5px;left:110px;\" id=\"aviso-ativado\">\n										\n											Avisaremos você assim que novas unidades chegarem ;-) \n\n									</div>\n\n									<div style=\"position:absolute;display:none;bottom:5px;left:110px;\" id=\"ativar-aviso\">\n										<a id=\"clica-aqui\" href=\"#\"> Quer saber assim que chegar ? </a> \n									</div>\n\n									<a class=\"btn btn-primary btn-large\" id=\"btn-comprar\"  name=\"btn-comprar\">\n										<i class=\"icon-shopping-cart\"> </i> Comprar\n									</a>\n\n							</g:if>\n\n							<g:else>\n									\n									<g:set var=\"estoque\" value=\"${estoques[0]}\"/>\n									<g:hiddenField id=\"unidade\" name=\"unidade\" value=\"${estoque.unidade}\" />\n\n									<g:if test=\"${estoque.quantidade > 0}\">\n\n										<p id=\"label-quantidade\"> Quantidade: </p>\n										<g:select id=\"select-quantidade\" name=\"quantidade\" from=\"${1..estoque.quantidade}\"/>\n\n										<a class=\"btn btn-primary btn-large\" id=\"btn-comprar\"  name=\"btn-comprar\">\n											<i class=\"icon-shopping-cart\"> </i> Comprar\n										</a>\n									\n									</g:if>\n\n									<g:else>\n										<div id=\"msg-estoque-esgotado\"> \n											<p> \n												Ow Amiga, esse item esgotou, mas estamos aguardando novas unidades !! \n											</p>							\n											\n											<div style=\"display:none;font-size:14px;color:blue;\" id=\"aviso-ativado\">\n													Avisaremos você assim que novas unidades chegarem ;-) \n											</div>\n											<div style=\"display:none;\" id=\"ativar-aviso\">\n												<a href=\"${createLink(controller:'produto',action:'avisar',\n															id:produtoInstance.id,params:[un:estoque.unidade])}\">\n															Quer saber assim que chegar ?  \n												</a> \n											</div>\n										</div>\n										\n									</g:else>\n\n							</g:else>\n\n\n						</g:form>\n						\n	      			</div>\n\n      			</div>\n\n\n      		</div>\n\n\n	</body>\n\n</html>",
 			"file": "grails-app/views/produto/detalhes.gsp",
+			"file_size": 8462,
+			"file_write_time": 130247724515719507,
 			"settings":
 			{
-				"buffer_size": 8630,
+				"buffer_size": 8460,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/views/shoppingCart/index.gsp",
+			"settings":
+			{
+				"buffer_size": 5436,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/views/shoppingCart/checkout.gsp",
+			"settings":
+			{
+				"buffer_size": 9535,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/views/home/index.gsp",
+			"settings":
+			{
+				"buffer_size": 2828,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/controllers/br/com/arrasaamiga/ClienteController.groovy",
+			"settings":
+			{
+				"buffer_size": 913,
 				"line_ending": "Unix"
 			}
 		},
@@ -255,7 +290,7 @@
 			"file": "grails-app/views/layouts/main.gsp",
 			"settings":
 			{
-				"buffer_size": 6225,
+				"buffer_size": 6283,
 				"line_ending": "Unix"
 			}
 		}
@@ -287,6 +322,7 @@
 	},
 	"file_history":
 	[
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/conf/Config.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/layouts/main.gsp",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/domain/br/com/arrasaamiga/FotoProduto.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/produto/create.gsp",
@@ -336,7 +372,6 @@
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/domain/br/com/arrasaamiga/ShoppingCart.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/domain/br/com/arrasaamiga/ProdutoItem.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/services/ShoppingCartService.groovy",
-		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/conf/Config.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/conf/BuildConfig.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/.gitignore",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/produto/edit.gsp",
@@ -507,7 +542,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 3,
 			"sheets":
 			[
 				{
@@ -543,15 +578,71 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 8630,
+						"buffer_size": 8460,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4998,
-								4998
+								4469,
+								4469
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2223.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "grails-app/views/shoppingCart/index.gsp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5436,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								374,
+								374
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "grails-app/views/shoppingCart/checkout.gsp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 9535,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4000,
+								4000
 							]
 						],
 						"settings":
@@ -566,20 +657,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "grails-app/views/layouts/main.gsp",
+					"buffer": 4,
+					"file": "grails-app/views/home/index.gsp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6225,
+						"buffer_size": 2828,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5416,
-								5416
+								489,
+								489
 							]
 						],
 						"settings":
@@ -588,7 +679,64 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1911.0,
+						"translation.y": 234.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "grails-app/controllers/br/com/arrasaamiga/ClienteController.groovy",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 913,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								732,
+								732
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "grails-app/views/layouts/main.gsp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6283,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2279,
+								2279
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 702.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
