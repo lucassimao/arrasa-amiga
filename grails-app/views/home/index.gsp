@@ -59,6 +59,13 @@
 
 			<hr>
 
+			<g:if test='${flash.message}'>
+				<div class='alert alert-info' style="margin-top:10px;font-weight:bold;">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					<i class="icon-ok"> </i> ${flash.message}
+				</div>
+			</g:if>
+
 			<div id="toast">
 				<img />
 				<label/>

@@ -76,17 +76,19 @@
 								</li>
 
 								<li>
-									<a href="#">
-										<i class="icon-eye-open  icon-large"></i>	Precisa de uma maquiadora ? 
+									<a href="https://www.facebook.com/arrasaamiga" target="_blank">
+										<i class="icon-facebook  icon-large"></i>	Facebook 
 									</a>
 								</li>
 
+								
+								
 								<li>
 									<a href="#">
 										<i class="icon-question-sign  icon-large"></i> Como Comprar ? 
 									</a>
 								</li>
-
+								
 								<li class="${(controllerName == 'shoppingCart' && actionName=='index')?'active':''}">
 									<g:link controller="shoppingCart">
 										<i class="icon-shopping-cart  icon-large"></i>	

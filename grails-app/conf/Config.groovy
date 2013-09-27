@@ -98,4 +98,8 @@ grails.plugins.springsecurity.userLookup.userDomainClassName = 'br.com.arrasaami
 grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'br.com.arrasaamiga.UsuarioGrupoDeUsuario'
 grails.plugins.springsecurity.authority.className = 'br.com.arrasaamiga.GrupoDeUsuario'
 
-grails.plugins.springsecurity.rememberMe.alwaysRemember = true // por 14 dias  
+grails.plugins.springsecurity.rememberMe.alwaysRemember = true // por 14 dias 
+
+grails.plugins.springsecurity.controllerAnnotations.staticRules = [
+   '/console/**': ['ROLE_ADMIN']
+] 
