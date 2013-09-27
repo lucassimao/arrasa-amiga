@@ -174,7 +174,7 @@
 
 					
 
-					<div class="fb-comments"  data-href="${request.requestURL}" data-width="910" style=""></div>
+					<div class="fb-comments"  data-href="${ (request.requestURL?.equals('/'))?'http://www.arrasaamiga.com.br': request.requestURL }" data-width="910" style=""></div>
 
 				</div>
 

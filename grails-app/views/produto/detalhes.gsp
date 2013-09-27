@@ -192,9 +192,10 @@
 									<div class="item ${i==0?'active':''}">	
 
 										<a class="fancybox" rel="group" title="${fotoProduto.comentario}" href="${resource(file:fotoProduto.arquivo, dir:'img/produtos')}"> 
-											<g:img id="img${i}" dir="img/produtos" file="${fotoProduto.arquivo}"/> </div>
+											<g:img id="img${i}" dir="img/produtos" file="${fotoProduto.arquivo}"/> 
 										</a>
-
+										
+									</div>
 								</g:each>
 							</div>
 

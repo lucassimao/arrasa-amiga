@@ -4,6 +4,22 @@
 		"selected_items":
 		[
 			[
+				"addTo",
+				"addToFotos"
+			],
+			[
+				"ar",
+				"arquivoFoto"
+			],
+			[
+				"pre",
+				"precoAVistaEmReais"
+			],
+			[
+				"prod",
+				"produtoInstance"
+			],
+			[
 				"unid",
 				"unidadesAnteriores"
 			],
@@ -78,10 +94,6 @@
 			[
 				"valor",
 				"valorAVista"
-			],
-			[
-				"prod",
-				"produto"
 			],
 			[
 				"unida",
@@ -224,82 +236,26 @@
 	"buffers":
 	[
 		{
-			"file": "grails-app/views/home/index.gsp",
-			"settings":
-			{
-				"buffer_size": 2693,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "grails-app/views/produto/_form.gsp",
-			"settings":
-			{
-				"buffer_size": 10490,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "grails-app/views/produto/_addNewUnidade.gsp",
-			"settings":
-			{
-				"buffer_size": 657,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "grails-app/views/produto/create.gsp",
-			"settings":
-			{
-				"buffer_size": 1679,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "grails-app/controllers/br/com/arrasaamiga/ProdutoController.groovy",
-			"settings":
-			{
-				"buffer_size": 11809,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "grails-app/views/produto/show.gsp",
-			"settings":
-			{
-				"buffer_size": 4561,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "grails-app/domain/br/com/arrasaamiga/Produto.groovy",
-			"settings":
-			{
-				"buffer_size": 2237,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "grails-app/domain/br/com/arrasaamiga/FotoProduto.groovy",
-			"settings":
-			{
-				"buffer_size": 276,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "grails-app/views/produto/_addNewFoto.gsp",
-			"settings":
-			{
-				"buffer_size": 1053,
-				"line_ending": "Unix"
-			}
-		},
-		{
 			"file": "grails-app/conf/ApplicationResources.groovy",
 			"settings":
 			{
-				"buffer_size": 494,
+				"buffer_size": 777,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/views/produto/detalhes.gsp",
+			"settings":
+			{
+				"buffer_size": 8630,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/views/layouts/main.gsp",
+			"settings":
+			{
+				"buffer_size": 6225,
 				"line_ending": "Unix"
 			}
 		}
@@ -331,20 +287,26 @@
 	},
 	"file_history":
 	[
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/layouts/main.gsp",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/domain/br/com/arrasaamiga/FotoProduto.groovy",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/produto/create.gsp",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/home/index.gsp",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/domain/br/com/arrasaamiga/Produto.groovy",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/controllers/br/com/arrasaamiga/ProdutoController.groovy",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/conf/ApplicationResources.groovy",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/produto/detalhes.gsp",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/produto/_form.gsp",
+		"/home/lsimaocosta/Programming/arrasa-amiga/web-app/js/crud.produtos.js",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/produto/_addNewFoto.gsp",
+		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/produto/_addNewUnidade.gsp",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/produto/show.gsp",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/produto/_form2.gsp",
-		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/produto/_addNewUnidade.gsp",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/produto/create2.gsp",
-		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/produto/_addNewFoto.gsp",
-		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/produto/create.gsp",
 		"/home/lsimaocosta/Programming/tag-it-master/examples.html",
-		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/layouts/main.gsp",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/estoque/entrada.gsp",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/cliente/cadastro.gsp",
-		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/produto/detalhes.gsp",
 		"/home/lsimaocosta/Programming/arrasa-amiga/web-app/css/produto/detalhes.css",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/domain/br/com/arrasaamiga/Aviso.groovy",
-		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/controllers/br/com/arrasaamiga/ProdutoController.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/controllers/br/com/arrasaamiga/HomeController.groovy",
 		"/home/lsimaocosta/Dropbox/gggg",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/domain/br/com/arrasaamiga/StatusVenda.groovy",
@@ -356,13 +318,11 @@
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/shoppingCart/checkout.gsp",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/services/br/com/arrasaamiga/PagSeguroService.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/domain/br/com/arrasaamiga/ItemVenda.groovy",
-		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/home/index.gsp",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/domain/br/com/arrasaamiga/Cliente.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/venda/show.gsp",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/shoppingCart/index.gsp",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/login/auth.gsp",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/services/br/com/arrasaamiga/ShoppingCartService.groovy",
-		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/domain/br/com/arrasaamiga/Produto.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/index.gsp",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/conf/UrlMappings.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/domain/br/com/arrasaamiga/FormaPagamento.groovy",
@@ -376,7 +336,6 @@
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/domain/br/com/arrasaamiga/ShoppingCart.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/domain/br/com/arrasaamiga/ProdutoItem.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/services/ShoppingCartService.groovy",
-		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/views/produto/_form.gsp",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/conf/Config.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/grails-app/conf/BuildConfig.groovy",
 		"/home/lsimaocosta/Programming/arrasa-amiga/.gitignore",
@@ -469,6 +428,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"println",
+			".each",
 			"param",
 			".each",
 			"list-unidades",
@@ -546,52 +507,51 @@
 	"groups":
 	[
 		{
-			"selected": 5,
+			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "grails-app/views/home/index.gsp",
+					"file": "grails-app/conf/ApplicationResources.groovy",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2693,
+						"buffer_size": 777,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								222,
-								222
+								288,
+								288
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/Groovy/Groovy.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 130.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "grails-app/views/produto/_form.gsp",
+					"file": "grails-app/views/produto/detalhes.gsp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 10490,
+						"buffer_size": 8630,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								9342,
-								9342
+								4998,
+								4998
 							]
 						],
 						"settings":
@@ -600,53 +560,26 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 4994.0,
+						"translation.y": 2184.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "grails-app/views/produto/_addNewUnidade.gsp",
+					"file": "grails-app/views/layouts/main.gsp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 657,
+						"buffer_size": 6225,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								325,
-								325
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "grails-app/views/produto/create.gsp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1679,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1440,
-								1440
+								5416,
+								5416
 							]
 						],
 						"settings":
@@ -655,175 +588,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 273.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "grails-app/controllers/br/com/arrasaamiga/ProdutoController.groovy",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 11809,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3722,
-								3722
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Groovy/Groovy.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1403.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "grails-app/views/produto/show.gsp",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 4561,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								557,
-								557
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "grails-app/domain/br/com/arrasaamiga/Produto.groovy",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2237,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								114,
-								114
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Groovy/Groovy.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "grails-app/domain/br/com/arrasaamiga/FotoProduto.groovy",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 276,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								112,
-								112
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Groovy/Groovy.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "grails-app/views/produto/_addNewFoto.gsp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1053,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								81,
-								81
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "grails-app/conf/ApplicationResources.groovy",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 494,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								382,
-								382
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Groovy/Groovy.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1911.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
