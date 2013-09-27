@@ -82,12 +82,13 @@
 								</li>
 
 								
-								
+								<!--
 								<li>
 									<a href="#">
 										<i class="icon-question-sign  icon-large"></i> Como Comprar ? 
 									</a>
 								</li>
+								-->
 								
 								<li class="${(controllerName == 'shoppingCart' && actionName=='index')?'active':''}">
 									<g:link controller="shoppingCart">
