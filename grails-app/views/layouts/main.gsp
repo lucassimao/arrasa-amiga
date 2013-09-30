@@ -9,7 +9,19 @@
 
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
 		<meta property="fb:admins" content="1665191676"/>
+		<meta property="fb:admins" content="100002204592399"/>
+		<meta property="fb:admins" content="100002253748681"/>
+		<meta property="fb:app_id" content="592257150816024" /> 
+		<meta property="og:site_name" content="Arrasa Amiga"/>
+		<meta property="og:type" content="website" /> 
+		<meta property="og:url" content="${ (request.requestURL?.equals('/'))?'http://www.arrasaamiga.com.br': request.requestURL }" /> 
+		<meta property="og:title" content="${ layoutTitle() }" /> 
+		<meta property="og:description" content="${pageProperty(name:'page.description')}" />
+		<meta property="og:image" content="${ pageProperty(name:'page.og:image') }" /> 
+
+
 
 		<title><g:layoutTitle default="Arrasa Amiga"/></title>
 		<!-- <link rel="shortcut icon" href="${resource(dir: 'images', file: 'favicon.ico')}" type="image/x-icon"> -->
@@ -193,8 +205,9 @@
 						data-send="true" data-width="450" data-show-faces="true" data-font="tahoma"></div>
 
 					
-
+					
 					<div class="fb-comments"  data-href="${ (request.requestURL?.equals('/'))?'http://www.arrasaamiga.com.br': request.requestURL }" data-width="910" style=""></div>
+					
 
 				</div>
 

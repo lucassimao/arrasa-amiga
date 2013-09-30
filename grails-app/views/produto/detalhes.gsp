@@ -5,11 +5,15 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>  </title>
+		<title> ${produtoInstance.nome}  </title>
+
+
 		<parameter name="description" value="${produtoInstance.nome}" />
 
 		<g:set var="keywords" value="${produtoInstance.nome.split(' ').findAll{ it.length() > 2 }.join(',')}" />
+		
 		<parameter name="keywords" value="${keywords}" />
+		<parameter name="og:image" value="${resource(dir:'img',file:produtoInstance.fotoMiniatura,absolute:true)}"/>
 
 
 
@@ -21,7 +25,8 @@
 			<g:javascript>
 				
 				$(function(){
-					
+
+
 
 					$("#btn-comprar").click(function(){
 						$('form').submit();
