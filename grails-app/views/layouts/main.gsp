@@ -13,11 +13,11 @@
 		<meta property="fb:admins" content="1665191676"/>
 		<meta property="fb:admins" content="100002204592399"/>
 		<meta property="fb:admins" content="100002253748681"/>
-		<meta property="fb:app_id" content="592257150816024" /> 
+
 		<meta property="og:site_name" content="Arrasa Amiga"/>
 		<meta property="og:type" content="website" /> 
 		<meta property="og:url" content="${ (request.requestURL?.equals('/'))?'http://www.arrasaamiga.com.br': request.requestURL }" /> 
-		<meta property="og:title" content="${ layoutTitle() }" /> 
+		<meta property="og:title" name="title" content="${ layoutTitle() }" /> 
 		<meta property="og:description" content="${pageProperty(name:'page.description')}" />
 		<meta property="og:image" content="${ pageProperty(name:'page.og:image') }" /> 
 
@@ -59,6 +59,10 @@
 			}
 
 		</style>
+
+
+		<g:javascript src="jquery-1.10.1.min.js" />
+		<g:javascript src="bootstrap.min.js" />
 
 		<g:layoutHead/>
 		<r:layoutResources />
@@ -216,10 +220,12 @@
     	</div> 
 
 
-
-		<g:javascript library="application"/>
+    	<!--
 		<script type="text/javascript" src="${resource(dir:'js',file:'jquery-1.10.1.min.js')}"></script>
 		<script type="text/javascript" src="${resource(dir:'js',file:'bootstrap.min.js')}"></script>
+		-->
+
+
 
 		<r:layoutResources />
 	</body>

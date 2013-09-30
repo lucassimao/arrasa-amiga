@@ -40,8 +40,11 @@
 				padding:5px;
 				text-align:center;
 				height:300px;
-				border:1px solid orange;
+				border:1px solid pink;
+				background-color: white;
 				position:relative;
+				border-radius: 1em;
+				box-shadow: pink 0.5em 0.5em 0.3em;
 			}
 		</style>
 

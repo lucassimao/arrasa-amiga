@@ -8,12 +8,12 @@
 		<title> ${produtoInstance.nome}  </title>
 
 
-		<parameter name="description" value="${produtoInstance.nome}" />
+		<parameter name="description" value="${produtoInstance.descricao}" />
 
 		<g:set var="keywords" value="${produtoInstance.nome.split(' ').findAll{ it.length() > 2 }.join(',')}" />
 		
 		<parameter name="keywords" value="${keywords}" />
-		<parameter name="og:image" value="${resource(dir:'img',file:produtoInstance.fotoMiniatura,absolute:true)}"/>
+		<parameter name="og:image" value="${resource(dir:'img/produtos',file:produtoInstance.fotoMiniatura,absolute:true)}"/>
 
 
 
