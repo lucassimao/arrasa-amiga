@@ -5,6 +5,15 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<title>  </title>
+		<parameter name="description" value="${produtoInstance.nome}" />
+
+		<g:set var="keywords" value="${produtoInstance.nome.split(' ').findAll{ it.length() > 2 }.join(',')}" />
+		<parameter name="keywords" value="${keywords}" />
+
+
+
+
 		<meta name="layout" content="main"/>
 
 			<g:javascript library="detalhesProdutos"/>
@@ -192,7 +201,7 @@
 									<div class="item ${i==0?'active':''}">	
 
 										<a class="fancybox" rel="group" title="${fotoProduto.comentario}" href="${resource(file:fotoProduto.arquivo, dir:'img/produtos')}"> 
-											<g:img id="img${i}" dir="img/produtos" file="${fotoProduto.arquivo}"/> 
+											<g:img id="img${i}" dir="img/produtos" alt="${produtoInstance.nome}" title="${fotoProduto.comentario}" file="${fotoProduto.arquivo}"/> 
 										</a>
 										
 									</div>

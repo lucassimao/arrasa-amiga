@@ -3,6 +3,11 @@
 <!DOCTYPE html>
 <html>
 	<head>
+
+		<parameter name="description" value="Produtos para maquiagem à pronta entrega" />
+		<parameter name="keywords" value="Maquiagem, blushes, NYX, batom, sombra, paleta,Teresina, Piauí, maquiadora" />
+
+
 		<meta name="layout" content="main"/>
 
 		<style type="text/css">
@@ -81,7 +86,7 @@
 					
 				<div class="span3 item-produto">
 					
-					<g:img dir="img/produtos" file="${produto.fotoMiniatura}"/>
+					<g:img dir="img/produtos" file="${produto.fotoMiniatura}" alt="${produto.nome}" title="${produto.nome}"/>
 
 
 					<a href="${createLink(uri:produto.nomeAsURL, absolute:true)}"> 
