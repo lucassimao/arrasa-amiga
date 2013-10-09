@@ -4,7 +4,7 @@
 <html>
 	<head>
 
-		<title> Arrasa Amiga </title>
+		<title> Arrasa Amiga : Produtos para maquiagem à pronta entrega </title>
 		<parameter name="description" value="Produtos para maquiagem à pronta entrega" />
 		<parameter name="keywords" value="Maquiagem, blushes, NYX, batom, sombra, paleta,Teresina, Piauí, maquiadora" />
 		<parameter name="og:image" value="${resource(dir:'img',file:'top.jpg',absolute:true)}"/>
