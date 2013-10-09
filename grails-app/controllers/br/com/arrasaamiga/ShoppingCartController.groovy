@@ -105,8 +105,8 @@ class ShoppingCartController {
     }
 
     def add(Long id,Integer quantidade,String unidade){
-    	def produtoInstance = Produto.get(id)
 
+    	def produtoInstance = Produto.get(id)
 
         if (!produtoInstance){
             flash.message = "Produto ${id} desconhecido"
@@ -188,7 +188,19 @@ class ShoppingCartController {
     	redirect(action: "index")
     }
 
-    @Secured(['IS_AUTHENTICATED_FULLY'])
+    def getCidades(int idUf){
+        def uf = Uf.get(idUf)
+        def cidades = Cidade.findAllByUf(uf)
+
+        def retorno = []
+
+        cidades.each{c->
+            retorno << ['id':c.id,'nome':c.nome]
+        }
+
+        render ( retorno as JSON)
+    }
+
     def checkout(){
         
         def itens = shoppingCartService.itens
@@ -199,9 +211,7 @@ class ShoppingCartController {
             return
         }
 
-        def cliente = Cliente.findByUsuario(springSecurityService.currentUser)
-        def frete = (cliente.endereco.fromTeresina)?0:25
-        
+        def frete = 25         
         def valorAPrazo = somarValorTotalAPrazoDoCarrinho()
         def valorAVista = somarValorTotalAVistaDoCarrinho()
 
@@ -212,60 +222,99 @@ class ShoppingCartController {
 
         List diasDeEntrega = getProximosDiasDeEntrega()
 
-        
-
-        ['totalAPrazo':totalAPrazo,'totalAVista':totalAVista,valorAPrazo:valorAPrazo,
-            'enderecoEntrega': cliente.endereco,itens: itens, frete: frete, desconto:desconto,valorAVista:valorAVista, diasDeEntrega: diasDeEntrega]
-    }
-
-    @Secured(['IS_AUTHENTICATED_FULLY'])
-    def fecharVenda(){
-
+        def venda = new Venda()
         def user = springSecurityService.currentUser
-        def cliente = Cliente.findByUsuario(user)
+       
+        if (user){
+             venda.cliente = Cliente.findByUsuario(user)
 
-        flash.informacoesAdicionaisEntrega = params.informacoesAdicionais
-
-        try{
-        
-            def fp = FormaPagamento.valueOf( params.formaPagamento )
-
-            if ( !cliente.endereco.isFromTeresina() && fp != FormaPagamento.PagSeguro  ){
-                flash.message = "Forma de pagamento inválida!" 
-                redirect(action: "checkout") 
-                return                
-            }
-        
-        }catch(Exception e){
-            flash.message = "A forma de pagamento deve ser informada" 
-            redirect(action: "checkout") 
-            return 
+        }else{
+            venda.cliente = new Cliente()
+            venda.cliente.usuario = new Usuario()
+            venda.cliente.endereco = new Endereco(uf: Uf.piaui, cidade : Cidade.teresina )
         }
         
 
-        if (cliente.endereco.isFromTeresina()){
+        
+        
 
-            if ( params.dataEntrega )  {
+        ['totalAPrazo':totalAPrazo,'totalAVista':totalAVista,valorAPrazo:valorAPrazo,venda: venda,
+            itens: itens, frete: frete, desconto:desconto,valorAVista:valorAVista, diasDeEntrega: diasDeEntrega]
+    }
 
-                def dataDeEntregaEscolhida = null
+    def fecharVenda(){
 
-                try{
-                
-                    dataDeEntregaEscolhida =  new Date( Long.valueOf(params.dataEntrega) ) 
-                
-                }catch(Exception e){
 
-                    e.printStackTrace()
-                    flash.message = "A data da entrega deve ser selecionada" 
-                    redirect(action: "checkout") 
-                    return 
+       if (params.dataEntrega){
 
-                }
+            try{
+            
+                params.dataEntrega = new Date( Long.valueOf(params.dataEntrega) ) 
+            
+            }catch(Exception e){
 
-                List diasDeEntrega = getProximosDiasDeEntrega()
+                e.printStackTrace()
+                flash.messageDataEntrega = "A data da entrega deve ser uma data válida" 
+                redirect(action: "checkout") 
+                return 
+
+            }
+        }
+
+    
+
+        def valorAPrazo = somarValorTotalAPrazoDoCarrinho()
+        def valorAVista = somarValorTotalAVistaDoCarrinho()
+        List diasDeEntrega = getProximosDiasDeEntrega()
+        def itens = shoppingCartService.itens
+        def frete = 25   
+        def desconto = valorAPrazo - valorAVista
+        def totalAPrazo = valorAPrazo + frete
+        def totalAVista = valorAVista + frete 
+
+
+        def venda = new Venda(params)
+        
+        def user = (springSecurityService.currentUser)?:Usuario.findByUsername(params.cliente.email)
+        
+        if (user){
+            venda.cliente = Cliente.findByUsuario(user)
+            venda.cliente.properties = params.cliente
+        }else{
+            venda.cliente.usuario.enabled = true
+            venda.cliente.senha = '12345'
+        }
+        
+        def model = [totalAPrazo:totalAPrazo,
+                     totalAVista:totalAVista,
+                     valorAPrazo:valorAPrazo,
+                     venda: venda,itens: itens, 
+                     frete: frete, desconto:desconto,valorAVista:valorAVista, 
+                     diasDeEntrega: diasDeEntrega]
+
+
+        if (!venda.cliente.validate()){ 
+            flash.message = "Amiga, os campos em destaque devem ser preenchidos" 
+            render(view: "checkout",model:model) 
+            return              
+        }
+
+     
+        if ( !venda.cliente.isFromTeresina() && venda.formaPagamento != FormaPagamento.PagSeguro  ){
+
+            flash.message = "Forma de pagamento inválida!" 
+            render(view: "checkout",model:model) 
+            return                
+        }
+        
+
+        if ( venda.cliente.isFromTeresina() ){
+
+            if (venda.dataEntrega){
 
                 def calDiaEntrega = Calendar.getInstance()
-                calDiaEntrega.time = dataDeEntregaEscolhida
+                calDiaEntrega.time = venda.dataEntrega
+                
 
                 boolean dataSelecionadaCorretamente = diasDeEntrega.any {dia-> 
                    
@@ -279,57 +328,38 @@ class ShoppingCartController {
                 }
 
                 if (!dataSelecionadaCorretamente){
-                    flash.message = "A data da entrega deve ser selecionada" 
-                    redirect(action: "checkout") 
+                    flash.messageDataEntrega = "Apenas as datas apresentadas são aceitas" 
+                    render(view: "checkout",model:model) 
                     return                      
                 }
 
-    
             }else{
-                flash.message = "A data da entrega deve ser selecionada" 
-                redirect(action: "checkout") 
-                return  
+                flash.messageDataEntrega = "A data da entrega deve ser selecionada" 
+                render(view: "checkout",model:model) 
+                return                
             }
 
         }
 
 
-        def valorAPrazo = somarValorTotalAPrazoDoCarrinho()
-        def valorAVista = somarValorTotalAVistaDoCarrinho()
 
-        def venda = new Venda()
+        venda.subTotalItensEmCentavos = valorAPrazo*100
         venda.carrinho = shoppingCartService.shoppingCart
-        venda.cliente = cliente
-        venda.enderecoEntrega = cliente.endereco
-
-        venda.freteEmCentavos = (venda.enderecoEntrega.fromTeresina)?0:2500
-        venda.subTotalItensEmCentavos = valorAPrazo * 100
-
-        if (cliente.endereco.isFromTeresina()){
-            
-            venda.informacoesAdicionaisEntrega = params.informacoesAdicionais
-            venda.dataEntrega = new Date( Long.valueOf(params.dataEntrega) )
-
-        }
-
-        venda.formaPagamento = FormaPagamento.valueOf( params.formaPagamento )
-        venda.status = StatusVenda.AguardandoPagamento  
+        venda.status = StatusVenda.AguardandoPagamento
         venda.itensVenda = shoppingCartService.checkOut()
 
+        if (!venda.cliente.isFromTeresina()){
+            venda.freteEmCentavos = frete*100    
+        }
+
         if ( venda.formaPagamento == FormaPagamento.AVista ){
+            venda.descontoEmCentavos = desconto*100    
+        }  
 
-            venda.descontoEmCentavos = (valorAPrazo - valorAVista) * 100
-
-        }else{
-
-            venda.descontoEmCentavos = 0 //será atribuido em Pagseguro#retorno
+        venda.cliente.save()
         
-        }                    
-
+        springSecurityService.reauthenticate(venda.cliente.email)      
         
-
-
-
         if ( venda.formaPagamento == FormaPagamento.AVista ){
 
             venda.carrinho.checkedOut = true
@@ -341,8 +371,10 @@ class ShoppingCartController {
 
         }else{
             
+
             venda.save() // salva logo, pois precisa do ID da venda para registrar com a transação de pagamento do pagseguro
-           
+            // não elimina o carrinho ainda, pq nao sabe se vai dar certo. So vai eliminar no retorno do pag seguro
+            
             def paymentURL = null
 
             try{
@@ -353,7 +385,7 @@ class ShoppingCartController {
                 
             }catch(PagSeguroServiceException e){
 
-                println "Erro ao tentar ir para o pagseguro : cliente ${cliente.id} "
+                println "Erro ao tentar ir para o pagseguro : cliente ${venda.cliente.id} "
                 Iterator itr = e.getErrorList().iterator();  
       
                 while (itr.hasNext()) {  
@@ -371,12 +403,11 @@ class ShoppingCartController {
                 venda.delete() // não deu pra mandar pro pag seguro ... exclui venda 
                 
                 flash.message = e.toString() 
-                redirect(action: "checkout") 
+                render(view: "checkout",model:model)
                 return    
             }
 
         }        
         
-
     }
 }

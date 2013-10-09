@@ -50,13 +50,6 @@ class PagSeguroController {
             return           
         }
 
-    	
-
-        
-
-        
-
-
 
     }
 }

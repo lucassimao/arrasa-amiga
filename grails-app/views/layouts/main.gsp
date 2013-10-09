@@ -67,16 +67,16 @@
 		<g:layoutHead/>
 		<r:layoutResources />
 
-		<script>
-		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		<g:javascript>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-		  ga('create', 'UA-43736713-1', 'arrasaamiga.com.br');
-		  ga('send', 'pageview');
+			ga('create', 'UA-43736713-1', 'arrasaamiga.com.br');
+			ga('send', 'pageview');
 
-		</script>
+		</g:javascript>
 
 	</head>
 	<body>
@@ -90,6 +90,8 @@
 		  fjs.parentNode.insertBefore(js, fjs);
 		}(document, 'script', 'facebook-jssdk'));</script> 
 
+
+		
 
 		<div class="container" >
 			
@@ -107,12 +109,13 @@
 									</a>
 								</li>
 
+								<!--
 								<li>
-									<a href="#">
+									<a href="#" id="como-comprar">
 										<i class="icon-question-sign  icon-large"></i> Como Comprar ? 
 									</a>
 								</li>
-								
+								-->
 
 								<li>
 									<a href="https://www.facebook.com/arrasaamiga" target="_blank">
@@ -209,22 +212,13 @@
 						data-send="true" data-width="450" data-show-faces="true" data-font="tahoma"></div>
 
 					
-					
 					<div class="fb-comments"  data-href="${ (request.requestURL?.equals('/'))?'http://www.arrasaamiga.com.br': request.requestURL }" data-width="910" style=""></div>
 					
-
 				</div>
 
 			</g:if>
 
     	</div> 
-
-
-    	<!--
-		<script type="text/javascript" src="${resource(dir:'js',file:'jquery-1.10.1.min.js')}"></script>
-		<script type="text/javascript" src="${resource(dir:'js',file:'bootstrap.min.js')}"></script>
-		-->
-
 
 
 		<r:layoutResources />

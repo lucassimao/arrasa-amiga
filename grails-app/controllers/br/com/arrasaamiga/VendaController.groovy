@@ -13,11 +13,11 @@ class VendaController {
         if (venda){
         
         	[	numeroPedido: String.format("%05d", venda.id) , venda : venda,
-        		enderecoEntrega: venda.enderecoEntrega,itens: venda.itensVenda,
+        		enderecoEntrega: venda.cliente.endereco,itens: venda.itensVenda,
         		cliente: venda.cliente, subTotal: venda.subTotalItensEmReais, 
         		detalhesPagamento: venda.detalhesPagamento, frete: venda.freteEmReais,desconto: venda.descontoEmReais,
         		valorTotal:venda.valorTotal,
-        		dataEntrega: venda.dataEntrega,informacoesAdicionaisEntrega : venda.informacoesAdicionaisEntrega]
+        		dataEntrega: venda.dataEntrega]
         
         }else{
         	println "Erro ao carregar venda ${id}"

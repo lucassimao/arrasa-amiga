@@ -64,46 +64,26 @@
 
           <div class="row-fluid">
             <div class="span5">
-              <label> <span class="caption"> CEP: </span> ${enderecoEntrega.cep} </label>
 
-              <label> <span class="caption"> Estado: </span> ${enderecoEntrega.uf}</label>
+              <g:if test="${!cliente.fromTeresina}">
+                <label> <span class="caption"> CEP: </span> ${enderecoEntrega.cep} </label>
+              </g:if>
 
-              <label> <span class="caption"> Cidade: </span> ${enderecoEntrega.cidade}</label>
+              <label> <span class="caption"> Estado: </span> ${enderecoEntrega.uf.nome}</label>
+
+              <label> <span class="caption"> Cidade: </span> ${enderecoEntrega.cidade.nome}</label>
 
               <label> <span class="caption"> Bairro: </span> ${enderecoEntrega.bairro} </label>
 
-              <label> <span class="caption"> Endereço: </span> ${enderecoEntrega.endereco}</label>
-
               <label> <span class="caption"> Complemento: </span>  ${enderecoEntrega.complemento}</label>
 
-              <g:if test="${enderecoEntrega.pontoDeReferencia}">
-                <label> <span class="caption"> Ponto de Referência: </span> ${enderecoEntrega.pontoDeReferencia}</label>
+              <g:if test="${cliente.fromTeresina}">
+                <label> <span class="caption"> Dia da Entrega: </span> <g:formatDate format="EEEE, dd/MM/yyyy" date="${dataEntrega}"/> </label>
               </g:if>
+
+
             </div>
             
-            <g:if test="${enderecoEntrega.fromTeresina}">
-
-              <div class="span7">
-
-                <p style="font-family:Arial;">            
-                    <span style="font-family:Arial;font-weight:bold;font-size:14px;"> Dia da entrega: </span> 
-                    <g:formatDate format="EEEE, dd/MM/yyyy" date="${dataEntrega}"/>
-                </p>
-
-                <hr>
-
-                <p style="font-family:Arial;font-weight:bold;font-size:14px;">
-                  Informações adicionais:
-                </p>
-                
-                <p style="font-family:Arial;text-align:justify;">
-                    ${informacoesAdicionaisEntrega}
-                </p>
-                
-              </div>
-
-            </g:if>
-
           </div>
 
         </div>
@@ -184,7 +164,7 @@
             </div>
           </div>
 
-          <g:if test="${!enderecoEntrega.fromTeresina}">
+          <g:if test="${!cliente.fromTeresina}">
 
             <div id="div-frete" style="clear:both;">
               <h5 style="display:inline;color:blue;">Frete</h5>

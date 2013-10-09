@@ -1,5 +1,7 @@
 <%@ page import="br.com.arrasaamiga.Produto" %>
 <%@ page import="br.com.arrasaamiga.FormaPagamento" %>
+<%@ page import="br.com.arrasaamiga.Uf" %>
+<%@ page import="br.com.arrasaamiga.Cidade" %>
 
 <!DOCTYPE html>
 <html>
@@ -22,18 +24,108 @@
 					
 			$(function(){
 
+				function resetDivsValores(){
+					$("#div-frete").css('display','none');
+					$("#div-desconto").css('display','none');
+					$("#div-valor-total-a-vista").css('display','none');
+					$("#div-valor-total-a-vista-teresina").css('display','none');
+					$("#div-valor-total-a-prazo").css('display','none');
+					$("#div-valor-total-a-prazo-teresina").css('display','none');				
+				}
 
-
-
-				$("input[name='formaPagamento']").click(function(){
-
-					$("span.forma-pagamento-selecionado").toggleClass("forma-pagamento-selecionado");
-
-					var span = $(this).next();
-					$(span).toggleClass("forma-pagamento-selecionado");
+				function atualizarDivs(){
 					
+					resetDivsValores();
 
+					var cidade = $("#select-cidade option:selected").text();
+					var uf = $("#select-uf option:selected").text();
+
+					var formaPagamento = $("input[name='formaPagamento']:checked").val();
+
+					if (uf === 'Piauí' && cidade === 'Teresina' ){
+
+						$("#div-pagamento-avista").css('display','block');
+
+						switch(formaPagamento){
+							case "AVista":
+
+								$("#div-desconto").css('display','block');
+								$("#div-valor-total-a-vista-teresina").css('display','block');
+
+								break;
+							
+							case "PagSeguro":
+
+								$("#div-valor-total-a-prazo-teresina").css('display','block');
+
+								break;
+						}
+
+						$("#div-cep").css('display','none');
+						$("#div-entrega-teresina").css('display','block');
+
+					}else{
+
+						$("#div-pagamento-avista").css('display','none');
+
+						$("#div-pagamento-pagseguro").prop('checked',true);
+						$("#div-cep").css('display','block');
+						$("#div-entrega-teresina").css('display','none');
+
+						$("#div-frete").css('display','block');
+						$("#div-valor-total-a-prazo").css('display','block');
+
+
+
+					}	
+
+				}
+
+				$("#select-cidade").change(function(){
+					atualizarDivs();
 				});
+
+
+				$("#select-uf").change(function(){
+					var idUf = $(this).val();
+
+					$.ajax({
+						
+						url: "${createLink(controller:'shoppingCart',action:'getCidades',absolute:true)}",
+						data: {'idUf': idUf},
+						settings: {'cache':true}
+
+					}).success(function( data, textStatus, jqXHR ) {
+
+						$("#select-cidade").empty();
+
+						$.each(data,function(index,objCidade){
+
+							var nomeCidade = objCidade.nome;
+							var idCidade = objCidade.id;
+							
+							var option = $("<option/>").text(nomeCidade).attr("value",idCidade);
+							
+							<g:if test="${venda?.cliente?.endereco?.cidade}">
+								if (idCidade === ${venda?.cliente?.endereco?.cidade?.id}){
+									$(option).attr('selected',true);
+								}
+							</g:if>
+							
+							$("#select-cidade").append(option);
+
+
+						});
+
+						$("#select-cidade").change();
+
+					
+					}).fail(function(){
+						alert("Erro ao carregar cidades");
+
+					});
+				});
+
 
 
 				$("input[name='dataEntrega']").click(function(){
@@ -46,41 +138,40 @@
 
 				});
 
-				$("#btnFecharVenda").click(function(){
-
-					$("form").submit();
-
-				});
 
 				$("input[name='formaPagamento']").click(function(){
 
-					var formaPagamento = $(this).attr("value");
+					$("span.forma-pagamento-selecionado").toggleClass("forma-pagamento-selecionado");
+					var span = $(this).next();
+					$(span).toggleClass("forma-pagamento-selecionado");
 
-					switch(formaPagamento){
-						case "AVista":
-
-							$("#div-valor-total-a-prazo").css("display","none");
-							$("#div-desconto").css("display","block");
-							$("#div-valor-total-a-vista").css("display","block");
-
-							break;
-						
-						case "PagSeguro":
-
-							$("#div-desconto").css("display","none");
-							$("#div-valor-total-a-vista").css("display","none");
-							$("#div-valor-total-a-prazo").css("display","block");
-
-							break;
-						default:
-							// wtf ??
-					}
-					
+					atualizarDivs();					
 					
 				});
 
 
-				$("input[name='formaPagamento'][checked]").click();
+				$("#select-uf").change();		
+
+				<g:if test="${venda?.cliente?.hasErrors()}">
+				    $('html, body').animate({
+				        scrollTop: $("#anchor-form-informacoes-entrega").offset().top - 45
+				    }, 1500);
+
+				    $("#form-fechar-venda div.error input").first().focus();
+
+				</g:if>
+
+				<g:if test="${flash.messageDataEntrega}">
+
+				    $('html, body').animate({
+				        scrollTop: $("#anchor-entrega-teresina").offset().top - 45
+				    }, 1500);
+
+				</g:if>
+
+
+
+
 
 			});
 
@@ -95,24 +186,18 @@
 
 			<hr>
 
+			<a href="#" name="msg"></a>
 
 			<div class="well" style="background-color:#F29BF2;color:white;border:1px solid white;">
 				<h2>  Entrega e Pagamento  </h2>
-				<h5>  Visualize os detalhes do seu pedido, confirme seu 
-				endereço de entrega e escolha uma forma de pagamento  </h5>
+				<h5>  Visualize os detalhes do seu pedido, preencha as informações para entrega e escolha uma forma de pagamento  </h5>
 			</div>
 
 			<hr>
 
 			<g:set var="ocultarRodape" value="${true}" scope="request"/>
 
-			<g:if test="${flash.message}">
-				<div class="alert alert-info">
-				   <button type="button" class="close" data-dismiss="alert">&times;</button>
-				   <i class=" icon-info-sign"></i>
-				   ${flash.message} 
-				</div>
-			</g:if>
+			
 
 			<div class="row-flow" style="margin:20px 0px;"> 
 
@@ -134,7 +219,7 @@
 									<g:img dir="img/produtos" style="float:left;" file="${produto.fotoMiniatura}"/>
 
 									<div>
-										<label>${produto.nome }</label>
+										<label>${produto.nome}</label>
 
 										<g:if test="${produto.isMultiUnidade()}">
 											<p> <small> ${produto.tipoUnitario}: ${itemVenda.unidade} </small> </p>
@@ -152,13 +237,11 @@
 								</td>
 								
 								<td>
-									<g:formatNumber number="${itemVenda.precoAPrazoEmReais}" type="currency" 
-										currencyCode="BRL" />
+									<g:formatNumber number="${itemVenda.precoAPrazoEmReais}" type="currency" currencyCode="BRL" />
 								</td>
 								
 								<td>
-									<g:formatNumber number="${itemVenda.subTotalAPrazo}" type="currency" 
-										currencyCode="BRL" />
+									<g:formatNumber number="${itemVenda.subTotalAPrazo}" type="currency" currencyCode="BRL" />
 								</td>
 
 							</tr>
@@ -170,79 +253,148 @@
 
 			</div>	
 
-			<g:form action="fecharVenda">
 
-				
+			<a href="#" id="anchor-form-informacoes-entrega"></a>
+
+			<g:if test="${flash.message}">
+				<div class="alert alert-info">
+				   <button type="button" class="close" data-dismiss="alert">&times;</button>
+				   <i class=" icon-info-sign"></i>
+				   ${flash.message} 
+				</div>
+			</g:if>
+
+			
+
+			<g:form action="fecharVenda" name="form-fechar-venda">
 
 				<div class="well" style="background-color:white;">
 
-					<legend> <i class="icon-truck"></i> Entrega </legend>
+					<legend> <i class="icon-truck"></i> Informações para Entrega </legend>
 
 					<div class="row-fluid">
-						<div class="span4">
-							<label> CEP: ${enderecoEntrega.cep} </label>
+						<div class="span12">
+	
+						    <fieldset>
+						    	 
+						    	  <g:if test="${venda?.cliente?.usuario?.id}">
+						    	  		<g:hiddenField value="${venda.cliente.usuario.id}" name="cliente.usuario.id"/> 
+						    	  </g:if>
 
-							<label> Estado: ${enderecoEntrega.uf}</label>
+						          <div class="control-group ${hasErrors(bean: venda.cliente, field: 'nome', 'error')}">
+						              <label style="font-weight:bold;"> Nome: </label>
+						              <input type="text" value="${venda?.cliente?.nome}" name="cliente.nome" 
+						              		placeholder="Nome completo …" class="input-xxlarge">
 
-							<label> Cidade: ${enderecoEntrega.cidade}</label>
+						          </div>
 
-							<label> Bairro: ${enderecoEntrega.bairro} </label>
+						          <div class="control-group ${hasErrors(bean: venda.cliente, field: 'email', 'error')}">
+						              <label style="font-weight:bold;"> E-mail: </label>
+						              <input class="input-xlarge" value="${venda?.cliente?.email}" name="cliente.email" type="text" >
+						          </div>
 
-							<label> Endereço: ${enderecoEntrega.endereco}</label>
+						          <div style="float:left;" class="control-group ${hasErrors(bean: venda.cliente, field: 'dddTelefone', 'error')}">
+						              <label style="font-weight:bold;"> Telefone: </label>
+						              <input type="text" value="${venda?.cliente?.dddTelefone}" placeholder="DDD" name="cliente.dddTelefone" maxlength="2" class="input-mini" >
 
-							<label> Complemento: ${enderecoEntrega.complemento}</label>
+						          </div>
 
-							<label> Ponto de Referência: ${enderecoEntrega.pontoDeReferencia}</label>
+						          <div style="float:left;margin-right:10px;" class="control-group ${hasErrors(bean: venda.cliente, field: 'telefone', 'error')}">
+						          		<input style="margin-top:25px;margin-left:5px;" type="text" value="${venda?.cliente.telefone}" placeholder="numero" maxlength="9" name="cliente.telefone" class="input-small">
+						          </div>						          
+
+						          <div style="float:left;"  class="control-group ${hasErrors(bean: venda.cliente, field: 'dddCelular', 'error')}">
+						              <label style="font-weight:bold;"> Celular: </label> 
+						              <input type="text" value="${venda?.cliente.dddCelular}" placeholder="DDD" maxlength="2" name="cliente.dddCelular" class="input-mini" >
+						          </div>
+
+						          <div  class="control-group ${hasErrors(bean: venda.cliente, field: 'celular', 'error')}">
+						          		<input style="margin-top:25px;margin-left:5px;" type="text" value="${venda?.cliente.celular}" placeholder="numero" maxlength="9" name="cliente.celular" class="input-small">
+						          </div>
+
+
+
+
+						          <div style="clear:both;float:left;margin-right:10px;" class="control-group ${hasErrors(bean: venda.cliente, field: 'endereco.uf', 'error')}">
+						              <label style="font-weight:bold;"> Estado: </label>
+
+						              <g:select class="input-medium" value="${ (venda?.cliente?.endereco?.uf?.id)?:Uf.get(17).id }" 
+						              		name="cliente.endereco.uf.id" id="select-uf" 
+						              		optionValue="nome" optionKey="id" from="${Uf.list()}" />
+
+
+						          </div>
+
+						          <div style="float:left;margin-right:10px;" class="control-group ${hasErrors(bean: venda.cliente, field: 'endereco.cidade', 'error')}">
+						              <label style="font-weight:bold;"> Cidade: </label>
+
+						              <g:select class="input-medium" value="${venda?.cliente?.endereco?.cidade?.id}" 
+						              			name="cliente.endereco.cidade.id" id="select-cidade" from="${}" />
+
+						          </div>
+
+
+						          <div style="float:left;margin-right:10px;" class="control-group ${hasErrors(bean: venda.cliente, field: 'endereco.bairro', 'error')}">
+						              <label style="font-weight:bold;"> Bairro: </label>
+						              <input name="cliente.endereco.bairro"  value="${venda?.cliente?.endereco?.bairro}" type="text" >
+						          </div>
+
+						          <div id="div-cep" style="display:none;" class="control-group ${hasErrors(bean: venda.cliente, field: 'endereco.cep', 'error')}">
+						              
+						              <label style="font-weight:bold;"> CEP: </label>
+						              <input class="input-small" name="cliente.endereco.cep" value="${venda?.cliente?.endereco?.cep}" type="text" >
+
+						          </div>						          
+
+						          <div style="clear:both;">
+						          	<label> Complemento: </label>
+						          	<input class="input-xxlarge" value="${venda?.cliente?.endereco?.complemento}" 
+						          		placeholder="casa, quadra, apartamento, rua, número, ponto de referência ... "  
+						          		name="cliente.endereco.complemento" type="text" >
+						          </div>
+
+						    </fieldset>
+
 						</div>
-						
-						<g:if test="${enderecoEntrega.fromTeresina}">
-
-							<div class="span8">
-								<p style="font-family:Arial;text-align:justify;text-indent:20px;"> 						
-								
-									Amiga, você é de Teresina - Piauí <g:img dir="img" file="bandeira-piaui.png" /> !!! 
-									Aqui nos fazemos entregas em domicílio,
-									basta selecionar uma das seguintes datas para receber seu pedido:
-								
-								</p>
-
-								<label class="radio inline">
-									<input type="radio" value="${diasDeEntrega[0].time}" name="dataEntrega" > 
-									<span> <g:formatDate format="EEEE, dd/MM/yyyy" date="${diasDeEntrega[0]}"/> </span>
-								</label>
-
-								<label class="radio inline">
-									<input value="${diasDeEntrega[1].time}" type="radio" name="dataEntrega" > 
-									<span> <g:formatDate format="EEEE, dd/MM/yyyy" date="${diasDeEntrega[1]}"/> </span>
-								</label>
-
-								<label class="radio inline">
-									<input value="${diasDeEntrega[2].time}" type="radio" name="dataEntrega" >
-									<span> <g:formatDate format="EEEE, dd/MM/yyyy" date="${diasDeEntrega[2]}"/> </span>
-								</label>
-								
-
-								<hr>
-
-								<p style="font-family:Arial;text-align:justify;">
-									Informaçoes adicionais:
-								</p>
-								
-								<textarea name="informacoesAdicionais" 
-									placeholder="Informe o melhor horário ou um endereço alternativo para entregarmos seu pedido (como o seu endereço de trabalho, caso seja melhor)" 
-									rows="4" style="min-width:480px;">${flash.informacoesAdicionaisEntrega}</textarea>
-								
-							</div>
-
-						</g:if>
 
 					</div>
 
 				</div>
 
+				<a href="#" id="anchor-entrega-teresina"></a>
+
+				<g:if test="${flash.messageDataEntrega}">
+					<div class="alert alert-info">
+					   <button type="button" class="close" data-dismiss="alert">&times;</button>
+					   <i class=" icon-info-sign"></i>
+					   ${flash.messageDataEntrega} 
+					</div>
+				</g:if>
 
 
-				<div class="well" style="background-color:white;">
+				<div id="div-entrega-teresina" class="well" style="display:none;background-color:white;">
+
+					<legend> <i class="icon-calendar"></i> Entrega </legend>
+
+					<p style="text-align:justify;font-weigth:bold;text-indent:20px;"> 						
+						Em Teresina as entregas são feitas em domicílio a partir das 17:30 nas terças e quintas, e nos sábados pela manhã! Selecione uma das seguintes datas para receber seu pedido:
+					</p>
+
+
+					<g:each in="${diasDeEntrega}" var="diaDeEntrega">
+
+						<label class="radio inline">
+							<input type="radio" value="${diaDeEntrega.time}" name="dataEntrega" > 
+							<span> <g:formatDate format="EEEE, dd/MM/yyyy" date="${diaDeEntrega}"/> </span>
+						</label>
+
+					</g:each>
+					
+				</div>
+
+
+
+				<div id="div-financeiro" class="well" style="background-color:white;">
 
 
 					<div id="div-subtotal">
@@ -253,22 +405,21 @@
 						</div>
 					</div>
 
-					<g:if test="${!enderecoEntrega.fromTeresina}">
 
-						<div id="div-frete" style="clear:both;">
-							<h5 style="display:inline;color:blue;">Frete</h5>
 
-							<div style="float:right;font-weight:bold;border-bottom:1px solid red;"> 
-								<div style="color:blue;font-size:10px;text-align:right;">
-									+ <g:formatNumber number="${frete}" type="currency" currencyCode="BRL" />
-								</div>
+					<div id="div-frete" style="clear:both;display:none;">
+						<h5 style="display:inline;color:blue;">Frete</h5>
+
+						<div style="float:right;font-weight:bold;border-bottom:1px solid red;"> 
+							<div style="color:blue;font-size:10px;text-align:right;">
+								+ <g:formatNumber number="${frete}" type="currency" currencyCode="BRL" />
 							</div>
-
 						</div>
 
-					</g:if>
+					</div>
 
-					<div id="div-desconto" style="padding:0px 4px;;clear:both;display:none;background-color:yellow;">
+
+					<div id="div-desconto" style="padding:0px 4px;clear:both;display:none;background-color:yellow;">
 						<h5 style="display:inline;color:blue;">Desconto</h5>
 
 						<div style="float:right;font-weight:bold;"> 
@@ -290,13 +441,34 @@
 						</div>
 					</div>
 
-					<div id="div-valor-total-a-prazo">
+					<div id="div-valor-total-a-vista-teresina" style="display:none;">
+						<hr>
+
+						<h4 style="color:#666;display:inline;">Valor Total</h4>
+
+						<div style="float:right;font-weight:bold;font-size:35px;color:#00adef;"> 
+							<g:formatNumber number="${totalAVista - frete}" type="currency"	currencyCode="BRL" />
+						</div>
+					</div>
+
+
+					<div id="div-valor-total-a-prazo" style="display:none;">
 						<hr>
 						
 						<h4 style="color:#666;display:inline;">Valor Total</h4>
 
 						<div style="float:right;font-weight:bold;font-size:35px;color:#00adef;"> 
 							<g:formatNumber number="${totalAPrazo}" type="currency"	currencyCode="BRL" />
+						</div>
+					</div>
+
+					<div id="div-valor-total-a-prazo-teresina" style="display:none;">
+						<hr>
+						
+						<h4 style="color:#666;display:inline;">Valor Total</h4>
+
+						<div style="float:right;font-weight:bold;font-size:35px;color:#00adef;"> 
+							<g:formatNumber number="${totalAPrazo - frete}" type="currency"	currencyCode="BRL" />
 						</div>
 					</div>
 
@@ -311,25 +483,23 @@
 					
 						<div class="row-fluid">
 
-							<g:if test="${enderecoEntrega.fromTeresina}">
 
-								<div class="span5 well" style="padding-right:0px;">
-									<label class="radio">
-										<input  name="formaPagamento" type="radio" value="AVista" >
-										<span> Pagamento em Dinheiro </span>
-									</label>
-									
-									<p> 
-										Pagamento na entrega da sua encomenda
-									</p>
-									<p> 
-										<em> ** Tem desconto amiga ! </em> 
-									</p>
-								</div>
+							<div id="div-pagamento-avista" class="span5 well" style="padding-right:0px;display:none;">
+								<label class="radio">
+									<input  name="formaPagamento" type="radio" value="AVista" >
+									<span> Pagamento em Dinheiro </span>
+								</label>
+								
+								<p> 
+									Pagamento na entrega da sua encomenda
+								</p>
+								<p> 
+									<em> ** Tem desconto amiga ! </em> 
+								</p>
+							</div>
 
-							</g:if>
 
-							<div class="span7 well" style="padding-right:0px;">
+							<div id="div-pagamento-pagseguro" class="span7 well" style="padding-right:0px;">
 								<label class="radio">
 									<input name="formaPagamento" type="radio" value="PagSeguro" checked > 
 									<span class="forma-pagamento-selecionado"> Cartão de Crédito / Transferência Bancária / Boleto Bancário </span>								
@@ -353,13 +523,14 @@
 
 				<div  class="row-fluid">
 		            <div>
+		            	<input type="submit" style="display:none;"/>
+
 		                <a href="${createLink(action:'index')}" class="btn btn-success">
 		                    <i class="icon-shopping-cart icon-white"></i>
 		                    Voltar para o carrinho de compras
 		                </a>	                
-		                <a href="#" style="float:right;" id="btnFecharVenda" class="btn btn-success">
-		                   <i class="icon-ok-circle icon-white"></i>
-		                   Confirmar Pedido
+		                <button type="submit" style="float:right;" id="btnFecharVenda" class="btn btn-success">
+		                   <i class="icon-ok-circle icon-white"></i>  Confirmar Pedido
 		                </a>
 		            </div>
 		        </div>

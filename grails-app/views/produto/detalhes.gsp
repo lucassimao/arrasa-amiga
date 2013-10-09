@@ -20,7 +20,7 @@
 
 		<meta name="layout" content="main"/>
 
-			<g:javascript library="detalhesProdutos"/>
+			<r:require module="detalhesProdutos"/>
 
 			<g:javascript>
 				
@@ -28,8 +28,9 @@
 
 
 
-					$("#btn-comprar").click(function(){
-						$('form').submit();
+					$("#btn-comprar").click(function(event){
+						event.preventDefault();
+						$('#form-produto').submit();
 					});
 
 					$(".fancybox").fancybox();
@@ -81,7 +82,7 @@
 											for(var count=1; count <= qtdeEmEstoque;++count){
 												var option = $("<option/>").text(count).attr("value",count);
 												$("#select-quantidade").append(option);
-											}
+											}form-produto
 
 										}else{
 
@@ -241,7 +242,7 @@
 
 						
 
-						<g:form action="add" controller="shoppingCart" method="post" id="${produtoInstance.id}"> 
+						<g:form name="form-produto" action="add" controller="shoppingCart" method="post" id="${produtoInstance.id}"> 
 						
 							<g:if test="${produtoInstance.isMultiUnidade()}">
 

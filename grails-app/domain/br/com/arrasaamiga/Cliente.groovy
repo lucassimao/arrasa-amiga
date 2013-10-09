@@ -3,8 +3,6 @@ package br.com.arrasaamiga
 class Cliente {
 
 	String nome
-	Date dataNascimento
-
 	String celular
     String dddCelular
 
@@ -15,12 +13,16 @@ class Cliente {
 
 	Usuario usuario
 
+    Date dateCreated
+
 	static embedded = ['endereco']
-	static transients = ['email','senha']
+	static transients = ['email','senha','fromTeresina']
 
 
     static mapping = {
         usuario cascade: 'all'
+        endereco cascade: 'all'
+        autoTimestamp true
     }
 
 
@@ -33,10 +35,15 @@ class Cliente {
     	telefone(blank:false,nullable:false,maxSize:9)
         dddTelefone(blank:false,nullable:false,maxSize:2)
     	endereco(nullable:false)
-    	dataNascimento(nullable:false)
     	usuario(nullable:false)
+        dateCreated(nullable:true)
 
 
+    }
+
+    public boolean isFromTeresina(){
+
+        return this.endereco?.cidade?.id == Cidade.teresina.id
     }
 
     public void setCelular(String celular){

@@ -9,7 +9,6 @@ class Venda {
 	List itensVenda
 	Date dateCreated
 	Cliente cliente
-	Endereco enderecoEntrega
 
 	int freteEmCentavos
 	int subTotalItensEmCentavos
@@ -20,8 +19,6 @@ class Venda {
 
     StatusVenda status
 
-    // apenas para clientes de Teresina
-    String informacoesAdicionaisEntrega
     Date dataEntrega
 
     String transacaoPagSeguro
@@ -33,7 +30,6 @@ class Venda {
 	static hasMany = [itensVenda:ItemVenda]
 	static transients = ['valorTotal','paymentURL','pagSeguroService',
                         'detalhesPagamento','subTotalItensEmReais','descontoEmReais','freteEmReais']
-    static embedded = ['enderecoEntrega']
 
     static constraints = {
     	freteEmCentavos(min:0)
@@ -44,8 +40,6 @@ class Venda {
     	formaPagamento(nullable:false)
         status(nullable:false)
         cliente(nullable:false)
-        enderecoEntrega(nullable:false)
-        informacoesAdicionaisEntrega(blank:true,nullable:true)
         dataEntrega(nullable:true)
         transacaoPagSeguro(blank:true,nullable:true)
         carrinho(nullable:true)
@@ -126,11 +120,11 @@ class Venda {
         // país, estado, cidade, bairro, CEP, rua, número, complemento
         paymentRequest.setShippingAddress(  
             "BRA",   
-            cliente.endereco.uf.name(),   
-            cliente.endereco.cidade,   
+            cliente.endereco.uf.sigla,   
+            cliente.endereco.cidade.nome,   
             cliente.endereco.bairro,  
             cliente.endereco.cep,    
-            cliente.endereco.endereco,    
+            cliente.endereco.complemento,    
             "0",   
             cliente.endereco.complemento    
         );  

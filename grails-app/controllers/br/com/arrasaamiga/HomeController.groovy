@@ -3,7 +3,7 @@ package br.com.arrasaamiga
 class HomeController {
 
 
-	def shoppingCartService
+	//def shoppingCartService
     def springSecurityService	
 
 	def index(){
