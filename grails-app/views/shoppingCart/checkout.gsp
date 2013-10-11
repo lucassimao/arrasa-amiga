@@ -347,7 +347,7 @@
 						          </div>						          
 
 						          <div style="clear:both;">
-						          	<label> Complemento: </label>
+						          	<label style="font-weight:bold;"> Complemento: </label>
 						          	<input class="input-xxlarge" value="${venda?.cliente?.endereco?.complemento}" 
 						          		placeholder="casa, quadra, apartamento, rua, número, ponto de referência ... "  
 						          		name="cliente.endereco.complemento" type="text" >
@@ -499,7 +499,7 @@
 							</div>
 
 
-							<div id="div-pagamento-pagseguro" class="span7 well" style="padding-right:0px;">
+							<div id="div-pagamento-pagseguro" class="span7 well pull-right" style="padding-right:0px;">
 								<label class="radio">
 									<input name="formaPagamento" type="radio" value="PagSeguro" checked > 
 									<span class="forma-pagamento-selecionado"> Cartão de Crédito / Transferência Bancária / Boleto Bancário </span>								

@@ -1,3 +1,6 @@
+<%@ page import="br.com.arrasaamiga.Uf" %>
+<%@ page import="br.com.arrasaamiga.Cidade" %>
+
 <!DOCTYPE html>
 <!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
 <!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
@@ -76,6 +79,67 @@
 			ga('create', 'UA-43736713-1', 'arrasaamiga.com.br');
 			ga('send', 'pageview');
 
+			$(function(){
+
+				$("#como-comprar").click(function(event){
+					event.preventDefault();
+
+					$('#myModal').modal();
+				});
+
+				
+				$("#myModal-select-uf").change(function(){
+					var idUf = $(this).val();
+
+					$.ajax({
+						
+						url: "${createLink(controller:'shoppingCart',action:'getCidades',absolute:true)}",
+						data: {'idUf': idUf},
+						settings: {'cache':true}
+
+					}).success(function( data, textStatus, jqXHR ) {
+
+						$("#myModal-select-cidade").empty();
+
+						$.each(data,function(index,objCidade){
+
+							var nomeCidade = objCidade.nome;
+							var idCidade = objCidade.id;
+							
+							var option = $("<option/>").text(nomeCidade).attr("value",idCidade);
+							if (nomeCidade === 'Teresina'){
+								$(option).attr('selected',true);
+							}
+							$("#myModal-select-cidade").append(option);
+
+
+						});
+
+						$("#myModal #select-cidade").change();
+
+					
+					}).fail(function(){
+						alert("Erro ao carregar cidades");
+
+					});
+				});
+
+				$("#myModal #btn-ok").click(function(event){
+					event.preventDefault();
+
+					var idCidade = $("#myModal-select-cidade").val();
+					var url = "${createLink(controller:'home',action:'comocomprar',absolute:true)}?";
+					url += $.param({cidade: idCidade});
+
+					window.location =  url  ;
+
+				});
+
+				$("#myModal-select-uf").change();
+
+
+			});
+
 		</g:javascript>
 
 	</head>
@@ -92,6 +156,35 @@
 
 
 		
+		<div id="myModal" class="modal hide fade">
+		  <div class="modal-header">
+		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		    <h3> Qual sua cidade? </h3>
+		  </div>
+		  <div class="modal-body">
+		          <div style="clear:both;float:left;margin-right:10px;">
+		              <label style="font-weight:bold;"> Estado: </label>
+
+		              <g:select class="input-medium" value="${ Uf.get(17).id }" id="myModal-select-uf" name="uf"
+		              		optionValue="nome" optionKey="id" from="${Uf.list()}" />
+
+		          </div>
+
+		          <div style="float:left;margin-right:10px;">
+		              <label style="font-weight:bold;"> Cidade: </label>
+
+		              <g:select name="cidade" class="input-large" value="${}" id="myModal-select-cidade" from="${}" />
+
+		          </div>
+		  </div>
+		  <div class="modal-footer">
+		     <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+		     <a href="#" id="btn-ok" class="btn btn-primary"> OK </a>
+		  </div>
+		</div>
+
+
+		
 
 		<div class="container" >
 			
@@ -103,19 +196,20 @@
 						<div class="nav-collapse collapse">
 							<ul class="nav">
 
-								<li class="${(controllerName == null)?'active':''}">
+								<li class="${(controllerName == 'home' && actionName =='index')?'active':''}">
 									<a href="${createLinkTo(uri:'/',absolute:true)}">  
 										<i class=" icon-home  icon-large"></i> Home
 									</a>
 								</li>
 
-								<!--
-								<li>
-									<a href="#" id="como-comprar">
-										<i class="icon-question-sign  icon-large"></i> Como Comprar ? 
-									</a>
+								
+								<li id="como-comprar" class="${(controllerName == 'home' && actionName =='comocomprar')?'active':''}">
+									<g:link controller="home" action="comocomprar">
+										<i class="icon-question-sign  icon-large"></i> Como Comprar
+									</g:link>
 								</li>
-								-->
+
+								
 
 								<li>
 									<a href="https://www.facebook.com/arrasaamiga" target="_blank">
