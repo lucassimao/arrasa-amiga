@@ -82,7 +82,7 @@
 											for(var count=1; count <= qtdeEmEstoque;++count){
 												var option = $("<option/>").text(count).attr("value",count);
 												$("#select-quantidade").append(option);
-											}form-produto
+											}
 
 										}else{
 
@@ -249,9 +249,7 @@
 									<p id="label-tipo-unitario"> ${produtoInstance.tipoUnitario}: </p>
 
 
-									<g:select value="${ (unidadeComEstoque)?:estoques[0].unidade}" id="select-unidade" 
-												name="unidade"
-										 from="${produtoInstance.unidades}"/>
+									<g:select value="${ (unidadeComEstoque)?:estoques[0].unidade}" id="select-unidade" name="unidade" from="${produtoInstance.unidades}"/>
 
 									<p id="label-quantidade" style="left:110px;"> Quantidade:</p>
 									<g:select style="left:110px;" id="select-quantidade" name="quantidade" from="${[]}" /> 
