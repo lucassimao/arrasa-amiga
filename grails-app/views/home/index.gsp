@@ -24,7 +24,7 @@
 				color:#ad96a5;
 				font-size:20px;
 				position:absolute;
-				bottom: 50px;
+				bottom: 65px;
 				font-weight:bold;
 			}
 
@@ -33,7 +33,7 @@
 				color:#ad96a5;
 				font-size:12px;
 				position:absolute;
-				bottom: 28px;
+				bottom: 38px;
 			}
 
 			.item-produto{
@@ -99,10 +99,9 @@
 					
 				<div class="span3 item-produto">
 					
-					<g:img dir="img/produtos" file="${produto.fotoMiniatura}" alt="${produto.nome}" title="${produto.nome}"/>
-
-
+					
 					<a href="${createLink(uri:produto.nomeAsURL, absolute:true)}"> 
+						<g:img dir="img/produtos" file="${produto.fotoMiniatura}" alt="${produto.nome}" title="${produto.nome}"/>
 						<h5> ${produto.nome} </h5>
 					</a>
 					
