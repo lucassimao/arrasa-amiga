@@ -192,7 +192,7 @@
 			<div class="well well-titulo-produto">	
 				<h3> ${produtoInstance.nome} </h3>
 			</div>
-		
+
 
       		<div class="row-fluid" style="clear:both;">
       			
@@ -324,6 +324,10 @@
 
 
       		</div>
+
+      		            <a href="${createLinkTo(uri:'/',absolute:true)}" class="btn btn-success">
+                <i class="icon-backward icon-white"></i>  Voltar
+            </a>
 
 
 	</body>
