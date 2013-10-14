@@ -225,9 +225,15 @@
 
 	      			<div id="produto-detalhes" class="span7">
 
-						<small class="well-detalhes-descricao">
+						<p class="well-detalhes-descricao">
 							${produtoInstance.descricao}
-						</small>
+						</p>
+						
+						<p>
+							<div class="fb-like" style="float:right;" data-href="${ (request.requestURL?.equals('/'))?'http://www.arrasaamiga.com.br': request.requestURL }" data-width="100px" 
+							data-height="The pixel height of the plugin" data-colorscheme="light" data-layout="button_count" data-action="recommend" 
+							data-show-faces="true" data-send="true"></div>
+						</p>
 
 						<h3 id="label-preco">  
 							<g:formatNumber number="${produtoInstance.precoAPrazoEmReais}" type="currency" 
