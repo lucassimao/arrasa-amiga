@@ -27,11 +27,11 @@
 				$(function(){
 
 
-
 					$("#btn-comprar").click(function(event){
 						event.preventDefault();
 						$('#form-produto').submit();
 					});
+
 
 					$(".fancybox").fancybox();
 
@@ -301,13 +301,11 @@
 											<div style="display:none;font-size:14px;color:blue;" id="aviso-ativado">
 													Avisaremos você assim que novas unidades chegarem ;-) 
 											</div>
+											
+
 											<div style="display:none;" id="ativar-aviso">
-												<a href="${createLink(controller:'produto',action:'avisar',
-															id:produtoInstance.id,params:[un:estoque.unidade])}">
-															Quer saber assim que chegar ?  
-												</a> 
+												<a data-toggle="modal" style="cursor:pointer;" data-target="#modal">Quer saber assim que chegar ?</a>
 											</div>
-										</div>
 										
 									</g:else>
 
@@ -323,9 +321,11 @@
 
       		</div>
 
-      		            <a href="${createLinkTo(uri:'/',absolute:true)}" class="btn btn-success">
+      		<a href="${createLinkTo(uri:'/',absolute:true)}" class="btn btn-primary">
                 <i class="icon-backward icon-white"></i>  Voltar
             </a>
+
+            <g:render template="aviseme" model="['produtoInstance':produtoInstance]"/>
 
 
 	</body>

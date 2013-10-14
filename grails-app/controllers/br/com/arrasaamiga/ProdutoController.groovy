@@ -287,6 +287,41 @@ class ProdutoController {
             unidadeComEstoque: unidadeComEstoque, cliente:cliente]
     }
 
+
+    def salvarAviso(Long id){
+        
+        def aviso = new Aviso(params)
+        def produto = aviso.produto
+
+        if (!produto){
+            println "Alguem tentanto carregar o produto ${id} ...."
+            redirect(uri:'/', absolute:true)
+            return
+        }
+
+        String unidade = aviso.unidade
+
+        if (!unidade){
+            println "Alguem tentanto carregar o produto ${id} sem unidade ...."
+            redirect(uri:'/', absolute:true)
+            return            
+        }
+
+        if (!produto.unidades.contains(unidade)){
+            println "Não existe a unidade ${params.unidade} no produto ${id} ...."
+            redirect(uri:'/', absolute:true)
+            return            
+        }
+
+
+        aviso.save()
+    
+        flash.info = 'Amiga, avisaremos você assim que novas unidades chegarem !!'
+        redirect(action:'detalhes',id:produto.id)
+
+    }
+
+
     def quantidadeEmEstoque(Long produtoId,String unidade) {
 
         def produtoInstance = Produto.get(produtoId)
@@ -313,9 +348,11 @@ class ProdutoController {
 
             if (quantidade == 0){
                 def user = springSecurityService.currentUser
-                def cliente = Cliente.findByUsuario(user)
                 
-                marcadoParaAvisar = ( Aviso.findByProdutoAndClienteAndUnidade(produtoInstance,cliente,unidade) != null )
+                if (user){
+                    def cliente = Cliente.findByUsuario(user)
+                    marcadoParaAvisar = ( Aviso.findByProdutoAndEmailAndUnidade(produtoInstance,cliente.email,unidade) != null )
+                }
             }
 
             render (['quantidade': quantidade, 'marcadoParaAvisar': marcadoParaAvisar] as JSON)
@@ -328,42 +365,5 @@ class ProdutoController {
          
     }
 
-    @Secured(['IS_AUTHENTICATED_FULLY'])
-    def avisar(Long id){
-        def produto = Produto.get(id)
 
-        if (!produto){
-            println "Alguem tentanto carregar o produto ${id} ...."
-            redirect(uri:'/', absolute:true)
-            return
-        }
-
-        String unidade = params.un
-
-        if (!unidade){
-            println "Alguem tentanto carregar o produto ${id} sem unidade ...."
-            redirect(uri:'/', absolute:true)
-            return            
-        }
-
-        if (!produto.unidades.contains(unidade)){
-            println "Não existe a unidade ${params.unidade} no produto ${id} ...."
-            redirect(uri:'/', absolute:true)
-            return            
-        }
-
-
-        def user = springSecurityService.currentUser
-
-        def aviso = new Aviso()
-        aviso.cliente = Cliente.findByUsuario(user)
-        aviso.produto = produto
-        aviso.unidade = unidade
-
-        aviso.save()
-    
-        flash.info = 'Amiga, avisaremos você assim que novas unidades chegarem !!'
-        redirect(action:'detalhes',id:produto.id)
-
-    }
 }
