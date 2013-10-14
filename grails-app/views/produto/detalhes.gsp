@@ -33,6 +33,8 @@
 				});
 
 
+
+
 				$(".fancybox").fancybox();
 
 				<g:each in="${produtoInstance.fotos}" var="fotoProduto" status="i">
