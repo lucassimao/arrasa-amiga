@@ -13,16 +13,16 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-		<meta property="fb:admins" content="1665191676"/>
-		<meta property="fb:admins" content="100002204592399"/>
-		<meta property="fb:admins" content="100002253748681"/>
+		<meta property="fb:admins" content="1665191676">
+		<meta property="fb:admins" content="100002204592399">
+		<meta property="fb:admins" content="100002253748681">
 
-		<meta property="og:site_name" content="Arrasa Amiga"/>
-		<meta property="og:type" content="website" /> 
-		<meta property="og:url" content="${ (request.requestURL?.equals('/'))?'http://www.arrasaamiga.com.br': request.requestURL }" /> 
-		<meta property="og:title" name="title" content="${ layoutTitle() }" /> 
-		<meta property="og:description" content="${pageProperty(name:'page.description')}" />
-		<meta property="og:image" content="${ pageProperty(name:'page.og:image') }" /> 
+		<meta property="og:site_name" content="Arrasa Amiga">
+		<meta property="og:type" content="website" > 
+		<meta property="og:url" content="${ (request.requestURL?.equals('/'))?'http://www.arrasaamiga.com.br': request.requestURL }" > 
+		<meta property="og:title" name="title" content="${ layoutTitle() }" > 
+		<meta property="og:description" content="${pageProperty(name:'page.description')}" >
+		<meta property="og:image" content="${ pageProperty(name:'page.og:image') }" > 
 
 
 
