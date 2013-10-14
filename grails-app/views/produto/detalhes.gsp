@@ -15,121 +15,48 @@
 		<parameter name="keywords" value="${keywords}" />
 		<parameter name="og:image" value="${resource(dir:'img/produtos',file:produtoInstance.fotoMiniatura,absolute:true)}"/>
 
-
-
-
 		<meta name="layout" content="main"/>
 
-			<r:require module="detalhesProdutos"/>
-
-			<g:javascript>
-				
-				$(function(){
 
 
-					$("#btn-comprar").click(function(event){
-						event.preventDefault();
-						$('#form-produto').submit();
-					});
+		<link type="text/css"  rel="stylesheet" href="${resource(dir: 'css/produto', file: 'detalhes.css')}" > </link>
+		<r:require module="detalhesProdutos"/>
+
+		<g:javascript>
+			
+			$(function(){
 
 
-					$(".fancybox").fancybox();
-
-					<g:each in="${produtoInstance.fotos}" var="fotoProduto" status="i">
-						$("#img${i}").data('unidade',"${fotoProduto.unidade}");
-					</g:each>
-
-					<g:if test="${produtoInstance.isMultiUnidade()}">
-
-							$("#select-unidade").change(function(){
-
-								var unidade = $(this).val();
-
-								$(".carousel-inner img").each(function(index,img){
-
-									if ( $(img).data('unidade') === unidade ){
-
-										$(".carousel").carousel(index);
-										return false;
-									}
-
-								});
+				$("#btn-comprar").click(function(event){
+					event.preventDefault();
+					$('#form-produto').submit();
+				});
 
 
-								$.ajax({
-										
-										url: "${createLink(controller:'produto',action:'quantidadeEmEstoque',absolute:true)}",
-										data: {'produtoId': ${produtoInstance.id} , 'unidade': unidade},
-										settings: {'cache':false}
+				$(".fancybox").fancybox();
 
-									}).success(function( data, textStatus, jqXHR ) {
+				<g:each in="${produtoInstance.fotos}" var="fotoProduto" status="i">
+					$("#img${i}").data('unidade',"${fotoProduto.unidade}");
+				</g:each>
 
-										var qtdeEmEstoque = parseInt(data.quantidade);
+				<g:if test="${produtoInstance.isMultiUnidade()}">
 
-										$("#select-quantidade").empty();
-										$("#msg-estoque-esgotado").css('display','none');
-										$("#aviso-ativado").hide();
-										$("#ativar-aviso").hide();
+						$("#select-unidade").change(function(){
 
-										if ( qtdeEmEstoque > 0 ){
+							var unidade = $(this).val();
 
-											$("#select-quantidade").show();
-											$("#label-quantidade").show();
-											$("#btn-comprar").show();
+							$(".carousel-inner img").each(function(index,img){
 
-											// adicionando as quantidades
+								if ( $(img).data('unidade') === unidade ){
 
-											for(var count=1; count <= qtdeEmEstoque;++count){
-												var option = $("<option/>").text(count).attr("value",count);
-												$("#select-quantidade").append(option);
-											}
-
-										}else{
-
-										
-											$("#select-quantidade").hide();
-											$("#label-quantidade").hide();
-											$("#btn-comprar").hide();
-											$("#msg-estoque-esgotado #unidade").text(unidade);
-											$("#msg-estoque-esgotado").show({duration:250});
-
-											var marcadoParaAvisar = Boolean(data.marcadoParaAvisar);
-											
-											if (marcadoParaAvisar){
-												$("#aviso-ativado").show();
-												$("#ativar-aviso").hide();
-
-											}else{
-												$("#aviso-ativado").hide();
-												$("#ativar-aviso").show();
-
-												var url = "${createLink(controller:'produto',action:'avisar',id:produtoInstance.id)}";
-												$("#clica-aqui").attr("href", url + "?" + $.param({'un':unidade}));
-											}
-
-										}
-
-
-
-									
-									}).fail(function(){
-
-
-									});
-
+									$(".carousel").carousel(index);
+									return false;
+								}
 
 							});
 
-							// carregando estoque para o primeiro item da lista de unidades
-							$("#select-unidade").change();
 
-					</g:if>
-					<g:else>
-						$(function(){
-
-								var unidade = $("#unidade").val();
-
-								$.ajax({
+							$.ajax({
 									
 									url: "${createLink(controller:'produto',action:'quantidadeEmEstoque',absolute:true)}",
 									data: {'produtoId': ${produtoInstance.id} , 'unidade': unidade},
@@ -138,38 +65,107 @@
 								}).success(function( data, textStatus, jqXHR ) {
 
 									var qtdeEmEstoque = parseInt(data.quantidade);
-									var marcadoParaAvisar = Boolean(data.marcadoParaAvisar);
+
+									$("#select-quantidade").empty();
+									$("#msg-estoque-esgotado").css('display','none');
+									$("#aviso-ativado").hide();
+									$("#ativar-aviso").hide();
+
+									if ( qtdeEmEstoque > 0 ){
+
+										$("#select-quantidade").show();
+										$("#label-quantidade").show();
+										$("#btn-comprar").show();
+
+										// adicionando as quantidades
+
+										for(var count=1; count <= qtdeEmEstoque;++count){
+											var option = $("<option/>").text(count).attr("value",count);
+											$("#select-quantidade").append(option);
+										}
+
+									}else{
 
 									
-									if ( qtdeEmEstoque == 0 ){
+										$("#select-quantidade").hide();
+										$("#label-quantidade").hide();
+										$("#btn-comprar").hide();
+										$("#msg-estoque-esgotado #unidade").text(unidade);
+										$("#msg-estoque-esgotado").show({duration:250});
 
+										var marcadoParaAvisar = Boolean(data.marcadoParaAvisar);
+										
 										if (marcadoParaAvisar){
-
-											$("#aviso-ativado").show({duration:250});
+											$("#aviso-ativado").show();
+											$("#ativar-aviso").hide();
 
 										}else{
-										
-											$("#ativar-aviso").show({duration:250});										
+											$("#aviso-ativado").hide();
+											$("#ativar-aviso").show();
+
 										}
+
 									}
 
 
-
-								
 								}).fail(function(){
 
 
 								});
 
 
-						});						
-					</g:else>
+						});
+
+						// carregando estoque para o primeiro item da lista de unidades
+						$("#select-unidade").change();
+
+				</g:if>
+				<g:else>
+					$(function(){
+
+							var unidade = $("#unidade").val();
+
+							$.ajax({
+								
+								url: "${createLink(controller:'produto',action:'quantidadeEmEstoque',absolute:true)}",
+								data: {'produtoId': ${produtoInstance.id} , 'unidade': unidade},
+								settings: {'cache':false}
+
+							}).success(function( data, textStatus, jqXHR ) {
+
+								var qtdeEmEstoque = parseInt(data.quantidade);
+								var marcadoParaAvisar = Boolean(data.marcadoParaAvisar);
+
+								
+								if ( qtdeEmEstoque == 0 ){
+
+									if (marcadoParaAvisar){
+
+										$("#aviso-ativado").show({duration:250});
+
+									}else{
+									
+										$("#ativar-aviso").show({duration:250});										
+									}
+								}
 
 
-				});
-			</g:javascript>
+
+							
+							}).fail(function(){
+
+
+							});
+
+
+					});						
+				</g:else>
+
+
+			});
+		</g:javascript>
 		
-		<link type="text/css"  rel="stylesheet" href="${resource(dir: 'css/produto', file: 'detalhes.css')}" > </link>
+		
 
 	</head>
 	<body>
@@ -197,6 +193,9 @@
       		<div class="row-fluid" style="clear:both;">
       			
       			<div class="well well-detalhes">
+
+
+
 
 	      			<div id="produto-fotos" class="span5">
 
@@ -247,8 +246,6 @@
 							<g:if test="${produtoInstance.isMultiUnidade()}">
 
 									<p id="label-tipo-unitario"> ${produtoInstance.tipoUnitario}: </p>
-
-
 									<g:select value="${ (unidadeComEstoque)?:estoques[0].unidade}" id="select-unidade" name="unidade" from="${produtoInstance.unidades}"/>
 
 									<p id="label-quantidade" style="left:110px;"> Quantidade:</p>
@@ -261,13 +258,11 @@
 											
 
 									<div style="font-size:14px;color:blue;position:absolute;display:none;bottom:5px;left:110px;" id="aviso-ativado">
-										
-											Avisaremos você assim que novas unidades chegarem ;-) 
-
+										Avisaremos você assim que novas unidades chegarem ;-) 
 									</div>
 
 									<div style="position:absolute;display:none;bottom:5px;left:110px;" id="ativar-aviso">
-										<a id="clica-aqui" href="#"> Quer saber assim que chegar ? </a> 
+										<a data-toggle="modal" style="cursor:pointer;" data-target="#modal">Quer saber assim que chegar ?</a>
 									</div>
 
 									<a class="btn btn-primary btn-large" id="btn-comprar"  name="btn-comprar">
@@ -306,6 +301,7 @@
 											<div style="display:none;" id="ativar-aviso">
 												<a data-toggle="modal" style="cursor:pointer;" data-target="#modal">Quer saber assim que chegar ?</a>
 											</div>
+										</div>
 										
 									</g:else>
 

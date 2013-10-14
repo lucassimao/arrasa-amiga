@@ -15,32 +15,32 @@
 
             <fieldset>
 
-                  <div class="control-group ${hasErrors(bean: aviso, field: 'nome', 'error')}">
+                  <div class="control-group">
                       <label style="font-weight:bold;"> Nome: </label>
-                      <input type="text" name="nome" required placeholder="Nome completo …" class="span12">
+                      <input type="text" name="nome" required placeholder="Nome completo …" class="span5">
                   </div>
 
-                  <div class="control-group ${hasErrors(bean: aviso, field: 'email', 'error')}">
+                  <div class="control-group">
                       <label style="font-weight:bold;"> E-mail: </label>
                       <input class="input-large" required name="email" type="email" >
                   </div>
 
-                  <div style="float:left;" class="control-group ${hasErrors(bean: aviso, field: 'dddTelefone', 'error')}">
+                  <div style="float:left;" class="control-group ">
                       <label style="font-weight:bold;"> Telefone: </label>
                       <input type="tel" required placeholder="DDD" name="dddTelefone" maxlength="2" class="input-mini" >
 
                   </div>
 
-                  <div style="float:left;margin-right:10px;" class="control-group ${hasErrors(bean: aviso, field: 'telefone', 'error')}">
+                  <div style="float:left;margin-right:10px;" class="control-group">
                       <input style="margin-top:25px;margin-left:5px;" type="tel" required value="${aviso?.telefone}" placeholder="numero" maxlength="9" name="telefone" class="input-small">
                   </div>                      
 
-                  <div style="float:left;"  class="control-group ${hasErrors(bean: aviso, field: 'dddCelular', 'error')}">
+                  <div style="float:left;"  class="control-group">
                       <label style="font-weight:bold;"> Celular: </label> 
                       <input type="tel" required placeholder="DDD" maxlength="2" name="dddCelular" class="input-mini" >
                   </div>
 
-                  <div  class="control-group ${hasErrors(bean: aviso, field: 'celular', 'error')}">
+                  <div  class="control-group">
                       <input style="margin-top:25px;margin-left:5px;" required type="tel" placeholder="numero" maxlength="9" name="celular" class="input-small">
                   </div>
 
