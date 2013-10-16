@@ -6,7 +6,7 @@
 <!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
 <!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]-->
 <!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"><!--<![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js" xmlns:fb="http://www.facebook.com/2008/fbml"><!--<![endif]-->
 	<head>
 
 
@@ -17,6 +17,7 @@
 		<meta property="fb:admins" content="100002204592399"/>
 		<meta property="fb:admins" content="100002253748681"/>
 
+		<meta property="fb:app_id" content="592257150816024"/> 
 		<meta property="og:site_name" content="Arrasa Amiga"/>
 		<meta property="og:type" content="website" /> 
 		<meta property="og:url" content="${ (request.requestURL?.equals('/'))?'http://www.arrasaamiga.com.br': request.requestURL }" /> 
@@ -147,14 +148,27 @@
 	</head>
 	<body>
 
-		<div id="fb-root"></div>
-		<script>(function(d, s, id) {
-		  var js, fjs = d.getElementsByTagName(s)[0];
-		  if (d.getElementById(id)) return;
-		  js = d.createElement(s); js.id = id;
-		  js.src = "//connect.facebook.net/pt_BR/all.js#xfbml=1";
-		  fjs.parentNode.insertBefore(js, fjs);
-		}(document, 'script', 'facebook-jssdk'));</script> 
+		<div id="fb-root" style="display:none;"></div>
+		<script>
+
+			$(document).ready(function() {
+			  
+			  $.ajaxSetup({ cache: true });
+
+			  $.getScript('//connect.facebook.net/pt_BR/all.js#xfbml=1', function(){
+				    FB.init({
+				      appId: '592257150816024', xfbml: true  
+				    });     
+
+					FB.Event.subscribe('auth.login', function(response) {
+						alert(response);
+					});
+
+
+			  });
+			});
+
+		</script> 
 
 
 		
@@ -273,8 +287,10 @@
 			                        	
 			                        	<sec:ifNotLoggedIn>
 											<li><a href="${createLink(controller:'login')}"> Entrar </a></li>
+											<!--
 											<li><a href="${createLink(controller:'cliente',action:'cadastro')}"> Quero me cadastrar ! </a></li>
 											<li><a href="#"> Esqueci minha senha! </a></li>
+											-->
 			                        	</sec:ifNotLoggedIn>
 
 			                        </ul>

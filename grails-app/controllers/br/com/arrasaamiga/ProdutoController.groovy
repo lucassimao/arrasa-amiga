@@ -3,7 +3,12 @@ package br.com.arrasaamiga
 import org.springframework.dao.DataIntegrityViolationException
 import grails.plugins.springsecurity.Secured
 import grails.converters.*
- 
+
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
+import grails.converters.JSON
+import org.apache.commons.codec.binary.Base64
+
 class ProdutoController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
@@ -290,36 +295,63 @@ class ProdutoController {
 
     def salvarAviso(Long id){
         
-        def aviso = new Aviso(params)
-        def produto = aviso.produto
+        //Facebook App info
+        String fbSecretKey = "d1392b8e735e984825ea27846a7ee107";
+        String fbAppId = "592257150816024";
 
-        if (!produto){
-            println "Alguem tentanto carregar o produto ${id} ...."
-            redirect(uri:'/', absolute:true)
-            return
+
+        //it is important to enable url-safe mode for Base64 encoder 
+        Base64 base64 = new Base64(true);
+
+        //split request into signature and data
+        String[] signedRequest = params.signed_request.split("\\.", 2);
+
+        //parse signature
+        String sig = new String(base64.decode(signedRequest[0].getBytes("UTF-8")));
+
+        //parse data and convert to json object
+        def data = JSON.parse(new String(base64.decode(signedRequest[1].getBytes("UTF-8"))))
+
+        //check signature algorithm
+        if(!data.algorithm.equals("HMAC-SHA256")) {
+            //unknown algorithm is used
+            return null;
         }
 
-        String unidade = aviso.unidade
-
-        if (!unidade){
-            println "Alguem tentanto carregar o produto ${id} sem unidade ...."
-            redirect(uri:'/', absolute:true)
-            return            
+        //check if data is signed correctly
+        if(!hmacSHA256(signedRequest[1], fbSecretKey).equals(sig)) {
+            //signature is not correct, possibly the data was tampered with
+            return null;
         }
 
-        if (!produto.unidades.contains(unidade)){
-            println "Não existe a unidade ${params.unidade} no produto ${id} ...."
-            redirect(uri:'/', absolute:true)
-            return            
-        }
+        //def oauth_token = data.oauth_token
 
+
+        def aviso = new Aviso()
+        aviso.nome = data.registration.name
+        aviso.email = data.registration.email
+        aviso.celular = data.registration.celular
+        aviso.produto = Produto.load(data.registration.idProduto)
+        aviso.unidade = data.registration.unidade
+        aviso.facebookUserId = data.user_id
 
         aviso.save()
-    
+
         flash.info = 'Amiga, avisaremos você assim que novas unidades chegarem !!'
-        redirect(action:'detalhes',id:produto.id)
+        redirect(uri:aviso.produto.nomeAsURL)
 
     }
+
+    //HmacSHA256 implementation 
+    private String hmacSHA256(String data, String key) throws Exception {
+        SecretKeySpec secretKey = new SecretKeySpec(key.getBytes("UTF-8"), "HmacSHA256");
+        Mac mac = Mac.getInstance("HmacSHA256");
+        mac.init(secretKey);
+        byte[] hmacData = mac.doFinal(data.getBytes("UTF-8"));
+        return new String(hmacData);
+    }
+
+
 
 
     def quantidadeEmEstoque(Long produtoId,String unidade) {
