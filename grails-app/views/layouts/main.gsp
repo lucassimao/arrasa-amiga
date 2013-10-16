@@ -268,9 +268,10 @@
 
 			                        <ul class="dropdown-menu">
 			                        	<sec:ifLoggedIn>
-											<li><a href="#"> Meus Pedidos</a></li>
+
+											<!-- <li><a href="#"> Meus Pedidos</a></li>
 											<li><a href="#"> Meus Produtos Favoritos </a></li>
-											<li class="divider"></li>
+											<li class="divider"></li> -->
 											
 											<sec:ifAllGranted roles="ROLE_ADMIN">
 

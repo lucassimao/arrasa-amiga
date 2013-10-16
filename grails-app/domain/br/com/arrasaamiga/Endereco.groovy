@@ -11,7 +11,7 @@ class Endereco {
     static constraints = {
     	cep(blank:true,nullable:true,validator:{val,obj->
 
-            if (obj.cidade?.id != Cidade.teresina.id ){
+            if (obj.cidade?.id != Cidade.teresina.id &&  obj.cidade?.id != Cidade.timon.id ){
                 return val?.trim()?.size()>0
             }
 
@@ -27,7 +27,7 @@ class Endereco {
 
 
     public void setCidade(Cidade cidade){
-        if (cidade?.id == Cidade.teresina.id){
+        if (cidade?.id == Cidade.teresina.id || cidade?.id == Cidade.timon.id){
             this.cep = ''
         }
         this.cidade = cidade

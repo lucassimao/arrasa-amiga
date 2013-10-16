@@ -42,7 +42,7 @@
 
 					var formaPagamento = $("input[name='formaPagamento']:checked").val();
 
-					if (uf === 'Piauí' && cidade === 'Teresina' ){
+					if ( (uf === 'Piauí' && cidade === 'Teresina') || (uf === 'Maranhão' && cidade === 'Timon' ) ){
 
 						$("#div-pagamento-avista").css('display','block');
 
@@ -157,7 +157,7 @@
 				        scrollTop: $("#anchor-form-informacoes-entrega").offset().top - 45
 				    }, 1500);
 
-				    $("#form-fechar-venda div.error input").first().focus();
+				    $("#form-fechar-venda .error input").first().focus();
 
 				</g:if>
 
@@ -377,7 +377,7 @@
 					<legend> <i class="icon-calendar"></i> Entrega </legend>
 
 					<p style="text-align:justify;font-weigth:bold;text-indent:20px;"> 						
-						Em Teresina as entregas são feitas em domicílio a partir das 17:30 nas terças e quintas, e nos sábados pela manhã! Selecione uma das seguintes datas para receber seu pedido:
+						As entregas são feitas em domicílio a partir das 17:30 nas terças e quintas, e nos sábados pela manhã! Selecione uma das seguintes datas para receber seu pedido:
 					</p>
 
 

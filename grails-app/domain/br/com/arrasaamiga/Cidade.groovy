@@ -5,7 +5,7 @@ class Cidade {
 	String nome
 	Uf uf
 	
-	static transients = ['teresina']
+	static transients = ['teresina','timon']
 
 	static mapping = {
 		uf column : 'estado'
@@ -13,6 +13,10 @@ class Cidade {
 
 	public static Cidade getTeresina(){
 		return Cidade.findByUfAndNome(Uf.piaui,'Teresina')
+	}
+
+	public static Cidade getTimon(){
+		return Cidade.findByUfAndNome(Uf.maranhao,'Timon')
 	}
 
 }

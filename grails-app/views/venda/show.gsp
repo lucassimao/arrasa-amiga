@@ -53,7 +53,13 @@
 
         <hr>
 
-        <g:img style="margin-top:45px;" dir="img" file="timeline-01.png"/>
+        <g:if test="${venda.formaPagamento.equals(FormaPagamento.AVista)}">
+            <g:img style="margin-top:45px;" dir="img" file="timeline-02.png"/>
+        </g:if>
+        <g:else>
+            <g:img style="margin-top:45px;" dir="img" file="timeline-01.png"/>
+            
+        </g:else>
         
       </div>
 
@@ -65,7 +71,7 @@
           <div class="row-fluid">
             <div class="span5">
 
-              <g:if test="${!cliente.fromTeresina}">
+              <g:if test="${!cliente.isDentroDaAreaDeEntregaRapida()}">
                 <label> <span class="caption"> CEP: </span> ${enderecoEntrega.cep} </label>
               </g:if>
 
@@ -77,7 +83,7 @@
 
               <label> <span class="caption"> Complemento: </span>  ${enderecoEntrega.complemento}</label>
 
-              <g:if test="${cliente.fromTeresina}">
+              <g:if test="${cliente.isDentroDaAreaDeEntregaRapida()}">
                 <label> <span class="caption"> Dia da Entrega: </span> <g:formatDate format="EEEE, dd/MM/yyyy" date="${dataEntrega}"/> </label>
               </g:if>
 
@@ -164,7 +170,7 @@
             </div>
           </div>
 
-          <g:if test="${!cliente.fromTeresina}">
+          <g:if test="${!cliente.isDentroDaAreaDeEntregaRapida()}">
 
             <div id="div-frete" style="clear:both;">
               <h5 style="display:inline;color:blue;">Frete</h5>

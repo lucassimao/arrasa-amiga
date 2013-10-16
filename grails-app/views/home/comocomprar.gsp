@@ -2,7 +2,7 @@
 <html>
 	<head>
 
-		<title> Arrasa Amiga : Como Comprar  </title>
+		<title> Arrasa Amiga: Como Comprar  </title>
 		<parameter name="description" value="Dicas úteis sobre como comprar na Arrasa Amiga" />
 		<parameter name="keywords" value="Maquiagem, blushes, NYX, batom, sombra, paleta,Teresina, Piauí, maquiadora" />
 		<parameter name="og:image" value="${resource(dir:'img',file:'top.jpg',absolute:true)}"/>
@@ -77,7 +77,7 @@
 					<h3> Página Principal</h3>
 					<p>
 						Bem vinda amiga! Assim que você acessa o nosso site, você encontra vários produtos 
-						de maquiagem disponíveis a pronta entrega aqui mesmo em Teresina ! 
+						de maquiagem disponíveis a pronta entrega aqui mesmo em ${cidade} ! 
 					</p>
 
 				</div>
@@ -226,7 +226,7 @@
 						suas comprinhas! 
 					</p>
 					<p>
-						Em Teresina, as entregas são feitas nas terças e quintas a partir das 18hrs.
+						Em ${cidade}, as entregas são feitas nas terças e quintas a partir das 18hrs.
 						No sábado tambem fazemos entregas, pelo período da manhã.
 					</p>
 					<p> 

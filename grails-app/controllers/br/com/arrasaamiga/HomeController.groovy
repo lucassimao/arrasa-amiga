@@ -18,14 +18,14 @@ class HomeController {
 		try{
 			def cidade = Cidade.get(params.cidade)
 
-			if (cidade?.uf?.sigla == 'PI' && cidade?.nome == 'Teresina'){
-				render(view:'comocomprar-teresina')
+			if ( cidade.id == Cidade.teresina.id || cidade.id == Cidade.timon.id ){
+				render(view:'comocomprar',model:[cidade: cidade.nome])
 			}else{
-				render(view:'comocomprar-outras-cidades')
+				render(view:'comocomprar-outras-cidades',model:[cidade: cidade.nome])
 			}
 
 		}catch(Exception e){
-			render(view:'comocomprar-outras-cidades')
+			render(view:'comocomprar-outras-cidades',model:[cidade: ''])
 		}
 
 	}

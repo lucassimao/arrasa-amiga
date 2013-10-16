@@ -300,7 +300,7 @@ class ShoppingCartController {
         }
 
      
-        if ( !venda.cliente.isFromTeresina() && venda.formaPagamento != FormaPagamento.PagSeguro  ){
+        if ( !venda.cliente.isDentroDaAreaDeEntregaRapida() && venda.formaPagamento != FormaPagamento.PagSeguro  ){
 
             flash.message = "Forma de pagamento inválida!" 
             render(view: "checkout",model:model) 
@@ -308,7 +308,7 @@ class ShoppingCartController {
         }
         
 
-        if ( venda.cliente.isFromTeresina() ){
+        if ( venda.cliente.isDentroDaAreaDeEntregaRapida() ){
 
             if (venda.dataEntrega){
 
@@ -348,7 +348,7 @@ class ShoppingCartController {
         venda.status = StatusVenda.AguardandoPagamento
         venda.itensVenda = shoppingCartService.checkOut()
 
-        if (!venda.cliente.isFromTeresina()){
+        if (!venda.cliente.isDentroDaAreaDeEntregaRapida()){
             venda.freteEmCentavos = frete*100    
         }
 
