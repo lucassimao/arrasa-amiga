@@ -326,7 +326,6 @@ class ProdutoController {
 
         //def oauth_token = data.oauth_token
 
-
         def aviso = new Aviso()
         aviso.nome = data.registration.name
         aviso.email = data.registration.email

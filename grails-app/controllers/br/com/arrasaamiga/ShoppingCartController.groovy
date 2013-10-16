@@ -364,7 +364,7 @@ class ShoppingCartController {
 
             venda.carrinho.checkedOut = true
             venda.carrinho.save()
-            venda.save()
+            venda.save(flush:true)
 
             redirect(action:'show',controller:'venda', id:venda.id)
             return
@@ -372,7 +372,7 @@ class ShoppingCartController {
         }else{
             
 
-            venda.save() // salva logo, pois precisa do ID da venda para registrar com a transação de pagamento do pagseguro
+            venda.save(flush:true) // salva logo, pois precisa do ID da venda para registrar com a transação de pagamento do pagseguro
             // não elimina o carrinho ainda, pq nao sabe se vai dar certo. So vai eliminar no retorno do pag seguro
             
             def paymentURL = null
@@ -380,6 +380,7 @@ class ShoppingCartController {
             try{
                 
                 paymentURL = venda.getPaymentURL()
+
                 redirect(url:paymentURL)
                 return
                 

@@ -160,11 +160,6 @@
 				      appId: '592257150816024', xfbml: true  
 				    });     
 
-					FB.Event.subscribe('auth.login', function(response) {
-						alert(response);
-					});
-
-
 			  });
 			});
 

@@ -41,6 +41,12 @@
 				</li>
 
 				<li>
+					<a style="${ (controllerName.equals('venda'))?'background-color:#666;color:white;':'' }" href="${createLink(controller: 'venda')}">
+						Vendas
+					</a>
+				</li>
+
+				<li>
 					<a style="${ (controllerName.equals('aviso'))?'background-color:#666;color:white;':'' }" href="${createLink(controller: 'aviso')}">
 						Avisos
 					</a>
