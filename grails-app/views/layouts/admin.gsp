@@ -41,6 +41,12 @@
 				</li>
 
 				<li>
+					<a style="${ (controllerName.equals('aviso'))?'background-color:#666;color:white;':'' }" href="${createLink(controller: 'aviso')}">
+						Avisos
+					</a>
+				</li>
+
+				<li>
 					<a style="${ (controllerName.equals('clienteAvulso'))?'background-color:#666;color:white;':'' }" href="${createLink(controller: 'clienteAvulso')}">
 						Contatos de Clientes
 					</a>

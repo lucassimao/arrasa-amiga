@@ -7,13 +7,6 @@
 		<g:set var="entityName" value="${message(code: 'produto.label', default: 'Produto')}" />
 		<title><g:message code="default.list.label" args="[entityName]" /></title>
 
-		<style type="text/css">
-			table {
-			}
-
-			table td {
-			}
-		</style>
 	</head>
 	<body>
 		<a href="#list-produto" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
