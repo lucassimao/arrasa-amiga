@@ -329,7 +329,7 @@
 						              <label style="font-weight:bold;"> Cidade: </label>
 
 						              <g:select class="input-medium" value="${venda?.cliente?.endereco?.cidade?.id}" 
-						              			name="cliente.endereco.cidade.id" id="select-cidade" from="${}" />
+						              			name="cliente.endereco.cidade.id" id="select-cidade" from="${[]}" />
 
 						          </div>
 

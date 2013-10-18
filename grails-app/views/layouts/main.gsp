@@ -184,7 +184,7 @@
 		          <div style="float:left;margin-right:10px;">
 		              <label style="font-weight:bold;"> Cidade: </label>
 
-		              <g:select name="cidade" class="input-large" value="${}" id="myModal-select-cidade" from="${}" />
+		              <g:select name="cidade" class="input-large" value="${[]}" id="myModal-select-cidade" from="${[]}" />
 
 		          </div>
 		  </div>
