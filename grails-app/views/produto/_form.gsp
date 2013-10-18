@@ -16,6 +16,16 @@
 	<g:textArea name="descricao" style="width:400px;" cols="40" rows="5" maxlength="100000" required="" value="${produtoInstance?.descricao}"/>
 </div>
 
+<div class="fieldcontain ${hasErrors(bean: produtoInstance, field: 'visivel', 'error')} required">
+	<label for="visivel">
+		Visível:
+		<span class="required-indicator">*</span>
+	</label>	
+	<g:checkBox name="visivel" value="true" checked="${produtoInstance?.visivel}"  />
+
+</div>
+
+
 <div class="fieldcontain ${hasErrors(bean: produtoInstance, field: 'precoAVistaEmReais', 'error')} required">
 	<label for="precoAVistaEmReais">
 		Valor Unitário A Vista

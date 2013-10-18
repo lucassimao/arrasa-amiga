@@ -54,7 +54,10 @@ class ProdutoController {
 
     @Secured(['ROLE_ADMIN'])
     def create() {
-        [produtoInstance: new Produto(params)]
+        def produtoInstance = new Produto(params)
+        produtoInstance.visivel = true
+
+        [produtoInstance: produtoInstance]
     }
 
     @Secured(['ROLE_ADMIN'])
@@ -171,7 +174,7 @@ class ProdutoController {
         }
 
 
-        
+        produtoInstance.visivel = params.visivel
         produtoInstance.nome = params.nome
         produtoInstance.descricao = params.descricao
         produtoInstance.tipoUnitario = params.tipoUnitario

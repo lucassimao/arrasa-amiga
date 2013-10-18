@@ -12,7 +12,15 @@ class HomeController {
         def user = springSecurityService.currentUser
         def cliente = Cliente.findByUsuario(user)
 
-        [cliente : cliente]
+		def criteria = Produto.createCriteria()
+		def produtos = criteria.list {
+		    eq("visivel", true)
+		    order("ordem", "asc")
+		}
+
+
+		[produtos:produtos]
+
 	}
 
 	def comocomprar(){
@@ -34,7 +42,14 @@ class HomeController {
 
 	@Secured(['ROLE_ADMIN'])
 	def organizarHome(){
+		def criteria = Produto.createCriteria()
+		def produtos = criteria.list {
+		    eq("visivel", true)
+		    order("ordem", "asc")
+		}
 
+
+		[produtos:produtos]
 	}
 
 	@Secured(['ROLE_ADMIN'])

@@ -77,7 +77,7 @@
       		<g:set var="count" value="${0}"/>
       		<g:set var="qtdeProduto" value="${Produto.count()}"/>
 
-      		<g:each in="${Produto.listOrderByOrdem()}" var="produto" status="i">
+      		<g:each in="${produtos}" var="produto" status="i">
 
       			<g:if test="${ count == 0 }">
 					<div class="row-fluid" style="margin-bottom:20px;">

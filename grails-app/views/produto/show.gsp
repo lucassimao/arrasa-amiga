@@ -49,14 +49,23 @@
 				</g:if>
 			
 				<g:if test="${produtoInstance?.descricao}">
+					<li class="fieldcontain">
+						<span id="descricao-label" class="property-label"><g:message code="produto.descricao.label" default="Descricao" /></span>
+						
+							<span class="property-value" aria-labelledby="descricao-label"><g:fieldValue bean="${produtoInstance}" field="descricao"/></span>
+						
+					</li>
+				</g:if>
+				
 				<li class="fieldcontain">
-					<span id="descricao-label" class="property-label"><g:message code="produto.descricao.label" default="Descricao" /></span>
+					<span class="property-label">Visível</span>
 					
-						<span class="property-value" aria-labelledby="descricao-label"><g:fieldValue bean="${produtoInstance}" field="descricao"/></span>
+						<span class="property-value" aria-labelledby="descricao-label">
+							${ (produtoInstance.visivel)?'Sim':'Não'}
+						</span>
 					
 				</li>
-				</g:if>
-			
+
 				<g:if test="${produtoInstance?.tipoUnitario}">
 				<li class="fieldcontain">
 					<span id="tipoUnitario-label" class="property-label"><g:message code="produto.tipoUnitario.label" default="Tipo Unitario" /></span>
