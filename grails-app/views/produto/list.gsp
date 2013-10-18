@@ -66,6 +66,12 @@
 
 		<div class="nav" role="navigation" style="margin-top:20px;">
 			<ul>
+				<li style="float:right;">
+					<g:link class="create" style="background-image: url(../img/resize_big.png);" 
+						controller="home" action="organizarHome">
+						Organizar Página Inicial 
+					</g:link>
+				</li>
 				<li style="float:right;"><g:link class="create" action="create"> Cadastrar Novo Produto</g:link></li>
 			</ul>
 		</div>

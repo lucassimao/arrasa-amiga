@@ -14,6 +14,8 @@ class Produto {
     int precoAVistaEmCentavos
     int precoAPrazoEmCentavos
 
+    int ordem
+
 	static hasMany = [fotos:FotoProduto,unidades:String]
 	static transients = ['precoAVistaEmReais','precoAPrazoEmReais','estoques','quantidadeEmEstoque','nomeAsURL','multiUnidade','descontoAVistaEmReais']
 
@@ -24,6 +26,7 @@ class Produto {
         fotoMiniatura(nullable:true,blank:true)
     	precoAVistaEmCentavos(min:0)
         precoAPrazoEmCentavos(min:0)
+        ordem(min:0)
     }
 
     static mapping = {

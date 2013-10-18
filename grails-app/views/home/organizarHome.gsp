@@ -13,11 +13,6 @@
 		<meta name="layout" content="main"/>
 
 		<style type="text/css">
-			.btnComprar{
-				left:26%;
-				position:absolute;
-				bottom: 10px;
-			}
 
 			.label-preco{
 				left:30%;
@@ -60,8 +55,6 @@
 				});
 
 
-
-
 			});
 
 
@@ -72,24 +65,17 @@
 	<body>
 
 
-
-
+			<g:link style="margin-top:20px;" controller="produto" class=" btn btn-primary"> 
+				<i class="icon-backward"> </i> Voltar
+			</g:link>	
 
 			<hr>
-
-			<g:if test='${flash.message}'>
-				<div class='alert alert-info' style="margin-top:10px;font-weight:bold;">
-					<button type="button" class="close" data-dismiss="alert">&times;</button>
-					<i class="icon-ok"> </i> ${flash.message}
-				</div>
-			</g:if>
-
-			<div id="toast">
-				<img />
-				<label/>
-			</div>
+			
+			<g:set var="ocultarRodape" value="${true}" scope="request"/>
+			<g:set var="ocultarMenu" value="${true}" scope="request"/>
 
       		<g:set var="count" value="${0}"/>
+      		<g:set var="qtdeProduto" value="${Produto.count()}"/>
 
       		<g:each in="${Produto.listOrderByOrdem()}" var="produto" status="i">
 
@@ -109,42 +95,41 @@
 						<g:formatNumber number="${produto.precoAPrazoEmReais}" type="currency" 
 						currencyCode="BRL" />
 					</p>
-
 					
 						
-					<p class="label-desconto-a-vista"> 
-						Desconto para pagamento à vista
-					</p>
-
-
-
 					<p>
 
-						<g:if test="${produto.isMultiUnidade()}">
-
-							<a href="${createLink(uri:produto.nomeAsURL, absolute:true)}" class="btnComprar btn btn-primary" > 
-								<i class="icon-shopping-cart"> </i> Comprar
-							</a>
-
-						</g:if>
-						<g:else>
 							
-							<g:form action="add" controller="shoppingCart">
-								<g:hiddenField name="id" value="${produto.id}"/>
-								<g:hiddenField name="unidade" value="${produto.unidades[0]}"/>
-								<g:hiddenField name="quantidade" value="${1}"/>
-								
 
+						<div style="position:absolute;bottom: 10px;margin-left:15px;">
 
-								<g:link id="${produto.id}" class="btnComprar btn btn-primary" url="#"> 
-									<i class="icon-shopping-cart"> </i>  Comprar 
+							<g:if test="${i > 0}">
+								<g:link action="left" controller="home" id="${produto.id}" class=" btn btn-primary"> 
+									<i class="icon-arrow-left"> </i>  
 								</g:link>
+							</g:if>
 
-							</g:form>  									
+							<g:if test="${ (i+1) > 4 }">
+								<g:link action="up" controller="home" id="${produto.id}"  class="btn btn-primary"> 
+									<i class="icon-arrow-up"> </i>  
+								</g:link>
+							</g:if>
+
+							<g:if  test="${ i < (qtdeProduto - 4) }">
+								<g:link action="down" controller="home" id="${produto.id}" class=" btn btn-primary"> 
+									<i class="icon-arrow-down"> </i>  
+								</g:link>
+							</g:if>
+
+							<g:if test="${ (i+1) < qtdeProduto}">
+								<g:link action="right" controller="home" id="${produto.id}" class=" btn btn-primary"> 
+									<i class="icon-arrow-right"> </i> 
+								</g:link>
+							</g:if>
+
+						</div>
+																								
 						
-						</g:else>
-
-
 
 					</p>
 
