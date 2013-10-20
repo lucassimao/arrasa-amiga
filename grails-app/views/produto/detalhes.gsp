@@ -230,7 +230,7 @@
 						</p>
 						
 						<p>
-							<div class="fb-like" style="float:right;" data-href="${ (request.requestURL?.equals('/'))?'http://www.arrasaamiga.com.br': request.requestURL }" data-width="100px" 
+							<div class="fb-like" style="float:right;" data-href="${ createLink(uri:produto.nomeAsURL, absolute:true) }" data-width="100px" 
 							data-height="The pixel height of the plugin" data-colorscheme="light" data-layout="button_count" data-action="recommend" 
 							data-show-faces="true" data-send="true"></div>
 						</p>
