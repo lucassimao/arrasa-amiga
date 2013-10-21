@@ -72,11 +72,15 @@ class Venda {
         
         }else{
 
-            if (!transacaoPagSeguro){
-                throw new IllegalStateException("Não posso obter detalhes do pagamento sem a transação com PagSeguro!")
-            }
+            if (this.transacaoPagSeguro){
 
-            return pagSeguroService.getDetalhesPagamento(transacaoPagSeguro)
+                return pagSeguroService.getDetalhesPagamento(transacaoPagSeguro)
+
+            }else{
+
+                return 'Transação não foi finalizada. Cliente não concluiu compra'
+
+            }
 
         }
 
