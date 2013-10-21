@@ -79,6 +79,8 @@ class VendaController {
         @Secured(['IS_AUTHENTICATED_FULLY'])
         def list(Integer max) {
                 params.max = Math.min(max ?: 10, 100)
+                params.sort = 'dateCreated'
+                params.order = 'desc'
                 [vendaInstanceList: Venda.list(params), vendaInstanceTotal: Venda.count()]
         }
 
