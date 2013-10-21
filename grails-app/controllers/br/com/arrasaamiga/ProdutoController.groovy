@@ -49,7 +49,7 @@ class ProdutoController {
     def list(Integer max) {
         params.max = Math.min(max ?: 10, 100)
         
-        [produtoInstanceList: Produto.list(params), produtoInstanceTotal: Produto.count()]
+        [produtoInstanceList: Produto.executeQuery('from Produto p order by visivel desc,ordem asc',[],params), produtoInstanceTotal: Produto.count()]
     }
 
     @Secured(['ROLE_ADMIN'])

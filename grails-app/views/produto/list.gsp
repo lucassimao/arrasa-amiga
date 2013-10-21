@@ -34,7 +34,7 @@
 				</thead>
 				<tbody>
 				<g:each in="${produtoInstanceList}" status="i" var="produtoInstance">
-					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}" >
+					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}" style="${ (produtoInstance.visivel)?'':'text-decoration:line-through;'}" >
 					
 						<td>
 							<g:link action="show" id="${produtoInstance.id}" >
@@ -52,7 +52,7 @@
 								currencyCode="BRL" />							
 						</td>
 					
-						<td>${produtoInstance.unidades.join(',')}</td>
+						<td style="max-width:200px;">${produtoInstance.unidades.join(',')}</td>
 					
 					</tr>
 				</g:each>
