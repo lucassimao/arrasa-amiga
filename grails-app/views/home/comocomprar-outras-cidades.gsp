@@ -77,7 +77,7 @@
 					<h3> Página Principal</h3>
 					<p>
 						Bem vinda amiga! Assim que você acessa o nosso site, você encontra vários produtos 
-						de maquiagem disponíveis a pronta entrega! 
+						de maquiagem disponíveis à pronta entrega! 
 					</p>
 
 				</div>
@@ -226,7 +226,7 @@
 					</p>
 
 					<p>
-						Para pagamentos através de boleto ou transferência, você tem desconto !!!
+						Para pagamentos através de boleto ou transferência, você tem desconto!!!
 						Todo procedimento é muito seguro e tranquilo.
 					</p>
 
@@ -252,7 +252,7 @@
 						suas comprinhas! 
 					</p>
 					<p>
-						Nos enviaremos imediatamente o seu pedido via sedex e um código de rastreamento por email
+						Nós enviaremos imediatamente o seu pedido via sedex e um código de rastreamento por email
 						para você saber exatamente quando seus produtos serão entregues
 					</p>
 					<p> 

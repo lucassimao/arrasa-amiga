@@ -77,7 +77,7 @@
 					<h3> Página Principal</h3>
 					<p>
 						Bem vinda amiga! Assim que você acessa o nosso site, você encontra vários produtos 
-						de maquiagem disponíveis a pronta entrega aqui mesmo em ${cidade} ! 
+						de maquiagem disponíveis à pronta entrega aqui mesmo em ${cidade} ! 
 					</p>
 
 				</div>
@@ -105,7 +105,7 @@
 					<h3> Comprando </h3>
 
 					<p>
-						Amou um dos nossos produtos? É muito fácil comprar!
+						Amou nossos produtos? É muito fácil comprar!
 						Basta clicar no botão "Comprar", logo abaixo do produto que você deseja  adquirir e 
 						ele será adicionado ao seu carrinho de compras ...
 
@@ -127,8 +127,8 @@
 				<div class="span6">
 					<h3> Selecionando </h3>
 					<p>
-						Alguns produtos você deve escolher a cor, tamanho ou modelo ( como bases, batons e 
-						corretivos por exemplo ). Depois de ter escolhido, basta clicar novamente no botão "Comprar" 
+						Alguns produtos você deve escolher a cor, tamanho ou modelo (como bases, batons e 
+						corretivos por exemplo). Depois de ter escolhido, basta clicar novamente no botão "Comprar" 
 						que o produto será adicionado no seu carrinho de compras.
 
 					</p>
@@ -191,7 +191,7 @@
 					</p>
 
 					<p>
-						Para pagamento a vista, sempre tem desconto! Você finaliza a compra e paga quando receber seu pedido.
+						Para pagamento à vista, sempre tem desconto! Você finaliza a compra e paga quando receber seu pedido.
 					</p>
 					<p>
 						Se você selecionar pagamento com cartão de crédito, você informará qual
@@ -227,7 +227,7 @@
 					</p>
 					<p>
 						Em ${cidade}, as entregas são feitas nas terças e quintas a partir das 18hrs.
-						No sábado tambem fazemos entregas, pelo período da manhã.
+						No sábado também fazemos entregas, pelo período da manhã.
 					</p>
 					<p> 
 						Qualquer dúvida, basta entrar em contato pela nossa 
