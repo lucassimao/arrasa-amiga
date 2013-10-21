@@ -1,5 +1,7 @@
 
 <%@ page import="br.com.arrasaamiga.Venda" %>
+<%@ page import="br.com.arrasaamiga.StatusVenda" %>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -26,6 +28,7 @@
 					
 						<g:sortableColumn property="status" title="${message(code: 'venda.status.label', default: 'Status')}" />
 						<th> Data </th>
+						<th> Marcar como entregue </th>
 					
 					</tr>
 				</thead>
@@ -41,6 +44,17 @@
 						<td>${fieldValue(bean: vendaInstance, field: "status")}</td>
 
 						<td> <g:formatDate format="dd/MM/yyyy" date="${vendaInstance.dateCreated}" /> </td>
+						<td>
+							<g:if test="${vendaInstance.status != StatusVenda.Entregue}">
+								<g:form>
+										<g:hiddenField name="id" value="${vendaInstance?.id}" />
+										<g:hiddenField name="offset" value="${params.offset}" />
+										<g:hiddenField name="max" value="${params.max}" />
+										<g:actionSubmit class="delete" action="marcarComoEntregue" value="Marcar" onclick="return confirm('Tem certeza');" />
+								</g:form>
+							</g:if>
+						</td>
+
 					
 					</tr>
 				</g:each>

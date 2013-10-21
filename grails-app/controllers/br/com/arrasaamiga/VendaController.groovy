@@ -47,6 +47,26 @@ class VendaController {
 
         }
 
+        @Secured(['IS_AUTHENTICATED_FULLY'])
+        def marcarComoEntregue(Long id){
+                def v = Venda.get(id)
+                v.status = StatusVenda.Entregue
+
+                v.save(flush:true)
+
+                flash.message = 'A venda foi marcada como entregue'
+                
+                if (params.offset && params.max){
+                        redirect(action:'list', params:[offset:params.offset, max: params.max] )
+                }else{
+                        redirect(action:'list')
+                }
+                
+
+        }
+
+
+
         def cancelada(){
 
         }
