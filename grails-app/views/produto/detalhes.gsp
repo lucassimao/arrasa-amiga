@@ -230,14 +230,13 @@
 						</p>
 						
 						<p>
-							<div class="fb-like" style="float:right;" data-href="${ createLink(uri:produtoInstance.nomeAsURL, absolute:true) }" data-width="100px" 
+							<div class="fb-like" style="float:right;margin-right:1px;" data-href="http://www.arrasaamiga.com.br/Paleta-de-Blushes---10-Tons-7" data-width="100px" 
 							data-height="The pixel height of the plugin" data-colorscheme="light" data-layout="button_count" data-action="recommend" 
 							data-show-faces="true" data-send="true"></div>
 						</p>
 
 						<h3 id="label-preco">  
-							<g:formatNumber number="${produtoInstance.precoAPrazoEmReais}" type="currency" 
-								currencyCode="BRL" />
+							<span> <g:formatNumber number="${produtoInstance.precoAPrazoEmReais}" type="currency" 	currencyCode="BRL" /> </span>
 							<i class="icon-tag"></i> 
 						</h3>
 
