@@ -121,7 +121,8 @@
 
 					
 					}).fail(function(){
-						alert("Erro ao carregar cidades");
+						//alert("Erro ao carregar cidades");
+						window.location = "${createLink(controller:'shoppingCart',action:'checkout',absolute:true)}"
 
 					});
 				});

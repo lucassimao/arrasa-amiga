@@ -117,11 +117,9 @@
 						});
 
 						$("#myModal #select-cidade").change();
-
 					
 					}).fail(function(){
-						alert("Erro ao carregar cidades");
-
+						window.location = 'http://www.arrasaamiga.com.br';
 					});
 				});
 
