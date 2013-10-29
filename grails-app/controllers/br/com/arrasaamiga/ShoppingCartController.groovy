@@ -10,6 +10,7 @@ class ShoppingCartController {
 
 	def shoppingCartService
     def springSecurityService
+    //def mailService
 
     static allowedMethods = [add: "POST", removerProduto: "POST"]
 
@@ -242,6 +243,21 @@ class ShoppingCartController {
             itens: itens, frete: frete, desconto:desconto,valorAVista:valorAVista, diasDeEntrega: diasDeEntrega]
     }
 
+    /*
+    private void enviarEmail(Venda venda){
+        
+        mailService.sendMail {
+          to "lsimaocosta@gmail.com"
+          subject "Nova venda - #${venda.id} - ${venda.cliente.nome}"
+          body( view:"/venda/showFull", model:[numeroPedido: String.format("%05d", venda.id) , venda : venda,
+            enderecoEntrega: venda.cliente.endereco,itens: venda.itensVenda?:venda.carrinho.itens,
+            cliente: venda.cliente, subTotal: venda.subTotalItensEmReais, 
+            detalhesPagamento: venda.detalhesPagamento, frete: venda.freteEmReais,desconto: venda.descontoEmReais,
+            valorTotal:venda.valorTotal,dataEntrega: venda.dataEntrega])
+        }
+
+    }*/
+
     def fecharVenda(){
 
 
@@ -358,13 +374,14 @@ class ShoppingCartController {
 
         venda.cliente.save()
         
-        springSecurityService.reauthenticate(venda.cliente.email)      
-        
+        springSecurityService.reauthenticate(venda.cliente.email)  
+
         if ( venda.formaPagamento == FormaPagamento.AVista ){
 
             venda.carrinho.checkedOut = true
             venda.carrinho.save()
             venda.save(flush:true)
+            
 
             redirect(action:'show',controller:'venda', id:venda.id)
             return
@@ -373,7 +390,7 @@ class ShoppingCartController {
             
 
             venda.save(flush:true) // salva logo, pois precisa do ID da venda para registrar com a transação de pagamento do pagseguro
-            // não elimina o carrinho ainda, pq nao sabe se vai dar certo. So vai eliminar no retorno do pag seguro
+                // não elimina o carrinho ainda, pq nao sabe se vai dar certo. So vai eliminar no retorno do pag seguro
             
             def paymentURL = null
 

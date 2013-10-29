@@ -26,9 +26,10 @@ class Venda {
     ShoppingCart carrinho
 
     def pagSeguroService
+   
 
 	static hasMany = [itensVenda:ItemVenda]
-	static transients = ['valorTotal','paymentURL','pagSeguroService',
+	static transients = ['valorTotal','paymentURL','pagSeguroService','mailService',
                         'detalhesPagamento','subTotalItensEmReais','descontoEmReais','freteEmReais']
 
     static constraints = {
@@ -146,6 +147,5 @@ class Venda {
 
         return paymentRequest.register(pagSeguroService.accountCredentials);
     }
-
 
 }

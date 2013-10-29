@@ -1,5 +1,7 @@
 <%@ page import="br.com.arrasaamiga.Produto" %>
 <%@ page import="br.com.arrasaamiga.FormaPagamento" %>
+<%@ page contentType="text/html"%>
+
 
 <!DOCTYPE html>
 <html>
@@ -44,10 +46,10 @@
         <hr>
 
         <g:if test="${venda.formaPagamento.equals(FormaPagamento.AVista)}">
-            <g:img style="margin-top:45px;" dir="img" file="timeline-02.png"/>
+            <g:img style="margin-top:45px;" absolute="true" dir="img" file="timeline-02.png"/>
         </g:if>
         <g:else>
-            <g:img style="margin-top:45px;" dir="img" file="timeline-01.png"/>
+            <g:img style="margin-top:45px;" absolute="true" dir="img" file="timeline-01.png"/>
             
         </g:else>
         
@@ -59,27 +61,34 @@
           <legend> <i class="icon-truck"></i> Entrega </legend>
 
           <div class="row-fluid">
-            <div class="span5">
+              <div class="span5">
 
-              <g:if test="${!cliente.isDentroDaAreaDeEntregaRapida()}">
-                <label> <span class="caption"> CEP: </span> ${enderecoEntrega.cep} </label>
-              </g:if>
+                    <label> <span class="caption"> Nome: </span> ${cliente.nome} </label>
 
-              <label> <span class="caption"> Estado: </span> ${enderecoEntrega.uf.nome}</label>
+                    <label> <span class="caption"> Telefone: </span> ${cliente.dddTelefone} - ${cliente.telefone}</label>
+                    <label> <span class="caption"> Celular: </span> ${cliente.dddCelular} - ${cliente.celular}</label>
 
-              <label> <span class="caption"> Cidade: </span> ${enderecoEntrega.cidade.nome}</label>
-
-              <label> <span class="caption"> Bairro: </span> ${enderecoEntrega.bairro} </label>
-
-              <label> <span class="caption"> Complemento: </span>  ${enderecoEntrega.complemento}</label>
-
-              <g:if test="${cliente.isDentroDaAreaDeEntregaRapida()}">
-                <label> <span class="caption"> Dia da Entrega: </span> <g:formatDate format="EEEE, dd/MM/yyyy" date="${dataEntrega}"/> </label>
-              </g:if>
-
-
-            </div>
+              </div>
             
+              <div class="span5">
+
+                    <g:if test="${!cliente.isDentroDaAreaDeEntregaRapida()}">
+                      <label> <span class="caption"> CEP: </span> ${enderecoEntrega.cep} </label>
+                    </g:if>
+
+                    <label> <span class="caption"> Estado: </span> ${enderecoEntrega.uf.nome}</label>
+
+                    <label> <span class="caption"> Cidade: </span> ${enderecoEntrega.cidade.nome}</label>
+
+                    <label> <span class="caption"> Bairro: </span> ${enderecoEntrega.bairro} </label>
+
+                    <label> <span class="caption"> Complemento: </span>  ${enderecoEntrega.complemento}</label>
+
+                    <g:if test="${cliente.isDentroDaAreaDeEntregaRapida()}">
+                      <label> <span class="caption"> Dia da Entrega: </span> <g:formatDate format="EEEE, dd/MM/yyyy" date="${dataEntrega}"/> </label>
+                    </g:if>
+
+              </div>            
           </div>
 
         </div>
@@ -105,7 +114,7 @@
               
               <tr>
                 <td style="text-align:left !important;">
-                  <g:img dir="img/produtos" style="float:left;" file="${produto.fotoMiniatura}"/>
+                  <g:img dir="img/produtos" absolute="true" style="float:left;" file="${produto.fotoMiniatura}"/>
 
                   <div>
                     <label>${produto.nome }</label>

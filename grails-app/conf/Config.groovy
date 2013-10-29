@@ -105,3 +105,16 @@ grails.plugins.springsecurity.rememberMe.alwaysRemember = true // por 14 dias
 grails.plugins.springsecurity.controllerAnnotations.staticRules = [
    '/console/**': ['ROLE_ADMIN']
 ] 
+
+grails {
+   mail {
+     host = "smtp.gmail.com"
+     port = 465
+     username = "arrasa.amiga@gmail.com"
+     password = "20130704"
+     props = ["mail.smtp.auth":"true",             
+              "mail.smtp.socketFactory.port":"465",
+              "mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
+              "mail.smtp.socketFactory.fallback":"false"]
+   }
+}
