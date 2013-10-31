@@ -240,34 +240,35 @@
 									</li>
 
 								</ul>
+
+								<!--
 								<ul class="nav pull-right">
 
+									
 									<li class="dropdown">
+									
 				                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-				                        	<sec:ifLoggedIn>
-				                        		<g:set var="style" value="color:#F29BF2;"/>
-				                        	</sec:ifLoggedIn>
 
-				                        	<sec:ifNotLoggedIn>
-				                        		<g:set var="style" value=""/>
-				                        	</sec:ifNotLoggedIn>
-
-				                        	<i style="${style}" class="icon-female icon-large"></i> 
-				                        	<sec:ifNotLoggedIn>
-				                        		Entrar
-				                        	</sec:ifNotLoggedIn>
 				                        	<sec:ifLoggedIn>
+				                        		<i style="color:#F29BF2;" class="icon-female icon-large"></i> 
 				                        		Você
 				                        	</sec:ifLoggedIn>
+
+				                        	<sec:ifNotLoggedIn>
+				                        		<i class="icon-female icon-large"></i> 
+				                        		Entrar
+				                        	</sec:ifNotLoggedIn>
+
 				                        	<b class="caret"></b>
 				                       	</a>
 
 				                        <ul class="dropdown-menu">
+				                        	
 				                        	<sec:ifLoggedIn>
+												
+												<li><a href="#"> Meus Pedidos</a></li>	
 
-												<!-- <li><a href="#"> Meus Pedidos</a></li>
-												<li><a href="#"> Meus Produtos Favoritos </a></li>
-												<li class="divider"></li> -->
+												<li class="divider"></li>
 												
 												<sec:ifAllGranted roles="ROLE_ADMIN">
 
@@ -284,16 +285,14 @@
 				                        	
 				                        	<sec:ifNotLoggedIn>
 												<li><a href="${createLink(controller:'login')}"> Entrar </a></li>
-												<!--
-												<li><a href="${createLink(controller:'cliente',action:'cadastro')}"> Quero me cadastrar ! </a></li>
 												<li><a href="#"> Esqueci minha senha! </a></li>
-												-->
 				                        	</sec:ifNotLoggedIn>
 
 				                        </ul>
 			                      </li>
 
-								</ul>
+
+								</ul>-->
 
 							</div>
 						</div>
