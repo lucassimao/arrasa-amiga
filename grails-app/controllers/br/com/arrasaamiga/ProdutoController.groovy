@@ -372,7 +372,7 @@ class ProdutoController {
 
         if (!produtoInstance.unidades.contains(unidade)){
             render "erro"
-            throw new Exception("Não existe a unidade ${params.unidade} no produto ${id} ....")
+            throw new Exception("Não existe a unidade ${params.unidade} no produto ${produtoId} ....")
         }
 
         try{
