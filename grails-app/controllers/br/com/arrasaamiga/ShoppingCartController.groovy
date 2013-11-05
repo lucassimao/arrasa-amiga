@@ -212,14 +212,20 @@ class ShoppingCartController {
             return
         }
 
-        def frete = 25         
+        def frete = 25
+        def taxaEntrega = 0
+
         def valorAPrazo = somarValorTotalAPrazoDoCarrinho()
         def valorAVista = somarValorTotalAVistaDoCarrinho()
 
         def desconto = valorAPrazo - valorAVista
 
-        def totalAPrazo = valorAPrazo + frete
-        def totalAVista = valorAVista + frete
+        if (valorAPrazo < 50){
+            taxaEntrega = 2.5
+        }
+
+        def totalAPrazo = valorAPrazo + frete + taxaEntrega
+        def totalAVista = valorAVista + frete + taxaEntrega
 
         List diasDeEntrega = getProximosDiasDeEntrega()
 
@@ -239,7 +245,7 @@ class ShoppingCartController {
         
         
 
-        ['totalAPrazo':totalAPrazo,'totalAVista':totalAVista,valorAPrazo:valorAPrazo,venda: venda,
+        ['totalAPrazo':totalAPrazo,'totalAVista':totalAVista,valorAPrazo:valorAPrazo,venda: venda,taxaEntrega:taxaEntrega,
             itens: itens, frete: frete, desconto:desconto,valorAVista:valorAVista, diasDeEntrega: diasDeEntrega]
     }
 
@@ -257,6 +263,23 @@ class ShoppingCartController {
         }
 
     }*/
+
+    private boolean validarDataEntrega(List datasDeEntrega, Date dataEscolhida){
+        def calDiaEntrega = Calendar.getInstance()
+        calDiaEntrega.time = dataEscolhida
+        
+
+        boolean dataSelecionadaCorretamente = datasDeEntrega.any {dia-> 
+           
+            def cal2 = Calendar.getInstance()
+            cal2.time = dia
+
+            boolean sameDay = calDiaEntrega.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                              calDiaEntrega.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
+
+            return sameDay
+        }        
+    }
 
     def fecharVenda(){
 
@@ -284,10 +307,10 @@ class ShoppingCartController {
         List diasDeEntrega = getProximosDiasDeEntrega()
         def itens = shoppingCartService.itens
         def frete = 25   
+        def taxaEntrega = 0
         def desconto = valorAPrazo - valorAVista
         def totalAPrazo = valorAPrazo + frete
         def totalAVista = valorAVista + frete 
-
 
         def venda = new Venda(params)
         
@@ -300,10 +323,16 @@ class ShoppingCartController {
             venda.cliente.usuario.enabled = true
             venda.cliente.senha = '12345'
         }
+
+        if (venda.cliente.isDentroDaAreaDeEntregaRapida()){
+            taxaEntrega = 2.5
+            totalAPrazo += taxaEntrega
+            totalAVista += taxaEntrega
+        }
         
         def model = [totalAPrazo:totalAPrazo,
                      totalAVista:totalAVista,
-                     valorAPrazo:valorAPrazo,
+                     valorAPrazo:valorAPrazo,taxaEntrega:taxaEntrega,
                      venda: venda,itens: itens, 
                      frete: frete, desconto:desconto,valorAVista:valorAVista, 
                      diasDeEntrega: diasDeEntrega]
@@ -322,28 +351,13 @@ class ShoppingCartController {
             render(view: "checkout",model:model) 
             return                
         }
-        
+
 
         if ( venda.cliente.isDentroDaAreaDeEntregaRapida() ){
 
             if (venda.dataEntrega){
 
-                def calDiaEntrega = Calendar.getInstance()
-                calDiaEntrega.time = venda.dataEntrega
-                
-
-                boolean dataSelecionadaCorretamente = diasDeEntrega.any {dia-> 
-                   
-                    def cal2 = Calendar.getInstance()
-                    cal2.time = dia
-
-                    boolean sameDay = calDiaEntrega.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-                                      calDiaEntrega.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
-
-                    return sameDay
-                }
-
-                if (!dataSelecionadaCorretamente){
+                if (!validarDataEntrega(diasDeEntrega,venda.dataEntrega)){
                     flash.messageDataEntrega = "Apenas as datas apresentadas são aceitas" 
                     render(view: "checkout",model:model) 
                     return                      
