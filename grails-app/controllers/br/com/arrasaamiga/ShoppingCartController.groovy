@@ -10,7 +10,7 @@ class ShoppingCartController {
 
 	def shoppingCartService
     def springSecurityService
-    //def mailService
+    def asyncMailService
 
     static allowedMethods = [add: "POST", removerProduto: "POST"]
 
@@ -166,20 +166,18 @@ class ShoppingCartController {
         [ venda: venda, diasDeEntrega: getProximosDiasDeEntrega() ]
     }
 
-    /*
+    
     private void enviarEmail(Venda venda){
         
-        mailService.sendMail {
+        asyncMailService.sendMail {
+
           to "lsimaocosta@gmail.com"
           subject "Nova venda - #${venda.id} - ${venda.cliente.nome}"
-          body( view:"/venda/showFull", model:[numeroPedido: String.format("%05d", venda.id) , venda : venda,
-            enderecoEntrega: venda.cliente.endereco,itens: venda.itensVenda?:venda.carrinho.itens,
-            cliente: venda.cliente, subTotal: venda.subTotalItensEmReais, 
-            detalhesPagamento: venda.detalhesPagamento, frete: venda.freteEmReais,desconto: venda.descontoEmReais,
-            valorTotal:venda.valorTotal,dataEntrega: venda.dataEntrega])
+          html "Nova venda no site <a href='${createLink(absolute:true,controller:"venda",action:"showFull",id: venda.id)}'> #${venda.id} </a> "
+
         }
 
-    }*/
+    }
 
 
     def fecharVenda(){
@@ -264,12 +262,14 @@ class ShoppingCartController {
 
         springSecurityService.reauthenticate(venda.cliente.email)  
 
+
         if ( venda.formaPagamento == FormaPagamento.AVista ){
 
             venda.carrinho.checkedOut = true
             venda.carrinho.save()
             venda.save(flush:true)
             
+            enviarEmail(venda)
 
             redirect(action:'show',controller:'venda', id:venda.id)
             return
@@ -284,6 +284,8 @@ class ShoppingCartController {
             try{
                 
                 paymentURL = venda.getPaymentURL()
+                
+                enviarEmail(venda)
 
                 redirect(url:paymentURL)
                 return
@@ -297,9 +299,8 @@ class ShoppingCartController {
       
                     Error error = (Error) itr.next();  
       
-                    System.out.println("Código do erro: " + error.getCode());  
-      
-                    System.out.println("Mensagem de erro: " + error.getMessage());  
+                    println "Código do erro: ${error.getCode()}"; 
+                    println "Código do erro: ${error.getMessage()}"; 
       
                 }  
                 
