@@ -14,92 +14,8 @@ class ShoppingCartController {
 
     static allowedMethods = [add: "POST", removerProduto: "POST"]
 
-    private List getProximosDiasDeEntrega(){
-        def hoje = new Date()
-        def diasDeEntraga = []
-
-        Date terca, quinta, sabado
-
-        switch(hoje.toCalendar().get(Calendar.DAY_OF_WEEK)){
-            case Calendar.SUNDAY:
-                terca = (hoje + 2)
-                quinta = (hoje + 4)
-                sabado = (hoje + 6)
-                break
-            case Calendar.MONDAY:
-                terca = (hoje + 1)
-                quinta = (hoje + 3)
-                sabado = (hoje + 5)
-
-                break
-            case Calendar.TUESDAY:
-                terca =  (hoje + 7)
-                quinta = (hoje + 2)
-                sabado = (hoje + 4)
-                break
-
-            case Calendar.WEDNESDAY:
-                terca =  (hoje + 6)
-                quinta = (hoje + 1)
-                sabado = (hoje + 3)
-                break
-
-            case Calendar.THURSDAY:
-                terca =  (hoje + 5)
-                quinta = (hoje+7)
-                sabado = (hoje + 2)
-                break
-
-            case Calendar.FRIDAY:
-                terca =  (hoje + 4)
-                quinta = (hoje + 6)
-                sabado = (hoje + 1)
-                break
-
-            case Calendar.SATURDAY:
-                terca =  (hoje + 3)
-                quinta = (hoje + 5)
-                sabado = (hoje + 7)
-                break
-            default:
-                throw new Exception("Data não identificada! ${hoje}")
-
-        }
-
-        diasDeEntraga.add(terca)
-        diasDeEntraga.add(quinta)
-        diasDeEntraga.add(sabado)
-
-        return diasDeEntraga.sort()
-    }
-
-    private Double somarValorTotalAPrazoDoCarrinho(){
-        double total = 0
-        
-        shoppingCartService.getItens().each{ itemVenda ->
-
-            total += itemVenda.precoAPrazoEmReais * itemVenda.quantidade
-        }
-
-        return total
-
-    }
-
-
-    private Double somarValorTotalAVistaDoCarrinho(){
-        double total = 0
-        
-        shoppingCartService.getItens().each{ itemVenda ->
-
-            total += itemVenda.precoAVistaEmReais * itemVenda.quantidade
-        }
-
-        return total
-
-    }
-
     def index(){
-    	def total = somarValorTotalAPrazoDoCarrinho()
+    	def total = shoppingCartService.shoppingCart.valorTotalAPrazo
 
     	['valorTotal':total, itens: shoppingCartService.itens]
 
@@ -202,9 +118,26 @@ class ShoppingCartController {
         render ( retorno as JSON)
     }
 
+    def recalcularTotais(){
+
+        def venda = new Venda()
+        venda.carrinho = shoppingCartService.shoppingCart
+        venda.cliente = new Cliente()
+        venda.cliente.endereco = new Endereco()
+        venda.cliente.endereco.cidade = Cidade.load(params.cidadeId)
+        venda.cliente.endereco.uf = Uf.load(params.ufId)
+        venda.formaPagamento = FormaPagamento.valueOf(params.formaPagamento)
+
+
+        render(template:'totalVendaDetalhes',model:[ venda: venda ] )
+
+    }
+
     def checkout(){
         
-        def itens = shoppingCartService.itens
+        def shoppingCart = shoppingCartService.shoppingCart
+
+        def itens = shoppingCart.itens
 
         if (itens.size() == 0){
             flash.message = 'Seu carrinho está vazio!'
@@ -212,26 +145,12 @@ class ShoppingCartController {
             return
         }
 
-        def frete = 25
-        def taxaEntrega = 0
-
-        def valorAPrazo = somarValorTotalAPrazoDoCarrinho()
-        def valorAVista = somarValorTotalAVistaDoCarrinho()
-
-        def desconto = valorAPrazo - valorAVista
-
-        if (valorAPrazo < 50){
-            taxaEntrega = 2.5
-        }
-
-        def totalAPrazo = valorAPrazo + frete + taxaEntrega
-        def totalAVista = valorAVista + frete + taxaEntrega
-
-        List diasDeEntrega = getProximosDiasDeEntrega()
-
         def venda = new Venda()
+        venda.carrinho = shoppingCart
+        venda.formaPagamento = FormaPagamento.PagSeguro
+
         def user = springSecurityService.currentUser
-       
+
         if (user){
              venda.cliente = Cliente.findByUsuario(user)
 
@@ -240,13 +159,11 @@ class ShoppingCartController {
             venda.cliente.usuario = new Usuario()
             venda.cliente.endereco = new Endereco(uf: Uf.piaui, cidade : Cidade.teresina )
         }
-        
 
-        
-        
+        venda.carrinho = shoppingCart 
 
-        ['totalAPrazo':totalAPrazo,'totalAVista':totalAVista,valorAPrazo:valorAPrazo,venda: venda,taxaEntrega:taxaEntrega,
-            itens: itens, frete: frete, desconto:desconto,valorAVista:valorAVista, diasDeEntrega: diasDeEntrega]
+
+        [ venda: venda, diasDeEntrega: getProximosDiasDeEntrega() ]
     }
 
     /*
@@ -264,24 +181,17 @@ class ShoppingCartController {
 
     }*/
 
-    private boolean validarDataEntrega(List datasDeEntrega, Date dataEscolhida){
-        def calDiaEntrega = Calendar.getInstance()
-        calDiaEntrega.time = dataEscolhida
-        
-
-        boolean dataSelecionadaCorretamente = datasDeEntrega.any {dia-> 
-           
-            def cal2 = Calendar.getInstance()
-            cal2.time = dia
-
-            boolean sameDay = calDiaEntrega.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-                              calDiaEntrega.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
-
-            return sameDay
-        }        
-    }
 
     def fecharVenda(){
+
+
+        def shoppingCart = shoppingCartService.shoppingCart
+
+        if (shoppingCart.itens.size() == 0){
+            flash.message = 'Seu carrinho está vazio!'
+            redirect(action:'index')
+            return
+        }
 
 
        if (params.dataEntrega){
@@ -300,20 +210,10 @@ class ShoppingCartController {
             }
         }
 
-    
-
-        def valorAPrazo = somarValorTotalAPrazoDoCarrinho()
-        def valorAVista = somarValorTotalAVistaDoCarrinho()
-        List diasDeEntrega = getProximosDiasDeEntrega()
-        def itens = shoppingCartService.itens
-        def frete = 25   
-        def taxaEntrega = 0
-        def desconto = valorAPrazo - valorAVista
-        def totalAPrazo = valorAPrazo + frete
-        def totalAVista = valorAVista + frete 
-
         def venda = new Venda(params)
-        
+        venda.carrinho = shoppingCart
+        venda.status = StatusVenda.AguardandoPagamento
+
         def user = (springSecurityService.currentUser)?:Usuario.findByUsername(params.cliente.email)
         
         if (user){
@@ -324,23 +224,11 @@ class ShoppingCartController {
             venda.cliente.senha = '12345'
         }
 
-        if (venda.cliente.isDentroDaAreaDeEntregaRapida()){
-            taxaEntrega = 2.5
-            totalAPrazo += taxaEntrega
-            totalAVista += taxaEntrega
-        }
-        
-        def model = [totalAPrazo:totalAPrazo,
-                     totalAVista:totalAVista,
-                     valorAPrazo:valorAPrazo,taxaEntrega:taxaEntrega,
-                     venda: venda,itens: itens, 
-                     frete: frete, desconto:desconto,valorAVista:valorAVista, 
-                     diasDeEntrega: diasDeEntrega]
-
+        def model = [ venda: venda, diasDeEntrega: getProximosDiasDeEntrega() ]
 
         if (!venda.cliente.validate()){ 
             flash.message = "Amiga, os campos em destaque devem ser preenchidos" 
-            render(view: "checkout",model:model) 
+            render(view: "checkout",model: model  ) 
             return              
         }
 
@@ -357,37 +245,23 @@ class ShoppingCartController {
 
             if (venda.dataEntrega){
 
-                if (!validarDataEntrega(diasDeEntrega,venda.dataEntrega)){
+                if (!validarDataEntrega(venda.dataEntrega)){
                     flash.messageDataEntrega = "Apenas as datas apresentadas são aceitas" 
-                    render(view: "checkout",model:model) 
+                    render(view: "checkout",model: model ) 
                     return                      
                 }
 
             }else{
                 flash.messageDataEntrega = "A data da entrega deve ser selecionada" 
-                render(view: "checkout",model:model) 
+                render(view: "checkout",model: model ) 
                 return                
             }
 
         }
-
-
-
-        venda.subTotalItensEmCentavos = valorAPrazo*100
-        venda.carrinho = shoppingCartService.shoppingCart
-        venda.status = StatusVenda.AguardandoPagamento
-        venda.itensVenda = shoppingCartService.checkOut()
-
-        if (!venda.cliente.isDentroDaAreaDeEntregaRapida()){
-            venda.freteEmCentavos = frete*100    
-        }
-
-        if ( venda.formaPagamento == FormaPagamento.AVista ){
-            venda.descontoEmCentavos = desconto*100    
-        }  
+        
 
         venda.cliente.save()
-        
+
         springSecurityService.reauthenticate(venda.cliente.email)  
 
         if ( venda.formaPagamento == FormaPagamento.AVista ){
@@ -402,7 +276,6 @@ class ShoppingCartController {
 
         }else{
             
-
             venda.save(flush:true) // salva logo, pois precisa do ID da venda para registrar com a transação de pagamento do pagseguro
                 // não elimina o carrinho ainda, pq nao sabe se vai dar certo. So vai eliminar no retorno do pag seguro
             
@@ -442,4 +315,87 @@ class ShoppingCartController {
         }        
         
     }
+
+
+    private boolean validarDataEntrega(Date dataEscolhida){
+        List datasDeEntrega = getProximosDiasDeEntrega()
+
+        def calDiaEntrega = Calendar.getInstance()
+        calDiaEntrega.time = dataEscolhida
+        
+
+        boolean dataSelecionadaCorretamente = datasDeEntrega.any {dia-> 
+           
+            def cal2 = Calendar.getInstance()
+            cal2.time = dia
+
+            boolean sameDay = calDiaEntrega.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                              calDiaEntrega.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
+
+            return sameDay
+        }        
+    }
+
+
+
+    private List getProximosDiasDeEntrega(){
+
+        def hoje = new Date()
+        def diasDeEntraga = []
+
+        Date terca, quinta, sabado
+
+        switch(hoje.toCalendar().get(Calendar.DAY_OF_WEEK)){
+            case Calendar.SUNDAY:
+                terca = (hoje + 2)
+                quinta = (hoje + 4)
+                sabado = (hoje + 6)
+                break
+            case Calendar.MONDAY:
+                terca = (hoje + 1)
+                quinta = (hoje + 3)
+                sabado = (hoje + 5)
+
+                break
+            case Calendar.TUESDAY:
+                terca =  (hoje + 7)
+                quinta = (hoje + 2)
+                sabado = (hoje + 4)
+                break
+
+            case Calendar.WEDNESDAY:
+                terca =  (hoje + 6)
+                quinta = (hoje + 1)
+                sabado = (hoje + 3)
+                break
+
+            case Calendar.THURSDAY:
+                terca =  (hoje + 5)
+                quinta = (hoje+7)
+                sabado = (hoje + 2)
+                break
+
+            case Calendar.FRIDAY:
+                terca =  (hoje + 4)
+                quinta = (hoje + 6)
+                sabado = (hoje + 1)
+                break
+
+            case Calendar.SATURDAY:
+                terca =  (hoje + 3)
+                quinta = (hoje + 5)
+                sabado = (hoje + 7)
+                break
+            default:
+                throw new Exception("Data não identificada! ${hoje}")
+
+        }
+
+        diasDeEntraga.add(terca)
+        diasDeEntraga.add(quinta)
+        diasDeEntraga.add(sabado)
+
+        return diasDeEntraga.sort()
+    }
+
 }

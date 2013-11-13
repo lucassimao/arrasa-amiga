@@ -49,10 +49,9 @@
 	                    <i class="icon-backward icon-white"></i>
 	                    Escolher mais produtos
 	                </a>	                
-	                <a href="${createLink(controller:'shoppingCart',action:'checkout')}" 
-	                							style="float:right;" class="btn btn-primary">
+	                <a href="${createLink(controller:'shoppingCart',action:'checkout')}" style="float:right;" class="btn btn-primary">
 	                  <!-- <i class="icon-credit-card icon-white"></i> -->
-	                   Pagamento
+	                   Efetuar Pagamento
 	                   <i class="icon-forward icon-white"></i>
 	                </a>
 	            </div>
@@ -123,14 +122,11 @@
 								</td>
 								
 								<td>
-									<g:formatNumber number="${item.precoAPrazoEmReais}" type="currency" 
-									currencyCode="BRL" />
+									<g:formatNumber number="${item.precoAPrazoEmReais}" type="currency" currencyCode="BRL" />
 								</td>
 								
 								<td>
-									<g:formatNumber number="${item.getSubTotalAPrazo()}" type="currency" 
-									currencyCode="BRL" />
-
+									<g:formatNumber number="${item.getSubTotalAPrazo()}" type="currency" currencyCode="BRL" />
 								</td>
 
 								<td>
@@ -179,7 +175,7 @@
 	                <a href="${createLink(controller:'shoppingCart',action:'checkout')}" 
 	                	style="float:right;" class="btn btn-primary">
 	                   <!-- <i class="icon-credit-card icon-white"></i> -->
-	                   Pagamento
+	                   Efetuar Pagamento
 	                   <i class="icon-forward icon-white"></i>
 	                </a>
 	            </div>

@@ -21,68 +21,44 @@
 
 
 		<g:javascript>
+
+
+			function recalcularValorVenda(){
+				var formaPagamento =  $("input[name='formaPagamento']:checked").val();
+				var cidadeId = $("#select-cidade option:selected").val();
+				var ufId = $("#select-uf option:selected").val();
+
+				$('#div-financeiro').css('display','none');
+
+				<g:remoteFunction action="recalcularTotais" onComplete="\$('#div-financeiro').fadeIn(500);"
+								  update="div-financeiro" params="{formaPagamento : formaPagamento, cidadeId:cidadeId, uf: ufId }" />				
+			}
+			
 					
 			$(function(){
 
-				function resetDivsValores(){
-					$("#div-frete").css('display','none');
-					$("#div-desconto").css('display','none');
-					$("#div-valor-total-a-vista").css('display','none');
-					$("#div-valor-total-a-vista-teresina").css('display','none');
-					$("#div-valor-total-a-prazo").css('display','none');
-					$("#div-valor-total-a-prazo-teresina").css('display','none');				
-				}
+				$("#select-cidade").change(function(){
 
-				function atualizarDivs(){
-					
-					resetDivsValores();
+					var cidadeId = Number($("#select-cidade option:selected").val());
 
-					var cidade = $("#select-cidade option:selected").text();
-					var uf = $("#select-uf option:selected").text();
-
-					var formaPagamento = $("input[name='formaPagamento']:checked").val();
-
-					if ( (uf === 'Piauí' && cidade === 'Teresina') || (uf === 'Maranhão' && cidade === 'Timon' ) ){
+					if ( cidadeId === ${Cidade.teresina.id} || cidadeId === ${Cidade.timon.id} ){
 
 						$("#div-pagamento-avista").css('display','block');
-
-						switch(formaPagamento){
-							case "AVista":
-
-								$("#div-desconto").css('display','block');
-								$("#div-valor-total-a-vista-teresina").css('display','block');
-
-								break;
-							
-							case "PagSeguro":
-
-								$("#div-valor-total-a-prazo-teresina").css('display','block');
-
-								break;
-						}
-
 						$("#div-cep").css('display','none');
 						$("#div-entrega-teresina").css('display','block');
 
 					}else{
 
 						$("#div-pagamento-avista").css('display','none');
-
-						$("#div-pagamento-pagseguro").prop('checked',true);
+						$("#div-pagamento-pagseguro input").click();
 						$("#div-cep").css('display','block');
+						$("#div-cep input").focus();
 						$("#div-entrega-teresina").css('display','none');
-
-						$("#div-frete").css('display','block');
-						$("#div-valor-total-a-prazo").css('display','block');
-
-
+						$("#messageDataEntregaFlash").css('display','none');
 
 					}	
 
-				}
-
-				$("#select-cidade").change(function(){
-					atualizarDivs();
+					recalcularValorVenda();
 				});
 
 
@@ -121,7 +97,6 @@
 
 					
 					}).fail(function(){
-						//alert("Erro ao carregar cidades");
 						window.location = "${createLink(controller:'shoppingCart',action:'checkout',absolute:true)}"
 
 					});
@@ -143,10 +118,11 @@
 				$("input[name='formaPagamento']").click(function(){
 
 					$("span.forma-pagamento-selecionado").toggleClass("forma-pagamento-selecionado");
-					var span = $(this).next();
-					$(span).toggleClass("forma-pagamento-selecionado");
+					
+					var label = $(this).next();
+					$(label).toggleClass("forma-pagamento-selecionado");
 
-					atualizarDivs();					
+					recalcularValorVenda();
 					
 				});
 
@@ -172,9 +148,8 @@
 
 
 
-
-
 			});
+
 
 
 		</g:javascript>
@@ -212,7 +187,7 @@
 						</tr>							
 					</thead>
 					<tbody>
-						<g:each in="${itens}" var="itemVenda">
+						<g:each in="${venda.itensVenda}" var="itemVenda">
 							<g:set var="produto" value="${itemVenda.produto}"/>
 							
 							<tr>
@@ -343,11 +318,11 @@
 						          <div id="div-cep" style="display:none;" class="control-group ${hasErrors(bean: venda.cliente, field: 'endereco.cep', 'error')}">
 						              
 						              <label style="font-weight:bold;"> CEP: </label>
-						              <input class="input-small" name="cliente.endereco.cep" value="${venda?.cliente?.endereco?.cep}" type="text" >
+						              <input class="input-small" name="cliente.endereco.cep" value="${ venda?.cliente?.endereco?.cep }" type="text" >
 
 						          </div>						          
 
-						          <div style="clear:both;">
+						          <div style="clear:both;" class="control-group ${hasErrors(bean: venda.cliente, field: 'endereco.complemento', 'error')}">
 						          	<label style="font-weight:bold;"> Complemento: </label>
 						          	<input class="input-xxlarge" value="${venda?.cliente?.endereco?.complemento}" 
 						          		placeholder="casa, quadra, apartamento, rua, número, ponto de referência ... "  
@@ -365,7 +340,7 @@
 				<a href="#" id="anchor-entrega-teresina"></a>
 
 				<g:if test="${flash.messageDataEntrega}">
-					<div class="alert alert-info">
+					<div id="messageDataEntregaFlash" class="alert alert-info">
 					   <button type="button" class="close" data-dismiss="alert">&times;</button>
 					   <i class=" icon-info-sign"></i>
 					   ${flash.messageDataEntrega} 
@@ -392,86 +367,9 @@
 					</g:each>
 					
 				</div>
-
-
+						
 
 				<div id="div-financeiro" class="well" style="background-color:white;">
-
-
-					<div id="div-subtotal">
-						<h4 style="display:inline;color:#666;">Subtotal</h4>
-
-						<div style="float:right;font-weight:bold;font-size:15px;color:#666;"> 
-							<g:formatNumber number="${valorAPrazo}" type="currency"	currencyCode="BRL" />
-						</div>
-					</div>
-
-
-
-					<div id="div-frete" style="clear:both;display:none;">
-						<h5 style="display:inline;color:blue;">Frete</h5>
-
-						<div style="float:right;font-weight:bold;border-bottom:1px solid red;"> 
-							<div style="color:blue;font-size:10px;text-align:right;">
-								+ <g:formatNumber number="${frete}" type="currency" currencyCode="BRL" />
-							</div>
-						</div>
-
-					</div>
-
-
-					<div id="div-desconto" style="padding:0px 4px;clear:both;display:none;background-color:yellow;">
-						<h5 style="display:inline;color:blue;">Desconto</h5>
-
-						<div style="float:right;font-weight:bold;"> 
-							<div style="color:blue;font-size:11px;text-align:right;">
-								- <g:formatNumber number="${desconto}" type="currency" currencyCode="BRL" />
-							</div>
-						</div>
-
-					</div>
-
-
-					<div id="div-valor-total-a-vista" style="display:none;">
-						<hr>
-
-						<h4 style="color:#666;display:inline;">Valor Total</h4>
-
-						<div style="float:right;font-weight:bold;font-size:35px;color:#00adef;"> 
-							<g:formatNumber number="${totalAVista}" type="currency"	currencyCode="BRL" />
-						</div>
-					</div>
-
-					<div id="div-valor-total-a-vista-teresina" style="display:none;">
-						<hr>
-
-						<h4 style="color:#666;display:inline;">Valor Total</h4>
-
-						<div style="float:right;font-weight:bold;font-size:35px;color:#00adef;"> 
-							<g:formatNumber number="${totalAVista - frete}" type="currency"	currencyCode="BRL" />
-						</div>
-					</div>
-
-
-					<div id="div-valor-total-a-prazo" style="display:none;">
-						<hr>
-						
-						<h4 style="color:#666;display:inline;">Valor Total</h4>
-
-						<div style="float:right;font-weight:bold;font-size:35px;color:#00adef;"> 
-							<g:formatNumber number="${totalAPrazo}" type="currency"	currencyCode="BRL" />
-						</div>
-					</div>
-
-					<div id="div-valor-total-a-prazo-teresina" style="display:none;">
-						<hr>
-						
-						<h4 style="color:#666;display:inline;">Valor Total</h4>
-
-						<div style="float:right;font-weight:bold;font-size:35px;color:#00adef;"> 
-							<g:formatNumber number="${totalAPrazo - frete}" type="currency"	currencyCode="BRL" />
-						</div>
-					</div>
 
 				</div>
 
@@ -485,9 +383,9 @@
 						<div class="row-fluid">
 
 
-							<div id="div-pagamento-avista" class="span5 well" style="padding-right:0px;display:none;">
+							<div id="div-pagamento-avista" class="span5 well" style="padding-right:0px;">
 								<label class="radio">
-									<input  name="formaPagamento" type="radio" value="AVista" >
+									<input  name="formaPagamento" type="radio" value="AVista" ${venda.formaPagamento.equals(FormaPagamento.AVista)?'checked':''}>
 									<span> Pagamento em Dinheiro </span>
 								</label>
 								
@@ -502,7 +400,7 @@
 
 							<div id="div-pagamento-pagseguro" class="span7 well pull-right" style="padding-right:0px;">
 								<label class="radio">
-									<input name="formaPagamento" type="radio" value="PagSeguro" checked > 
+									<input name="formaPagamento" type="radio" value="PagSeguro" ${venda.formaPagamento.equals(FormaPagamento.PagSeguro)?'checked':''} > 
 									<span class="forma-pagamento-selecionado"> Cartão de Crédito / Transferência Bancária / Boleto Bancário </span>								
 								</label>
 								<p> 

@@ -27,7 +27,7 @@ class PagSeguroController {
 
         venda.transacaoPagSeguro = codigoTransacao
         venda.status = StatusVenda.fromPagSeguroTransactionStatus(transacaoPagSeguro.status)
-        venda.descontoEmCentavos = transacaoPagSeguro.getDiscountAmount() * 100
+        venda.descontoPagSeguroEmCentavos = transacaoPagSeguro.getDiscountAmount() * 100
         venda.taxasPagSeguroEmCentavos = transacaoPagSeguro.getFeeAmount() * 100
         venda.save()
 

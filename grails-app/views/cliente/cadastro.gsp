@@ -1,3 +1,6 @@
+<%@ page import="br.com.arrasaamiga.Uf" %>
+<%@ page import="br.com.arrasaamiga.Cidade" %>
+
 <html>
 <head>
 	<meta name='layout' content='main'/>
@@ -34,6 +37,75 @@
       }
 
 	</style>
+
+
+      <g:javascript>
+
+        $(function(){
+        
+
+        $("#select-cidade").change(function(){
+
+          var cidadeId = Number($("#select-cidade option:selected").val());
+
+          if ( cidadeId === ${Cidade.teresina.id} || cidadeId === ${Cidade.timon.id} ){
+
+            $("#div-cep").css('display','none');
+
+          }else{
+
+            $("#div-cep").css('display','block');
+
+          } 
+
+        });
+
+          $("#select-uf").change(function(){
+              var idUf = $(this).val();
+
+              $.ajax({
+                
+                url: "${createLink(controller:'shoppingCart',action:'getCidades',absolute:true)}",
+                data: {'idUf': idUf},
+                settings: {'cache':true}
+
+              }).success(function( data, textStatus, jqXHR ) {
+
+                    $("#select-cidade").empty();
+
+                    $.each(data,function(index,objCidade){
+
+                        var nomeCidade = objCidade.nome;
+                        var idCidade = Number(objCidade.id);
+
+                        var option = $("<option/>").text(nomeCidade).attr("value",idCidade);
+                        
+                        <g:if test="${cliente?.endereco?.cidade}">
+                          if (idCidade === ${cliente?.endereco?.cidade?.id}){
+                            $(option).attr('selected',true);
+                          }
+                        </g:if>
+                        
+                        $("#select-cidade").append(option);
+
+                    });
+
+                    $("#select-cidade").change();
+
+              
+              }).fail(function(){
+                  
+                  window.location = "${createLink(controller:'cliente',action:'cadastro',absolute:true)}"
+
+              });
+
+
+          });
+
+          $("#select-uf").change();
+
+        });
+      </g:javascript>
 </head>
 
 <body>
@@ -54,7 +126,7 @@
 
           <div class="control-group ${hasErrors(bean: cliente, field: 'nome', 'error')}">
               <label style="font-weight:bold;"> Nome: </label>
-              <input type="text" value="${cliente.nome}" id="nome" name="nome" placeholder="Nome completo …" class="input-xxlarge" required>
+              <input type="text" value="${cliente.nome}" id="nome" name="nome" placeholder="Nome completo …" class="input-xxlarge">
 
               <g:eachError bean="${cliente}" field="nome">
                   <span class="help-inline" style="padding-bottom:10px;"> <g:message error="${it}" /></span>
@@ -66,8 +138,8 @@
               <label style="font-weight:bold;"> Telefone: </label>
 
               
-              <input type="text" value="${cliente.dddTelefone}" placeholder="DDD" name="dddTelefone" maxlength="2" class="input-mini" required>
-              <input type="text" value="${cliente.telefone}" placeholder="numero" name="telefone" maxlength="9" class="input-large" required>
+              <input type="text" value="${cliente.dddTelefone}" placeholder="DDD" name="dddTelefone" maxlength="2" class="input-mini">
+              <input type="text" value="${cliente.telefone}" placeholder="numero" name="telefone" maxlength="9" class="input-large">
 
               <g:eachError bean="${cliente}" field="telefone">
                   <span class="help-inline" style="padding-bottom:10px;"> 
@@ -87,8 +159,8 @@
           <div class="control-group ${hasErrors(bean: cliente, field: 'celular', 'error')} ${hasErrors(bean: cliente, field: 'dddCelular', 'error')}">
               <label style="font-weight:bold;"> Celular: </label> 
 
-              <input type="text" value="${cliente.dddCelular}" placeholder="DDD" maxlength="2" name="dddCelular" class="input-mini" required>
-              <input type="text" value="${cliente.celular}" placeholder="numero" maxlength="9" name="celular" class="input-large" required>
+              <input type="text" value="${cliente.dddCelular}" placeholder="DDD" maxlength="2" name="dddCelular" class="input-mini">
+              <input type="text" value="${cliente.celular}" placeholder="numero" maxlength="9" name="celular" class="input-large">
 
               <g:eachError bean="${cliente}" field="celular">
                   <span class="help-inline" style="padding-bottom:10px;"> 
@@ -106,37 +178,13 @@
 
           </div>
 
-          <div style="margin-bottom:50px;" class="control-group ${hasErrors(bean: cliente, field: 'dataNascimento', 'error')}" >
-              <label style="font-weight:bold;"> Data de Nascimento: </label>
-              <g:datePicker value="${cliente.dataNascimento}" 
-                            name="dataNascimento" precision="day"/>
-
-              <g:eachError bean="${cliente}" field="dataNascimento">
-                  <span class="help-inline" style="padding-bottom:10px;"> 
-                      <g:message error="${it}" />
-                  </span>
-              </g:eachError>
-          </div>
-
 
         <legend style="font-weight:bold;"> Endereço para entregas </legend>
 
-          <div class="control-group ${hasErrors(bean: cliente, field: 'endereco.cep', 'error')}">
-              
-              <label style="font-weight:bold;"> CEP: </label>
-              <input name="endereco.cep" value="${cliente?.endereco?.cep}" type="text" required>
-
-              <g:eachError bean="${cliente}" field="endereco.cep">
-                  <span class="help-inline" style="padding-bottom:10px;"> 
-                      <g:message error="${it}" />
-                  </span>
-              </g:eachError>
-
-          </div>
-
           <div class="control-group ${hasErrors(bean: cliente, field: 'endereco.uf', 'error')}">
               <label style="font-weight:bold;"> Estado: </label>
-              <g:select name="endereco.uf" value="${cliente?.endereco?.uf?.key}" optionKey="key" from="${br.com.arrasaamiga.Uf.values()}" />
+              <g:select value="${ (cliente?.endereco?.uf?.id)?:Uf.piaui.id }" id="select-uf"
+                  name="endereco.uf.id" optionValue="nome" optionKey="id" from="${br.com.arrasaamiga.Uf.list()}" />
 
               <g:eachError bean="${cliente}" field="endereco.uf">
                   <span class="help-inline" style="padding-bottom:10px;"> 
@@ -147,7 +195,9 @@
 
           <div class="control-group ${hasErrors(bean: cliente, field: 'endereco.cidade', 'error')}">
               <label style="font-weight:bold;"> Cidade: </label>
-              <input name="endereco.cidade" value="${cliente?.endereco?.cidade}" type="text" required >
+
+              <g:select class="input-xlarge" value="${cliente?.endereco?.cidade?.id}" 
+                                name="endereco.cidade.id" id="select-cidade" from="${[]}" />
 
               <g:eachError bean="${cliente}" field="endereco.cidade">
                   <span class="help-inline" style="padding-bottom:10px;"> 
@@ -158,7 +208,7 @@
 
           <div class="control-group ${hasErrors(bean: cliente, field: 'endereco.bairro', 'error')}">
               <label style="font-weight:bold;"> Bairro: </label>
-              <input name="endereco.bairro"  value="${cliente?.endereco?.bairro}" type="text" required >
+              <input name="endereco.bairro"  value="${cliente?.endereco?.bairro}" type="text" >
 
               <g:eachError bean="${cliente}" field="endereco.bairro">
                   <span class="help-inline" style="padding-bottom:10px;"> 
@@ -168,29 +218,38 @@
           </div>
 
 
-          <div class="control-group ${hasErrors(bean: cliente, field: 'endereco.endereco', 'error')}">
+          <div class="control-group ${hasErrors(bean: cliente, field: 'endereco.complemento', 'error')}">
               <label style="font-weight:bold;"> Endereço: </label>
-              <input class="input-xxlarge" value="${cliente?.endereco?.endereco}" name="endereco.endereco" type="text" required >
+              <input class="input-xxlarge" value="${cliente?.endereco?.complemento}" 
+                placeholder="casa, quadra, apartamento, rua, número, ponto de referência ... "  
+                name="endereco.complemento" type="text" >
 
-              <g:eachError bean="${cliente}" field="endereco.endereco">
+              <g:eachError bean="${cliente}" field="endereco.complemento">
                   <span class="help-inline" style="padding-bottom:10px;"> 
                       <g:message error="${it}" />
                   </span>
               </g:eachError>
           </div>
 
-          <label> Complemento: </label>
-          <input class="input-xxlarge" value="${cliente?.endereco?.complemento}" placeholder="casa, apartamento, número ... "  name="endereco.complemento" type="text" >
+          <div id="div-cep" class="control-group ${hasErrors(bean: cliente, field: 'endereco.cep', 'error')}">
+              
+              <label style="font-weight:bold;"> CEP: </label>
+              <input name="endereco.cep" value="${cliente?.endereco?.cep}" type="text">
 
-          <label> Ponto de Referência: </label>
-          <input style="margin-bottom:50px;" class="input-xlarge" placeholder="da uma dica amiga ..." value="${cliente?.endereco?.pontoDeReferencia}" name="endereco.pontoDeReferencia" type="text" >
+              <g:eachError bean="${cliente}" field="endereco.cep">
+                  <span class="help-inline" style="padding-bottom:10px;"> 
+                      <g:message error="${it}" />
+                  </span>
+              </g:eachError>
+
+          </div>
 
 
         <legend style="font-weight:bold;"> Dados da Conta </legend>
 
           <div class="control-group ${hasErrors(bean: cliente, field: 'email', 'error')}">
               <label style="font-weight:bold;"> E-mail: </label>
-              <input class="input-xlarge" value="${cliente.email}" name="email" type="text" required >
+              <input class="input-xlarge" value="${cliente.email}" name="email" type="text" >
 
               <g:eachError bean="${cliente}" field="email">
                   <span class="help-inline" style="padding-bottom:10px;"> 
@@ -202,7 +261,7 @@
 
           <div class="control-group ${hasErrors(bean: cliente, field: 'senha', 'error')}">
               <label style="font-weight:bold;"> Senha: </label>
-              <input class="input-large" name="senha" type="password" required>
+              <input class="input-large" name="senha" type="password">
 
               <g:eachError bean="${cliente}" field="senha">
                   <span class="help-inline" style="padding-bottom:10px;"> 
@@ -223,7 +282,7 @@
 
   <g:javascript>
     $(function() {
-        var input =  $(".error:first input");
+        var input =  $(".error:first input:first");
 
         if (input.length == 0)
             $("#nome").focus();

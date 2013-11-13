@@ -61,31 +61,32 @@
           <legend> <i class="icon-truck"></i> Entrega </legend>
 
           <div class="row-fluid">
-              <div class="span5">
+              <div class="span4">
 
                     <label> <span class="caption"> Nome: </span> ${cliente.nome} </label>
+                    <label> <span class="caption"> Email: </span> ${cliente.email}</label>
 
                     <label> <span class="caption"> Telefone: </span> ${cliente.dddTelefone} - ${cliente.telefone}</label>
                     <label> <span class="caption"> Celular: </span> ${cliente.dddCelular} - ${cliente.celular}</label>
 
               </div>
             
-              <div class="span5">
+              <div class="span6">
+
+                    <label> <span class="caption"> Estado: </span> ${cliente.endereco.uf.nome}</label>
+
+                    <label> <span class="caption"> Cidade: </span> ${cliente.endereco.cidade.nome}</label>
+
+                    <label> <span class="caption"> Bairro: </span> ${cliente.endereco.bairro} </label>
+
+                    <label> <span class="caption"> Complemento: </span>  ${cliente.endereco.complemento}</label>
 
                     <g:if test="${!cliente.isDentroDaAreaDeEntregaRapida()}">
-                      <label> <span class="caption"> CEP: </span> ${enderecoEntrega.cep} </label>
+                      <label> <span class="caption"> CEP: </span> ${cliente.endereco.cep} </label>
                     </g:if>
 
-                    <label> <span class="caption"> Estado: </span> ${enderecoEntrega.uf.nome}</label>
-
-                    <label> <span class="caption"> Cidade: </span> ${enderecoEntrega.cidade.nome}</label>
-
-                    <label> <span class="caption"> Bairro: </span> ${enderecoEntrega.bairro} </label>
-
-                    <label> <span class="caption"> Complemento: </span>  ${enderecoEntrega.complemento}</label>
-
                     <g:if test="${cliente.isDentroDaAreaDeEntregaRapida()}">
-                      <label> <span class="caption"> Dia da Entrega: </span> <g:formatDate format="EEEE, dd/MM/yyyy" date="${dataEntrega}"/> </label>
+                      <label> <span class="caption"> Dia da Entrega: </span> <g:formatDate format="EEEE, dd/MM/yyyy" date="${venda.dataEntrega}"/> </label>
                     </g:if>
 
               </div>            
@@ -109,7 +110,7 @@
             </tr>             
           </thead>
           <tbody>
-            <g:each in="${itens}" var="itemVenda">
+            <g:each in="${venda.itensVenda}" var="itemVenda">
               <g:set var="produto" value="${itemVenda.produto}"/>
               
               <tr>
@@ -165,7 +166,7 @@
             <h4 style="display:inline;color:#666;">Subtotal</h4>
 
             <div style="float:right;font-weight:bold;font-size:15px;color:#666;"> 
-              <g:formatNumber number="${subTotal}" type="currency" currencyCode="BRL" />
+              <g:formatNumber number="${venda.valorItensAPrazo}" type="currency" currencyCode="BRL" />
             </div>
           </div>
 
@@ -174,9 +175,9 @@
             <div id="div-frete" style="clear:both;">
               <h5 style="display:inline;color:blue;">Frete</h5>
 
-              <div style="float:right;font-weight:bold;border-bottom:1px solid red;"> 
+              <div style="float:right;font-weight:bold;"> 
                 <div style="color:blue;font-size:10px;text-align:right;">
-                  + <g:formatNumber number="${frete}" type="currency" currencyCode="BRL" />
+                  + <g:formatNumber number="${venda.freteEmReais}" type="currency" currencyCode="BRL" />
                 </div>
               </div>
 
@@ -184,16 +185,33 @@
 
           </g:if>
 
-          <div id="div-desconto" style="clear:both;">
-            <h5 style="display:inline;color:blue;">Desconto</h5>
+          <g:if test="${venda.taxaEntregaEmReais > 0}">
+            
+            <div style="clear:both;">
+              <h5 style="display:inline;color:blue;">Taxa de Entrega</h5>
 
-            <div style="float:right;font-weight:bold;"> 
-              <div style="color:blue;font-size:10px;text-align:right;">
-                - <g:formatNumber number="${desconto}" type="currency" currencyCode="BRL" />
+              <div style="float:right;font-weight:bold;"> 
+                <div style="color:blue;font-size:10px;text-align:right;">
+                  + <g:formatNumber number="${venda.taxaEntregaEmReais}" type="currency" currencyCode="BRL" />
+                </div>
               </div>
             </div>
 
-          </div>
+          </g:if>
+
+          <g:if test="${venda.descontoEmReais > 0}">
+
+              <div id="div-desconto" style="clear:both;">
+                <h5 style="display:inline;color:blue;">Desconto</h5>
+
+                <div style="float:right;font-weight:bold;"> 
+                  <div style="color:blue;font-size:10px;text-align:right;">
+                    - <g:formatNumber number="${venda.descontoEmReais}" type="currency" currencyCode="BRL" />
+                  </div>
+                </div>
+
+              </div>
+          </g:if>
 
 
           <div id="div-valor-total">
@@ -202,7 +220,7 @@
             <h4 style="color:#666;display:inline;">Valor Total</h4>
 
             <div style="float:right;font-weight:bold;font-size:35px;color:#00adef;"> 
-              <g:formatNumber number="${valorTotal}" type="currency" currencyCode="BRL" />
+              <g:formatNumber number="${venda.valorTotal}" type="currency" currencyCode="BRL" />
             </div>
           </div>
 
@@ -216,7 +234,7 @@
         <div class="row-fluid">
 
           <div class="span6">
-              ${detalhesPagamento}
+              ${venda.detalhesPagamento}
           </div>
 
         </div>

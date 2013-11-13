@@ -241,12 +241,41 @@
 
 								</ul>
 
-								<!--
 								<ul class="nav pull-right">
 
 									
 									<li class="dropdown">
-									
+										
+
+										<sec:ifNotLoggedIn>
+					                        <a href="${createLink(controller:'login')}">
+					          					<i class="icon-female icon-large"></i> Entrar
+					                       	</a>
+										</sec:ifNotLoggedIn>
+
+
+			                        	<sec:ifLoggedIn>
+
+			                        		<sec:ifNotGranted roles="ROLE_ADMIN">
+				                        		<a href="#"> <i style="color:#F29BF2;" class="icon-female icon-large"></i> Bem-vinda </a>
+			                        		</sec:ifNotGranted>
+											
+											<sec:ifAllGranted roles="ROLE_ADMIN">
+													
+						                        <a href="${createLink(controller:'produto')}">
+						                        	<i style="color:blue;" class="icon-edit icon-large"></i> ADMINISTRATIVO
+						                       	</a>
+											</sec:ifAllGranted>
+
+			                        	</sec:ifLoggedIn>
+
+										
+											
+
+
+
+
+										<!--
 				                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
 
 				                        	<sec:ifLoggedIn>
@@ -285,14 +314,14 @@
 				                        	
 				                        	<sec:ifNotLoggedIn>
 												<li><a href="${createLink(controller:'login')}"> Entrar </a></li>
-												<li><a href="#"> Esqueci minha senha! </a></li>
-				                        	</sec:ifNotLoggedIn>
+												 <li><a href="#"> Esqueci minha senha! </a></li> 
+				                        	</sec:ifNotLoggedIn> 
 
-				                        </ul>
+				                        </ul>-->
 			                      </li>
 
 
-								</ul>-->
+								</ul>
 
 							</div>
 						</div>

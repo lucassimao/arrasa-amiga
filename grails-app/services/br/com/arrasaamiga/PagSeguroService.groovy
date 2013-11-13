@@ -49,6 +49,14 @@ class PagSeguroService {
 
 
     	Transaction transaction = getTransaction(transacaoPagSeguro)
+    	return getDetalhesPagamento(transaction)
+
+    }
+
+
+    public String getDetalhesPagamento(Transaction transaction){
+
+
     	int numParcelas = transaction.getInstallmentCount()
 
     	PaymentMethodCode paymentMethodCode = transaction.getPaymentMethod().getCode()

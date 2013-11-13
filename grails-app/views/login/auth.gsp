@@ -61,7 +61,7 @@
           <button class="btn btn-large btn-primary" type="submit">Entrar</button>
 
 
-        <!--
+        
         <p style="text-align:center;margin-top:15px;">
     			<a id="pop" title="Psiu!" 
     			data-content="Clica aqui se essa for sua primeira vez na Arrasa Amiga :-)" 
@@ -69,7 +69,7 @@
     			href="${createLink(controller:'cliente',action:'cadastro')}" data-delay="500" data-animation="animation"
     			data-html="true">Ainda não criou sua conta amiga ? </a>
         </p>
-        -->
+        
 </form>
 
 
@@ -77,7 +77,7 @@
 
   $(function () {
         
-        /*
+        
           $('body').popover({
               selector: '[data-toggle="popover"]'
           });
@@ -88,7 +88,7 @@
 
           $("#pop").popover('show');
           
-        */
+        
 
         $("#username").focus();
     });

@@ -99,19 +99,4 @@ class ShoppingCartService {
 		def shoppingCart = getShoppingCart()
 		return shoppingCart.itens
     }
-
-    List checkOut() {
-		def shoppingCart = getShoppingCart()
-		
-		List checkedOutItems = []
-
-		shoppingCart.itens.each { item ->
-			checkedOutItems.add(item)
-		}
-		
-		
-		shoppingCart.save()
-		
-		return checkedOutItems
-    }
 }

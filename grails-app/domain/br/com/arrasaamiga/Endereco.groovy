@@ -18,19 +18,42 @@ class Endereco {
             return true
 
         })
-    	complemento(blank:true,nullable:true)
+    	complemento(blank:false,nullable:false)
     	bairro(blank:false,nullable:false)
     	cidade(blank:false,nullable:false)
     	uf(nullable:false)
 
     }
 
-
     public void setCidade(Cidade cidade){
-        if (cidade?.id == Cidade.teresina.id || cidade?.id == Cidade.timon.id){
-            this.cep = ''
-        }
-        this.cidade = cidade
+
+        switch(cidade?.id){
+            case Cidade.teresina.id:
+                this.cep = '64000-001'
+                break
+            case Cidade.timon.id:
+                this.cep = '65630-001'
+                break
+        } 
+
+        this.@cidade = cidade
     }
+
+
+    public void setCep(String _cep){
+       
+        switch(cidade?.id){
+            case Cidade.teresina.id:
+                this.@cep = '64000-001'
+                break
+            case Cidade.timon.id:
+                this.@cep = '65630-001'
+                break
+            default:
+                this.@cep = _cep
+        }  
+
+    }
+
 
 }

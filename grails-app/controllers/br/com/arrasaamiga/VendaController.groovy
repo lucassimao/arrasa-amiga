@@ -11,12 +11,8 @@ class VendaController {
                 def venda = Venda.get(id)
 
                 if (venda){
-                        [	numeroPedido: String.format("%05d", venda.id) , venda : venda,
-                        enderecoEntrega: venda.cliente.endereco,itens: venda.itensVenda,
-                        cliente: venda.cliente, subTotal: venda.subTotalItensEmReais, 
-                        detalhesPagamento: venda.detalhesPagamento, frete: venda.freteEmReais,desconto: venda.descontoEmReais,
-                        valorTotal:venda.valorTotal,
-                        dataEntrega: venda.dataEntrega]
+                        [numeroPedido: String.format("%05d", venda.id) , venda : venda,
+                        enderecoEntrega: venda.cliente.endereco,cliente: venda.cliente]
 
                 }else{
                         println "Erro ao carregar venda ${id}"
@@ -32,12 +28,7 @@ class VendaController {
                 def venda = Venda.get(id)
 
                 if (venda){
-                        [       numeroPedido: String.format("%05d", venda.id) , venda : venda,
-                        enderecoEntrega: venda.cliente.endereco,itens: venda.itensVenda?:venda.carrinho.itens,
-                        cliente: venda.cliente, subTotal: venda.subTotalItensEmReais, 
-                        detalhesPagamento: venda.detalhesPagamento, frete: venda.freteEmReais,desconto: venda.descontoEmReais,
-                        valorTotal:venda.valorTotal,
-                        dataEntrega: venda.dataEntrega]
+                        [ numeroPedido: String.format("%05d", venda.id) , venda : venda,cliente: venda.cliente]
 
                 }else{
                         println "Erro ao carregar venda ${id}"

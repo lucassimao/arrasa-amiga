@@ -6,38 +6,28 @@ import java.text.NumberFormat
 class Venda {
 
 
-	List itensVenda
 	Date dateCreated
 	Cliente cliente
-
-	int freteEmCentavos
-	int subTotalItensEmCentavos
-    int descontoEmCentavos
-    int taxasPagSeguroEmCentavos
-
+	int freteEmCentavos = 0
+    int descontoPagSeguroEmCentavos = 0
+    int taxasPagSeguroEmCentavos = 0
 	FormaPagamento formaPagamento
-
     StatusVenda status
-
     Date dataEntrega
-
     String transacaoPagSeguro
-
     ShoppingCart carrinho
 
     def pagSeguroService
    
 
-	static hasMany = [itensVenda:ItemVenda]
-	static transients = ['valorTotal','paymentURL','pagSeguroService','mailService',
-                        'detalhesPagamento','subTotalItensEmReais','descontoEmReais','freteEmReais']
+	static transients = ['valorTotal','taxaEntregaEmReais','valorItensAPrazo', 'valorItensAVista',
+                         'descontoEmReais','freteEmReais','descontoParaCompraAVista','descontoPagSeguroEmReais',
+                         'paymentURL','pagSeguroService','detalhesPagamento','itensVenda']
 
     static constraints = {
     	freteEmCentavos(min:0)
-        subTotalItensEmCentavos(min:0)
-        descontoEmCentavos(min:0)
+        descontoPagSeguroEmCentavos(min:0)
         taxasPagSeguroEmCentavos(min:0)
-    	itensVenda(nullable:false)
     	formaPagamento(nullable:false)
         status(nullable:false)
         cliente(nullable:false)
@@ -51,19 +41,46 @@ class Venda {
     }
 
     public Double getValorTotal(){
-    	return getSubTotalItensEmReais() + getFreteEmReais()  - getDescontoEmReais()
+    	return getValorItensAPrazo() + getFreteEmReais()  - getDescontoEmReais() + getTaxaEntregaEmReais()
     }
 
-    public Double getSubTotalItensEmReais(){
-        return this.subTotalItensEmCentavos / 100.0
+    public Double getValorItensAPrazo(){
+        return this.carrinho.getValorTotalAPrazo()
     }
+
+    public Double getValorItensAVista(){
+        return this.carrinho.getValorTotalAVista()
+    }
+
 
     public Double getFreteEmReais(){
-        return this.freteEmCentavos / 100.0
-    }
+        return cliente.isDentroDaAreaDeEntregaRapida()?0:15
+    }        
 
     public Double getDescontoEmReais(){
-        return this.descontoEmCentavos / 100.0
+
+        if (this.formaPagamento.equals(FormaPagamento.AVista)){
+
+            return getDescontoParaCompraAVista()
+
+        }else if (this.descontoPagSeguroEmCentavos > 0){ // caso o cliente pague via boleto bancário
+
+            return getDescontoPagSeguroEmReais()
+
+        }else{
+            return 0
+        }
+    }
+
+    public Double getTaxaEntregaEmReais(){
+        
+        if ( getValorItensAPrazo() < 50 &&  cliente.isDentroDaAreaDeEntregaRapida() ){
+            return 2.5
+        }
+        else{
+            return 0
+        }
+        
     }
 
     public String getDetalhesPagamento(){
@@ -85,6 +102,26 @@ class Venda {
 
         }
 
+    }
+    /*
+     *  Esse desconto existe para pagamentos via boleto
+     *
+     */
+    public Double getDescontoPagSeguroEmReais(){
+        return this.descontoPagSeguroEmCentavos/100.0
+    }
+
+    def getItensVenda(){
+        return this.carrinho.itens
+    } 
+
+    /*
+     *
+     * método utilitário
+     *
+     */
+    public Double getDescontoParaCompraAVista(){
+        return getValorItensAPrazo() - getValorItensAVista()
     }
 
     public URL getPaymentURL(){
@@ -131,12 +168,12 @@ class Venda {
             cliente.endereco.cep,    
             cliente.endereco.complemento,    
             "0",   
-            cliente.endereco.complemento    
+            '' 
         );  
 
 
 
-        paymentRequest.extraAmount = new BigDecimal(formatter.format(this.freteEmReais) )
+        paymentRequest.extraAmount = new BigDecimal(formatter.format(this.freteEmReais + this.taxaEntregaEmReais) ) 
         paymentRequest.setReference(this.id.toString())
 
         paymentRequest.redirectURL = "http://www.arrasaamiga.com.br/pagSeguro/retorno/${this.id}"
@@ -147,5 +184,7 @@ class Venda {
 
         return paymentRequest.register(pagSeguroService.accountCredentials);
     }
+
+
 
 }

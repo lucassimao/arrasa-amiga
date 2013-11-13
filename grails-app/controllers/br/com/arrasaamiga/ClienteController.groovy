@@ -25,10 +25,10 @@ class ClienteController {
 
         SavedRequest savedRequest = new HttpSessionRequestCache().getRequest(request, response)
         flash.message = 'Bem vinda amiga! Sua conta foi criada com sucesso.'
+        springSecurityService.reauthenticate cliente.email
 
         if (savedRequest){
-        
-        	springSecurityService.reauthenticate cliente.email
+
         	redirect(url:savedRequest.redirectUrl)
         
         }else{

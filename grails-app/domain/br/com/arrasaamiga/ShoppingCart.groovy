@@ -9,7 +9,6 @@ class ShoppingCart {
 	String sessionID
 		
 	Boolean checkedOut = false
-
 	
 
 	static constraints = {
@@ -20,6 +19,8 @@ class ShoppingCart {
 		itens lazy: false
 	}
 
+	static transients = ['valorTotalAPrazo','valorTotalAVista']
+
 	public int getQuantidade(Produto produto, String unidade){
 		
 		def itemVenda = this.itens.find{ itemVenda-> 
@@ -28,4 +29,30 @@ class ShoppingCart {
 
 		return (itemVenda)?itemVenda.quantidade:0
 	}
+
+    private Double getValorTotalAPrazo(){
+        double total = 0
+        
+        this.itens.each{ itemVenda ->
+            total += itemVenda.precoAPrazoEmCentavos * itemVenda.quantidade
+        }
+
+        return total/100.0
+
+    }
+
+
+    private Double getValorTotalAVista(){
+        double total = 0
+        
+        this.itens.each{ itemVenda ->
+            total += itemVenda.precoAVistaEmCentavos * itemVenda.quantidade
+        }
+
+        return total/100.0
+
+    }
+
+
+
 }
