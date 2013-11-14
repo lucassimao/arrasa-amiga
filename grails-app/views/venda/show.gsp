@@ -69,7 +69,7 @@
           <legend> <i class="icon-truck"></i> Entrega </legend>
 
           <div class="row-fluid">
-            <div class="span5">
+            <div>
 
               <label> <span class="caption"> Estado: </span> ${cliente.endereco.uf.nome}</label>
 
