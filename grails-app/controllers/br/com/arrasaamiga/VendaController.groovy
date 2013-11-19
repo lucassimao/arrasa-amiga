@@ -56,6 +56,21 @@ class VendaController {
 
         }
 
+        @Secured(['IS_AUTHENTICATED_FULLY'])
+        def excluir(Long id){
+                def v = Venda.get(id)
+                v.delete()
+
+                flash.message = 'A venda foi excluida'
+                
+                if (params.offset && params.max){
+                        redirect(action:'list', params:[offset:params.offset, max: params.max] )
+                }else{
+                        redirect(action:'list')
+                }
+                
+        }
+
 
 
         def cancelada(){

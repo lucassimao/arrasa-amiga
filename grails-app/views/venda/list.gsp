@@ -28,7 +28,7 @@
 					
 						<g:sortableColumn property="status" title="${message(code: 'venda.status.label', default: 'Status')}" />
 						<th> Data </th>
-						<th> Marcar como entregue </th>
+						<th> Opções </th>
 					
 					</tr>
 				</thead>
@@ -46,11 +46,18 @@
 						<td> <g:formatDate format="dd/MM/yyyy" date="${vendaInstance.dateCreated}" /> </td>
 						<td>
 							<g:if test="${vendaInstance.status != StatusVenda.Entregue}">
-								<g:form>
+								<g:form style="display:inline">
 										<g:hiddenField name="id" value="${vendaInstance?.id}" />
 										<g:hiddenField name="offset" value="${params.offset}" />
 										<g:hiddenField name="max" value="${params.max}" />
-										<g:actionSubmit class="delete" action="marcarComoEntregue" value="Marcar" onclick="return confirm('Tem certeza');" />
+										<g:actionSubmit action="marcarComoEntregue" value="Marcar" onclick="return confirm('Tem certeza');" />
+								</g:form>
+
+								<g:form style="display:inline">
+										<g:hiddenField name="id" value="${vendaInstance?.id}" />
+										<g:hiddenField name="offset" value="${params.offset}" />
+										<g:hiddenField name="max" value="${params.max}" />
+										<g:actionSubmit action="excluir" value="Excluir" onclick="return confirm('Tem certeza');" />
 								</g:form>
 							</g:if>
 						</td>
