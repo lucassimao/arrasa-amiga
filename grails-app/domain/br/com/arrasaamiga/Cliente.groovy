@@ -28,7 +28,11 @@ class Cliente {
 
     static constraints = {
     	nome(blank:false,nullable:false)
-    	email(email:true,blank:false,nullable:false)
+    	email(email:true,blank:false,nullable:false,validator: {val,obj->
+            
+            def other = Usuario.findByUsername(val)
+            return ( other == null || other.id == obj.usuario.id )
+        })
         senha(blank:false,nullable:false)
     	celular(blank:false,nullable:false,maxSize:9)
         dddCelular(blank:false,nullable:false,maxSize:2)
