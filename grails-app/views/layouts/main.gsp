@@ -257,7 +257,20 @@
 			                        	<sec:ifLoggedIn>
 
 			                        		<sec:ifNotGranted roles="ROLE_ADMIN">
-				                        		<a href="#"> <i style="color:#F29BF2;" class="icon-female icon-large"></i> Bem-vinda </a>
+				                        		
+				                        		<a href="#" data-toggle="dropdown" class="dropdown-toggle"> 
+				                        			<i style="color:#F29BF2;" class="icon-female icon-large"></i> Bem-vinda 
+				                        			<b class="caret"></b>
+				                        		</a>
+
+		  										<ul class="dropdown-menu">
+						                        	
+													<li><a href="${createLink(controller:'cliente',action:'pedidos')}"> Meus Pedidos </a></li>	
+
+													<!-- <li class="divider"></li> -->
+													
+						                        </ul>
+
 			                        		</sec:ifNotGranted>
 											
 											<sec:ifAllGranted roles="ROLE_ADMIN">
@@ -269,55 +282,6 @@
 
 			                        	</sec:ifLoggedIn>
 
-										
-											
-
-
-
-
-										<!--
-				                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-
-				                        	<sec:ifLoggedIn>
-				                        		<i style="color:#F29BF2;" class="icon-female icon-large"></i> 
-				                        		Você
-				                        	</sec:ifLoggedIn>
-
-				                        	<sec:ifNotLoggedIn>
-				                        		<i class="icon-female icon-large"></i> 
-				                        		Entrar
-				                        	</sec:ifNotLoggedIn>
-
-				                        	<b class="caret"></b>
-				                       	</a>
-
-				                        <ul class="dropdown-menu">
-				                        	
-				                        	<sec:ifLoggedIn>
-												
-												<li><a href="#"> Meus Pedidos</a></li>	
-
-												<li class="divider"></li>
-												
-												<sec:ifAllGranted roles="ROLE_ADMIN">
-
-													<li> 
-														<a href="${createLink(controller:'produto')}"> ADMINISTRATIVO </a> 
-													</li>
-
-													<li class="divider"></li>
-
-												</sec:ifAllGranted>
-
-												<li><a href="${createLink(controller:'logout')}"> Sair</a></li>
-				                        	</sec:ifLoggedIn>
-				                        	
-				                        	<sec:ifNotLoggedIn>
-												<li><a href="${createLink(controller:'login')}"> Entrar </a></li>
-												 <li><a href="#"> Esqueci minha senha! </a></li> 
-				                        	</sec:ifNotLoggedIn> 
-
-				                        </ul>-->
 			                      </li>
 
 

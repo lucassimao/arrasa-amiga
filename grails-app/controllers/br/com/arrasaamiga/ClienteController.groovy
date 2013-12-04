@@ -1,6 +1,7 @@
 package br.com.arrasaamiga
 
 import org.springframework.security.web.savedrequest.*
+import grails.plugins.springsecurity.Secured
 
 class ClienteController {
 
@@ -37,6 +38,14 @@ class ClienteController {
         }
        	
 
+    }
+
+    @Secured(['isAuthenticated()'])
+    def pedidos(){
+        def user = springSecurityService.currentUser
+        def cliente = Cliente.findByUsuario(user)
+
+        [pedidos: Venda.findAllByCliente(cliente)]
     }
 
 }
