@@ -209,6 +209,20 @@
 
 						        </div> <!-- fim well valores -->
 
+								<div class="well" style="background-color:white;">
+
+									<legend> <i class="icon-money"></i> Forma de Pagamento </legend>
+									
+									<div class="row-fluid">
+
+										<div class="span8">
+										  ${pedido.detalhesPagamento}
+										</div>
+
+									</div>
+
+								</div>
+
 
 
 							</div> <!-- fim accordion inner -->
