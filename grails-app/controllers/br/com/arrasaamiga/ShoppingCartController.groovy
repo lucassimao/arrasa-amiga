@@ -139,7 +139,7 @@ class ShoppingCartController {
 
         def itens = shoppingCart.itens
 
-        if (itens.size() == 0){
+        if (!itens){
             flash.message = 'Seu carrinho está vazio!'
             redirect(action:'index')
             return
