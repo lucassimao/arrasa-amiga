@@ -44,21 +44,21 @@
         $(function(){
         
 
-        $("#select-cidade").change(function(){
+          $("#select-cidade").change(function(){
 
-          var cidadeId = Number($("#select-cidade option:selected").val());
+            var cidadeId = Number($("#select-cidade option:selected").val());
 
-          if ( cidadeId === ${Cidade.teresina.id} || cidadeId === ${Cidade.timon.id} ){
+            if ( cidadeId === ${Cidade.teresina.id} || cidadeId === ${Cidade.timon.id} ){
 
-            $("#div-cep").css('display','none');
+              $("#div-cep").css('display','none');
 
-          }else{
+            }else{
 
-            $("#div-cep").css('display','block');
+              $("#div-cep").css('display','block');
 
-          } 
+            } 
 
-        });
+          });
 
           $("#select-uf").change(function(){
               var idUf = $(this).val();

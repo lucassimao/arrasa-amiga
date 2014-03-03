@@ -12,24 +12,29 @@
 
 		<meta name="layout" content="main"/>
 
+
 		<style type="text/css">
 
+			#p-comprar{
+				text-align: center;
+				position:absolute;
+				bottom: 9px;
+				left:0px;
+				width: 100%;	
+			}
+
+
 			.label-preco{
-				left:30%;
+				text-align: center;
 				color:#ad96a5;
 				font-size:20px;
 				position:absolute;
 				bottom: 65px;
 				font-weight:bold;
+				left:0px;
+				width: 100%;
 			}
 
-			.label-desconto-a-vista{
-				left:10%;
-				color:#ad96a5;
-				font-size:12px;
-				position:absolute;
-				bottom: 38px;
-			}
 
 			.item-produto{
 				padding:5px;
@@ -40,9 +45,17 @@
 				position:relative;
 				border-radius: 1em;
 				box-shadow: pink 0.5em 0.5em 0.3em;
+				width: 200px;
+				float:left;
+				margin: 7px;
 			}
+
+			 #sortable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
+
+
 		</style>
 
+		<g:javascript src="jquery-ui-1.10.3.custom.min.js" />
 
 		<g:javascript>
 					
@@ -52,6 +65,31 @@
 					event.preventDefault();
 					$(this).parent().submit();
 										
+				});
+
+			    $( "#sortable" ).sortable();
+			    $( "#sortable" ).disableSelection();
+
+
+				$( "#sortable" ).sortable({
+					  update: function( event, ui ) {
+
+					  	var ordemArray =   $(this).sortable( "toArray" ) ;
+					  	
+					  	$.ajax({
+
+					  		data: {'ordem':ordemArray},
+					  		settings: {'cache':false},
+					  		type:'POST',
+					  		url: "${createLink(controller:'home',action:'atualizarOrdemDosItens',absolute:true)}",
+					  	
+					  	}).fail(function(){
+
+
+						});;
+					  		
+
+					  }
 				});
 
 
@@ -64,89 +102,43 @@
 
 	<body>
 
-
-			<g:link style="margin-top:20px;" controller="produto" class=" btn btn-primary"> 
-				<i class="icon-backward"> </i> Voltar
-			</g:link>	
-
 			<hr>
-			
+
 			<g:set var="ocultarRodape" value="${true}" scope="request"/>
 			<g:set var="ocultarMenu" value="${true}" scope="request"/>
 
-      		<g:set var="count" value="${0}"/>
-      		<g:set var="qtdeProduto" value="${Produto.count()}"/>
+			
+			<a href="${createLink(controller:'produto',action:'list',absolute:true)}" class="btn btn-success">
+	            <i class="icon-backward icon-white"></i> Voltar
+	        </a>
 
-      		<g:each in="${produtos}" var="produto" status="i">
+      		<ul id="sortable">
 
-      			<g:if test="${ count == 0 }">
-					<div class="row-fluid" style="margin-bottom:20px;">
-				</g:if>
-					
-				<div class="span3 item-produto">
-					
-					
-					<a href="${createLink(uri:produto.nomeAsURL, absolute:true)}"> 
-						<g:img dir="img/produtos" file="${produto.fotoMiniatura}" alt="${produto.nome}" title="${produto.nome}"/>
-						<h5> ${produto.nome} </h5>
-					</a>
-					
-					<p class="label-preco"> 
-						<g:formatNumber number="${produto.precoAPrazoEmReais}" type="currency" 
-						currencyCode="BRL" />
-					</p>
-					
-						
-					<p>
+	      		<g:each in="${produtos}" var="produto" status="i">
+
+
+      				<li id="${produto.id}" class="ui-state-default item-produto">
 
 							
-
-						<div style="position:absolute;bottom: 10px;margin-left:15px;">
-
-							<g:if test="${i > 0}">
-								<g:link action="left" controller="home" id="${produto.id}" class=" btn btn-primary"> 
-									<i class="icon-arrow-left"> </i>  
-								</g:link>
-							</g:if>
-
-							<g:if test="${ (i+1) > 4 }">
-								<g:link action="up" controller="home" id="${produto.id}"  class="btn btn-primary"> 
-									<i class="icon-arrow-up"> </i>  
-								</g:link>
-							</g:if>
-
-							<g:if  test="${ i < (qtdeProduto - 4) }">
-								<g:link action="down" controller="home" id="${produto.id}" class=" btn btn-primary"> 
-									<i class="icon-arrow-down"> </i>  
-								</g:link>
-							</g:if>
-
-							<g:if test="${ (i+1) < qtdeProduto}">
-								<g:link action="right" controller="home" id="${produto.id}" class=" btn btn-primary"> 
-									<i class="icon-arrow-right"> </i> 
-								</g:link>
-							</g:if>
-
-						</div>
-																								
+						<g:img dir="img/produtos" file="${produto.fotoMiniatura}" alt="${produto.nome}" title="${produto.nome}"/>
+						<h5> ${produto.nome}</h5>
 						
+						<p class="label-preco"> 
+							<g:formatNumber number="${produto.precoAPrazoEmReais}" type="currency" currencyCode="BRL" />
+						</p>					
+								
 
-					</p>
+      				</li>
+						
+				</g:each>
 
-				</div>
-				
-				<g:set var="count" value="${++count}"/>
-
-
-      			<g:if test="${ count == 4 || (i+1) == Produto.count()}">
-					</div>
-					<g:set var="count" value="${0}"/>
-				</g:if>
-
-			</g:each>
+			</ul>
 			
 	</body>
 </html>
+
+
+
 
 
 
