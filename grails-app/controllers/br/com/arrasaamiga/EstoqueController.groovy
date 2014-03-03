@@ -15,7 +15,20 @@ class EstoqueController {
 
     def list(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        [estoqueInstanceList: Estoque.list(params), estoqueInstanceTotal: Estoque.count()]
+
+        def c = Estoque.createCriteria()
+
+        def results = c.list (params) {
+            produto{
+                and{
+                    eq('visivel',true)
+                    order('nome') 
+                }
+            }
+        }
+
+
+        [estoqueInstanceList: results , estoqueInstanceTotal: Estoque.count()]
     }
 
     def show(Long id) {
