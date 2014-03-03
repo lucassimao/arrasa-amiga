@@ -59,6 +59,9 @@ class VendaController {
         @Secured(['IS_AUTHENTICATED_FULLY'])
         def excluir(Long id){
                 def v = Venda.get(id)
+
+                Estoque.reporItens(v.itensVenda)
+                
                 v.delete()
 
                 flash.message = 'A venda foi excluida'

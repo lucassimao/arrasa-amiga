@@ -230,7 +230,8 @@ class ShoppingCartController {
             return              
         }
 
-     
+        
+        // para clientes de cidades que nao seja Timon e Teresina, o pagamento deve ser necessariamente via PagSeguro
         if ( !venda.cliente.isDentroDaAreaDeEntregaRapida() && venda.formaPagamento != FormaPagamento.PagSeguro  ){
 
             flash.message = "Forma de pagamento inválida!" 
@@ -263,6 +264,7 @@ class ShoppingCartController {
         springSecurityService.reauthenticate(venda.cliente.email)  
 
 
+
         if ( venda.formaPagamento == FormaPagamento.AVista ){
 
             venda.carrinho.checkedOut = true
@@ -270,6 +272,8 @@ class ShoppingCartController {
             venda.save(flush:true)
             
             enviarEmail(venda)
+            
+            Estoque.removerItens(venda.itensVenda)
 
             redirect(action:'show',controller:'venda', id:venda.id)
             return
@@ -287,6 +291,8 @@ class ShoppingCartController {
                 
                 enviarEmail(venda)
 
+                Estoque.removerItens(venda.itensVenda)
+                
                 redirect(url:paymentURL)
                 return
                 

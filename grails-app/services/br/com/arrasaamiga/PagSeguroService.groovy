@@ -5,7 +5,7 @@ import br.com.uol.pagseguro.domain.Transaction
 import br.com.uol.pagseguro.domain.PaymentMethodCode
 import br.com.uol.pagseguro.exception.PagSeguroServiceException
 import br.com.uol.pagseguro.service.TransactionSearchService
-
+import br.com.uol.pagseguro.service.NotificationService
 
 class PagSeguroService {
 
@@ -98,6 +98,10 @@ class PagSeguroService {
 
     	}
 
+    }
+
+    public Transaction checkTransaction(String notificationCode){
+    	return NotificationService.checkTransaction( getAccountCredentials(), notificationCode)
     }
 
 }

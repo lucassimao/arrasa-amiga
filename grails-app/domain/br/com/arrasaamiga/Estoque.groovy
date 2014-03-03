@@ -21,6 +21,26 @@ class Estoque  {
     	quantidade(min:0)
     }
 
+    public static void removerItens(Set itens){
+
+        itens.each{item->
+
+            def estoque = Estoque.findByProdutoAndUnidade(item.produto, item.unidade)
+            estoque.quantidade -= item.quantidade
+            estoque.save()
+        }
+    }
+
+    public static void reporItens(Set itens){
+        
+        itens.each{item->
+
+            def estoque = Estoque.findByProdutoAndUnidade(item.produto, item.unidade)
+            estoque.quantidade += item.quantidade
+            estoque.save()
+        }
+    }
+
 
 
 }

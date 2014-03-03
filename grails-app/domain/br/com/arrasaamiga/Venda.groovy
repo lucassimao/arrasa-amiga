@@ -143,7 +143,7 @@ class Venda {
         // especificando os itens
         this.itensVenda.each{item->
             
-            Double valorUnitario = (formaPagamento == FormaPagamento.PagSeguro)? item.precoAPrazoEmReais : item.precoAVistaEmReais
+            Double valorUnitario = item.precoAPrazoEmReais
 
             paymentRequest.addItem(
                 item.id.toString(),
