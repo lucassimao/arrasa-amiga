@@ -48,10 +48,7 @@ class PagSeguroController {
 
         }else{
 
-            if (venda.status?.equals(StatusVenda.PagamentoRecebido)){
-                Estoque.reporItens(venda.itensVenda)
-            }
-
+            Estoque.reporItens(venda.itensVenda)
             redirect(controller:'venda',action:'cancelada')
             return           
         }
