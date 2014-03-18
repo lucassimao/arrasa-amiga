@@ -124,9 +124,14 @@ class ShoppingCartController {
         venda.carrinho = shoppingCartService.shoppingCart
         venda.cliente = new Cliente()
         venda.cliente.endereco = new Endereco()
+        venda.cliente.endereco.cep = params.cep
         venda.cliente.endereco.cidade = Cidade.load(params.cidadeId)
         venda.cliente.endereco.uf = Uf.load(params.ufId)
         venda.formaPagamento = FormaPagamento.valueOf(params.formaPagamento)
+        
+        if (!venda.cliente.isDentroDaAreaDeEntregaRapida()){
+            venda.servicoCorreio = ServicoCorreio.valueOf(params.servicoCorreio)
+        }
 
 
         render(template:'totalVendaDetalhes',model:[ venda: venda ] )
@@ -185,7 +190,7 @@ class ShoppingCartController {
 
         def shoppingCart = shoppingCartService.shoppingCart
 
-        if (shoppingCart.itens.size() == 0){
+        if ( !shoppingCart.itens ){
             flash.message = 'Seu carrinho está vazio!'
             redirect(action:'index')
             return
@@ -256,8 +261,7 @@ class ShoppingCartController {
                 return                
             }
 
-        }
-        
+        }      
 
         venda.cliente.save()
 
@@ -312,7 +316,8 @@ class ShoppingCartController {
                 
                 e.printStackTrace()
 
-                venda.delete() // não deu pra mandar pro pag seguro ... exclui venda 
+                venda.delete() // não deu pra mandar pro pag seguro ... exclui venda e repõe produtos
+                Estoque.reporItens(venda.itensVenda)
                 
                 flash.message = e.toString() 
                 render(view: "checkout",model:model)

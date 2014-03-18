@@ -14,7 +14,7 @@
 				vertical-align: middle !important;
 			}
 
-			.forma-pagamento-selecionado, .data-entrega-selecionada{
+			.forma-pagamento-selecionado, .data-entrega-selecionada, .frete-selecionado{
 				font-weight: bold;
 			}
 		</style>
@@ -27,11 +27,15 @@
 				var formaPagamento =  $("input[name='formaPagamento']:checked").val();
 				var cidadeId = $("#select-cidade option:selected").val();
 				var ufId = $("#select-uf option:selected").val();
+				var cep =  $("input[name='cliente.endereco.cep']").val();
+				var servicoCorreio = $("input:radio[name='servicoCorreio']:checked").val();
+
 
 				$('#div-financeiro').css('display','none');
 
 				<g:remoteFunction action="recalcularTotais" onComplete="\$('#div-financeiro').fadeIn(500);"
-								  update="div-financeiro" params="{formaPagamento : formaPagamento, cidadeId:cidadeId, uf: ufId }" />				
+								  update="div-financeiro" 
+								  params="{formaPagamento : formaPagamento, cidadeId:cidadeId, uf: ufId, cep:cep,servicoCorreio: servicoCorreio }" />				
 			}
 			
 					
@@ -45,6 +49,7 @@
 
 						$("#div-pagamento-avista").css('display','block');
 						$("#div-cep").css('display','none');
+						$("#div-escolher-frete").css('display','none');
 						$("#div-entrega-teresina").css('display','block');
 
 					}else{
@@ -53,6 +58,7 @@
 						$("#div-pagamento-pagseguro input").click();
 						$("#div-cep").css('display','block');
 						$("#div-cep input").focus();
+						$("#div-escolher-frete").css('display','block');
 						$("#div-entrega-teresina").css('display','none');
 						$("#messageDataEntregaFlash").css('display','none');
 
@@ -114,6 +120,10 @@
 
 				});
 
+				$("#div-cep input").change(function(){
+					recalcularValorVenda();
+				});
+
 
 				$("input[name='formaPagamento']").click(function(){
 
@@ -124,6 +134,16 @@
 
 					recalcularValorVenda();
 					
+				});
+
+				$("input[name='servicoCorreio']").click(function(){
+
+					$("span.frete-selecionado").toggleClass("frete-selecionado");
+					
+					var label = $(this).next();
+					$(label).toggleClass("frete-selecionado");
+
+					recalcularValorVenda();
 				});
 
 
@@ -367,6 +387,31 @@
 					</g:each>
 					
 				</div>
+
+
+				<div id="div-escolher-frete" class="well" style="display:none;background-color:white;">
+
+					<legend style="background-image:url(${resource(dir:'img',file:'correios_logo.jpg')});background-repeat:no-repeat;padding-left:35px;"> Frete </legend>
+
+					<p style="text-align:justify;font-weigth:bold;text-indent:20px;"> 						
+						Escolha o tipo de frete:
+					</p>
+
+					<div style="margin-left:20px;">
+						<label class="radio inline">
+							<input type="radio" value="PAC" checked name="servicoCorreio" > 
+							<span> PAC </span>
+						</label>
+
+						<label class="radio inline">
+							<input type="radio" value="SEDEX" name="servicoCorreio"> 
+							<span> SEDEX ( 2 dias úteis )</span>
+						</label>
+					</div>
+					
+				</div>
+
+
 						
 
 				<div id="div-financeiro" class="well" style="background-color:white;">

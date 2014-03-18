@@ -16,13 +16,15 @@ class Venda {
     Date dataEntrega
     String transacaoPagSeguro
     ShoppingCart carrinho
+    ServicoCorreio servicoCorreio
 
     def pagSeguroService
+    def correiosService
    
 
 	static transients = ['valorTotal','taxaEntregaEmReais','valorItensAPrazo', 'valorItensAVista',
                          'descontoEmReais','freteEmReais','descontoParaCompraAVista','descontoPagSeguroEmReais',
-                         'paymentURL','pagSeguroService','detalhesPagamento','itensVenda']
+                         'paymentURL','pagSeguroService','detalhesPagamento','itensVenda','correiosService']
 
     static constraints = {
     	freteEmCentavos(min:0)
@@ -34,10 +36,15 @@ class Venda {
         dataEntrega(nullable:true)
         transacaoPagSeguro(blank:true,nullable:true)
         carrinho(nullable:true)
+        servicoCorreio(nullable:true)
     }
 
     static mapping = {
         autoTimestamp true
+    }
+
+    def beforeInsert(){
+        this.freteEmCentavos = getFreteEmReais() * 100
     }
 
     public Double getValorTotal(){
@@ -54,7 +61,20 @@ class Venda {
 
 
     public Double getFreteEmReais(){
-        return cliente.isDentroDaAreaDeEntregaRapida()?0:15
+        if (cliente.isDentroDaAreaDeEntregaRapida())
+            return 0
+        else{
+
+            if (this.freteEmCentavos > 0){
+                
+                return this.freteEmCentavos/100.0
+            
+            }else{
+
+                return correiosService.calcularFrete(this.cliente.endereco.cep, this.servicoCorreio)?:15d
+
+            }
+        }
     }        
 
     public Double getDescontoEmReais(){

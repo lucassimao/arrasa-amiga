@@ -48,6 +48,7 @@ grails.project.dependency.resolution = {
 
          runtime 'mysql:mysql-connector-java:5.1.25'
          runtime 'commons-codec:commons-codec:1.8'
+         compile "org.codehaus.groovy.modules.http-builder:http-builder:0.7"
     }
 
     plugins {
@@ -68,6 +69,7 @@ grails.project.dependency.resolution = {
         
         compile ":spring-security-core:1.2.7.3"
         compile ":asynchronous-mail:1.0"
+
 
 
     }
