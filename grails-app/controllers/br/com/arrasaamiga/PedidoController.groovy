@@ -14,6 +14,8 @@ class PedidoController {
 
     def list(Integer max) {
         params.max = Math.min(max ?: 10, 100)
+        params.sort = (params.sort)?:'status'
+        params.order = (params.order)?:'asc'
         [pedidoInstanceList: Pedido.list(params), pedidoInstanceTotal: Pedido.count()]
     }
 
