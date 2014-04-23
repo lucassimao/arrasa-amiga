@@ -37,11 +37,11 @@ class ItemVenda {
     }
 
     public Double getSubTotalAVista(){
-    	return this.precoAVistaEmReais * quantidade
+    	return ( this.precoAVistaEmCentavos * quantidade )/ 100.0
     }
 
     public Double getSubTotalAPrazo(){
-        return this.precoAPrazoEmReais * quantidade
+        return ( this.precoAPrazoEmCentavos * quantidade ) / 100.0
     }
 }
 
