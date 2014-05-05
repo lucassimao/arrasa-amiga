@@ -94,12 +94,7 @@ class Venda {
 
     public Double getTaxaEntregaEmReais(){
         
-        if ( getValorItensAPrazo() < 50 &&  cliente.isDentroDaAreaDeEntregaRapida() ){
-            return 2.5
-        }
-        else{
-            return 0
-        }
+        return 2
         
     }
 
