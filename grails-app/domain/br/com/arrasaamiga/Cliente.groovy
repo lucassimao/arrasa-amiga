@@ -16,7 +16,7 @@ class Cliente {
     Date dateCreated
 
 	static embedded = ['endereco']
-	static transients = ['email','senha','fromTeresina','fromTimon','dentroDaAreaDeEntregaRapida']
+	static transients = ['email','senha','fromTeresina','dentroDaAreaDeEntregaRapida']
 
 
     static mapping = {
@@ -50,13 +50,8 @@ class Cliente {
         return this.endereco?.cidade?.id == Cidade.teresina.id  
     }
 
-    public boolean isFromTimon(){
-
-        return this.endereco?.cidade?.id == Cidade.timon.id  
-    }
-
     public boolean isDentroDaAreaDeEntregaRapida(){
-        return isFromTeresina() || isFromTimon()
+        return isFromTeresina()
     }
 
     public void setCelular(String celular){

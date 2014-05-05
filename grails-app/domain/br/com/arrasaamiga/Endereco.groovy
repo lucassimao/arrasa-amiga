@@ -31,9 +31,6 @@ class Endereco {
             case Cidade.teresina.id:
                 this.cep = '64000-001'
                 break
-            case Cidade.timon.id:
-                this.cep = '65630-001'
-                break
         } 
 
         this.@cidade = cidade
@@ -45,9 +42,6 @@ class Endereco {
         switch(cidade?.id){
             case Cidade.teresina.id:
                 this.@cep = '64000-001'
-                break
-            case Cidade.timon.id:
-                this.@cep = '65630-001'
                 break
             default:
                 this.@cep = _cep
