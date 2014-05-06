@@ -71,7 +71,7 @@ class Venda {
             
             }else{
 
-                return correiosService.calcularFrete(this.cliente.endereco.cep, this.servicoCorreio)?:15d
+                return correiosService.calcularFrete(this.cliente.endereco.cep, this.servicoCorreio)
 
             }
         }
