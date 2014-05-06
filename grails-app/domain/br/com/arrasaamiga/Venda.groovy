@@ -94,7 +94,11 @@ class Venda {
 
     public Double getTaxaEntregaEmReais(){
         
-        return 2
+        if (cliente.isDentroDaAreaDeEntregaRapida()){
+            return 2
+        }else{
+            return 0
+        }
         
     }
 
