@@ -29,7 +29,11 @@ class CorreiosService {
 
 				response.success = { resp, xml ->
 					assert resp.status == 200
+					//def respostaXML = new XmlParser().parseText(xml)
 					//println XmlUtil.serialize(xml)
+					if (!xml.cServico.Erro.text()?.equals('0'))
+						throw new Exception(xml.cServico.MsgErro.text())
+
 					return NumberFormat.numberInstance.parse(xml.cServico.Valor.toString())
 				}
 			 
@@ -37,7 +41,12 @@ class CorreiosService {
 
 		}catch(Exception e){
 			e.printStackTrace()
-			return 0d
+
+			// caso haja algum erro durante a comunicaçao com os correios, devolve um valor padrao 
+			if ( servico.equals(ServicoCorreio.PAC) )
+				return 20.15
+			else
+				return 35.55
 		}
 
 
