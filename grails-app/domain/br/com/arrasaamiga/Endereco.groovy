@@ -11,7 +11,7 @@ class Endereco {
     static constraints = {
     	cep(blank:true,nullable:true,validator:{val,obj->
 
-            if (obj.cidade?.id != Cidade.teresina.id &&  obj.cidade?.id != Cidade.timon.id ){
+            if (obj.cidade?.id != Cidade.teresina.id){
                 return val?.trim()?.size()>0
             }
 
