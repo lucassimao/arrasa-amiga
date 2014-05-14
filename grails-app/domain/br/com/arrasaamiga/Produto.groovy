@@ -53,7 +53,7 @@ class Produto {
     } 
 
     public Double getDescontoAVistaEmReais(){
-        return getPrecoAPrazoEmReais() - getPrecoAVistaEmReais()
+        return ( this.precoAPrazoEmCentavos - this.precoAVistaEmCentavos )/ 100.0
     }
 
     public List getEstoques(){
@@ -62,7 +62,7 @@ class Produto {
 
     public int getQuantidadeEmEstoque(String unidade){
         
-        if (this.unidades.contains(unidade)){
+        if (this.unidades?.contains(unidade)){
             def estoque = Estoque.findByProdutoAndUnidade(this,unidade)
             
             if (estoque){
