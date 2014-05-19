@@ -9,6 +9,10 @@ class ShoppingCartService {
 
     def shoppingCartFactoryService
 
+	def getShoppingCart() {
+		return shoppingCartFactoryService.shoppingCart
+	}
+
     def addToShoppingCart(Produto produto, String unidade, Integer qtde) {
 
 		def shoppingCart = shoppingCartFactoryService.getShoppingCart()
