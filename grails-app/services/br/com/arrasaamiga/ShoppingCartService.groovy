@@ -7,33 +7,11 @@ class ShoppingCartService {
 
     boolean transactional = true
 
-    public String getSessionID(){
-    	def session = RequestContextHolder.currentRequestAttributes().getSession()
-		return session.id    	
-    }
-
-    private ShoppingCart createShoppingCart() {
-		def sessionID = getSessionID()
-
-		def shoppingCart = new ShoppingCart(sessionID:sessionID)
-		shoppingCart.save()
-		
-		return shoppingCart
-    }
-
-	def getShoppingCart() {
-		def sessionID = getSessionID()
-		def shoppingCart = ShoppingCart.findBySessionIDAndCheckedOut(sessionID, false)
-		
-		if (!shoppingCart) {
-			shoppingCart = createShoppingCart()
-		}
-		
-		return shoppingCart
-	}
+    def shoppingCartFactoryService
 
     def addToShoppingCart(Produto produto, String unidade, Integer qtde) {
-		def shoppingCart = getShoppingCart()
+
+		def shoppingCart = shoppingCartFactoryService.getShoppingCart()
 
 		def itemVenda = shoppingCart.itens.find{ itemVenda-> 
 			itemVenda.produto.id == produto.id && itemVenda.unidade.equals(unidade) 
@@ -59,7 +37,7 @@ class ShoppingCartService {
     }
 
     def removeFromShoppingCart(Produto produto, String unidade, Integer quantidade) {
-		def shoppingCart = getShoppingCart()
+		def shoppingCart = shoppingCartFactoryService.getShoppingCart()
 
 
 		if (!shoppingCart) {
@@ -85,9 +63,10 @@ class ShoppingCartService {
     }
 
     def emptyShoppingCart() {
-		def shoppingCart = getShoppingCart()
+		def shoppingCart = shoppingCartFactoryService.getShoppingCart()
 		
 		shoppingCart.itens = []
+
 		shoppingCart.itens.each{itemVenda->
 			itemVenda.delete()
 		}
@@ -96,7 +75,7 @@ class ShoppingCartService {
     }
 
     Set getItens() {
-		def shoppingCart = getShoppingCart()
+		def shoppingCart = shoppingCartFactoryService.getShoppingCart()
 		return shoppingCart.itens
     }
 }
