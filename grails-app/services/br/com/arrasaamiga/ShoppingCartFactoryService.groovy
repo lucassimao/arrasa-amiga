@@ -7,7 +7,7 @@ class ShoppingCartFactoryService {
 
     boolean transactional = true
 
-    public String getSessionID(){
+    private String getSessionID(){
     	def session = RequestContextHolder.currentRequestAttributes().getSession()
 		return session.id    	
     }
