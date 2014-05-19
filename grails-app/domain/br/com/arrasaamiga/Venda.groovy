@@ -146,9 +146,9 @@ class Venda {
      */
     public Double getDescontoParaCompraAVista(){
         def valorItensAPrazo = new BigDecimal( getValorItensAPrazo().toString() )
-        def valorItensAVistaEmCentavos = new BigDecimal( getValorItensAVista().toString() )
+        def valorItensAVista = new BigDecimal( getValorItensAVista().toString() )
 
-        def descontoEmCentavos = valorItensAPrazoEmCentavos - valorItensAVistaEmCentavos
+        def descontoEmCentavos = valorItensAPrazo - valorItensAVista
 
         return descontoEmCentavos.doubleValue()
     }
