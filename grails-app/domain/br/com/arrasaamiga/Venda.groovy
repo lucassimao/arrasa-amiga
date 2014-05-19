@@ -48,7 +48,12 @@ class Venda {
     }
 
     public Double getValorTotal(){
-    	return getValorItensAPrazo() + getFreteEmReais()  - getDescontoEmReais() + getTaxaEntregaEmReais()
+        def valorItensAPrazo = new BigDecimal(getValorItensAPrazo().toString())
+        def freteEmCentavos = new BigDecimal(getFreteEmReais().toString())
+        def descontoEmCentavos = new BigDecimal(getDescontoEmReais().toString())
+        def taxaEntregaEmCentavos = new BigDecimal(getTaxaEntregaEmReais().toString())
+
+        return (valorItensAPrazo + freteEmCentavos  - descontoEmCentavos + taxaEntregaEmCentavos).doubleValue()
     }
 
     public Double getValorItensAPrazo(){
@@ -71,7 +76,7 @@ class Venda {
             
             }else{
 
-                return correiosService.calcularFrete(this.cliente.endereco.cep, this.servicoCorreio)
+                return correiosService.calcularFrete(this.cliente?.endereco?.cep, this.servicoCorreio)
 
             }
         }
@@ -140,7 +145,12 @@ class Venda {
      *
      */
     public Double getDescontoParaCompraAVista(){
-        return getValorItensAPrazo() - getValorItensAVista()
+        def valorItensAPrazo = new BigDecimal( getValorItensAPrazo().toString() )
+        def valorItensAVistaEmCentavos = new BigDecimal( getValorItensAVista().toString() )
+
+        def descontoEmCentavos = valorItensAPrazoEmCentavos - valorItensAVistaEmCentavos
+
+        return descontoEmCentavos.doubleValue()
     }
 
     public URL getPaymentURL(){
