@@ -34,7 +34,7 @@ class CorreiosService {
 					if (!xml.cServico.Erro.text()?.equals('0'))
 						throw new Exception(xml.cServico.MsgErro.text())
 
-					return new BigDecimal(xml.cServico.Valor.toString()).doubleValue()
+					return new BigDecimal(xml.cServico.Valor.toString().replace(',','.')).doubleValue()
 				}
 			 
 			}
