@@ -64,6 +64,7 @@ grails.hibernate.cache.queries = false
 environments {
     development {
         grails.logging.jul.usebridge = true
+        grails.serverURL = "http://www.arrasaamiga.com.br"
     }
     production {
         grails.logging.jul.usebridge = false
