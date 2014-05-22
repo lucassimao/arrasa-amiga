@@ -25,7 +25,16 @@ class EmailService {
     } 
 
 
-    public void notificarCliente(){
+    public void notificarCliente(Venda venda){
 
+        def g = grailsApplication.mainContext.getBean('org.codehaus.groovy.grails.plugins.web.taglib.ApplicationTagLib') 
+          
+        asyncMailService.sendMail {
+
+            to venda.cliente.email
+            subject " A Arrasa Amiga recebeu seu pedido ! "
+
+            html g.render(template:'/venda/templates/confirmacaoVenda',model:[venda: venda, cliente: venda.cliente])
+        }
     }
 }

@@ -12,6 +12,7 @@ import grails.plugins.springsecurity.Secured
 class PagSeguroController {
 
     def pagSeguroService
+    def emailService
 
     def index() {
 
@@ -73,11 +74,23 @@ class PagSeguroController {
         venda.status = StatusVenda.fromPagSeguroTransactionStatus(transaction.status)
         venda.save()
 
-        if (venda.status?.equals(StatusVenda.Cancelada)){
-            Estoque.reporItens(venda.itensVenda)
-        }
 
-        return
+        switch(venda.status){
+
+            case StatusVenda.PagamentoRecebido:
+                emailService.notificarAdministradores(venda)
+                emailService.notificarCliente(venda)
+                break
+
+            case StatusVenda.Cancelada:
+                emailService.notificarAdministradores(venda)
+                emailService.notificarCliente(venda)
+                Estoque.reporItens(venda.itensVenda)
+                break
+
+            default:
+                println "Status da venda #${venda.id} alterado para ${venda.status}"
+        }
 
     }
 }

@@ -10,7 +10,8 @@ class ShoppingCartController {
 
 	def shoppingCartService
     def springSecurityService
-    def asyncMailService
+    def emailService
+
 
     static allowedMethods = [add: "POST", removerProduto: "POST"]
 
@@ -124,7 +125,7 @@ class ShoppingCartController {
         venda.carrinho = shoppingCartService.shoppingCart
         venda.cliente = new Cliente()
         venda.cliente.endereco = new Endereco()
-        venda.cliente.endereco.cep = params.cep
+        venda.cliente.endereco.cep = params.cep?.trim()
         venda.cliente.endereco.cidade = Cidade.load(params.cidadeId)
         venda.cliente.endereco.uf = Uf.load(params.ufId)
         venda.formaPagamento = FormaPagamento.valueOf(params.formaPagamento)
@@ -172,19 +173,6 @@ class ShoppingCartController {
     }
 
     
-    private void enviarEmail(Venda venda){
-        
-        asyncMailService.sendMail {
-
-          to "lsimaocosta@gmail.com"
-          subject "Nova venda - #${venda.id} - ${venda.cliente.nome}"
-          html "Nova venda no site <a href='${createLink(absolute:true,controller:"venda",action:"showFull",id: venda.id)}'> #${venda.id} </a> "
-
-        }
-
-    }
-
-
     def fecharVenda(){
 
 
@@ -236,7 +224,7 @@ class ShoppingCartController {
         }
 
         
-        // para clientes de cidades que nao seja Timon e Teresina, o pagamento deve ser necessariamente via PagSeguro
+        // para clientes que nao são de Teresina, o pagamento deve ser necessariamente via PagSeguro
         if ( !venda.cliente.isDentroDaAreaDeEntregaRapida() && venda.formaPagamento != FormaPagamento.PagSeguro  ){
 
             flash.message = "Forma de pagamento inválida!" 
@@ -264,9 +252,9 @@ class ShoppingCartController {
         }      
 
         venda.cliente.save()
+        Estoque.removerItens(venda.itensVenda)
 
         springSecurityService.reauthenticate(venda.cliente.email)  
-
 
 
         if ( venda.formaPagamento == FormaPagamento.AVista ){
@@ -275,9 +263,9 @@ class ShoppingCartController {
             venda.carrinho.save()
             venda.save(flush:true)
             
-            enviarEmail(venda)
+            emailService.notificarAdministradores(venda)
+            emailService.notificarCliente(venda)
             
-            Estoque.removerItens(venda.itensVenda)
 
             redirect(action:'show',controller:'venda', id:venda.id)
             return
@@ -287,17 +275,11 @@ class ShoppingCartController {
             venda.save(flush:true) // salva logo, pois precisa do ID da venda para registrar com a transação de pagamento do pagseguro
                 // não elimina o carrinho ainda, pq nao sabe se vai dar certo. So vai eliminar no retorno do pag seguro
             
-            def paymentURL = null
-
             try{
                 
-                paymentURL = venda.getPaymentURL()
-                
-                enviarEmail(venda)
-
-                Estoque.removerItens(venda.itensVenda)
-                
+                def paymentURL = venda.getPaymentURL()     
                 redirect(url:paymentURL)
+
                 return
                 
             }catch(PagSeguroServiceException e){
@@ -316,12 +298,24 @@ class ShoppingCartController {
                 
                 e.printStackTrace()
 
-                venda.delete() // não deu pra mandar pro pag seguro ... exclui venda e repõe produtos
+                venda.delete() // não deu pra mandar pro pag seguro ... exclui venda
                 Estoque.reporItens(venda.itensVenda)
                 
                 flash.message = e.toString() 
                 render(view: "checkout",model:model)
                 return    
+            
+            }catch(Exception e){
+
+                e.printStackTrace()
+
+                venda.delete() // não deu pra mandar pro pag seguro ... exclui venda
+                Estoque.reporItens(venda.itensVenda)
+                
+                flash.message = e.toString() 
+                render(view: "checkout",model:model)
+                return 
+
             }
 
         }        
