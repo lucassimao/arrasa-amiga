@@ -30,7 +30,7 @@ class HomeController {
 		try{
 			def cidade = Cidade.get(params.cidade)
 
-			if ( cidade.id == Cidade.teresina.id || cidade.id == Cidade.timon.id ){
+			if ( cidade.id == Cidade.teresina.id  ){
 				render(view:'comocomprar',model:[cidade: cidade.nome])
 			}else{
 				render(view:'comocomprar-outras-cidades',model:[cidade: cidade.nome])

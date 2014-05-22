@@ -48,7 +48,7 @@
 
             var cidadeId = Number($("#select-cidade option:selected").val());
 
-            if ( cidadeId === ${Cidade.teresina.id} || cidadeId === ${Cidade.timon.id} ){
+            if ( cidadeId === ${Cidade.teresina.id} ){
 
               $("#div-cep").css('display','none');
 
