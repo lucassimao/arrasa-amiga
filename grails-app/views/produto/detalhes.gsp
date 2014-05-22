@@ -251,7 +251,7 @@
 							<g:if test="${produtoInstance.isMultiUnidade()}">
 
 									<p id="label-tipo-unitario"> ${produtoInstance.tipoUnitario}: </p>
-									<g:select value="${ (unidadeComEstoque)?:estoques[0].unidade}" id="select-unidade" name="unidade" from="${produtoInstance.unidades}"/>
+									<g:select value="${unidades[0]}" id="select-unidade" name="unidade" from="${unidades}"/>
 
 									<p id="label-quantidade" style="left:110px;"> Quantidade:</p>
 									<g:select style="left:110px;" id="select-quantidade" name="quantidade" from="${[]}" /> 

@@ -281,18 +281,11 @@ class ProdutoController {
             return
         }
 
-        // procurando a unidade padrao a ser selecionada na interface: a primeira que tiver estoque
-        String unidadeComEstoque = null
+        def estoques = produtoInstance.getEstoques()
+        List unidades = estoques.sort{ e1, e2-> e2.quantidade <=> e1.quantidade }.collect{ it.unidade } // ordenando em ordem decrescente de quantidade
 
-        for(String unid : produtoInstance.unidades){
-            if (produtoInstance.getQuantidadeEmEstoque(unid) > 0){
-                unidadeComEstoque = unid
-                break
-            }
-        } 
 
-        [produtoInstance: produtoInstance,estoques: produtoInstance.getEstoques(),
-            unidadeComEstoque: unidadeComEstoque, cliente:cliente]
+        [produtoInstance: produtoInstance,unidades: unidades,estoques: estoques,cliente:cliente]
     }
 
 
