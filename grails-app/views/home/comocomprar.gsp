@@ -226,11 +226,8 @@
 						suas comprinhas! 
 					</p>
 					<p>
-						Em ${cidade}, as entregas são feitas nas terças e quintas a partir das 18hrs.
-						No sábado também fazemos entregas, pelo período da manhã. 
-					</p>
-					<p> 
-						Para compras de até R$ 50,00 é cobrada uma pequena taxa de entrega de R$ 2,50. Para compras acima desse valor, essa taxa não é cobrada. 
+						Em ${cidade}, as entregas são feitas nas terças e quintas a partir das 16:30hrs.
+						No sábado também fazemos entregas pela manhã, a partir das 9h. 
 					</p>
 					<p> 
 						Qualquer dúvida, basta entrar em contato pela nossa 
