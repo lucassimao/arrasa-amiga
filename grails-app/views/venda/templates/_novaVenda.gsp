@@ -88,7 +88,7 @@
                     </td>
 
                     <td>
-                         <g:if test="${!cliente.isDentroDaAreaDeEntregaRapida()}">
+                         <g:if test="${cliente.isDentroDaAreaDeEntregaRapida()}">
                             <g:formatDate format="EEEE, dd/MM/yyyy" date="${venda.dataEntrega}"/>
                          </g:if>
                          <g:else>

@@ -111,7 +111,9 @@
 
                     <td>
                          <g:if test="${cliente.isDentroDaAreaDeEntregaRapida()}">
-                            <span style="font-weight:bold;color:blue;"> <g:formatDate format="EEEE, dd/MM/yyyy" date="${venda.dataEntrega}"/> </span>
+                            <span style="font-weight:bold;color:blue;"> 
+                                <g:formatDate format="EEEE, dd/MM/yyyy" date="${venda.dataEntrega}"/> 
+                            </span>
                          </g:if>
                          <g:else>
                             ${cliente.endereco.cep}
