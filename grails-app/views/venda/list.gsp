@@ -8,6 +8,25 @@
 		<meta name="layout" content="admin">
 		<g:set var="entityName" value="${message(code: 'venda.label', default: 'Venda')}" />
 		<title><g:message code="default.list.label" args="[entityName]" /></title>
+
+		<script type="text/javascript">
+			$(function(){
+
+
+				$("#formTrackingCode").submit(function(){
+					var inputHidden = $(this).find("input[name='trackingCode']");
+
+					var trackingCode = prompt("Código de rastreio: ",$(inputHidden).val());
+
+					if (trackingCode){
+						$(inputHidden).val(trackingCode);
+					}else{
+						return false;
+					}
+				});
+
+			});
+		</script>
 	</head>
 	<body>
 		<a href="#list-venda" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
@@ -58,6 +77,14 @@
 										<g:hiddenField name="offset" value="${params.offset}" />
 										<g:hiddenField name="max" value="${params.max}" />
 										<g:actionSubmit action="excluir" value="Excluir" onclick="return confirm('Tem certeza');" />
+								</g:form>
+
+								<g:form name="formTrackingCode" style="display:inline">
+										<g:hiddenField name="id" value="${vendaInstance?.id}" />
+										<g:hiddenField name="offset" value="${params.offset}" />
+										<g:hiddenField name="max" value="${params.max}" />
+										<g:hiddenField name="trackingCode" value="${vendaInstance.codigoRastreio}" />
+										<g:actionSubmit action="setTrackingCode" value="Código de Rastreio" />
 								</g:form>
 							</g:if>
 						</td>

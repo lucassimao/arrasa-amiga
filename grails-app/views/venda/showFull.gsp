@@ -81,13 +81,21 @@
 
                     <label> <span class="caption"> Complemento: </span>  ${cliente.endereco.complemento}</label>
 
-                    <g:if test="${!cliente.isDentroDaAreaDeEntregaRapida()}">
-                      <label> <span class="caption"> CEP: </span> ${cliente.endereco.cep} </label>
-                    </g:if>
-
                     <g:if test="${cliente.isDentroDaAreaDeEntregaRapida()}">
                       <label> <span class="caption"> Dia da Entrega: </span> <g:formatDate format="EEEE, dd/MM/yyyy" date="${venda.dataEntrega}"/> </label>
                     </g:if>
+                    <g:else>
+                        <label> <span class="caption"> CEP: </span> ${cliente.endereco.cep} </label>
+
+                        <g:if test="${venda.codigoRastreio}">
+                            <label> 
+                                <span class="caption"> Código de Rastreio: </span> 
+                                <a target="_blank" href="http://websro.correios.com.br/sro_bin/txect01$.Inexistente?P_LINGUA=001&P_TIPO=002&P_COD_LIS=${venda.codigoRastreio}">
+                                    ${venda.codigoRastreio}
+                                </a> 
+                            </label>
+                        </g:if>
+                    </g:else>
 
               </div>            
           </div>
