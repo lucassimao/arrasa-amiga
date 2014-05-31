@@ -4,11 +4,30 @@ import grails.plugins.springsecurity.Secured
 import grails.converters.*
 import org.codehaus.groovy.grails.web.json.*
 
+class SalvarContatoCommand{
+
+	String nome
+	String email
+	String dddCelular
+	String celular
+	String mensagem
+
+	static constraints ={
+		nome blank:false, nullable:false
+		email blank:false, nullable:false, email:true
+		dddCelular blank:true, nullable:true
+		celular blank:true, nullable:true
+		mensagem blank:false, nullable:false
+	}
+}
+
 class HomeController {
 
 
 	//def shoppingCartService
     def springSecurityService	
+    def emailService
+
 
 	def index(){
         def user = springSecurityService.currentUser
@@ -23,6 +42,20 @@ class HomeController {
 
 		[produtos:produtos]
 
+	}
+
+	def salvarContato(SalvarContatoCommand cmd){
+
+		if (!cmd.hasErrors()){
+			//emailService.notificarContato(cmd.nome, cmd.celular, cmd.email, cmd.mensagem)
+			flash.message = 'Sua mensagem foi enviada com sucesso!'
+			render view:'/home/contato'
+			return
+
+		}else{
+			render view:'/home/contato', model:[cmd:cmd]
+			return			
+		}
 	}
 
 	def comocomprar(){

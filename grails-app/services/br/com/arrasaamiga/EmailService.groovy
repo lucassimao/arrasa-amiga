@@ -37,4 +37,26 @@ class EmailService {
             html g.render(template:'/venda/templates/confirmacaoVenda',model:[venda: venda, cliente: venda.cliente])
         }
     }
+
+
+    public void notificarContato(String nome,String telefone,String email,String msg){
+
+        asyncMailService.sendMail {
+
+            to email
+            subject "A Arrasa Amiga recebeu sua mensagem ! "
+            html '<body> <p> Este e-mail é automático</p> <p> Agradecemos seu contato e responderemos o mais breve possível amiga! </p> </body>'
+        }
+
+        def administradores = ['lsimaocosta@gmail.com','arrasaamiga@gmail.com']
+
+        asyncMailService.sendMail {
+
+            to administradores
+            subject " Nova mensagem para Arrasa Amiga ! "
+            html "<body> <p> De: ${nome} </p><p> Email: ${email}</p><p> Telefone: ${telefone}</p> <p>Mensagem: ${msg}</p> </body>"
+
+        }
+    }
+
 }

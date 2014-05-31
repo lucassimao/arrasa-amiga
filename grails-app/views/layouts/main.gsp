@@ -239,6 +239,15 @@
 										</g:link>
 									</li>
 
+
+									<li class="${ (controllerName == 'contato')?'active':''}">
+										<g:link uri="/contato">
+											<i class="icon-envelope icon-large"></i> Contato
+										</g:link>
+									</li>
+
+
+
 								</ul>
 
 								<ul class="nav pull-right">

@@ -8,6 +8,7 @@ class UrlMappings {
 		}
 
 		"/"(controller:"home",action:"index")
+		"/contato"(view:'/home/contato')
 		"/$produto-$id"(controller:"produto",action:"detalhes")
 		"500"(view:'/error')
 	}
