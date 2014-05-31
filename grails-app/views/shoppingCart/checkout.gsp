@@ -474,8 +474,9 @@
 		                    Voltar para o carrinho de compras
 		                </a>	                
 		                <button type="submit" style="float:right;" id="btnFecharVenda" class="btn btn-success">
+
 		                   <i class="icon-ok-circle icon-white"></i>  Confirmar Pedido
-		                </a>
+		                </button>
 		            </div>
 		        </div>
 
