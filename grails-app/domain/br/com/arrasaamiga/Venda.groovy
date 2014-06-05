@@ -17,6 +17,7 @@ class Venda {
     String transacaoPagSeguro
     ShoppingCart carrinho
     ServicoCorreio servicoCorreio
+    String codigoRastreio
 
     def pagSeguroService
     def correiosService
@@ -28,6 +29,7 @@ class Venda {
 
     static constraints = {
     	freteEmCentavos(min:0)
+        codigoRastreio(blank:true,nullable:true)
         descontoPagSeguroEmCentavos(min:0)
         taxasPagSeguroEmCentavos(min:0)
     	formaPagamento(nullable:false)
