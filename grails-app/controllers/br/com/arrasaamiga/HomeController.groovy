@@ -47,7 +47,7 @@ class HomeController {
 	def salvarContato(SalvarContatoCommand cmd){
 
 		if (!cmd.hasErrors()){
-			//emailService.notificarContato(cmd.nome, cmd.celular, cmd.email, cmd.mensagem)
+			emailService.notificarContato(cmd.nome, cmd.celular, cmd.email, cmd.mensagem)
 			flash.message = 'Sua mensagem foi enviada com sucesso!'
 			render view:'/home/contato'
 			return
