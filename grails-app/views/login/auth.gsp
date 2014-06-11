@@ -67,7 +67,11 @@
     			data-content="Clica aqui se essa for sua primeira vez na Arrasa Amiga :-)" 
     			data-placement="right" data-toggle="popover"  
     			href="${createLink(controller:'cliente',action:'cadastro')}" data-delay="500" data-animation="animation"
-    			data-html="true">Ainda não criou sua conta amiga ? </a>
+    			data-html="true">Ainda não criou sua conta ? </a>
+        </p>
+
+        <p style="text-align:center;margin-top:15px;">
+          <a href="${createLink(uri:'/pwdrecovery')}" data-html="true">Esqueceu sua senha ? </a>
         </p>
         
 </form>
@@ -86,9 +90,16 @@
               selector: 'a[rel="tooltip"], [data-toggle="tooltip"]'
           });
 
+          $('#pop').hover(function(){
+              
+              $('#pop').popover('show');
+              setTimeout(function(){$('#pop').popover('hide')}, 3000);
+
+          }, function(){});
+
           $("#pop").popover('show');
-          
-        
+          setTimeout(function(){$('#pop').popover('hide')}, 3000);
+
 
         $("#username").focus();
     });

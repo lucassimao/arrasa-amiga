@@ -25,6 +25,17 @@ class EmailService {
     } 
 
 
+    public void enviarNovaSenha(Cliente cliente, String novaSenha){
+        asyncMailService.sendMail {
+
+            to cliente.email
+            subject "Arrasa Amiga: Nova Senha"
+
+            html groovyPageRenderer.render(template:'/home/novaSenha',model:[cliente: cliente,novaSenha: novaSenha])
+        }        
+    }
+
+
     public void notificarCliente(Venda venda){
           
         asyncMailService.sendMail {

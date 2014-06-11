@@ -24,9 +24,10 @@ class SalvarContatoCommand{
 class HomeController {
 
 
-	//def shoppingCartService
     def springSecurityService	
     def emailService
+
+    static allowedMethods = [pwdRecovery: 'POST']
 
 
 	def index(){
@@ -42,6 +43,26 @@ class HomeController {
 
 		[produtos:produtos]
 
+	}
+
+	def pwdRecovery(String email){
+		Usuario user = Usuario.findByUsername(email)
+
+		if (user){
+
+			def max = 5000
+			def min = 0
+			def novaSenha = min + (int)(Math.random() * ((max - min) + 1))
+
+			emailService.enviarNovaSenha(Cliente.findByUsuario(user), novaSenha.toString())
+			user.password = novaSenha
+			user.save(flush:true)
+
+			flash.message = "Uma nova senha foi criada e enviada para o e-mail informado !"
+		}else{
+			flash.error = 'Não existe usuário cadastrado com o e-mail informado!'
+			[email: email]
+		}
 	}
 
 	def salvarContato(SalvarContatoCommand cmd){
