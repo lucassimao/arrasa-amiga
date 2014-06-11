@@ -73,12 +73,12 @@
 
 
 
-<div class="fieldcontain ${hasErrors(bean: produtoInstance, field: 'fotoMiniatura', 'error')} required">
+<div class="fieldcontain required">
 	<label for="fotoMiniatura">
 		Foto Miniatura
 		<span class="required-indicator">*</span>
 	</label>
-	<g:field type="file" name="fotoMiniatura"/>
+	<g:field type="file" name="fotoMiniaturaFile"/>
 	
 </div>
 

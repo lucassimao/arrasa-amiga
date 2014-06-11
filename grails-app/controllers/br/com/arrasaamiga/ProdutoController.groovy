@@ -89,8 +89,8 @@ class ProdutoController {
             }
         }
         
-
-        def multipartFileMiniatura = request.getFile('fotoMiniatura')
+        println request
+        def multipartFileMiniatura = request.getFile('fotoMiniaturaFile')
         produtoInstance.fotoMiniatura = "img${System.currentTimeMillis()}${multipartFileMiniatura.originalFilename}"
 
         if (!produtoInstance.save(flush: true)) {
@@ -183,7 +183,7 @@ class ProdutoController {
 
         
         def miniaturaAnterior = produtoInstance.fotoMiniatura
-        def multipartFileMiniatura = request.getFile('fotoMiniatura')
+        def multipartFileMiniatura = request.getFile('fotoMiniaturaFile')
 
         if (multipartFileMiniatura.originalFilename)
             produtoInstance.fotoMiniatura =  multipartFileMiniatura.originalFilename
