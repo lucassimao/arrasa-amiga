@@ -10,6 +10,11 @@ class CorreiosService {
 
     boolean transactional = false
 
+
+    public String getTrackingURL(String trackingCode){
+    	return "http://websro.correios.com.br/sro_bin/txect01\$.Inexistente?P_LINGUA=001&P_TIPO=002&P_COD_LIS=${trackingCode}"
+    }
+
     public Double calcularFrete(String cepDestino,ServicoCorreio servico){
 
     	def http = new HTTPBuilder( "http://ws.correios.com.br" )

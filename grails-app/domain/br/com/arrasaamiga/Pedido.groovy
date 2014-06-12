@@ -15,6 +15,8 @@ class Pedido {
 
 	StatusPedido status
 
+    def correiosService
+
 
     static transients = ['valorEmReais','freteEmReais','iofEmReais',
                         'custoTotalEmReais','custoUnitarioEmReais','urlRastreioCorreios']
@@ -70,7 +72,7 @@ class Pedido {
     }
 
     public String getUrlRastreioCorreios(){
-        return "http://websro.correios.com.br/sro_bin/txect01\$.Inexistente?P_LINGUA=001&P_TIPO=002&P_COD_LIS=${codigoRastreio}"
+        return correiosService.getTrackingURL(codigoRastreio)
     }
 
 }

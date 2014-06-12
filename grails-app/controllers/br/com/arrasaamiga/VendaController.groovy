@@ -33,7 +33,7 @@ class VendaController {
                 if (trackingCode){
                         def v = Venda.load(id)
                         v.codigoRastreio = trackingCode
-                        v.save()
+                        v.save(flush:true)
                         flash.message = 'Código de rastreio atualizado com sucesso'
                 }       
 

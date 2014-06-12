@@ -23,7 +23,7 @@ class Venda {
     def correiosService
    
 
-	static transients = ['valorTotal','taxaEntregaEmReais','valorItensAPrazo', 'valorItensAVista',
+	static transients = ['urlRastreioCorreios','valorTotal','taxaEntregaEmReais','valorItensAPrazo', 'valorItensAVista',
                          'descontoEmReais','freteEmReais','descontoParaCompraAVista','descontoPagSeguroEmReais',
                          'paymentURL','pagSeguroService','detalhesPagamento','itensVenda','correiosService']
 
@@ -214,6 +214,11 @@ class Venda {
 
 
         return paymentRequest.register(pagSeguroService.accountCredentials);
+    }
+
+
+    public String getUrlRastreioCorreios(){
+        return correiosService.getTrackingURL(codigoRastreio)
     }
 
 

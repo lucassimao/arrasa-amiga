@@ -62,13 +62,28 @@
 											<label> <span class="caption"> Bairro: </span> ${cliente.endereco.bairro} </label>
 											<label> <span class="caption"> Complemento: </span>  ${cliente.endereco.complemento}</label>
 
-											<g:if test="${!cliente.isDentroDaAreaDeEntregaRapida()}">
-												<label> <span class="caption"> CEP: </span> ${cliente.endereco.cep} </label>
-											</g:if>
-
 											<g:if test="${cliente.isDentroDaAreaDeEntregaRapida()}">
-												<label> <span class="caption"> Dia da Entrega: </span> <g:formatDate format="EEEE, dd/MM/yyyy" date="${pedido.dataEntrega}"/> </label>
+												<label> 
+													<span class="caption"> Dia da Entrega: </span> 
+													<g:formatDate format="EEEE, dd/MM/yyyy" date="${pedido.dataEntrega}"/>
+												</label>
 											</g:if>
+											<g:else>
+												<label> 
+													<span class="caption"> CEP: </span> 
+													${cliente.endereco.cep} 
+												</label>
+
+												<g:if test="${pedido.codigoRastreio}">
+													<label> 
+														<span class="caption"> Rastreio: </span> 
+														<a href="${pedido.urlRastreioCorreios}" target="_blank">
+															${pedido.codigoRastreio}
+														</a> 
+													</label>
+												</g:if>
+											</g:else>
+
 
 
 										</div>
