@@ -9,12 +9,28 @@ import javax.crypto.spec.SecretKeySpec
 import grails.converters.JSON
 import org.apache.commons.codec.binary.Base64
 
+import groovy.sql.Sql
+
 class ProdutoController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
     
     def grailsApplication
     def springSecurityService
+    def dataSource
+
+    def getTags(){
+        def sql = new Sql(dataSource)
+
+        String searchKey = "%${params.term}%"
+        def rows = sql.rows("select distinct pw.keywords_string from produto_keywords pw where lower(pw.keywords_string) like lower(:search)",
+                            [search:searchKey])
+
+        def tags = [:]
+
+        rows.eachWithIndex{row, index-> tags[index] = row.keywords_string }
+        render tags as JSON
+    }
 
 
     def addNewUnidade(String unidade){
@@ -71,6 +87,7 @@ class ProdutoController {
         def comentarios = JSON.parse(params.fotoComentario)
 
         def produtoInstance = new Produto(params)
+        produtoInstance.keywords = params['palavrasChave[]'] // vem como um array de strings
         produtoInstance.fotos = []
         produtoInstance.unidades = []
 
@@ -89,7 +106,6 @@ class ProdutoController {
             }
         }
         
-        println request
         def multipartFileMiniatura = request.getFile('fotoMiniaturaFile')
         produtoInstance.fotoMiniatura = "img${System.currentTimeMillis()}${multipartFileMiniatura.originalFilename}"
 
@@ -175,6 +191,7 @@ class ProdutoController {
 
 
         produtoInstance.visivel = params.visivel
+        produtoInstance.keywords = params['palavrasChave[]']
         produtoInstance.nome = params.nome
         produtoInstance.descricao = params.descricao
         produtoInstance.tipoUnitario = params.tipoUnitario

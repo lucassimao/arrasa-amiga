@@ -239,6 +239,12 @@ fieldset,
 	margin-left: 27%;
 }
 
+.fieldcontain .xpto {
+	margin-top:-3%;
+	display: block;
+	margin-left: 26%;
+}
+
 label {
 	cursor: pointer;
 	display: inline-block;

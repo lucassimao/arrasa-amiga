@@ -56,6 +56,15 @@
 						
 					</li>
 				</g:if>
+
+				<li class="fieldcontain">
+					<span class="property-label">Tags</span>
+					
+						<span class="property-value" aria-labelledby="tags-label">
+							${ produtoInstance.keywords?.join(',') }
+						</span>
+					
+				</li>
 				
 				<li class="fieldcontain">
 					<span class="property-label">Visível</span>

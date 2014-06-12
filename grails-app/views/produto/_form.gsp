@@ -16,6 +16,14 @@
 	<g:textArea name="descricao" style="width:400px;" cols="40" rows="5" maxlength="100000" required="" value="${produtoInstance?.descricao}"/>
 </div>
 
+<div class="fieldcontain">
+	<label>
+		Palavras-Chave:
+	</label>
+	<input type="text" style="" name="palavrasChave[]" value="" id="tagedit-input" >
+</div>
+
+
 <div class="fieldcontain ${hasErrors(bean: produtoInstance, field: 'visivel', 'error')} required">
 	<label for="visivel">
 		Visível:
@@ -85,11 +93,25 @@
 
 <g:javascript library="crudProdutos"/>
 
+<g:javascript library="tagEdit"/>
+
 <g:javascript>
 	
 
 
 	$(function(){
+
+
+
+		$("#tagedit-input").tagedit({
+			autocompleteURL: "${createLink(action:'getTags',abosolute:true)}",
+			additionalListClass :'xpto'
+		});
+
+		// adicionando tags ao formulário
+		<g:each in="${produtoInstance.keywords}" var="keyword">
+			$("#tagedit-input").val("${keyword}").trigger('transformToTag');
+		</g:each>
 
 		
 		var model =  (function(){

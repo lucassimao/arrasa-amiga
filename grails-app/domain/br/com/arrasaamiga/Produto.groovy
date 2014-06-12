@@ -17,18 +17,19 @@ class Produto {
     int ordem
     Boolean visivel
 
-	static hasMany = [fotos:FotoProduto,unidades:String]
+	static hasMany = [fotos:FotoProduto,unidades:String,keywords:String]
 	static transients = ['precoAVistaEmReais','precoAPrazoEmReais','estoques','quantidadeEmEstoque','nomeAsURL','multiUnidade','descontoAVistaEmReais']
 
     static constraints = {
-    	nome(nullable:false,blank:false)
-    	descricao(nullable:false,blank:false,maxSize:100000)
-        tipoUnitario(nullable:false,blank:false)
-        fotoMiniatura(nullable:true,blank:true)
-    	precoAVistaEmCentavos(min:0)
-        precoAPrazoEmCentavos(min:0)
-        ordem(min:0)
-        visivel(nullable:true)
+    	nome nullable:false,blank:false
+    	descricao nullable:false,blank:false,maxSize:100000
+        tipoUnitario nullable:false,blank:false
+        fotoMiniatura nullable:true,blank:true
+    	precoAVistaEmCentavos min:0
+        precoAPrazoEmCentavos min:0
+        ordem min:0
+        visivel nullable:true
+
     }
 
     static mapping = {
