@@ -1,8 +1,10 @@
 # README #
 
+Como juntar dois commits
 http://stackoverflow.com/questions/2563632/how-can-i-merge-two-commits-into-one
 
 This README would normally document whatever steps are necessary to get your application up and running.
+
 
 ### What is this repository for? ###
 
