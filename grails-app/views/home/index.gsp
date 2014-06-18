@@ -76,6 +76,7 @@
 
 	<body>
 
+			<!--
 			<hr>
 
 			<g:if test='${flash.message}'>
@@ -152,7 +153,7 @@
 				</g:if>
 
 			</g:each>
-			
+			-->
 	</body>
 </html>
 

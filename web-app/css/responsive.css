@@ -1,0 +1,137 @@
+/*
+    ========================================
+    CLOTHESHOP - SHOPPING CART THEME
+    ========================================
+    
+    @author         : Afriq Yasin Ramadhan
+    @version        : v1.1
+    @date-create    : 08/22/2012
+    @last-update    : 04/12/2014
+    @file-name      : responsive
+
+*/
+
+@media (min-width: 1200px) {
+	.container {
+		width: 970px;
+	}
+}
+
+@media screen and (min-width:992px) and (max-width:1200px) {
+	
+}
+
+@media screen and (min-width:769px) and (max-width:991px) {
+
+}
+
+@media screen and (max-width: 768px){
+	.logo h1,
+	.logo h2{
+	    text-align: left;
+	    font-size: 28px;
+	    line-height: 34px;
+	    font-weight: 700;
+	    text-transform: uppercase;
+	    margin: 5px 0 5px;
+	    letter-spacing: -1px;
+	}
+
+	.account a{
+	    color: #ffffff;
+	}
+
+	.account a:hover,
+	.account a:active,
+	.account a:focus{
+		color: #f1f1f1;
+	}
+
+	.account ul > li{
+	    margin: 12px 0 0 10px;
+	    position: relative;
+	}
+
+	.account ul > li a .cart-item{
+		position: absolute;
+		right: -7px;
+		top: -9px;
+		background: #f89406;
+		color: #ffffff;
+		padding: 2px 6px;
+		display: inline-block;
+		-webkit-border-radius: 10px;
+		   -moz-border-radius: 10px;
+			 -o-border-radius: 10px;
+				border-radius: 10px;
+		font-size: 11px;
+	}
+
+	#home-slider .carousel-control.left,
+	#home-slider .carousel-control.right {
+		margin-top: 15%;
+	}
+}
+
+@media screen and (min-width: 481px) and (max-width: 767px){
+	.account ul > li{
+	    position: relative;
+	}
+
+	.account ul > li:nth-child(1),
+	.account ul > #your-account{
+	    border-right: 1px solid #333;
+	    padding-right: 10px;
+	}
+
+	#home-slider .carousel-control.left,
+	#home-slider .carousel-control.right {
+		margin-top: 25%;
+	}
+
+	.copyright .copyright-left,
+	.copyright .copyright-right{
+	    text-align: center;
+	}
+
+	.copyright .list-social{
+	    float: none;
+	    margin-top: 20px;
+	    display: table;
+	    margin-left: auto;
+	    margin-right: auto;
+	}
+	
+}
+
+@media screen and (max-width: 480px){
+	.account ul > li{
+	    margin: 12px 0 0 0;
+	    position: relative;
+	}
+
+	.account ul > li:nth-child(1),
+	.account ul > #your-account{
+	    border-right: none;
+	    padding-right: 10px;
+	}
+	
+	#home-slider .carousel-control.left,
+	#home-slider .carousel-control.right {
+		margin-top: 25%;
+	}
+
+	.copyright .copyright-left,
+	.copyright .copyright-right{
+	    text-align: center;
+	}
+
+	.copyright .list-social{
+	    float: none;
+	    margin-top: 20px;
+	    display: table;
+	    margin-left: auto;
+	    margin-right: auto;
+	}
+	
+}
