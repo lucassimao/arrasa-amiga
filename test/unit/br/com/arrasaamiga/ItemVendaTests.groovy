@@ -13,7 +13,7 @@ import org.junit.*
 class ItemVendaTests {
 
     void setUp() {
-        mockDomain(ItemVenda)
+        mockFor(ItemVenda)
     }
 
     void tearDown() {
