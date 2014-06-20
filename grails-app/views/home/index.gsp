@@ -40,7 +40,7 @@
 				<div class="col-md-3 col-sm-3 col-xs-6">
 				  <div class="thumbnail product-item">
 				    <a href="${createLink(uri:produto.nomeAsURL, absolute:true)}"> 
-				    	<g:img dir="img/produtos" file="${produto.fotoMiniatura}" alt="${produto.nome}" title="${produto.nome}"/> 
+				    	<r:img dir="img/produtos" file="${produto.fotoMiniatura}" alt="${produto.nome}" title="${produto.nome}"/> 
 				    </a>
 
 
