@@ -1,14 +1,35 @@
+<%@ page import="br.com.arrasaamiga.Cidade" %>
+
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:fb="http://www.facebook.com/2008/fbml">
   <head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    <meta name="description" content="responsive clothing store template">
-    <meta name="author" content="afriq yasin ramadhan">
-    <link rel="shortcut icon" href="img/favicon.png">
+    <meta name="description" content="${ pageProperty(name:'page.description') }" />
+    <meta name="keywords" content="${ pageProperty(name:'page.keywords') }">
 
-    <title>Clotheshop</title>
+    <!-- metatags facebook -->
+    
+    <meta property="fb:admins" content="1665191676"/>
+    <meta property="fb:admins" content="100002204592399"/>
+    <meta property="fb:admins" content="100002253748681"/>
+    <meta property="fb:app_id" content="592257150816024"/> 
+    <meta property="og:site_name" content="Arrasa Amiga"/>
+    <meta property="og:type" content="website" /> 
+    <meta property="og:url" content="${ (request.requestURL?.equals('/'))?'http://www.arrasaamiga.com.br': request.requestURL }" /> 
+    <meta property="og:title" name="title" content="${ layoutTitle() }" /> 
+    <meta property="og:description" content="${pageProperty(name:'page.description')}" />
+    <meta property="og:image" content="${ pageProperty(name:'page.og:image') }" /> 
+
+    <!-- fim metatags facebook -->
+
+    <link rel="shortcut icon" href="${resource(dir: 'img', file: 'favicon.ico')}">
+
 
     <!-- Bootstrap core CSS -->
     <link href="${resource(dir:'css',file:'bootstrap.css') }" rel="stylesheet">
@@ -22,71 +43,73 @@
       <script src="${resource(dir:'js',file:'html5shiv.js') }"></script>
       <script src="${resource(dir:'js',file:'respond.min.js') }"></script>
     <![endif]-->
+
+
+    <g:layoutHead/>
+    <r:layoutResources />
+    
+    <title><g:layoutTitle default="Arrasa Amiga"/></title>
+
   </head>
 
   <body>
 
-    <!-- begin:navbar -->
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#clotheshop-navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-        </div>
+    <div id="fb-root" style="display:none;"></div>
 
-        <div class="collapse navbar-collapse" id="clotheshop-navbar">
-          <ul class="nav navbar-nav navbar-right">
-            <li><a class="disabled">CURRENCY</a></li>
-            <li class="active"><a href="#">USD</a></li>
-            <li><a href="#">EUR</a></li>
-            <li><a href="#">IDR</a></li>
-            <li class="divider-vertical"></li>
-            <li class="dropdown">
-              <a data-toggle="dropdown" class="dropdown-toggle" href="#">LANGUAGE <b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="#">EN</a></li>
-                <li><a href="#">ID</a></li>
-                <li><a href="#">FR</a></li>
-                <li class="divider"></li>
-                <li><a href="#">IT</a></li>
-              </ul>
-            </li>
-          </ul>
-        </div><!-- /.navbar-collapse -->
-      </div>
-    </nav>
-    <!-- end:navbar -->
+    <!-- se tiver perfil administrativo renderiza a barra -->
+    <sec:ifAllGranted roles="ROLE_ADMIN">
+        <g:render template="/layouts/navbar"/>
+    </sec:ifAllGranted>
+
 
     <!-- begin:content -->
     <div class="container">
+
       <!-- begin:logo -->
       <div class="row">
         <div class="col-md-6 col-sm-6 col-xs-6">
           <div class="logo">
-            <h1><a href="index.html">Clothe<span>shop</span> </a></h1>
-            <p>Clean and simple shopping cart</p>
+            <h1><a href="${createLink(uri:'/',absolute:true)}">Arrasa<span> amiga</span> </a></h1>
+            <p>Produtos para maquiagem a pronta entrega</p>
           </div>
         </div>
         <div class="col-md-6 col-sm-6 col-xs-6">
           <div class="account">
             <ul>
-              <li id="your-account">
-                <div class="hidden-xs">
-                  <h4><a href="#">Your Account</a></h4>
-                  <p>Welcome, <a href="login.html">log in</a></p>
-                </div>
-                <div class="visible-xs">
-                  <a href="login.html" class="btn btn-primary"><i class="fa fa-user"></i></a>
-                </div>
-              </li>
+
+              <sec:ifLoggedIn>
+
+                  <li id="your-account">
+                    <div class="hidden-xs">
+                      <h4> Bem vinda </h4>
+                      <p><a href="${createLink(controller:'cliente',action:'pedidos',absolute:true)}"> Minha conta </a></p>
+                    </div>
+                    <div class="visible-xs">
+                      <a href="login.html" class="btn btn-primary"><i class="fa fa-user"></i></a>
+                    </div>
+                  </li>
+
+              </sec:ifLoggedIn>
+
+              <sec:ifNotLoggedIn>
+                      
+                  <li id="your-account">
+                    <div class="hidden-xs">
+                      <h4><a href="${createLink(controller:'login')}"> Login </a></h4>
+                      <p> <a href="${createLink(controller:'cliente',action:'cadastro')}"> Cadastre-se aqui </a></p>
+                    </div>
+                    <div class="visible-xs">
+                      <a href="login.html" class="btn btn-primary"><i class="fa fa-user"></i></a>
+                    </div>
+                  </li>
+
+              </sec:ifNotLoggedIn>
+
+
               <li>
                 <div class="hidden-xs">
-                  <h4><a href="cart.html">Cart</a></h4>
-                  <p><strong>3 Product(s)</strong></p>
+                  <h4><a href="cart.html"> Carrinho </a></h4>
+                  <p><strong> <cart:qtdeTotalItens/> Produto(s)</strong></p>
                 </div>
                 <div class="visible-xs">
                   <a href="cart.html" class="btn btn-primary"><span class="cart-item">3</span> <i class="fa fa-shopping-cart"></i></a>
@@ -103,7 +126,7 @@
         <div class="col-md-12">
           <div class="nav-menus">
             <ul class="nav nav-pills">
-              <li class="active"><a href="index.html">Home</a></li>
+              <li class="${(controllerName == 'home' && actionName =='index')?'active':''}"><a href="${createLink(uri:'/',absolute:true)}">Home</a></li>
               <li><a href="#">Acessories</a></li>
               <li class="dropdown">
                 <a href="#" data-toggle="dropdown" class="dropdown-toggle">Boy <b class="caret"></b></a>
@@ -132,10 +155,10 @@
                   <li><a href="#">Skirts</a></li>
                 </ul>
               </li>
-              <li><a href="#">Edition</a></li>
+              <li><a href="#">Edition </a></li>
               <li><a href="#">Authorized Dealer</a></li>
-              <li><a href="about.html">About</a></li>
-              <li><a href="contact.html">Contact</a></li>
+              <li class="${(controllerName == 'home' && actionName =='comocomprar')?'active':''}" ><a href="${createLink(action:'comocomprar',controller:'home',absolute:true,params: [cidade:Cidade.teresina.id])}">Como Comprar </a></li>
+              <li class="${ (request.forwardURI?.endsWith('contato') )?'active':''}"><a href="${createLink(uri:'/contato',absolute:true)}">Contato</a></li>
             </ul>
           </div>
         </div>
@@ -181,254 +204,52 @@
       </div>
       <!-- end:home-slider -->
 
-      <!-- begin:best-seller -->
-      <div class="row">
-        <div class="col-md-12">
-          <div class="page-header">
-            <h2>Best Seller <small>Most sold product in this month</small></h2>
-          </div>
-        </div>
-      </div>
+      <g:layoutBody/>
 
-      <div class="row product-container">
-        <div class="col-md-3 col-sm-3 col-xs-6">
-          <div class="thumbnail product-item">
-            <a href="product_detail.html"><img alt="" src="${resource(dir:'img',file:'layout-WB0BMF1K5/product1.jpg')}"></a>
-            <div class="caption">
-              <h5>Casual Rock Pants</h5>
-              <p>$54.00</p>
-              <p>Available</p>
-            </div>
-            <div class="product-item-badge">New</div>
-          </div>
-        </div>
-        <div class="col-md-3 col-sm-3 col-xs-6">
-          <div class="thumbnail product-item">
-            <a href="product_detail.html"><img alt="" src="${resource(dir:'img',file:'layout-WB0BMF1K5/product2.jpg')}"></a>
-            <div class="caption">
-              <h5>T-shirt</h5>
-              <p class="product-item-price">$54.00</p>
-              <p>Available</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3 col-sm-3 col-xs-6">
-          <div class="thumbnail product-item">
-            <a href="product_detail.html"><img alt="" src="${resource(dir:'img',file:'layout-WB0BMF1K5/product3.jpg')}"></a>
-            <div class="caption">
-              <h5>Casual Rock Pants</h5>
-              <p><del>$54.00</del> $32.00</p>
-              <p>Available</p>
-            </div>
-            <div class="product-item-badge badge-sale">Sale</div>
-          </div>
-        </div>
-        <div class="col-md-3 col-sm-3 col-xs-6">
-          <div class="thumbnail product-item">
-            <a href="product_detail.html"><img alt="" src="${resource(dir:'img',file:'layout-WB0BMF1K5/product4.jpg')}"></a>
-            <div class="caption">
-              <h5>Casual Rock T-Shirt</h5>
-              <p>$54.00</p>
-              <p>Available</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- end:best-seller -->
 
-      <!-- begin:new-arrival -->
-      <div class="row">
-        <dov class="col-md-12">
-          <div class="page-header">
-            <h2>New Arrival <small>New products in this month</small></h2>
-          </div>
-        </dov>
-      </div>
-
-      <div class="row product-container">
-        <div class="col-md-3 col-sm-3 col-xs-6">
-          <div class="thumbnail product-item">
-            <a href="product_detail.html"><img alt="" src="${resource(dir:'img',file:'layout-WB0BMF1K5/product1.jpg')}"></a>
-            <div class="caption">
-              <h5>Pants</h5>
-              <p>$54.00</p>
-              <p>Available</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3 col-sm-3 col-xs-6">
-          <div class="thumbnail product-item">
-            <a href="product_detail.html"><img alt="" src="${resource(dir:'img',file:'layout-WB0BMF1K5/product2.jpg')}"></a>
-            <div class="caption">
-              <h5>Pants</h5>
-              <p>$54.00</p>
-              <p>Available</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3 col-sm-3 col-xs-6">
-          <div class="thumbnail product-item">
-            <a href="product_detail.html"><img alt="" src="${resource(dir:'img',file:'layout-WB0BMF1K5/product3.jpg')}"></a>
-            <div class="caption">
-              <h5>Pants</h5>
-              <p>$54.00</p>
-              <p>Available</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3 col-sm-3 col-xs-6">
-          <div class="thumbnail product-item">
-            <a href="product_detail.html"><img alt="" src="${resource(dir:'img',file:'layout-WB0BMF1K5/product4.jpg')}"></a>
-            <div class="caption">
-              <h5>Pants</h5>
-              <p>$54.00</p>
-              <p>Available</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- end:new-arrival -->
-
-      <!-- begin:random-product -->
-      <div class="row">
-        <div class="col-md-12">
-          <div class="page-header">
-            <h2>Random Product <small>Other products</small></h2>
-          </div>
-        </div>
-      </div>
-
-      <div class="row product-container">
-        <div class="col-md-3 col-sm-3 col-xs-6">
-          <div class="thumbnail product-item">
-            <a href="product_detail.html"><img alt="" src="${resource(dir:'img',file:'layout-WB0BMF1K5/product1.jpg')}"></a>
-            <div class="caption">
-              <h5>Pants</h5>
-              <p>$54.00</p>
-              <p>Available</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3 col-sm-3 col-xs-6">
-          <div class="thumbnail product-item">
-            <a href="product_detail.html"><img alt="" src="${resource(dir:'img',file:'layout-WB0BMF1K5/product2.jpg')}"></a>
-            <div class="caption">
-              <h5>Pants</h5>
-              <p>$54.00</p>
-              <p>Available</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3 col-sm-3 col-xs-6">
-          <div class="thumbnail product-item">
-            <a href="product_detail.html"><img alt="" src="${resource(dir:'img',file:'layout-WB0BMF1K5/product3.jpg')}"></a>
-            <div class="caption">
-              <h5>Pants</h5>
-              <p>$54.00</p>
-              <p>Available</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3 col-sm-3 col-xs-6">
-          <div class="thumbnail product-item">
-            <a href="product_detail.html"><img alt="" src="${resource(dir:'img',file:'layout-WB0BMF1K5/product4.jpg')}"></a>
-            <div class="caption">
-              <h5>Pants</h5>
-              <p>$54.00</p>
-              <p>Available</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- end:random-product -->
-
-      <!-- begin:footer -->
-      <div class="row">
-        <div class="col-md-12 footer">
-          <div class="row">
-            <div class="col-md-3 col-sm-6">
-              <div class="widget">
-                <h3><span>Contact Info</span></h3>
-                <address>
-                  No. 22, Bantul, Yogyakarta, Indonesia<br>
-                  Call Us : (0274) 4411005<br>
-                  Email : avriqq@gmail.com<br>
-                </address>
-              </div>
-            </div>
-
-            <div class="col-md-3 col-sm-6">
-              <div class="widget">
-                <h3><span>Customer Support</span></h3>
-                <ul class="list-unstyled list-star">
-                  <li><a href="#">FAQ</a></li>
-                  <li><a href="#">Payment Option</a></li>
-                  <li><a href="#">Booking Tips</a></li>
-                  <li><a href="#">Information</a></li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="col-md-3 col-sm-6">
-              <div class="widget">
-                <h3><span>Discover our store</span></h3>
-                <ul class="list-unstyled list-star">
-                    <li><a href="#">California</a></li>
-                    <li><a href="#">Bali</a></li>
-                    <li><a href="#">Singapore</a></li>
-                    <li><a href="#">Canada</a></li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="col-md-3 col-sm-6">
-              <div class="widget">
-                <h3><span>Get Our Newsletter</span></h3>
-                <p>Subscribe to our newsletter and get exclusive deals straight to your inbox!</p>
-                <form>
-                  <input type="email" class="form-control" name="email" placeholder="Your Email : "><br>
-                  <input type="submit" class="btn btn-warning" value="Subscribe">
-                </form>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-      <!-- end:footer -->
-
-      <!-- begin:copyright -->
-      <div class="row">
-        <div class="col-md-12 copyright">
-          <div class="row">
-            <div class="col-md-6 col-sm-6 copyright-left">
-              <p>Copyright &copy; Clotheshop 2012-2014. All right reserved.</p>
-            </div>
-            <div class="col-md-6 col-sm-6 copyright-right">
-              <ul class="list-unstyled list-social">
-                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                <li><a href="#"><i class="fa fa-facebook-square"></i></a></li>
-                <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-                <li><a href="#"><i class="fa fa-instagram"></i></a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- end:copyright -->
+      <g:render template="/layouts/footer"/>
 
     </div>
     <!-- end:content -->
 
 
-    <!-- Le javascript
-    ================================================== -->
+    <!-- Le javascript -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="${resource(dir:'js',file:'jquery.js')}"></script>
     <script src="${resource(dir:'js',file:'bootstrap.min.js')}"></script>
     <script src="${resource(dir:'js',file:'masonry.pkgd.min.js')}"></script>
     <script src="${resource(dir:'js',file:'imagesloaded.pkgd.min.js')}"></script>
     <script src="${resource(dir:'js',file:'script.js')}"></script>
+
+    <g:javascript>
+
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-43736713-1', 'arrasaamiga.com.br');
+        ga('send', 'pageview');
+
+        $(document).ready(function() {
+          
+          $.ajaxSetup({ cache: true });
+
+          $.getScript('//connect.facebook.net/pt_BR/all.js#xfbml=1', function(){
+              FB.init({
+                appId: '592257150816024', xfbml: true  
+              });     
+
+          });
+
+
+        });
+
+    </g:javascript>
+
+
+
+    <r:layoutResources />
 
   </body>
 </html>

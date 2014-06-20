@@ -37,7 +37,7 @@
     ==================
 */
 @import url(font-awesome.css);
-@import url(http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700,300);
+@import url(http://fonts.googleapis.com/css?family=Oregano:400italic|Roboto+Condensed:400,300,700);
 
 
 /*
@@ -168,6 +168,7 @@ input[type="color"]:focus,
             box-shadow: none;
 }
 
+/*
 .btn-primary:hover, 
 .btn-primary:focus, 
 .btn-primary:active, 
@@ -182,7 +183,7 @@ input[type="color"]:focus,
     color: #fff;
     background-color: #515151;
     border-color: #444;
-}
+}*/
 
 .text-yellow{
     color: #f89406;
@@ -220,6 +221,14 @@ a:hover.no-underline{
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: -1px;
+}
+
+.logo h1,.logo h1 a{
+    font-family: 'Oregano', cursive;
+    font-style: italic;
+    font-size: 50px;
+    font-weight: 700;
+    text-decoration: none;
 }
 
 .logo h1 span,
@@ -595,6 +604,7 @@ a:hover.no-underline{
 */
 .product-item{
     position: relative;
+    min-height:300px;
 }
 
 .product-item .caption h5{
@@ -632,6 +642,14 @@ a:hover.no-underline{
     background: #f89406;
 }
 
+.product-item .buy-item{
+    position: absolute;
+    bottom: 5px;
+    width:100px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
 
 /*
     ==================

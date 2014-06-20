@@ -17,6 +17,9 @@ class Produto {
     int ordem
     Boolean visivel
 
+    Date dateCreated
+    Date lastUpdated
+
 	static hasMany = [fotos:FotoProduto,unidades:String,keywords:String]
 	static transients = ['precoAVistaEmReais','precoAPrazoEmReais','estoques','quantidadeEmEstoque','nomeAsURL','multiUnidade','descontoAVistaEmReais']
 
@@ -29,6 +32,8 @@ class Produto {
         precoAPrazoEmCentavos min:0
         ordem min:0
         visivel nullable:true
+        dateCreated nullable: true
+        lastUpdated nullable:true
 
     }
 
