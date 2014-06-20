@@ -4,7 +4,7 @@ import org.springframework.dao.DataIntegrityViolationException
 import grails.converters.*
 import br.com.uol.pagseguro.domain.*
 import br.com.uol.pagseguro.exception.PagSeguroServiceException
-import grails.plugins.springsecurity.Secured
+import grails.plugin.springsecurity.annotation.Secured
 
 class ShoppingCartController {
 

@@ -1,7 +1,7 @@
 package br.com.arrasaamiga
 
 import org.springframework.security.web.savedrequest.*
-import grails.plugins.springsecurity.Secured
+import grails.plugin.springsecurity.annotation.Secured
 
 class ClienteController {
 

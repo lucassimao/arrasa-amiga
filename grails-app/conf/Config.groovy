@@ -2,8 +2,6 @@
 // config files can be ConfigSlurper scripts, Java properties files, or classes
 // in the classpath in ConfigSlurper format
 
-grails.config.locations = [ "classpath:database-${grails.util.Environment.current.name}-config.properties"]
-
 // grails.config.locations = [ "classpath:${appName}-config.properties",
 //                             "classpath:${appName}-config.groovy",
 //                             "file:${userHome}/.grails/${appName}-config.properties",
@@ -14,10 +12,11 @@ grails.config.locations = [ "classpath:database-${grails.util.Environment.curren
 // }
 
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
-grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
-grails.mime.use.accept.header = false
-grails.mime.types = [
-    all:           '*/*',
+
+// The ACCEPT header will not be used for content negotiation for user agents containing the following strings (defaults to the 4 major rendering engines)
+grails.mime.disable.accept.header.userAgents = ['Gecko', 'WebKit', 'Presto', 'Trident']
+grails.mime.types = [ // the first one is the default format
+    all:           '*/*', // 'all' maps to '*' or the first available format in withFormat
     atom:          'application/atom+xml',
     css:           'text/css',
     csv:           'text/csv',
@@ -28,22 +27,40 @@ grails.mime.types = [
     multipartForm: 'multipart/form-data',
     rss:           'application/rss+xml',
     text:          'text/plain',
+    hal:           ['application/hal+json','application/hal+xml'],
     xml:           ['text/xml', 'application/xml']
 ]
 
 // URL Mapping Cache Max Size, defaults to 5000
 //grails.urlmapping.cache.maxsize = 1000
 
-// What URL patterns should be processed by the resources plugin
-grails.resources.adhoc.includes = ['/images/**','/img/**', '/css/**', '/js/**', '/plugins/**']
+// Legacy setting for codec used to encode data with ${}
+grails.views.default.codec = "html"
+
+// The default scope for controllers. May be prototype, session or singleton.
+// If unspecified, controllers are prototype scoped.
+grails.controllers.defaultScope = 'singleton'
+
+// GSP settings
+grails {
+    views {
+        gsp {
+            encoding = 'UTF-8'
+            htmlcodec = 'xml' // use xml escaping instead of HTML4 escaping
+            codecs {
+                expression = 'html' // escapes values inside ${}
+                scriptlet = 'html' // escapes output from scriptlets in GSPs
+                taglib = 'none' // escapes output from taglibs
+                staticparts = 'none' // escapes output from static template parts
+            }
+        }
+        // escapes all not-encoded output at final stage of outputting
+        // filteringCodecForContentType.'text/html' = 'html'
+    }
+}
 
 
-// The default codec used to encode data with ${}
-grails.views.default.codec = "none" // none, html, base64
-grails.views.gsp.encoding = "UTF-8"
 grails.converters.encoding = "UTF-8"
-// enable Sitemesh preprocessing of GSP pages
-grails.views.gsp.sitemesh.preprocess = true
 // scaffolding templates configuration
 grails.scaffolding.templates.domainSuffix = 'Instance'
 
@@ -62,6 +79,12 @@ grails.exceptionresolver.params.exclude = ['password']
 // configure auto-caching of queries by default (if false you can cache individual queries with 'cache: true')
 grails.hibernate.cache.queries = false
 
+// configure passing transaction's read-only attribute to Hibernate session, queries and criterias
+// set "singleSession = false" OSIV mode in hibernate configuration after enabling
+grails.hibernate.pass.readonly = false
+// configure passing read-only to OSIV session by default, requires "singleSession = false" OSIV mode
+grails.hibernate.osiv.readonly = false
+
 environments {
     development {
         grails.logging.jul.usebridge = true
@@ -72,11 +95,8 @@ environments {
     }
 }
 
-
-
-
 // log4j configuration
-log4j = {
+log4j.main = {
     // Example of changing the log pattern for the default console appender:
     //
     //appenders {
@@ -96,15 +116,31 @@ log4j = {
            'net.sf.ehcache.hibernate'
 }
 
-// Added by the Spring Security Core plugin:
-grails.plugins.springsecurity.userLookup.userDomainClassName = 'br.com.arrasaamiga.Usuario'
-grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'br.com.arrasaamiga.UsuarioGrupoDeUsuario'
-grails.plugins.springsecurity.authority.className = 'br.com.arrasaamiga.GrupoDeUsuario'
-grails.plugins.springsecurity.rememberMe.alwaysRemember = true
-grails.plugins.springsecurity.rememberMe.tokenValiditySeconds = 15552000 // 6 meses
 
-grails.plugins.springsecurity.controllerAnnotations.staticRules = [
-   '/console/**': ['ROLE_ADMIN']
+// What URL patterns should be processed by the resources plugin
+grails.resources.adhoc.includes = ['/images/**','/img/**', '/css/**', '/js/**', '/plugins/**']
+
+// Added by the Spring Security Core plugin:
+grails.plugin.springsecurity.userLookup.userDomainClassName = 'br.com.arrasaamiga.Usuario'
+grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'br.com.arrasaamiga.UsuarioGrupoDeUsuario'
+grails.plugin.springsecurity.authority.className = 'br.com.arrasaamiga.GrupoDeUsuario'
+grails.plugin.springsecurity.rememberMe.alwaysRemember = true
+grails.plugin.springsecurity.rememberMe.tokenValiditySeconds = 15552000 // 6 meses
+grails.plugin.springsecurity.password.algorithm = 'SHA-256'
+grails.plugin.springsecurity.password.hash.iterations = 1
+grails.plugin.springsecurity.logout.postOnly = false
+
+
+grails.plugin.springsecurity.controllerAnnotations.staticRules = [
+    '/':                              ['permitAll'],
+    '/home/**':                         ['permitAll'],
+    '/index.gsp':                     ['permitAll'],
+    '/**/js/**':                      ['permitAll'],
+    '/**/css/**':                     ['permitAll'],
+    '/**/images/**':                  ['permitAll'],
+    '/**/img/**':                  ['permitAll'],
+    '/**/favicon.ico':                ['permitAll'],
+    '/console/**':                    ['ROLE_ADMIN']
 ] 
 
 grails {
@@ -119,24 +155,4 @@ grails {
               "mail.smtp.socketFactory.fallback":"false"]
    }
 }
-// Uncomment and edit the following lines to start using Grails encoding & escaping improvements
 
-// GSP settings
-grails {
-    views {
-        gsp {
-            encoding = 'UTF-8'
-            htmlcodec = 'xml' // use xml escaping instead of HTML4 escaping
-            codecs {
-                expression = 'html' // escapes values inside null
-                scriptlet = 'none' // escapes output from scriptlets in GSPs
-                taglib = 'none' // escapes output from taglibs
-                staticparts = 'none' // escapes output from static template parts
-            }
-        }
-        // escapes all not-encoded output at final stage of outputting
-        filteringCodecForContentType {
-            //'text/html' = 'html'
-        }
-    }
-}

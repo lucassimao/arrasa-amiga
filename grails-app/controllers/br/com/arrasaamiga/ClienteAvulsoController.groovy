@@ -1,8 +1,7 @@
 package br.com.arrasaamiga
 
 import org.springframework.dao.DataIntegrityViolationException
-
-import grails.plugins.springsecurity.Secured
+import grails.plugin.springsecurity.annotation.Secured
 
 @Secured(['ROLE_ADMIN'])
 class ClienteAvulsoController {

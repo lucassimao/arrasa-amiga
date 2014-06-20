@@ -20,7 +20,7 @@
         <div class="widget">
           <h3><span> Ajuda </span></h3>
           <ul class="list-unstyled list-star">
-            <li><a href="${createLink(action:'comocomprar',params: [cidade:Cidade.teresina.id])}"> Como Comprar </a></li>
+            <li><a href="${createLink(controller:'home',action:'comocomprar',params: [cidade:Cidade.teresina.id])}"> Como Comprar </a></li>
             <li><a href="#"> Quem somos </a></li>
           </ul>
         </div>

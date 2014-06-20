@@ -1,6 +1,6 @@
 package br.com.arrasaamiga
 
-import grails.plugins.springsecurity.Secured
+import grails.plugin.springsecurity.annotation.Secured
 
 import groovyx.net.http.*
 import static groovyx.net.http.ContentType.*

@@ -1,7 +1,7 @@
 package br.com.arrasaamiga
 
 import org.springframework.dao.DataIntegrityViolationException
-import grails.plugins.springsecurity.Secured
+import grails.plugin.springsecurity.annotation.Secured
 import grails.converters.*
 
 import javax.crypto.Mac

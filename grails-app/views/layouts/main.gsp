@@ -46,7 +46,6 @@
 
 
     <g:layoutHead/>
-    <r:layoutResources />
     
     <title><g:layoutTitle default="Arrasa Amiga"/></title>
 
@@ -221,7 +220,7 @@
     <script src="${resource(dir:'js',file:'imagesloaded.pkgd.min.js')}"></script>
     <script src="${resource(dir:'js',file:'script.js')}"></script>
 
-    <r:script>
+    <script type="text/javascript">
 
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -245,11 +244,8 @@
 
         });
 
-    </r:script>
+    </script>
 
-
-
-    <r:layoutResources />
 
   </body>
 </html>

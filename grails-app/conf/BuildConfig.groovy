@@ -62,36 +62,26 @@ grails.project.dependency.resolution = {
          runtime 'mysql:mysql-connector-java:5.1.25'
          runtime 'commons-codec:commons-codec:1.8'
          compile "org.codehaus.groovy.modules.http-builder:http-builder:0.7"
+         test "org.grails:grails-datastore-test-support:1.0-grails-2.4"
     }
 
     plugins {
 
         // plugins for the compile step
-        build ":tomcat:7.0.52.1"
-        compile ":scaffolding:2.0.3"
-        compile ':cache:1.1.2'
+        build ":tomcat:7.0.54"
+
+        compile ":scaffolding:2.1.1"
+        compile ":cache:1.1.6"
+        compile ':asset-pipeline:1.8.11'
+        compile ":spring-security-core:2.0-RC3"
+        //compile ":asynchronous-mail:1.0"
+        compile ":mail:1.0.6"
 
         // plugins needed at runtime but not for compilation
-        runtime ":hibernate4:4.3.5.3"
+        runtime ":hibernate4:4.3.5.4"
         runtime ":database-migration:1.4.0"
-        runtime ":jquery:1.11.0.2"
-        runtime ":resources:1.2.8"
-
-
-
-        // Uncomment these (or add new ones) to enable additional resources capabilities
-        //runtime ":zipped-resources:1.0"
-        //runtime ":cached-resources:1.0"
-        //runtime ":yui-minify-resources:0.1.5"
-
-        
-
         runtime ":console:1.3"
-        
-        compile ":spring-security-core:1.2.7.3"
-        compile ":asynchronous-mail:1.0"
-
-
+        //runtime ":jquery:1.11.0.2"rm -rf target
 
     }
 }

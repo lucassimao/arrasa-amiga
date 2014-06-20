@@ -5,8 +5,7 @@ import br.com.uol.pagseguro.domain.Transaction
 import br.com.uol.pagseguro.service.NotificationService
 import br.com.uol.pagseguro.exception.PagSeguroServiceException
 import br.com.uol.pagseguro.service.TransactionSearchService  
-
-import grails.plugins.springsecurity.Secured
+import grails.plugin.springsecurity.annotation.Secured
 
 
 class PagSeguroController {
