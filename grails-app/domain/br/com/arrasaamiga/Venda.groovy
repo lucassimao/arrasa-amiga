@@ -2,6 +2,7 @@ package br.com.arrasaamiga
 
 import br.com.uol.pagseguro.domain.*
 import java.text.NumberFormat
+import grails.rest.*
 
 class Venda {
 
@@ -18,6 +19,7 @@ class Venda {
     ShoppingCart carrinho
     ServicoCorreio servicoCorreio
     String codigoRastreio
+    Usuario vendedor
 
     def pagSeguroService
     def correiosService
@@ -39,6 +41,7 @@ class Venda {
         transacaoPagSeguro(blank:true,nullable:true)
         carrinho(nullable:true)
         servicoCorreio(nullable:true)
+        vendedor(nullable:true)
     }
 
     static mapping = {
@@ -47,6 +50,22 @@ class Venda {
 
     def beforeInsert(){
         this.freteEmCentavos = getFreteEmReais() * 100
+    }
+
+    /* Atualizando o estoque dos itens comprados */
+    def afterInsert(){
+
+        Estoque.withNewSession{session->
+
+            this.itensVenda.each{item->
+
+                def estoque = Estoque.findByProdutoAndUnidade(item.produto, item.unidade)
+                println "Removendo ${item.quantidade} de ${item.produto.nome} - ${item.unidade} ... "
+                estoque.quantidade -= item.quantidade
+                estoque.save(flush:true)
+            }
+
+        }
     }
 
     public Double getValorTotal(){

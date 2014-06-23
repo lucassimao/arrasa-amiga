@@ -252,7 +252,7 @@ class ShoppingCartController {
         }      
 
         venda.cliente.save()
-        Estoque.removerItens(venda.itensVenda)
+        springSecurityService.reauthenticate(venda.cliente.email)
 
 
         if ( venda.formaPagamento == FormaPagamento.AVista ){

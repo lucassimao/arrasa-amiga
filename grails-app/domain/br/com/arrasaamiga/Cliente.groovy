@@ -39,7 +39,7 @@ class Cliente {
     	telefone(blank:false,nullable:false,maxSize:9)
         dddTelefone(blank:false,nullable:false,maxSize:2)
     	endereco(nullable:false)
-    	usuario(nullable:false)
+    	usuario(nullable:true)
         dateCreated(nullable:true)
 
 
