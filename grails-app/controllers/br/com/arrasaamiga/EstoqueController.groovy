@@ -22,9 +22,7 @@ class EstoqueController {
         def results = c.list () {
 
             produto{
-                and{
-                    eq('visivel',true) 
-                }
+                eq('visivel',true) 
                 order('nome')
             }
 
