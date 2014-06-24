@@ -117,7 +117,7 @@ class VendaController {
                 if (v.formaPagamento?.equals(FormaPagamento.AVista)) 
                         Estoque.reporItens(v.itensVenda)
                 
-                v.delete()
+                v.delete(flush:true)
 
                 flash.message = 'A venda foi excluida'
                 
