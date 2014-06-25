@@ -133,13 +133,14 @@ grails.plugin.springsecurity.logout.postOnly = false
 
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
     '/':                              ['permitAll'],
-    '/home/**':                         ['permitAll'],
+    '/home/**':                       ['permitAll'],
     '/index.gsp':                     ['permitAll'],
     '/**/js/**':                      ['permitAll'],
     '/**/css/**':                     ['permitAll'],
     '/**/images/**':                  ['permitAll'],
-    '/**/img/**':                  ['permitAll'],
+    '/**/img/**':                     ['permitAll'],
     '/**/favicon.ico':                ['permitAll'],
+    '/assets/**':                     ['permitAll'],
     '/console/**':                    ['ROLE_ADMIN']
 ] 
 

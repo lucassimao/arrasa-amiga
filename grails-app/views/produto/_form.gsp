@@ -90,19 +90,14 @@
 	
 </div>
 
+<asset:javascript src="crud-produtos.js"/>
+<asset:javascript src="tagEdit.js"/>
 
-<g:javascript library="crudProdutos"/>
 
-<g:javascript library="tagEdit"/>
-
-<g:javascript>
-	
-
+<asset:script type="text/javascript">
 
 	$(function(){
-
-
-
+	
 		$("#tagedit-input").tagedit({
 			autocompleteURL: "${createLink(action:'getTags',abosolute:true)}",
 			additionalListClass :'xpto'
@@ -113,134 +108,12 @@
 			$("#tagedit-input").val("${keyword}").trigger('transformToTag');
 		</g:each>
 
-		
-		var model =  (function(){
-			
-			var unidades = [];
-			var fotosUnidades = {};
-			var fotoComentario = {};
-
-
-
-
-			return {
-
-				getUnidadesAsJSON: function(){
-					return JSON.stringify(unidades);
-				},
-
-				getFotosUnidadesAsJSON: function(){
-					return JSON.stringify(fotosUnidades);
-				},
-				
-				getFotoComentarioAsJSON: function(){
-					return JSON.stringify(fotoComentario);
-				},
-
-				adicionarUnidade : function(str){
-					unidades.push(str);
-					fotosUnidades[str] = [];
-
-				},
-
-
-				removerUnidade : function(str){
-					var index = $.inArray(str,unidades);
-
-					if (index > -1){
-						unidades.splice(index,1);
-						delete fotosUnidades[str];
-
-						$("#descricao").val();
-					}
-				},
-
-
-
-				addFoto : function(unidade,nomeArquivo){
-					fotosUnidades[unidade].push(nomeArquivo);
-
-				},
-
-				removeFoto : function(unidade,nomeArquivo){
-					var index = $.inArray(nomeArquivo,fotosUnidades[unidade]);
-
-					if (index > -1){
-						fotosUnidades[unidade].splice(index,1);
-					}
-
-				},
-
-				setComentario : function(nomeArquivo,comentario){
-					fotoComentario[nomeArquivo] = comentario;
-				},
-
-				upFoto : function(unidade,foto){
-					var index = $.inArray(foto,fotosUnidades[unidade]);
-
-					if (index > 0){
-						var idxAcima = index - 1
-						var fotoAcima = fotosUnidades[unidade][idxAcima];
-
-						fotosUnidades[unidade][idxAcima] = foto;
-						fotosUnidades[unidade][index] = fotoAcima;
-
-						return true;
-
-					}
-
-					return false;
-
-				},
-
-				downFoto: function(unidade,foto){
-					var index = $.inArray(foto,fotosUnidades[unidade]);
-
-					if (index < (fotosUnidades[unidade].length -1) ){
-						var idxAbaixo = index + 1;
-						var fotoAbaixo = fotosUnidades[unidade][idxAbaixo];
-
-						fotosUnidades[unidade][idxAbaixo] = foto;
-						fotosUnidades[unidade][index] = fotoAbaixo;
-
-						return true;
-
-					}
-
-					return false;
-
-				},
-
-				contains : function(str){
-
-					var rslt = null;
-
-					$.each(unidades, function(index, value) {
-
-					  if (rslt == null && value.toLowerCase() === str.toLowerCase()) {
-					    rslt = index;
-					    return false;
-					  }
-					
-					});	
-
-					return (rslt !== null)?true:false;		
-				}
-
-
-			}
-
-		})();	
-
 
 		// reconstruindo modelo de dados
 		<g:each in="${produtoInstance.unidades}" status="idx" var="unidade">
 			model.adicionarUnidade("${unidade}");
 
 			$("#list-unidades li:nth-child(${idx+1})").data('unidade',"${unidade}");
-			
-			
-
 			
 			<g:each in="${produtoInstance.fotos.findAll{f-> f.unidade.equals(unidade)}}" var="foto"> 
 				$("#list-unidades li").eq(${idx}).children("div.produto-unidade-foto").eq(${foto.posicao}).data('nomeArquivo',"${foto.arquivo}");
@@ -251,52 +124,8 @@
 
 			updateUpDownArrows( $("#list-unidades li:nth-child(${idx+1})") );
 			
-
 		</g:each>
 
-
-		function updateUpDownArrows(li){
-			var qtdeFotos = $(li).children('.produto-unidade-foto').length;
-
-			$(li).find('.imagem-up, .imagem-down').css('display','none');
-
-			$(li).children('.produto-unidade-foto').each(function(index,divProdutoUnidade){
-
-
-				if (index > 0 ){
-					$(divProdutoUnidade).find('.imagem-up').toggle();
-				}
-
-				if (index < (qtdeFotos - 1)){
-					$(divProdutoUnidade).find('.imagem-down').toggle();
-				}
-
-			});
-		}
-
-		function adicionarUnidade(unidade,fotos){
-			
-			$.ajax({
-					
-				url: "${createLink(controller:'produto',action:'addNewUnidade',absolute:true)}",
-				data: { 'unidade': unidade },
-				settings: {'cache': false}
-
-			}).success(function( data, textStatus, jqXHR ) {
-
-				model.adicionarUnidade(unidade);
-				
-				var listItem = $(data);
-				$(listItem).data("unidade",unidade);
-
-				$("#list-unidades").append( listItem );
-
-
-			}).fail(function(){
-				alert("Não foi possível adicionar a unidade ...");
-			});				
-			
-		}
 
 		$("form").submit(function(){
 
@@ -360,11 +189,13 @@
 
 
 			var inputFile = $("<input type='file' name='foto'/>");
-			var form = $('${form(enctype:'multipart/form-data',action:'asyncFotoUpload')}');
+			
+			var form = $("<form enctype='multipart/form-data' method='POST' action='${createLink(action:'asyncFotoUpload',controller:'produto',absolute:true)}'></form>");
 
 			$(form).append(inputFile);
 
 			$(inputFile).change(function(){
+
 				$(form).ajaxSubmit({
 
 					data: { },
@@ -391,6 +222,7 @@
 						alert("Não foi possível adicionar a foto ...");
 					}
 				});
+
 			});
 
 			$(inputFile).click();
@@ -484,6 +316,32 @@
 		});
 
 
+		function adicionarUnidade(unidade,fotos){
+			
+			$.ajax({
+					
+				url: "${createLink(controller:'produto',action:'addNewUnidade',absolute:true)}",
+				data: { 'unidade': unidade },
+				settings: {'cache': false}
+
+			}).success(function( data, textStatus, jqXHR ) {
+
+				model.adicionarUnidade(unidade);
+				
+				var listItem = $(data);
+				$(listItem).data("unidade",unidade);
+
+				$("#list-unidades").append( listItem );
+
+
+			}).fail(function(){
+				alert("Não foi possível adicionar a unidade ...");
+			});				
+			
+		}
+
 	});
-</g:javascript>
+
+
+</asset:script>
 

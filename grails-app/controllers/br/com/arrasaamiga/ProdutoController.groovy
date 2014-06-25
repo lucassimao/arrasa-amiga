@@ -8,9 +8,11 @@ import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import grails.converters.JSON
 import org.apache.commons.codec.binary.Base64
-
 import groovy.sql.Sql
+import grails.util.Environment
+import grails.util.BuildSettingsHolder
 
+@Secured(['permitAll'])
 class ProdutoController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
@@ -18,6 +20,7 @@ class ProdutoController {
     def grailsApplication
     def springSecurityService
     def dataSource
+    def assetResourceLocator
 
     def getTags(){
         def sql = new Sql(dataSource)
@@ -43,7 +46,20 @@ class ProdutoController {
 
     def asyncFotoUpload(){
 
-        String uploadDir =  grailsApplication.mainContext.getResource('img/produtos').file.absolutePath 
+        String uploadDir
+
+        Environment.executeForCurrentEnvironment {
+            production {
+                uploadDir = grailsApplication.mainContext.getResource('images/produtos').file.absolutePath 
+            }
+            development {
+                def grailsSettings = BuildSettingsHolder.settings
+                String separator = File.separator
+                String baseDir = grailsSettings.baseDir.absolutePath
+                uploadDir =  baseDir  + separator + "grails-app" + separator + "assets" + separator + "images"
+            }
+        }
+
         def multipartFile = request.getFile('foto')
         def originalFilename = "img${System.currentTimeMillis()}${multipartFile.originalFilename}"
 

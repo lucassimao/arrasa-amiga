@@ -7,7 +7,7 @@
 		<title> Arrasa Amiga: Produtos para maquiagem à pronta entrega </title>
 		<parameter name="description" value="Produtos para maquiagem à pronta entrega" />
 		<parameter name="keywords" value="Maquiagem, blushes, NYX, batom, sombra, paleta,Teresina, Piauí, maquiadora" />
-		<parameter name="og:image" value="${resource(dir:'img',file:'top.jpg',absolute:true)}"/>
+		<parameter name="og:image" value="${assetPath(src: 'top.jpg')}"/>
 		<meta name="layout" content="main"/>
 
 	</head>
@@ -40,7 +40,7 @@
 				<div class="col-md-3 col-sm-3 col-xs-6">
 				  <div class="thumbnail product-item">
 				    <a href="${createLink(uri:produto.nomeAsURL, absolute:true)}"> 
-				    	<g:img dir="img/produtos" file="${produto.fotoMiniatura}" alt="${produto.nome}" title="${produto.nome}"/> 
+				    	<asset:image src="produtos/${produto.fotoMiniatura}" alt="${produto.nome}" title="${produto.nome}"/>
 				    </a>
 
 

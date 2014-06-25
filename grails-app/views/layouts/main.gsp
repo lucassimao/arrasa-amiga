@@ -28,20 +28,19 @@
 
     <!-- fim metatags facebook -->
 
-    <link rel="shortcut icon" href="${resource(dir: 'img', file: 'favicon.ico')}">
-
+    <asset:link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 
     <!-- Bootstrap core CSS -->
-    <link href="${resource(dir:'css',file:'bootstrap.css') }" rel="stylesheet">
+    <asset:stylesheet href="bootstrap.css"/>
 
     <!-- Custom styles for this template -->
-    <link href="${resource(dir:'css',file:'style.css') }" rel="stylesheet">
-    <link href="${resource(dir:'css',file:'responsive.css') }" rel="stylesheet">
+    <asset:stylesheet href="style.css"/>
+    <asset:stylesheet href="responsive.css"/>
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-      <script src="${resource(dir:'js',file:'html5shiv.js') }"></script>
-      <script src="${resource(dir:'js',file:'respond.min.js') }"></script>
+      <asset:javascript src="html5shiv.js"/>
+      <asset:javascript src="respond.min.js"/>
     <![endif]-->
 
 
@@ -214,13 +213,13 @@
 
     <!-- Le javascript -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="${resource(dir:'js',file:'jquery.js')}"></script>
-    <script src="${resource(dir:'js',file:'bootstrap.min.js')}"></script>
-    <script src="${resource(dir:'js',file:'masonry.pkgd.min.js')}"></script>
-    <script src="${resource(dir:'js',file:'imagesloaded.pkgd.min.js')}"></script>
-    <script src="${resource(dir:'js',file:'script.js')}"></script>
+    <asset:javascript src="jquery.js"/>
+    <asset:javascript src="bootstrap.js"/>
+    <asset:javascript src="masonry.pkgd.min.js"/>
+    <asset:javascript src="imagesloaded.pkgd.min.js"/>
+    <asset:javascript src="script.js"/>
 
-    <script type="text/javascript">
+    <asset:script type="text/javascript">
 
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -244,7 +243,9 @@
 
         });
 
-    </script>
+    </asset:script>
+
+    <asset:deferredScripts/>
 
 
   </body>

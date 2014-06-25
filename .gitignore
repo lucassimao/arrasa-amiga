@@ -2,3 +2,4 @@ target/*
 *.log
 arrasa-amiga.sublime-workspace
 web-app/img/produtos/*
+grails-app/assets/images/produtos/*
