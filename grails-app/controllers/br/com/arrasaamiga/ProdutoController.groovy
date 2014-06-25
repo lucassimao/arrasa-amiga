@@ -56,7 +56,8 @@ class ProdutoController {
                 def grailsSettings = BuildSettingsHolder.settings
                 String separator = File.separator
                 String baseDir = grailsSettings.baseDir.absolutePath
-                uploadDir =  baseDir  + separator + "grails-app" + separator + "assets" + separator + "images"
+                String assetsFolder = "${baseDir}${separator}grails-app${separator}assets${separator}" 
+                uploadDir = "${assetsFolder}images${separator}produtos"
             }
         }
 
@@ -68,7 +69,7 @@ class ProdutoController {
         }
 
 
-        render(template:'addNewFoto',model:[foto:originalFilename])
+        render(template:'addNewFoto',model:[foto: "produtos/${originalFilename}"])
     }
 
 
