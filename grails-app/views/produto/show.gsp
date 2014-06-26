@@ -65,6 +65,15 @@
 						</span>
 					
 				</li>
+
+				<li class="fieldcontain">
+					<span class="property-label">Grupos</span>
+					
+						<span class="property-value" aria-labelledby="tags-label">
+							${ produtoInstance.grupos?.join(',') }
+						</span>
+					
+				</li>
 				
 				<li class="fieldcontain">
 					<span class="property-label">Visível</span>

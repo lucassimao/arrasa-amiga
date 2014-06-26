@@ -23,6 +23,13 @@
 	<input type="text" style="" name="palavrasChave[]" value="" id="tagedit-input" >
 </div>
 
+<div class="fieldcontain">
+	<label>
+		Grupos:
+	</label>
+	<input type="text" style="" name="_grupos[]" value="" id="tagedit-input-grupos" >
+</div>
+
 
 <div class="fieldcontain ${hasErrors(bean: produtoInstance, field: 'visivel', 'error')} required">
 	<label for="visivel">
@@ -104,9 +111,26 @@
 			additionalListClass: 'keywords'
 		});
 
+		
+		var localJSON = JSON.parse('${raw(gruposDeProdutos)}');
+
+		$("#tagedit-input-grupos").tagedit({
+			autocompleteOptions:{
+				source:localJSON					
+			},
+			allowAdd:false,
+			additionalListClass: 'keywords'
+		});
+
+
 		// adicionando tags ao formulário
 		<g:each in="${produtoInstance.keywords}" var="keyword">
 			$("#tagedit-input").val("${keyword}").trigger('transformToTag');
+		</g:each>		
+
+		// adicionando tags dos grupos
+		<g:each in="${produtoInstance.grupos}" var="grupo">
+			$("#tagedit-input-grupos").val("${grupo.nome}").trigger('transformToTag',[${grupo.id}]);
 		</g:each>
 
 

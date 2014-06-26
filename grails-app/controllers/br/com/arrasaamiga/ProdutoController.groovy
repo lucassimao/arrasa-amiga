@@ -11,6 +11,7 @@ import org.apache.commons.codec.binary.Base64
 import groovy.sql.Sql
 import grails.util.Environment
 import grails.util.BuildSettingsHolder
+import groovy.json.JsonBuilder
 
 @Secured(['permitAll'])
 class ProdutoController {
@@ -33,6 +34,20 @@ class ProdutoController {
 
         rows.eachWithIndex{row, index-> tags[index] = row.keywords_string }
         render tags as JSON
+    }
+
+    private String getGruposDeProdutos(){
+        def grupos = []
+        def builder = new JsonBuilder()
+
+        
+        GrupoDeProduto.list().each{grupo->
+            grupos<< ['id': grupo.id,'label': grupo.nome]
+        }
+
+        builder(grupos)
+
+        return builder.toString()
     }
 
 
@@ -73,7 +88,7 @@ class ProdutoController {
         def produtoInstance = new Produto(params)
         produtoInstance.visivel = true
 
-        [produtoInstance: produtoInstance]
+        [produtoInstance: produtoInstance,gruposDeProdutos: getGruposDeProdutos()]
     }
 
     @Secured(['ROLE_ADMIN'])
@@ -85,6 +100,19 @@ class ProdutoController {
         def unidades = JSON.parse(params.unidades)
         def fotos = JSON.parse(params.fotosUnidades)
         def comentarios = JSON.parse(params.fotoComentario)
+
+
+
+        // corrigindo os grupos
+        def pattern = ~/_grupos\[\d+\-a\]/
+        def paramsGroups = params.keySet().findAll{p->  return (pattern.matcher(p).matches()) }
+
+        int count = 0
+        def pattern2 = ~/\d+/
+        paramsGroups.each{p->
+            params["grupos[${count}].id"] = pattern2.matcher(p)[0]
+            ++count
+        }
 
         def produtoInstance = new Produto(params)
         produtoInstance.keywords = params.list('palavrasChave[]')
@@ -164,7 +192,7 @@ class ProdutoController {
             return
         }
 
-        [produtoInstance: produtoInstance]
+        [produtoInstance: produtoInstance,gruposDeProdutos: getGruposDeProdutos()]
     }
 
 
@@ -188,7 +216,6 @@ class ProdutoController {
                 return
             }
         }
-
 
         produtoInstance.visivel = params.visivel
         produtoInstance.keywords = params.list('palavrasChave[]')

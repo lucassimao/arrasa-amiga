@@ -20,7 +20,7 @@ class Produto {
     Date dateCreated
     Date lastUpdated
 
-	static hasMany = [fotos:FotoProduto,unidades:String,keywords:String]
+	static hasMany = [fotos:FotoProduto,unidades:String,keywords:String,grupos:GrupoDeProduto]
 	static transients = ['precoAVistaEmReais','precoAPrazoEmReais','estoques','quantidadeEmEstoque','nomeAsURL','multiUnidade','descontoAVistaEmReais']
 
     static constraints = {
