@@ -58,12 +58,6 @@
 					</a>
 				</li>
 
-				<li>
-					<a style="${ (controllerName.equals('investimento'))?'background-color:#666;color:white;':'' }" href="${createLink(controller: 'investimento')}">
-						Investimentos
-					</a>
-				</li>
-
 
 			</ul>
 		</div>
