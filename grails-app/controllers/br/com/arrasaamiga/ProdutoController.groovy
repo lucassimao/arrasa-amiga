@@ -40,36 +40,19 @@ class ProdutoController {
         render(template:'addNewUnidade',model:[unidade:unidade])
     }
 
-    def addNewFoto(String nomeArquivo){
-        render(template:'addNewFoto',model:[foto:nomeArquivo])
-    }
-
     def asyncFotoUpload(){
 
-        String uploadDir
-
-        Environment.executeForCurrentEnvironment {
-            production {
-                uploadDir = grailsApplication.mainContext.getResource('images/produtos').file.absolutePath 
-            }
-            development {
-                def grailsSettings = BuildSettingsHolder.settings
-                String separator = File.separator
-                String baseDir = grailsSettings.baseDir.absolutePath
-                String assetsFolder = "${baseDir}${separator}grails-app${separator}assets${separator}" 
-                uploadDir = "${assetsFolder}images${separator}produtos"
-            }
-        }
+        String uploadDir = getUploadDir()
 
         def multipartFile = request.getFile('foto')
-        def originalFilename = "img${System.currentTimeMillis()}${multipartFile.originalFilename}"
+        String originalFilename = "img${System.currentTimeMillis()}${multipartFile.originalFilename}"
 
         if (originalFilename){
             multipartFile.transferTo(new File(uploadDir + File.separator + originalFilename))
         }
+        def foto = new FotoProduto(arquivo:originalFilename)
 
-
-        render(template:'addNewFoto',model:[foto: "produtos/${originalFilename}"])
+        render(template:'addNewFoto',model:[foto: foto])
     }
 
 
@@ -104,7 +87,7 @@ class ProdutoController {
         def comentarios = JSON.parse(params.fotoComentario)
 
         def produtoInstance = new Produto(params)
-        produtoInstance.keywords = params['palavrasChave[]'] // vem como um array de strings
+        produtoInstance.keywords = params.list('palavrasChave[]')
         produtoInstance.fotos = []
         produtoInstance.unidades = []
 
@@ -133,7 +116,7 @@ class ProdutoController {
             return
         }
 
-        String uploadDir =  grailsApplication.mainContext.getResource('img/produtos').file.absolutePath 
+        String uploadDir = getUploadDir()
         
         if (multipartFileMiniatura.originalFilename)
             multipartFileMiniatura.transferTo(new File(uploadDir + File.separator + produtoInstance.fotoMiniatura))
@@ -147,7 +130,7 @@ class ProdutoController {
             estoque.unidade = un
             estoque.quantidade = 0 // qtde inicial
 
-            estoque.save()
+            estoque.save(flush:true)
 
         }
 
@@ -208,7 +191,7 @@ class ProdutoController {
 
 
         produtoInstance.visivel = params.visivel
-        produtoInstance.keywords = params['palavrasChave[]']
+        produtoInstance.keywords = params.list('palavrasChave[]')
         produtoInstance.nome = params.nome
         produtoInstance.descricao = params.descricao
         produtoInstance.tipoUnitario = params.tipoUnitario
@@ -272,7 +255,7 @@ class ProdutoController {
          
         if (multipartFileMiniatura.originalFilename){
 
-            String uploadDir =  grailsApplication.mainContext.getResource('img/produtos').file.absolutePath 
+            String uploadDir =  getUploadDir() 
             multipartFileMiniatura.transferTo(new File(uploadDir + File.separator + produtoInstance.fotoMiniatura))
         }
 
@@ -426,5 +409,25 @@ class ProdutoController {
          
     }
 
+
+    private static String getUploadDir(){
+
+
+        Environment.executeForCurrentEnvironment {
+            
+            production {
+                return grailsApplication.mainContext.getResource('images/produtos').file.absolutePath 
+            }
+
+            development {
+                def grailsSettings = BuildSettingsHolder.settings
+                String separator = File.separator
+                String baseDir = grailsSettings.baseDir.absolutePath
+                String assetsFolder = "${baseDir}${separator}grails-app${separator}assets${separator}" 
+                return "${assetsFolder}images${separator}produtos"
+            }
+        }
+
+    }
 
 }

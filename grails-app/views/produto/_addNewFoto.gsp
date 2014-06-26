@@ -7,10 +7,10 @@
 	</div>
 
 
-	<asset:image class="produto-foto" style="margin-right:5px;border:1px solid blue;width:70px;height:70px;float:left;" src="${foto}"/>
+	<asset:image src="produtos/${foto.arquivo}" class="produto-foto" style="margin-right:5px;border:1px solid blue;width:70px;height:70px;float:left;"/>
 
 	<div class="comentario" style="position:relative;height:70px;overflow: hidden;">
-		<p> ${ (comentario)?:'Forneça uma descrição para essa foto'} </p>
+		<p> ${ (foto.comentario)?:'Forneça uma descrição para essa foto'} </p>
 		<asset:image class="btn-Editar-Descricao" src="edit.png" style="cursor:pointer;position:absolute;width:15px;bottom:0px;right:20px;"/>
 		<asset:image class="btn-Excluir-Foto" src="delete.png" style="cursor:pointer;position:absolute;width:15px;bottom:0px;right:0px;"/>
 	</div>

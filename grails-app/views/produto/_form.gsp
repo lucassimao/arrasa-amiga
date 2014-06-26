@@ -90,8 +90,9 @@
 	
 </div>
 
-<asset:javascript src="crud-produtos.js"/>
-<asset:javascript src="tagEdit.js"/>
+<asset:stylesheet href="tagedit.manifest.css"/>
+<asset:javascript src="crud.produtos.manifest.js"/>
+<asset:javascript src="tagedit.manifest.js"/>
 
 
 <asset:script type="text/javascript">
@@ -99,8 +100,8 @@
 	$(function(){
 	
 		$("#tagedit-input").tagedit({
-			autocompleteURL: "${createLink(action:'getTags',abosolute:true)}",
-			additionalListClass :'xpto'
+			autocompleteURL: "${createLink(action:'getTags',controller:'produto',abosolute:true)}",
+			additionalListClass: 'keywords'
 		});
 
 		// adicionando tags ao formulário

@@ -12,7 +12,7 @@
 				text-indent: 35px;
 				background-repeat: no-repeat;
 				background-position: 0.7em center;
-				background-image:url(${resource(dir:'images/skin',file:'back.png')});
+				background-image:url(${assetPath(src:'skin/back.png')});
 			}	
 		</style>
 	</head>

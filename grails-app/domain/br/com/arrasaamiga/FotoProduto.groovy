@@ -7,6 +7,7 @@ class FotoProduto {
 	String unidade
 	String arquivo
 
+
 	static constraints = {
 		comentario(blank:true,nullable:true)
 		posicao(min:0)

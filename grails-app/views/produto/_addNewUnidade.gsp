@@ -12,7 +12,7 @@
 
 	<g:if test="${fotos}">
 		<g:each in="${fotos}" var="foto">
-			<g:render template="addNewFoto" model="['foto':foto.arquivo,'comentario':foto.comentario]"/>
+			<g:render template="addNewFoto" model="['foto': foto]"/>
 		</g:each>
 	</g:if> 				
 

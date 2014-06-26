@@ -24,7 +24,7 @@ grails.project.fork = [
 
 // removendo arquivos de fotos de produtos enviados em ambiente de desenvolvimento
 grails.war.resources = { stagingDir ->
-      delete { fileset(dir: "${stagingDir}/img/produtos", includes: '*') }
+      delete { fileset(dir: "${stagingDir}/images/produtos", includes: '*') }
 }
 
 grails.project.dependency.resolver = "maven" // or ivy
