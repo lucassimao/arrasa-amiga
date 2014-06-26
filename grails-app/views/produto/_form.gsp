@@ -16,18 +16,32 @@
 	<g:textArea name="descricao" style="width:400px;" cols="40" rows="5" maxlength="100000" required="" value="${produtoInstance?.descricao}"/>
 </div>
 
-<div class="fieldcontain">
+<div class="fieldcontain" id="tagedit-keywords">
 	<label>
 		Palavras-Chave:
 	</label>
-	<input type="text" style="" name="palavrasChave[]" value="" id="tagedit-input" >
+	<g:if test="${produtoInstance.keywords}">
+		<g:each in="${produtoInstance.keywords}" var="keyword" status="idx">
+			<input type="text" style="" name="formdata[palavrasChave][${idx}-a]" value="${keyword}" class="tag" >
+		</g:each>
+	</g:if>
+	<g:else>
+		<input type="text" class="tag" style="" name="palavrasChave[]" value="">
+	</g:else>
 </div>
 
-<div class="fieldcontain">
+<div class="fieldcontain" id="tagedit-grupos">
 	<label>
 		Grupos:
 	</label>
-	<input type="text" style="" name="_grupos[]" value="" id="tagedit-input-grupos" >
+	<g:if test="${produtoInstance.grupos}">
+		<g:each in="${produtoInstance.grupos}" var="grupo" status="idx">
+			<input type="text" style="" name="formdata[_grupos][${idx}-a]" value="${grupo.nome}" class="tag" >
+		</g:each>
+	</g:if>
+	<g:else>
+		<input type="text" style="" name="_grupos[]" value="" >
+	</g:else>
 </div>
 
 
@@ -81,7 +95,7 @@
 <div class="fieldcontain" style="margin-top:20px;border">
 	<label></label>
 
-	<g:img dir="img" file="plus.png" style="width:12px;"/>
+	<assets:image file="plus.png" style="width:12px;"/>
 	<a id="btn-Add-Unidade" href="#">  Adicionar Unidade </a>
 </div>
 
@@ -106,7 +120,7 @@
 
 	$(function(){
 	
-		$("#tagedit-input").tagedit({
+		$("#tagedit-keywords input").tagedit({
 			autocompleteURL: "${createLink(action:'getTags',controller:'produto',abosolute:true)}",
 			additionalListClass: 'keywords'
 		});
@@ -114,24 +128,13 @@
 		
 		var localJSON = JSON.parse('${raw(gruposDeProdutos)}');
 
-		$("#tagedit-input-grupos").tagedit({
+		$("#tagedit-grupos input").tagedit({
 			autocompleteOptions:{
 				source:localJSON					
 			},
 			allowAdd:false,
 			additionalListClass: 'keywords'
 		});
-
-
-		// adicionando tags ao formulário
-		<g:each in="${produtoInstance.keywords}" var="keyword">
-			$("#tagedit-input").val("${keyword}").trigger('transformToTag');
-		</g:each>		
-
-		// adicionando tags dos grupos
-		<g:each in="${produtoInstance.grupos}" var="grupo">
-			$("#tagedit-input-grupos").val("${grupo.nome}").trigger('transformToTag',[${grupo.id}]);
-		</g:each>
 
 
 		// reconstruindo modelo de dados
