@@ -22,7 +22,7 @@
 	</label>
 	<g:if test="${produtoInstance.keywords}">
 		<g:each in="${produtoInstance.keywords}" var="keyword" status="idx">
-			<input type="text" style="" name="formdata[palavrasChave][${idx}-a]" value="${keyword}" class="tag" >
+			<input type="text" style="" name="palavrasChave[${idx}-a]" value="${keyword}" class="tag" >
 		</g:each>
 	</g:if>
 	<g:else>
@@ -35,8 +35,8 @@
 		Grupos:
 	</label>
 	<g:if test="${produtoInstance.grupos}">
-		<g:each in="${produtoInstance.grupos}" var="grupo" status="idx">
-			<input type="text" style="" name="formdata[_grupos][${idx}-a]" value="${grupo.nome}" class="tag" >
+		<g:each in="${produtoInstance.grupos}" var="grupo">
+			<input type="text" style="" name="_grupos[${grupo.id}-a]" value="${grupo.nome}" class="tag" >
 		</g:each>
 	</g:if>
 	<g:else>
@@ -133,6 +133,7 @@
 				source:localJSON					
 			},
 			allowAdd:false,
+			allowEdit:false,
 			additionalListClass: 'keywords'
 		});
 

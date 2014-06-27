@@ -217,11 +217,32 @@ class ProdutoController {
             }
         }
 
-        produtoInstance.visivel = params.visivel
+
         produtoInstance.keywords = params.list('palavrasChave[]')
-        produtoInstance.nome = params.nome
-        produtoInstance.descricao = params.descricao
-        produtoInstance.tipoUnitario = params.tipoUnitario
+        
+        // adicionando novas tags
+        def patternKeywords = ~/palavrasChave\[\d+\-a\]/
+        def paramsTags = params.keySet().findAll{p->  return (patternKeywords.matcher(p).matches()) }
+        paramsTags.each{ key->
+            produtoInstance.keywords << params[key]
+        }
+
+
+        // atualizando os grupos
+        def patternGrupos = ~/_grupos\[\d+\-a\]/
+        def paramsGroups = params.keySet().findAll{p->  return (patternGrupos.matcher(p).matches()) }
+
+        int count = 0
+        def pattern2 = ~/\d+/
+        paramsGroups.each{p->
+            params["grupos[${count}].id"] = pattern2.matcher(p)[0]
+            ++count
+        }
+
+        produtoInstance.grupos = []
+        bindData(produtoInstance, params, [include: ['grupos','visivel','nome','descricao','tipoUnitario']])
+        assert count == produtoInstance.grupos?.size()
+
         produtoInstance.precoAPrazoEmReais = Double.valueOf( params.precoAPrazoEmReais.replace(',','.') )
         produtoInstance.precoAVistaEmReais = Double.valueOf( params.precoAVistaEmReais.replace(',','.') )
 
@@ -254,7 +275,7 @@ class ProdutoController {
                 estoque.unidade = unidade
                 estoque.quantidade = 0 // qtde inicial
 
-                estoque.save()
+                estoque.save(flush:true)
             }
 
             produtoInstance.addToUnidades(unidade)
