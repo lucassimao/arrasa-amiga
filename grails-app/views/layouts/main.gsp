@@ -1,4 +1,5 @@
 <%@ page import="br.com.arrasaamiga.Cidade" %>
+<%@ page import="br.com.arrasaamiga.GrupoDeProduto" %>
 
 
 <!DOCTYPE html>
@@ -125,36 +126,11 @@
           <div class="nav-menus">
             <ul class="nav nav-pills">
               <li class="${(controllerName == 'home' && actionName =='index')?'active':''}"><a href="${createLink(uri:'/',absolute:true)}">Home</a></li>
-              <li><a href="#">Acessories</a></li>
-              <li class="dropdown">
-                <a href="#" data-toggle="dropdown" class="dropdown-toggle">Boy <b class="caret"></b></a>
-                <ul class="dropdown-menu" id="menu1">
-                  <li>
-                    <a href="#">Shirts <b class="caret"></b></a>
-                    <ul class="dropdown-menu sub-menu">
-                      <li><a href="#">Shirts</a></li>
-                      <li><a href="#">T-shirts</a></li>
-                      <li><a href="#">Polo Shirts</a></li>
-                      <li><a href="#">Tanktop</a></li>
-                    </ul>
-                  </li>
-                  <li><a href="#">Jacket</a></li>
-                  <li><a href="categories.html">Pants</a></li>
-                  <li><a href="#">Boxer</a></li>
-                  <li class="divider"></li>
-                  <li><a href="#">SweatShirts</a></li>
-                </ul>
-              </li>
-              <li class="dropdown">
-                <a href="#" data-toggle="dropdown" class="dropdown-toggle">Girl <b class="caret"></b></a>
-                <ul class="dropdown-menu" id="menu1">
-                  <li><a href="#">Shirts</a></li>
-                  <li><a href="#">Pants</a></li>
-                  <li><a href="#">Skirts</a></li>
-                </ul>
-              </li>
-              <li><a href="#">Edition </a></li>
-              <li><a href="#">Authorized Dealer</a></li>
+
+              <g:each in="${GrupoDeProduto.findAllByPaiIsNull()}" var="grupo">
+                  <g:render template="/layouts/menuitem" model="[grupo:grupo,isRoot:true]"/>
+              </g:each>
+
               <li class="${(controllerName == 'home' && actionName =='comocomprar')?'active':''}" ><a href="${createLink(action:'comocomprar',controller:'home',absolute:true,params: [cidade:Cidade.teresina.id])}">Como Comprar </a></li>
               <li class="${ (request.forwardURI?.endsWith('contato') )?'active':''}"><a href="${createLink(uri:'/contato',absolute:true)}">Contato</a></li>
             </ul>

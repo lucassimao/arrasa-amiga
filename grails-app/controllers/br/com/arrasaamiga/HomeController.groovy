@@ -29,15 +29,43 @@ class HomeController {
 
     static allowedMethods = [pwdRecovery: 'POST']
 
+    private List carregarSubGrupos(GrupoDeProduto grupo){
+        List lt = []
+       
+    	if (grupo.subGrupos){
+    		grupo.subGrupos.each{ subGrupo->
+    			lt += [subGrupo.id] + carregarSubGrupos(subGrupo)
+    		} 
+    	}else{
+    		return []
+    	}
+       
+       return lt
+    }
 
 	def index(){
         def user = springSecurityService.currentUser
         def cliente = Cliente.findByUsuario(user)
 
+        List subGrupos = []
+        def grupoDeProduto = GrupoDeProduto.findByNome(params.grupoDeProduto)
+        if (grupoDeProduto){
+        	subGrupos << grupoDeProduto.id
+        	subGrupos += carregarSubGrupos(grupoDeProduto)
+        }
+
+
 		def criteria = Produto.createCriteria()
 		def produtos = criteria.list {
 		    eq("visivel", true)
 		    order("ordem", "asc")
+		    
+		    if(grupoDeProduto){
+
+			    grupos{
+			    	inList("id", subGrupos)
+			    }
+		    }
 		}
 
 

@@ -11,6 +11,7 @@ class UrlMappings {
 		"/contato"(view:'/home/contato')
 		"/pwdrecovery"(view:'/home/pwdRecovery')
 		"/$produto-$id"(controller:"produto",action:"detalhes")
+		"/produtos/$grupoDeProduto"(controller:"home",action:"index")
 		"500"(view:'/error')
 	}
 }

@@ -18,7 +18,7 @@
 		<!-- mais vendidos, novidades -->
 		<g:set var="count" value="${0}"/>
 		<g:set var="hoje" value="${new Date()}"/>
-		<g:set var="qtdeProdutosVisiveis" value="${ Produto.countByVisivel(true) }"/>
+		<g:set var="qtdeProdutosVisiveis" value="${ produtos.size() }"/>
 
 		
 		<div class="row">
@@ -28,7 +28,6 @@
 			  </div>
 			</div>
 		</div>
-		
 
 		<g:each in="${produtos}" var="produto" status="i">
 
@@ -65,7 +64,16 @@
 
 			<g:set var="count" value="${++count}"/>
 
-  			<g:if test="${ count == 4 || (i+1) == qtdeProdutosVisiveis}">
+			<g:if test="${(i+1) == qtdeProdutosVisiveis && count < 4}">
+
+				<g:each in="${1..(4-count)}">
+					<g:set var="count" value="${++count}"/>
+					<div class="col-md-3 col-sm-3 col-xs-6"> </div>
+				</g:each>
+
+			</g:if>
+
+  			<g:if test="${ count == 4 }">
 				</div>
 				<g:set var="count" value="${0}"/>
 			</g:if>
