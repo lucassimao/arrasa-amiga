@@ -22,6 +22,7 @@ class ProdutoController {
     def springSecurityService
     def dataSource
     def assetResourceLocator
+    def shoppingCartService
 
     def getTags(){
         def sql = new Sql(dataSource)
@@ -347,10 +348,13 @@ class ProdutoController {
         }
 
         def estoques = produtoInstance.getEstoques()
-        List unidades = estoques.sort{ e1, e2-> e2.quantidade <=> e1.quantidade }.collect{ it.unidade } // ordenando em ordem decrescente de quantidade
+        // ordenando em ordem decrescente de quantidade
+        List unidades = estoques.sort{ e1, e2-> e2.quantidade <=> e1.quantidade }.collect{ it.unidade } 
+        println unidades
 
-
-        [produtoInstance: produtoInstance,unidades: unidades,estoques: estoques,cliente:cliente]
+        [produtoInstance: produtoInstance,unidades: unidades,
+            shoppingCart: shoppingCartService.shoppingCart,
+            estoques: estoques,cliente:cliente, grupoRaiz: produtoInstance.grupos[0]?.getGrupoRaiz()?.nome]
     }
 
 

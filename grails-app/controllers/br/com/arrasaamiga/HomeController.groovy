@@ -69,7 +69,7 @@ class HomeController {
 		}
 
 
-		[produtos:produtos]
+		[produtos:produtos,grupoRaiz:grupoDeProduto?.grupoRaiz?.nome]
 
 	}
 

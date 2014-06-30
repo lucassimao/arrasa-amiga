@@ -1,25 +1,32 @@
-<div class="modal fade hide" id="modal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 
-	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		<h3 id="myModalLabel">  <i class="icon-envelope"></i> Cadastro para Contato </h3> 
+	<div class="modal-dialog">
+		<div class="modal-content"> 
+
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h3 id="myModalLabel" class="modal-title">  <i class="icon-envelope"></i> Cadastro para Contato </h3> 
+			</div>
+
+			<div class="modal-body"></div>
+		</div>
 	</div>
 
-	<div class="modal-body"></div>
 </div>
 
-<g:javascript>
+<asset:script type="text/javascript">
 
 
-	$('#modal').on('hidden', function () {
+	$('#modal').on('hidden', function() {
 		$(this).children(".modal-body").empty();
 	});
 
 
 	<%= 
 		"""
-			jQuery('#modal').on('show', function () {
+			jQuery('#modal').on('show.bs.modal', function(){
 
+				console.log(1);
 				var unidade = '';
 
 				
@@ -42,7 +49,7 @@
 
 				FB.XFBML.parse(jQuery(modalBody).get(0));
 			});
-		"""
+		""".encodeAsRaw()
 	%>
 
-</g:javascript>
+</asset:script>

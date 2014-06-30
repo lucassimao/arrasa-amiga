@@ -802,6 +802,10 @@ a:hover.no-underline{
     background: #f1f1f1;
 }
 
+.content-detail .tab-content .comentarios{
+    text-align: justify;
+}
+
 
 /*
     ==================

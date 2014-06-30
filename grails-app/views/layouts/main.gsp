@@ -125,10 +125,10 @@
         <div class="col-md-12">
           <div class="nav-menus">
             <ul class="nav nav-pills">
-              <li class="${(controllerName == 'home' && actionName =='index')?'active':''}"><a href="${createLink(uri:'/',absolute:true)}">Home</a></li>
+              <li class="${(!grupoRaiz && controllerName == 'home' && actionName =='index')?'active':''}"><a href="${createLink(uri:'/',absolute:true)}">Home</a></li>
 
               <g:each in="${GrupoDeProduto.findAllByPaiIsNull()}" var="grupo">
-                  <g:render template="/layouts/menuitem" model="[grupo:grupo,isRoot:true]"/>
+                  <g:render template="/layouts/menuitem" model="[grupo:grupo,isRoot:true,grupoRaiz:grupoRaiz]"/>
               </g:each>
 
               <li class="${(controllerName == 'home' && actionName =='comocomprar')?'active':''}" ><a href="${createLink(action:'comocomprar',controller:'home',absolute:true,params: [cidade:Cidade.teresina.id])}">Como Comprar </a></li>

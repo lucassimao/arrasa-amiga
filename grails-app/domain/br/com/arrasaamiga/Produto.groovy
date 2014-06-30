@@ -4,6 +4,7 @@ class Produto {
 
 	String nome
     String descricao
+    String marca
 
     String fotoMiniatura
 	List fotos    
@@ -28,6 +29,7 @@ class Produto {
     	descricao nullable:false,blank:false,maxSize:100000
         tipoUnitario nullable:false,blank:false
         fotoMiniatura nullable:true,blank:true
+        marca nullable:true,blank:true
     	precoAVistaEmCentavos min:0
         precoAPrazoEmCentavos min:0
         ordem min:0
