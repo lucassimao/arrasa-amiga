@@ -260,6 +260,7 @@ class ProdutoController {
         produtoInstance.fotos*.delete()
         produtoInstance.fotos.clear()
         produtoInstance.unidades.clear()
+        produtoInstance.marca = params.marca
 
         def unidades = JSON.parse(params.unidades)
         def fotos = JSON.parse(params.fotosUnidades)
@@ -350,7 +351,6 @@ class ProdutoController {
         def estoques = produtoInstance.getEstoques()
         // ordenando em ordem decrescente de quantidade
         List unidades = estoques.sort{ e1, e2-> e2.quantidade <=> e1.quantidade }.collect{ it.unidade } 
-        println unidades
 
         [produtoInstance: produtoInstance,unidades: unidades,
             shoppingCart: shoppingCartService.shoppingCart,

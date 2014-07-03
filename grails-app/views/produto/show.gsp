@@ -57,6 +57,17 @@
 					</li>
 				</g:if>
 
+
+				<li class="fieldcontain">
+					<span class="property-label">Marca</span>
+					
+					<span class="property-value" aria-labelledby="marca-label">
+						${ produtoInstance.marca }
+					</span>
+					
+				</li>
+
+
 				<li class="fieldcontain">
 					<span class="property-label">Tags</span>
 					

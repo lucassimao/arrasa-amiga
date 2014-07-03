@@ -30,6 +30,14 @@
 	</g:else>
 </div>
 
+
+<div class="fieldcontain ${hasErrors(bean: produtoInstance, field: 'marca', 'error')}">
+	<label for="marca">
+		Marca:
+	</label>
+	<g:textField style="width:400px;" name="marca" value="${produtoInstance?.marca}"/>
+</div>
+
 <div class="fieldcontain" id="tagedit-grupos">
 	<label>
 		Grupos:

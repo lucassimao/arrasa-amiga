@@ -104,9 +104,11 @@
           </div>
           <div class="row">
             <div class="col-md-12">
+              
               <div class="heading-title">
                 <h2> <span>${produtoInstance.nome}</span> <span class="text-yellow">.</span></h2>
               </div>
+
               <div class="row">
 
                 <!-- begin:product-image-slider -->
@@ -144,32 +146,32 @@
                           <strong>Blackbox / AF0012 / In Stock</strong>
                       </span>
 
-                      <p style="text-align:justify;">
-                        Lápis para os olhos podendo ser usado como base para sombra, enfatizando a cor e 
-                         delineador e nos lábios. Use o branco para intensificar sombras mais claras como azul,
-                          amarelo, bege e verde além de poder ser usado abaixo da sobrancelha para iluminar. 
-                          Use o preto para intensificar sombras escuras como a preta, azul marinho ou roxo ... 
-                          além de poder ser usado na linha d'água.                        
-                      </p>
-
                       <table>
                         <tbody>
-                          <g:if test="${produtoInstance.marca}">
-                            <tr class="hidden-xs">
-                                <td><strong>Marca</strong></td>
-                                <td>:</td>
-                                <td>${produtoInstance.marca}</td>
-                            </tr>
-                          </g:if>
 
-                          <tr>
-                              <td colspan="3"> 
-                                <span class="price">
-                                    <g:formatNumber number="${produtoInstance.precoAPrazoEmReais}" 
-                                    type="currency" currencyCode="BRL" /> 
-                                </span>
-                              </td>
-                          </tr>
+                            <tr>
+                                <td colspan="3"> 
+                                  <h3> ${produtoInstance.nome} </h3>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="3"> 
+                                  <h5> ${produtoInstance.marca} </h5>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="3"> 
+                                  <span class="price">
+                                      <g:formatNumber number="${produtoInstance.precoAPrazoEmReais}" 
+                                      type="currency" currencyCode="BRL" /> 
+                                  </span>
+                                  <g:if test="${produtoInstance.precoAVistaEmCentavos <  produtoInstance.precoAPrazoEmCentavos}">
+                                    <p> * Desconto à vista </p>
+                                  </g:if>
+                                </td>
+                            </tr>
 
                           <g:if test="${produtoInstance.isMultiUnidade()}">
                               
