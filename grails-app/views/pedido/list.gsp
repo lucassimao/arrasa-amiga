@@ -37,7 +37,7 @@
 					</tr>
 				</thead>
 				<tbody>
-				<g:each in="${pedidoInstanceList.findAll{it.subGrupo.size()>0 } }" status="i" var="pedidoInstance">
+				<g:each in="${pedidoInstanceList}" status="i" var="pedidoInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 						
 						<td>${fieldValue(bean: pedidoInstance, field: "id")}</td>

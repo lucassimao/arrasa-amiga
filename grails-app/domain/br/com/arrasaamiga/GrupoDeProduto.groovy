@@ -14,13 +14,17 @@ class GrupoDeProduto {
     }
 
     static mappedBy = [ subGrupos: "pai" ]
-    static transients = ['ancestrais','grupoRaiz']
+    static transients = ['ancestrais','grupoRaiz','descendentes']
 
 
     public String toString(){
         return nome
     }
 
+    /**
+     * retorna a hierarquia de 
+     * grupos, do raiz ao pai do grupo atual
+     */
     public List getAncestrais(){
         List lst = []
         if (this.pai)
@@ -40,6 +44,25 @@ class GrupoDeProduto {
             return this.pai.getGrupoRaiz()
         else    
             return this
+    }
+
+    /**
+     * Esse método retorna todos os grupos
+     * descentes do atual grupo. O método 
+     * getSubGrupos retorna apenas os grupos filhos do grupo atual
+     */ 
+    public List getDescendentes(){
+        List lt = []
+       
+        if (this.subGrupos){
+            this.subGrupos.each{ subGrupo->
+                lt += [subGrupo.id] + subGrupo.descendentes
+            } 
+        }else{
+            return []
+        }
+       
+       return lt
     }
 
 

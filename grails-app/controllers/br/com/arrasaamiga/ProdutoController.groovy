@@ -12,6 +12,7 @@ import groovy.sql.Sql
 import grails.util.Environment
 import grails.util.BuildSettingsHolder
 import groovy.json.JsonBuilder
+import grails.util.Environment
 
 @Secured(['permitAll'])
 class ProdutoController {
@@ -27,6 +28,7 @@ class ProdutoController {
     def getTags(){
         def sql = new Sql(dataSource)
 
+        
         String searchKey = "%${params.term}%"
         def rows = sql.rows("select distinct pw.keywords_string from produto_keywords pw where lower(pw.keywords_string) like lower(:search)",
                             [search:searchKey])
@@ -354,15 +356,27 @@ class ProdutoController {
 
         [produtoInstance: produtoInstance,unidades: unidades,
             shoppingCart: shoppingCartService.shoppingCart,
-            estoques: estoques,cliente:cliente, grupoRaiz: produtoInstance.grupos[0]?.getGrupoRaiz()?.nome]
+            estoques: estoques,cliente:cliente, grupoRaiz: produtoInstance.grupoPadrao?.getGrupoRaiz()?.nome]
     }
 
 
     def salvarAviso(Long id){
         
         //Facebook App info
-        String fbSecretKey = "d1392b8e735e984825ea27846a7ee107";
-        String fbAppId = "592257150816024";
+        String fbSecretKey;
+        String fbAppId;
+
+
+        switch (Environment.current) {
+            case Environment.DEVELOPMENT:
+                fbSecretKey = "43e210a33b692fd745392a8d4a6b92ec"
+                fbAppId = "538200826283779"
+                break
+            case Environment.PRODUCTION:
+                fbSecretKey = "d1392b8e735e984825ea27846a7ee107"
+                fbAppId = "592257150816024"
+        }
+
 
 
         //it is important to enable url-safe mode for Base64 encoder 
@@ -399,7 +413,7 @@ class ProdutoController {
         aviso.unidade = data.registration.unidade
         aviso.facebookUserId = data.user_id
 
-        aviso.save()
+        aviso.save(flush:true)
 
         flash.info = 'Amiga, avisaremos você assim que novas unidades chegarem !!'
         redirect(uri:aviso.produto.nomeAsURL)

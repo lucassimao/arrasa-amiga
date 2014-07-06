@@ -12,8 +12,8 @@
 		<asset:link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 		<asset:link rel="apple-touch-icon" href="apple-touch-icon.png" type="image/x-icon"/>
 		<asset:link rel="apple-touch-icon" sizes="114x114" href="apple-touch-icon-retina.png" type="image/x-icon"/>
-		<asset:stylesheet src="main.css"/>
-   	  	<asset:stylesheet src="mobile.css"/>
+		<asset:stylesheet href="main.css"/>
+   	  	<asset:stylesheet href="mobile.css"/>
 
 		<g:layoutHead/>
 

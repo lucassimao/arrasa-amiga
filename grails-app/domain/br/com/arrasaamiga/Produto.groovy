@@ -22,7 +22,9 @@ class Produto {
     Date lastUpdated
 
 	static hasMany = [fotos:FotoProduto,unidades:String,keywords:String,grupos:GrupoDeProduto]
-	static transients = ['precoAVistaEmReais','precoAPrazoEmReais','estoques','quantidadeEmEstoque','nomeAsURL','multiUnidade','descontoAVistaEmReais']
+	static transients = ['precoAVistaEmReais','precoAPrazoEmReais','estoques','grupoPadrao',
+                        'produtosRelacionados','quantidadeEmEstoque','nomeAsURL','multiUnidade',
+                        'descontoAVistaEmReais']
 
     static constraints = {
     	nome nullable:false,blank:false
@@ -91,6 +93,77 @@ class Produto {
 
     public boolean isMultiUnidade(){
         return this.unidades?.size() > 1
+    }
+
+    /**
+     * Implementa o conceito de grupo padrao
+     *
+     * Um produto pode estar em vários grupos de produtos (menus na pagina principal)
+     *
+     * Caso questionado um único grupo a qual ele pertença,
+     * ele retorna o grupo mais especializado, mais profundo na hierarquia dos grupos a qual ele pertence 
+     * 
+     * Caso haja empate entre grupos quanto ao criterio anterior, 
+     * esses são ordenados em ordem crescente pelo nome, e o que ficar em primeiro eh retornado 
+     *
+     */ 
+    public GrupoDeProduto getGrupoPadrao(){
+        def map = [:]
+
+        this.grupos.each{grupo->
+            int profundidade = grupo.ancestrais.size() 
+        
+            if (!map[profundidade]){
+                map[profundidade] = []
+            } 
+            map[profundidade] << grupo
+        }
+
+        if (map.keySet()){
+
+            int deeper = map.keySet().max()
+
+            if (map[deeper].size() == 1)
+                return map[deeper][0]
+            else
+                return map[deeper].min{g1, g2-> g1.nome.compareTo(g2.nome)}
+            
+        }else 
+            return null
+
+    }
+
+
+    public Set getProdutosRelacionados(int quantidade){
+        def grupoPadrao = this.grupoPadrao
+        Set gruposIds = []
+        
+        if (grupoPadrao){
+            gruposIds += grupoPadrao.ancestrais*.id
+            gruposIds << grupoPadrao.id
+        }
+        
+        if (gruposIds){
+            
+            def produtoID = this.id
+            def criteria = Produto.createCriteria()
+            def produtos = criteria.listDistinct {
+                eq("visivel", true)
+                ne('id',produtoID) // removendo o produto atual da lista
+
+                grupos{
+                    inList("id", gruposIds)
+                }
+
+                maxResults(quantidade)
+                order("ordem", "asc")
+            }
+
+            return produtos
+
+        }else 
+            return []
+
     }
 
 

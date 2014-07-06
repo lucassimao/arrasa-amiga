@@ -10,7 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
     
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="${ pageProperty(name:'page.description') }" />
     <meta name="keywords" content="${ pageProperty(name:'page.keywords') }">
 
@@ -19,7 +19,15 @@
     <meta property="fb:admins" content="1665191676"/>
     <meta property="fb:admins" content="100002204592399"/>
     <meta property="fb:admins" content="100002253748681"/>
-    <meta property="fb:app_id" content="592257150816024"/> 
+
+    <g:if env="production">
+        <meta property="fb:app_id" content="592257150816024"/> 
+    </g:if>    
+
+    <g:if env="development">
+        <meta property="fb:app_id" content="538200826283779"/> 
+    </g:if>
+    
     <meta property="og:site_name" content="Arrasa Amiga"/>
     <meta property="og:type" content="website" /> 
     <meta property="og:url" content="${ (request.requestURL?.equals('/'))?'http://www.arrasaamiga.com.br': request.requestURL }" /> 
@@ -156,6 +164,7 @@
     <asset:javascript src="imagesloaded.pkgd.min.js"/>
     <asset:javascript src="script.js"/>
 
+
     <asset:script type="text/javascript">
 
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -172,7 +181,13 @@
 
           $.getScript('//connect.facebook.net/pt_BR/all.js#xfbml=1', function(){
               FB.init({
-                appId: '592257150816024', xfbml: true  
+
+                <g:if env="production">
+                    appId: '592257150816024', xfbml: true 
+                </g:if>    
+                <g:elseif env="development">
+                    appId: '538200826283779', xfbml: true
+                </g:elseif>
               });     
 
           });
@@ -183,7 +198,6 @@
     </asset:script>
 
     <asset:deferredScripts/>
-
 
   </body>
 </html>

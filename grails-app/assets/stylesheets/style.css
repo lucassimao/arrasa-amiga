@@ -494,6 +494,7 @@ a:hover.no-underline{
     line-height: 1;
 }
 
+
 #home-slider .carousel-control {
     color: #333;
     text-shadow: none;
@@ -531,6 +532,7 @@ a:hover.no-underline{
 #home-slider .carousel-control.right:focus{
     background: #333 !important;
 }
+
 
 #home-slider .carousel-control.left {
     left: 20px;
@@ -656,27 +658,29 @@ a:hover.no-underline{
     [7. PRODUCT SINGLE]
     ==================
 */
+
 .heading-title{
     display: block;
-    margin-bottom: 20px;
-    padding: 10px 0;
-    border-bottom: 1px solid #f1f1f1;
+    padding: 0px 0;
+    border-bottom: 1px solid #f89406;
 }
 
 .heading-title h2{
     display: inline;
-    padding: 10px 0 8px;
+    padding-bottom: 0px;
+    margin:0px;
     font-size: 22px;
     line-height: 24px;
     font-weight: 300;
     text-transform: uppercase;
-    border-bottom: 1px solid #f89406;
+    
 }
 
 .heading-title h2 span{
     font-weight: 700;
 }
 
+/*
 #product-single .carousel-control {
     position: absolute;
     top: 15px;
@@ -718,6 +722,16 @@ a:hover.no-underline{
     background: #fff;
     border: 1px solid #cecece;  
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffffffff', GradientType=1);
+}*/
+
+#product-single .carousel-control.left {
+    right: 50px;
+    background-image: none
+}
+
+#product-single .carousel-control.right {
+    right: 15px;
+    background-image: none
 }
 
 #product-single .home-product-item{
@@ -733,7 +747,7 @@ a:hover.no-underline{
 .product-single{
     padding: 15px;
     margin-bottom: 20px;
-    background: #f1f1f1;
+    background: #fff;
     overflow: hidden;
 }
 
@@ -743,6 +757,10 @@ a:hover.no-underline{
     margin-right: auto;
 }
 
+.single-desc table{
+    width: 100%;
+
+}
 .single-desc table tr td{
     padding: 3px 5px 3px 0;
 }
@@ -750,14 +768,14 @@ a:hover.no-underline{
 .single-desc .price, 
 .single-desc .price-old{
     display: inline-block;
-    padding: 20px 0;
+    padding: 10px 0;
 }
 
 .single-desc .price{
     color: #f89406;
     font-weight: 400;
-    font-size: 23px;
-    line-height: 25px;
+    font-size: 27px;
+    line-height: 29px;
 }
 
 .single-desc .price-old{
@@ -769,7 +787,9 @@ a:hover.no-underline{
 }
 
 .single-desc .btn{
-    margin-top: 20px;
+    margin-top: 10px;
+    float:right;
+    font-size: 1.2em;
 }
 
 .content-detail{

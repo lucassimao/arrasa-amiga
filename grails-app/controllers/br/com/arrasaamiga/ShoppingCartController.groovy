@@ -6,6 +6,8 @@ import br.com.uol.pagseguro.domain.*
 import br.com.uol.pagseguro.exception.PagSeguroServiceException
 import grails.plugin.springsecurity.annotation.Secured
 
+
+@Secured(['permitAll'])
 class ShoppingCartController {
 
 	def shoppingCartService

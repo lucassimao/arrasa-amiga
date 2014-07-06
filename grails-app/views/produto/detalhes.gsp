@@ -8,177 +8,133 @@
 		<parameter name="description" value="${produtoInstance.descricao}" />
 		<parameter name="keywords" value="${produtoInstance.keywords?.join(',')}" />
 		<parameter name="og:image" value="${assetPath(src:'produtos/'+produtoInstance.fotoMiniatura)}"/>
-		<meta name="layout" content="main"/>	
+    
+    <meta name="layout" content="main"/>  
 	</head>
 	<body>
 
 
  <!-- begin:article -->
       <div class="row">
-        <!-- begin:sidebar -->
-        <div class="col-md-3 col-sm-4 sidebar">
-          <div class="row">
-            <div class="col-md-12">
-              <div class="widget">
-                <div class="widget-title">
-                  <h3> Meu Carrinho </h3>
-                </div>
-                <ul class="cart list-unstyled">
-                  <g:each in="${shoppingCart.itens}" var="item">
-                    <li>
-                      <div class="row">
-                        <div class="col-sm-7 col-xs-7">
-                          ${item.quantidade} <a href="${createLink(uri:item.produto.nomeAsUrl,absolute:true)}">${item.produto.nome}</a> <span>[ ${item.unidade} ]</span></div>
-                        <div class="col-sm-5 col-xs-5 text-right"><strong>${item.subTotalAPrazo}</strong> <a href="#"><i class="fa fa-trash-o"></i></a></div>
-                      </div>
-                    </li>
-                  </g:each>
-                </ul>
-                <ul class="list-unstyled total-price">
-                    <li>
-                      <div class="row">
-                        <div class="col-sm-8 col-xs-8">Entrega</div>
-                        <div class="col-sm-4 col-xs-4 text-right">R$ 2.00</div>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="row">
-                        <div class="col-sm-8 col-xs-8">Total</div>
-                        <div class="col-sm-4 col-xs-4 text-right">${shoppingCart.valorTotalAPrazo}</div>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="row">
-                        <!--<div class="col-sm-6 col-xs-6">
-                          <a class="btn btn-default" href="cart.html">Cart</a>
-                        </div>
-                        -->
-                        <div class="col-sm-12 col-xs-6 text-right">
-                          <a class="btn btn-primary" href="login.html">Concluir Pedido</a>
-                        </div>
-                      </div>
-                    </li>
-                </ul>
-              </div>
-              <!-- break
-              <div class="widget">
-                <div class="widget-title">
-                  <h3>Category</h3>
-                </div>
-                <ul class="nav nav-pills nav-stacked">
-                    <li class="active"><a href="#">Acessories</a></li>
-                    <li><a href="#">Girl</a></li>
-                    <li><a href="#">Boy</a></li>
-                    <li><a href="#">Edition</a></li>
-                </ul>
-              </div>
-              -->
-              <!-- break
-              <div class="widget">
-                <div class="widget-title">
-                  <h3>Payment Confirmation</h3>
-                </div>
-                <p>Already make a payment ? please confirm your payment by filling <a href="confirm.html">this form</a></p>
-              </div>
-              -->
-
-            </div>
-          </div>
-        </div>
-        <!-- end:sidebar -->
 
         <!-- begin:content -->
-        <div class="col-md-9 col-sm-8 content">
+        <div class="col-md-12 col-sm-12 content">
+
           <div class="row">
             <div class="col-md-12">
-                <ol class="breadcrumb">
+                <ol class="breadcrumb" style="background-color:white;border:1px solid #ccc;">
                   <li><a href="${createLink(absolute:true,uri: '/' )}">Home</a></li>
-                  <g:each in="${produtoInstance.grupos[0]?.ancestrais}" var="grupo" status="i">
+                  <g:each in="${produtoInstance.grupoPadrao?.ancestrais}" var="grupo" status="i">
                   	<li><a href="${createLink(absolute:true,uri: ('/produtos/' + grupo.nome) )}">${grupo.nome}</a></li>
               	  </g:each>
               	  <li class="active">
-              	  	<a href="${createLink(absolute:true,uri: ('/produtos/' + produtoInstance.grupos[0]?.nome) )}"> ${produtoInstance.grupos[0]?.nome}</a>
+              	  	<a href="${createLink(absolute:true,uri: ('/produtos/' + produtoInstance.grupoPadrao?.nome) )}"> ${produtoInstance.grupoPadrao?.nome}</a>
               	  </li>
                 </ol>
             </div>
           </div>
+
           <div class="row">
             <div class="col-md-12">
-              
-              <div class="heading-title">
-                <h2> <span>${produtoInstance.nome}</span> <span class="text-yellow">.</span></h2>
-              </div>
 
-              <div class="row">
+            
+              <div class="row">    
 
-                <!-- begin:product-image-slider -->
-                <div class="col-md-6 col-sm-6">
+               <!-- begin:product-image-slider-->
+                <div class="col-md-7 col-sm-7">
                   <div id="product-single" class="carousel slide" data-ride="carousel">
-                    <div class="carousel-inner">
 
+                    <div class="carousel-inner">
           						<g:each in="${produtoInstance.fotos}" var="foto" status="i">
-          							<div class="item ${ (i == 0)?'active':'' }"> <!-- <%-- usar classe 'active p/ selecionar item' --%> -->
-          								<div class="product-single">
+          							<div class="item ${ (i == 0)?'active':'' }">  
+          								 <div class="product-single">
           									<asset:image id="img${foto.id}" src="produtos/${foto.arquivo}" class="img-responsive"/>
-          								</div>
+                            <div class="carousel-caption">
+                                <h3> ${foto.comentario} </h3>
+                            </div>
+          								 </div>
           							</div>
           						</g:each>
 
                     </div>
 
-                    <a class="left carousel-control" href="#product-single" data-slide="prev">
-                      <i class="fa fa-angle-left"></i>
+                    <a class="left carousel-control" href="#product-single" role="button" data-slide="prev">
+                      <!-- <i class="fa fa-angle-left"></i> -->
+                      <span class="glyphicon glyphicon-chevron-left"></span>
                     </a>
                     <a class="right carousel-control" href="#product-single" data-slide="next">
-                      <i class="fa fa-angle-right"></i>
+                      <!--<i class="fa fa-angle-right"></i>-->
+                      <span class="glyphicon glyphicon-chevron-right"></span>
                     </a>
                   </div>
                 </div>
-                <!-- end:product-image-slider -->
+                 <!-- end:product-image-slider -->
 
                 <!-- begin:product-spesification -->
-                <div class="col-md-6 col-sm-6">
+                <div class="col-md-5 col-sm-5">
                   <div class="single-desc">
 
-                    <g:form  action="add" controller="shoppingCart" method="post" id="${produtoInstance.id}">
+                    <g:form  name="form-produto" action="add" controller="shoppingCart" method="post" id="${produtoInstance.id}">
                       
                       <span class="visible-xs">
-                          <strong>Blackbox / AF0012 / In Stock</strong>
+                          <strong> ${produtoInstance.marca} / In Stock</strong>
                       </span>
 
                       <table>
                         <tbody>
 
                             <tr>
-                                <td colspan="3"> 
-                                  <h3> ${produtoInstance.nome} </h3>
+                                <td colspan="3" > 
+                                  <div class="heading-title" >
+                                      <h2> <span>${produtoInstance.nome}</span> </h2>
+                                  </div>
                                 </td>
                             </tr>
 
                             <tr>
                                 <td colspan="3"> 
-                                  <h5> ${produtoInstance.marca} </h5>
+                                  <h5> ${produtoInstance.marca} </h5>                                  
                                 </td>
                             </tr>
 
                             <tr>
                                 <td colspan="3"> 
-                                  <span class="price">
-                                      <g:formatNumber number="${produtoInstance.precoAPrazoEmReais}" 
-                                      type="currency" currencyCode="BRL" /> 
-                                  </span>
-                                  <g:if test="${produtoInstance.precoAVistaEmCentavos <  produtoInstance.precoAPrazoEmCentavos}">
-                                    <p> * Desconto à vista </p>
-                                  </g:if>
+                                    <span class="price">
+                                        <g:formatNumber number="${produtoInstance.precoAPrazoEmReais}" 
+                                        type="currency" currencyCode="BRL" /> 
+                                    </span>
+
+                                    <p>
+                                      <small> 
+                                      Em até 5x de R$ 
+                                      ${formatNumber(number:produtoInstance.precoAPrazoEmReais/5,type:'currency',currencyCode:'BRL')}
+                                      no cartão  
+                                      </small>
+                                    </p>
+
+                                    <g:if test="${produtoInstance.precoAVistaEmCentavos < produtoInstance.precoAPrazoEmCentavos }">                       
+                                      <p><small> * Desconto à vista </small></p>     
+                                    </g:if>
+
+                                    <div class="fb-like" style="float:right;margin-right:1px;" 
+                                          data-href="${createLink(uri:produtoInstance.nomeAsURL, absolute:true)}" data-width="100px" 
+                                          data-colorscheme="light" data-layout="button_count" data-action="recommend" 
+                                          data-show-faces="true" data-send="true"></div>                                                               
                                 </td>
                             </tr>
+
+                            <tr>
+                                <td colspan="3"> 
+                                  <hr style="margin:10px 0;">
+                                </td>
+                            </tr>                            
+
 
                           <g:if test="${produtoInstance.isMultiUnidade()}">
                               
                               <tr>
-                                  <td><strong>${produtoInstance.tipoUnitario}</strong></td>
-                                  <td>:</td>
-                                  <td>
+                                  <td><strong>${produtoInstance.tipoUnitario} :</strong></td>
+                                  <td colspan="2">
                                       <select class="form-control" id="select-unidade" name="unidade"> 
                                         <g:each in="${unidades}" var="unidade" status="i">
                                           <option value="${raw(unidade)}" ${ (i==0)?'selected':''}>${raw(unidade)}</option>
@@ -188,48 +144,94 @@
                               </tr>
 
                               <tr class="tr-quantidade">
-                                  <td><strong>Quantidade</strong></td>
-                                  <td>:</td>
-                                  <td>
+                                  <td><strong>Quantidade :</strong></td>
+                                  <td colspan="2">
                                     <select class="form-control" id="select-quantidade" name="quantidade"/> 
                                   </td>
                               </tr>
 
+                                            
+                              <tr>
+                                  <td colspan="3">
+                                      <p id="msg-estoque-esgotado" style="display:none;"> 
+                                        Ow Amiga, ${produtoInstance.tipoUnitario} 
+                                        <span style="font-weight:bold;" id="unidade"></span>
+                                        está em falta
+                                      </p>   
+
+                                      <p style="font-size:14px;color:blue;display:none;" id="aviso-ativado">
+                                        Avisaremos você assim que novas unidades chegarem 
+                                      </p>   
+                                                                         
+                                      <p id="ativar-aviso">
+                                        <a data-toggle="modal" style="cursor:pointer;" data-target="#modal">
+                                          Quer saber assim que chegar ?
+                                        </a>
+                                      </p>     
+                                  </td>  
+                              </tr>  
+
+                              <tr id="tr-comprar">
+                                  <td colspan="3">
+                                    <a href="#" id="btn-comprar" class="btn btn-sm btn-primary">Adicionar ao Carrinho</a>
+                                  </td>  
+                              </tr>            
 
                           </g:if>
                           <g:else>
 
+                              <g:set var="estoque" value="${estoques[0]}"/>
+                              <g:hiddenField id="unidade" name="unidade" value="${estoque.unidade}" />
+
+                              <g:if test="${estoque.quantidade > 0}">
+
+                                  <tr class="tr-quantidade">
+                                    <td><strong>Quantidade</strong></td>
+                                    <td>:</td>
+                                    <td>
+                                        <g:select from="${1..(estoque.quantidade)}" class="form-control" id="select-quantidade" name="quantidade"/> 
+                                    </td>
+                                  </tr>
+
+                                  <tr id="tr-comprar">
+                                      <td colspan="3">
+                                        <a href="#" id="btn-comprar" class="btn btn-sm btn-primary">Adicionar ao Carrinho</a>
+                                      </td>  
+                                  </tr>                                  
+                              
+                              </g:if>
+                              <g:else>
+
+                                  <tr>
+                                      <td colspan="3">
+
+                                        <h5> 
+                                          Ow Amiga, estamos aguardando novas unidades !! 
+                                        </h5> 
+
+                                        <p style="font-size:14px;color:blue;display:none;" id="aviso-ativado">
+                                          Avisaremos você assim que novas unidades chegarem 
+                                        </p>   
+                                                                           
+                                        <p id="ativar-aviso">
+                                          <a data-toggle="modal" style="cursor:pointer;" data-target="#modal">
+                                            Quer saber assim que chegar ?
+                                          </a>
+                                        </p> 
+
+                                      </td>  
+                                  </tr>
+
+                              </g:else>
+
                           </g:else>
-
-
-                          <tr id="tr-comprar">
-                              <td colspan="3">
-                                <a href="#" class="btn btn-sm btn-primary">Adicionar ao Carrinho</a>
-                              </td>  
-                          </tr>
 
                         </tbody>
                       </table>
 
-                      <g:if test="${produtoInstance.isMultiUnidade()}">
-
-                          <p id="msg-estoque-esgotado" style="display:none;"> 
-                            Ow Amiga, ${produtoInstance.tipoUnitario} 
-                            <span style="font-weight:bold;" id="unidade"></span>
-                            está em falta
-                          </p>
-
-                          <p style="font-size:14px;color:blue;display:none;" id="aviso-ativado">
-                            Avisaremos você assim que novas unidades chegarem 
-                          </p>
-
-                          <p style="display:none;" id="ativar-aviso">
-                            <a data-toggle="modal" style="cursor:pointer;" data-target="#modal">Quer saber assim que chegar ?</a>
-                          </p>
-
-                      </g:if>
 
                     </g:form>
+
                   </div>
                 </div>
                 <!-- end:product-specification -->
@@ -249,7 +251,8 @@
                         <p class="comentarios">${produtoInstance.descricao}</p>
                       </div>
                       <div class="tab-pane fade" id="comentarios">
-                        <div class="fb-comments" data-width="100%"   data-href="${request.requestURL}" style=""></div>
+                        <div class="fb-comments" data-width="100%" 
+                            data-href="${request.requestURL}" data-colorscheme="light"></div>
                       </div>
                     </div>
                 </div>
@@ -257,30 +260,50 @@
               <!-- end:product-detail -->
 
               <!-- begin:related-product -->
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="heading-title">
-                    <h2>Produtos relacionados <span> </span> <span class="text-yellow">.</span></h2>
-                  </div>
+              
+              <%
+                def produtosRelacionados = produtoInstance.getProdutosRelacionados(4)
+              %>
 
-                  <div class="row product-container" style="position: relative; height: 463.75px;">
-                    
-                    <g:each in="${1..4}">
-                      <div class="col-md-3 col-sm-6 col-xs-6">
-                        <div class="thumbnail product-item">
-                          <a href="product_detail.html"><img alt="" src="images/product1.jpg"></a>
-                          <div class="caption">
-                            <h5>Pants</h5>
-                            <p>$54.00</p>
-                            <p>Available</p>
-                          </div>
-                        </div>
+              <g:if test="${produtosRelacionados}">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="heading-title" style="margin-bottom:5px;">
+                        <h2>Produtos relacionados <span> </span> <span class="text-yellow">.</span></h2>
                       </div>
-                    </g:each>
 
+                      <div class="row product-container" style="position: relative; height: 463.75px;">
+                        
+                        <g:each in="${produtosRelacionados}" var="pRelacionado">
+                          
+                          <div class="col-md-3 col-sm-6 col-xs-6">
+                            <div class="thumbnail product-item">
+                              <a href="${createLink(uri:pRelacionado.nomeAsURL, absolute:true)}">
+                                <asset:image src="produtos/${pRelacionado.fotoMiniatura}" alt="${pRelacionado.nome}" title="${pRelacionado.nome}"/>
+                              </a>
+                              <div class="caption">
+                                <h5>${pRelacionado.nome}</h5>
+                                <p>  ${pRelacionado.marca} </p>
+                                <p>
+                                  <g:formatNumber number="${pRelacionado.precoAPrazoEmReais}" type="currency" currencyCode="BRL" />
+                                </p>
+
+                                <div class="buy-item"> 
+                                  <a class="btn btn-primary" href="${createLink(uri:pRelacionado.nomeAsURL, absolute:true)}"> 
+                                    <span><i class="fa fa-shopping-cart"></i> Comprar </span> 
+                                  </a> 
+                                </div>
+
+                              </div>
+                            </div>
+                          </div>
+
+                        </g:each>
+
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
+              </g:if>
               <!-- end:related-product -->
 
             </div>
@@ -298,9 +321,22 @@
 
         $(function(){
 
+          
             <g:each in="${produtoInstance.fotos}" var="fotoProduto" status="i">
               $("#img${fotoProduto.id}").data('unidade',"${fotoProduto.unidade}");
             </g:each>
+
+            $("#btn-comprar").click(function(event){
+              event.preventDefault();
+              $('#form-produto').submit();
+            });
+
+            $("#btn-delete-cart-item").click(function(event){
+              event.preventDefault();
+              $(this).parents('form').submit();
+            });
+
+            
 
 
             <g:if test="${produtoInstance.isMultiUnidade()}">
@@ -380,10 +416,49 @@
                 $("#select-unidade").change();
 
             </g:if>
+            <g:else>
+
+                var unidade = $("#unidade").val();
+
+                $.ajax({
+                  
+                  url: "${createLink(controller:'produto',action:'quantidadeEmEstoque',absolute:true)}",
+                  data: {'produtoId': ${produtoInstance.id} , 'unidade': unidade},
+                  settings: {'cache':false}
+
+                }).success(function( data, textStatus, jqXHR ) {
+
+                  var qtdeEmEstoque = parseInt(data.quantidade);
+                  var marcadoParaAvisar = Boolean(data.marcadoParaAvisar);
+
+                  if ( qtdeEmEstoque == 0 ){
+
+                    if (marcadoParaAvisar){
+                      $("#aviso-ativado").show({duration:250});
+                      $("#ativar-aviso").hide({duration:250});
+
+                    }else{
+                      $("#aviso-ativado").hide({duration:250});
+                      $("#ativar-aviso").show({duration:250});
+
+                    }
+
+                    
+                  }
+
+                
+                }).fail(function(){
+
+                });
+
+            </g:else>
+
+
 
         });
 
       </asset:script>
+
 
 	</body>
 
