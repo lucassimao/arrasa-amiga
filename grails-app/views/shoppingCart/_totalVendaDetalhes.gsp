@@ -1,5 +1,5 @@
 <%@ page import="br.com.arrasaamiga.FormaPagamento" %>
-
+<!--
 <div id="div-subtotal">
 	<h4 style="display:inline;color:#666;">Subtotal</h4>
 
@@ -65,3 +65,4 @@
 		<g:formatNumber number="${venda.valorTotal}" type="currency"	currencyCode="BRL" />
 	</div>
 </div>
+-->

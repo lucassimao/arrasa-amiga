@@ -52,7 +52,6 @@
       <asset:javascript src="respond.min.js"/>
     <![endif]-->
 
-
     <g:layoutHead/>
     
     <title><g:layoutTitle default="Arrasa Amiga"/></title>
@@ -115,8 +114,8 @@
 
               <li>
                 <div class="hidden-xs">
-                  <h4><a href="cart.html"> Carrinho </a></h4>
-                  <p><strong> <cart:qtdeTotalItens/> Produto(s)</strong></p>
+                  <h4><a href="${createLink(controller:'shoppingCart')}"> Carrinho </a></h4>
+                  <p><a href="${createLink(controller:'shoppingCart')}"> <strong> <cart:qtdeTotalItens/> Produto(s)</strong> </a></p>
                 </div>
                 <div class="visible-xs">
                   <a href="cart.html" class="btn btn-primary"><span class="cart-item">3</span> <i class="fa fa-shopping-cart"></i></a>
@@ -139,8 +138,14 @@
                   <g:render template="/layouts/menuitem" model="[grupo:grupo,isRoot:true,grupoRaiz:grupoRaiz]"/>
               </g:each>
 
-              <li class="${(controllerName == 'home' && actionName =='comocomprar')?'active':''}" ><a href="${createLink(action:'comocomprar',controller:'home',absolute:true,params: [cidade:Cidade.teresina.id])}">Como Comprar </a></li>
-              <li class="${ (request.forwardURI?.endsWith('contato') )?'active':''}"><a href="${createLink(uri:'/contato',absolute:true)}">Contato</a></li>
+              <li class="${(controllerName == 'home' && actionName =='comocomprar')?'active':''}" >
+                <a href="${createLink(action:'comocomprar',controller:'home',absolute:true,params: [cidade:Cidade.teresina.id])}">Como Comprar </a>
+              </li>
+              
+              <li class="${ (request.forwardURI?.endsWith('contato') )?'active':''}">
+                <a href="${createLink(uri:'/contato',absolute:true)}">Contato</a>
+              </li>
+
             </ul>
           </div>
         </div>

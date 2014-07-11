@@ -94,6 +94,7 @@
 										<span class="badge badge-warning">${item.quantidade}</span>  
 									</p>
 
+									<!-- botão adicinar unidade -->
 									<div style="width:80px;display:block;margin-left:auto;margin-right:auto;">
 										<g:form action="add" controller="shoppingCart" style="float:left;">
 											<g:hiddenField name="id" value="${produto.id}"/>
@@ -106,6 +107,7 @@
 							                </a>
 						                </g:form>
 
+						                <!-- botão subtrair unidade -->
 						                <g:form action="removerProduto" controller="shoppingCart">
 											<g:hiddenField name="id" value="${produto.id}"/>
 											<g:hiddenField name="unidade" value="${item.unidade}"/>

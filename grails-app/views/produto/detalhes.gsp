@@ -21,6 +21,7 @@
         <div class="col-md-12 col-sm-12 content">
 
           <div class="row">
+            <!-- breadcrumb -->
             <div class="col-md-12">
                 <ol class="breadcrumb" style="background-color:white;border:1px solid #ccc;">
                   <li><a href="${createLink(absolute:true,uri: '/' )}">Home</a></li>
@@ -32,6 +33,7 @@
               	  </li>
                 </ol>
             </div>
+            <!-- end breadcumb -->
           </div>
 
           <div class="row">

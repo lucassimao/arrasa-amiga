@@ -13,10 +13,9 @@
       <!-- <%-- renderiza Grupos que possuem subGrupos mas que nao tem pai, menus que ficam no topo de todos --%>-->
 
       <li class="dropdown ${grupoRaiz?.equals(grupo.nome)?'active':''}">
-        <a href="#" data-toggle="dropdown" class="dropdown-toggle">${grupo.nome} <b class="caret"></b></a>
+        <a data-toggle="dropdown" class="dropdown-toggle" href="#">${grupo.nome} <b class="caret"></b></a>
         <ul class="dropdown-menu" id="menu1">
-
-          <li><a href="${createLink(absolute:true,uri: ('/produtos/' + grupo.nome) )}">Todos</a></li>
+          <li><a href="${createLink(absolute:true,uri: ('/produtos/' + grupo.nome) )}">Todos</a></li> 
           <li class="divider"></li>
           <g:each in="${GrupoDeProduto.findAllByPai(grupo)}" var="subGrupo">
               <g:render template="/layouts/menuitem" model="[grupo:subGrupo,isRoot:false,grupoRaiz:grupoRaiz]"/>
