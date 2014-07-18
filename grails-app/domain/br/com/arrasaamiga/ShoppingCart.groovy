@@ -1,22 +1,13 @@
 package br.com.arrasaamiga
 
 class ShoppingCart {
-	static hasMany = [itens : ItemVenda]
 	
+	static hasMany = [itens : ItemVenda]
 	Date dateCreated
    	Date lastUpdated
 	
-	String sessionID
-		
-	Boolean checkedOut = false
-	
-
-	static constraints = {
-		sessionID(blank:false)
-	}
-
 	static mapping = {
-		itens lazy: false
+		itens lazy: false, cascade: 'all'
 	}
 
 	static transients = ['valorTotalAPrazo','valorTotalAVista']

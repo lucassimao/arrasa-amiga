@@ -2,51 +2,46 @@ package br.com.arrasaamiga
 
 import javax.servlet.http.HttpSession
 import org.springframework.web.context.request.RequestContextHolder
+import javax.servlet.http.HttpSession
+import org.springframework.web.context.request.RequestContextHolder
 
 class ShoppingCartService {
 
-    boolean transactional = true
-
-    def shoppingCartFactoryService
+    boolean transactional = false
 
 	def getShoppingCart() {
-		return shoppingCartFactoryService.shoppingCart
+		def session = RequestContextHolder.currentRequestAttributes().getSession()
+		if (!session.shoppingCart){
+			session.shoppingCart =  new ShoppingCart()
+		}
+		return session.shoppingCart
+
 	}
 
     def addToShoppingCart(Produto produto, String unidade, Integer qtde) {
 
-		def shoppingCart = shoppingCartFactoryService.getShoppingCart()
+		def shoppingCart = getShoppingCart()
 
 		def itemVenda = shoppingCart.itens.find{ itemVenda-> 
 			itemVenda.produto.id == produto.id && itemVenda.unidade.equals(unidade) 
 		}
 
 		if (itemVenda){
-			
 			itemVenda.quantidade += qtde
-			itemVenda.save()
-
 		}else{
 			
 			itemVenda = new ItemVenda(produto:produto, unidade:unidade,quantidade:qtde)
 			itemVenda.precoAVistaEmCentavos = produto.precoAVistaEmCentavos
 			itemVenda.precoAPrazoEmCentavos = produto.precoAPrazoEmCentavos
 
-			itemVenda.save()
-
 			shoppingCart.addToItens(itemVenda)
-			shoppingCart.save()
 		}
 
     }
 
     def removeFromShoppingCart(Produto produto, String unidade, Integer quantidade) {
-		def shoppingCart = shoppingCartFactoryService.getShoppingCart()
+		def shoppingCart = getShoppingCart()
 
-
-		if (!shoppingCart) {
-			return
-		}
 
 		def itemVenda = shoppingCart.itens.find{ itemVenda-> 
 			itemVenda.produto.id == produto.id && itemVenda.unidade.equals(unidade) 
@@ -54,32 +49,20 @@ class ShoppingCartService {
 
 		if (itemVenda){
 			itemVenda.quantidade -= quantidade
-			itemVenda.save()
 
 			if (itemVenda.quantidade == 0){
 				shoppingCart.removeFromItens(itemVenda)
-				itemVenda.delete()
-
-				shoppingCart.save(flush:true)
 			}
 		}
 		
     }
 
-    def emptyShoppingCart() {
-		def shoppingCart = shoppingCartFactoryService.getShoppingCart()
-		
-		shoppingCart.itens = []
-
-		shoppingCart.itens.each{itemVenda->
-			itemVenda.delete()
-		}
-
-		shoppingCart.save()
+    def checkout() {
+		def session = RequestContextHolder.currentRequestAttributes().getSession()
+		session.shoppingCart = null
     }
 
     Set getItens() {
-		def shoppingCart = shoppingCartFactoryService.getShoppingCart()
-		return shoppingCart.itens
+		return getShoppingCart().itens
     }
 }

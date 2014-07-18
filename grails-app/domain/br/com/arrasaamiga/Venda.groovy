@@ -43,7 +43,8 @@ class Venda {
 
     static mapping = {
         autoTimestamp true
-    }
+        carrinho cascade: 'all'
+    }    
 
     def beforeInsert(){
         this.freteEmCentavos = getFreteEmReais() * 100

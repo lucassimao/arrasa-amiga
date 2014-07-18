@@ -62,20 +62,14 @@ class ShoppingCartController {
             flash.message = "Há apenas ${qtdeEmEstoque}  ${produtoInstance.nome} em estoque para esse item. Você ja incluiu ${qtdeAnterior}"
             
             if (params.origem){
-                
                 redirect(url: params.origem, absolute:true)
-
             }else{
                 redirect(uri: produtoInstance.nomeAsURL, absolute:true)
             }
             return
         }
 
-
-
-
         shoppingCartService.addToShoppingCart(produtoInstance,unidade,quantidade)
-
 
     	if (qtdeAnterior ==  0 ){
     		flash.message = " ${quantidade} ${produtoInstance.nome} adicionados(as) ao seu carrinho de compras"
@@ -121,30 +115,42 @@ class ShoppingCartController {
         render ( retorno as JSON)
     }
 
+    @Secured(['isAuthenticated()'])
     def recalcularTotais(){
 
         def venda = new Venda()
         venda.carrinho = shoppingCartService.shoppingCart
-        venda.cliente = new Cliente()
-        venda.cliente.endereco = new Endereco()
-        venda.cliente.endereco.cep = params.cep?.trim()
-        venda.cliente.endereco.cidade = Cidade.load(params.cidadeId)
-        venda.cliente.endereco.uf = Uf.load(params.ufId)
+        venda.cliente = Cliente.findByUsuario(springSecurityService.currentUser)
         venda.formaPagamento = FormaPagamento.valueOf(params.formaPagamento)
         
         if (!venda.cliente.isDentroDaAreaDeEntregaRapida()){
             venda.servicoCorreio = ServicoCorreio.valueOf(params.servicoCorreio)
         }
 
-
         render(template:'totalVendaDetalhes',model:[ venda: venda ] )
-
     }
 
+    @Secured(['isAuthenticated()'])
+    def confirmAddress(){
+        def user = springSecurityService.currentUser
+        ['cliente': Cliente.findByUsuario(user)]
+    }
+
+    @Secured(['isAuthenticated()'])
     def checkout(){
         
-        def shoppingCart = shoppingCartService.shoppingCart
+        def user = springSecurityService.currentUser
+        def cliente = Cliente.findByUsuario(user)
+        cliente.properties = params
 
+        // verifica se foi enviada alguma atualização nos dados do cliente
+        // pois ele pode ter vindo de /shoppingCart/confirmAddress
+        if (cliente.isDirty() && !cliente.save(flush:true)){
+            render view :'confirmAddress', model:[cliente:cliente]
+            return
+        }
+
+        def shoppingCart = shoppingCartService.shoppingCart
         def itens = shoppingCart.itens
 
         if (!itens){
@@ -155,26 +161,14 @@ class ShoppingCartController {
 
         def venda = new Venda()
         venda.carrinho = shoppingCart
-        venda.formaPagamento = FormaPagamento.PagSeguro
-
-        def user = springSecurityService.currentUser
-
-        if (user){
-             venda.cliente = Cliente.findByUsuario(user)
-
-        }else{
-            venda.cliente = new Cliente()
-            venda.cliente.usuario = new Usuario()
-            venda.cliente.endereco = new Endereco(uf: Uf.piaui, cidade : Cidade.teresina )
-        }
-
+        venda.formaPagamento = FormaPagamento.AVista
+        venda.cliente = cliente
         venda.carrinho = shoppingCart 
-
 
         [ venda: venda, diasDeEntrega: getProximosDiasDeEntrega() ]
     }
 
-    
+    @Secured(['isAuthenticated()'])
     def fecharVenda(){
 
 
@@ -186,43 +180,22 @@ class ShoppingCartController {
             return
         }
 
-
-       if (params.dataEntrega){
-
-            try{
-            
-                params.dataEntrega = new Date( Long.valueOf(params.dataEntrega) ) 
-            
-            }catch(Exception e){
-
-                e.printStackTrace()
-                flash.messageDataEntrega = "A data da entrega deve ser uma data válida" 
-                redirect(action: "checkout") 
-                return 
-
-            }
-        }
-
         def venda = new Venda(params)
         venda.carrinho = shoppingCart
         venda.status = StatusVenda.AguardandoPagamento
-
-        def user = (springSecurityService.currentUser)?:Usuario.findByUsername(params.cliente.email)
-        
-        if (user){
-            venda.cliente = Cliente.findByUsuario(user)
-            venda.cliente.properties = params.cliente
-        }else{
-            venda.cliente.usuario.enabled = true
-            venda.cliente.senha = '12345'
-        }
+        venda.cliente = Cliente.findByUsuario(springSecurityService.currentUser)
 
         def model = [ venda: venda, diasDeEntrega: getProximosDiasDeEntrega() ]
 
-        if (!venda.cliente.validate()){ 
-            flash.message = "Amiga, os campos em destaque devem ser preenchidos" 
-            render(view: "checkout",model: model  ) 
-            return              
+        try{       
+            venda.dataEntrega = new Date( Long.valueOf(params.dataEntrega) )
+            venda.clearErrors()
+
+        }catch(Exception e){
+
+            flash.messageDataEntrega = "A data da entrega deve ser uma data válida" 
+            render(view: "checkout",model:model) 
+            return 
         }
 
         
@@ -237,35 +210,23 @@ class ShoppingCartController {
 
         if ( venda.cliente.isDentroDaAreaDeEntregaRapida() ){
 
-            if (venda.dataEntrega){
-
-                if (!validarDataEntrega(venda.dataEntrega)){
-                    flash.messageDataEntrega = "Apenas as datas apresentadas são aceitas" 
-                    render(view: "checkout",model: model ) 
-                    return                      
-                }
-
-            }else{
-                flash.messageDataEntrega = "A data da entrega deve ser selecionada" 
+            if (!validarDataEntrega(venda.dataEntrega)){
+                flash.messageDataEntrega = "Apenas as datas apresentadas são aceitas" 
                 render(view: "checkout",model: model ) 
-                return                
+                return                      
             }
 
         }      
 
-        venda.cliente.save()
         Estoque.removerItens(venda.itensVenda)
 
 
         if ( venda.formaPagamento == FormaPagamento.AVista ){
 
-            venda.carrinho.checkedOut = true
-            venda.carrinho.save()
-            venda.save(flush:true)
-            
+            venda.save(flush:true,failOnError:true)
+            shoppingCartService.checkout()
             emailService.notificarAdministradores(venda)
-            emailService.notificarCliente(venda)
-            
+            emailService.notificarCliente(venda)         
 
             redirect(action:'show',controller:'venda', id:venda.id)
             return
@@ -298,7 +259,7 @@ class ShoppingCartController {
                 
                 e.printStackTrace()
 
-                venda.delete() // não deu pra mandar pro pag seguro ... exclui venda
+                venda.delete(flush:true) // não deu pra mandar pro pag seguro ... exclui venda
                 Estoque.reporItens(venda.itensVenda)
                 
                 flash.message = e.toString() 
@@ -309,7 +270,7 @@ class ShoppingCartController {
 
                 e.printStackTrace()
 
-                venda.delete() // não deu pra mandar pro pag seguro ... exclui venda
+                venda.delete(flush:true) // não deu pra mandar pro pag seguro ... exclui venda
                 Estoque.reporItens(venda.itensVenda)
                 
                 flash.message = e.toString() 
@@ -349,57 +310,57 @@ class ShoppingCartController {
         def hoje = new Date()
         def diasDeEntraga = []
 
-        Date terca, quinta, sabado
+        Date segunda, quarta, sexta
 
         switch(hoje.toCalendar().get(Calendar.DAY_OF_WEEK)){
             case Calendar.SUNDAY:
-                terca = (hoje + 2)
-                quinta = (hoje + 4)
-                sabado = (hoje + 6)
+                segunda = (hoje + 1)
+                quarta = (hoje + 3)
+                sexta = (hoje + 5)
                 break
             case Calendar.MONDAY:
-                terca = (hoje + 1)
-                quinta = (hoje + 3)
-                sabado = (hoje + 5)
+                segunda = (hoje + 7)
+                quarta = (hoje + 2)
+                sexta = (hoje + 4)
 
                 break
             case Calendar.TUESDAY:
-                terca =  (hoje + 7)
-                quinta = (hoje + 2)
-                sabado = (hoje + 4)
+                segunda = (hoje + 6)
+                quarta = (hoje + 1)
+                sexta = (hoje + 3)
                 break
 
             case Calendar.WEDNESDAY:
-                terca =  (hoje + 6)
-                quinta = (hoje + 1)
-                sabado = (hoje + 3)
+                segunda = (hoje + 5)
+                quarta = (hoje + 7)
+                sexta = (hoje + 2)
                 break
 
             case Calendar.THURSDAY:
-                terca =  (hoje + 5)
-                quinta = (hoje+7)
-                sabado = (hoje + 2)
+                segunda = (hoje + 4)
+                quarta = (hoje + 6)
+                sexta = (hoje + 1)
                 break
 
             case Calendar.FRIDAY:
-                terca =  (hoje + 4)
-                quinta = (hoje + 6)
-                sabado = (hoje + 1)
+                segunda = (hoje + 3)
+                quarta = (hoje + 5)
+                sexta = (hoje + 7)
                 break
 
             case Calendar.SATURDAY:
-                terca =  (hoje + 3)
-                quinta = (hoje + 5)
-                sabado = (hoje + 7)
+                segunda = (hoje + 2)
+                quarta = (hoje + 4)
+                sexta = (hoje + 5)
                 break
             default:
                 throw new Exception("Data não identificada! ${hoje}")
 
         }
 
-        diasDeEntraga.add(terca)
-        diasDeEntraga.add(quinta)
-        diasDeEntraga.add(sabado)
+        diasDeEntraga.add(segunda)
+        diasDeEntraga.add(quarta)
+        diasDeEntraga.add(sexta)
 
         return diasDeEntraga.sort()
     }

@@ -37,28 +37,34 @@
       <hr>
 
 
-      <div class="well" style="background-color:#F29BF2;color:white;border:1px solid white;">
+      <sec:ifNotGranted roles="ROLE_ADMIN">
+        <div class="well" style="background-color:#F29BF2;color:white;border:1px solid white;">
 
-        <h2>  <i class="icon-ok icon-white"></i> Recebemos seu pedido</h2>
-        
-        <h5>  Obrigada, ${cliente.nome}.   </h5>
-        <small>  Você será informada(o) por e-mail sobre o andamento do pedido até a chegada ao endereço escolhido.  </small>
-     
-      </div>
+          <h2>  <i class="icon-ok icon-white"></i> Recebemos seu pedido</h2>
+          
+          <h5>  Obrigada, ${venda.cliente.nome}.   </h5>
+          <small>  Você será informada(o) por e-mail sobre o andamento do pedido até a chegada ao endereço escolhido.  </small>
+       
+        </div>
+      </sec:ifNotGranted>
 
 
       <div class="well" style="text-align:center;background-color:white;color:rgb(102, 102, 102);">
 
-        <h3 >  O número do seu Pedido é ${numeroPedido} </h3>
+        <sec:ifNotGranted roles="ROLE_ADMIN">
+            <h3>  O número do seu Pedido é #${numeroPedido} </h3>
+        </sec:ifNotGranted>
+        <sec:ifAllGranted roles="ROLE_ADMIN">
+            <h3>  Pedido #${numeroPedido} </h3>
+        </sec:ifAllGranted>        
 
         <hr>
 
         <g:if test="${venda.formaPagamento.equals(FormaPagamento.AVista)}">
-            <g:img style="margin-top:45px;" dir="img" file="timeline-02.png"/>
+            <asset:image class="hidden-xs" style="margin-top:45px;" src="timeline-02.png"/>
         </g:if>
         <g:else>
-            <g:img style="margin-top:45px;" dir="img" file="timeline-01.png"/>
-            
+            <asset:image class="hidden-xs" style="margin-top:45px;" src="timeline-01.png"/>
         </g:else>
         
       </div>
@@ -66,106 +72,96 @@
 
         <div class="well" style="background-color:white;">
 
-          <legend> <i class="icon-truck"></i> Entrega </legend>
+          <legend> <i class="fa fa-truck"></i> Entrega </legend>
 
-          <div class="row-fluid">
-            <div>
-
-              <label> <span class="caption"> Estado: </span> ${cliente.endereco.uf.nome}</label>
-
-              <label> <span class="caption"> Cidade: </span> ${cliente.endereco.cidade.nome}</label>
-
-              <label> <span class="caption"> Bairro: </span> ${cliente.endereco.bairro} </label>
-
-              <label> <span class="caption"> Complemento: </span>  ${cliente.endereco.complemento}</label>
-              
-              <g:if test="${cliente.isDentroDaAreaDeEntregaRapida()}">
-                <label> <span class="caption"> Dia da Entrega: </span> <g:formatDate format="EEEE, dd/MM/yyyy" date="${venda.dataEntrega}"/> </label>
-              </g:if>
-              <g:else>
-                  <label> <span class="caption"> CEP: </span> ${cliente.endereco.cep} </label>
-
-                  <g:if test="${venda.codigoRastreio}">
-                      <label> 
-                          <span class="caption"> Código de Rastreio: </span> 
-                          <a target="_blank" href="http://websro.correios.com.br/sro_bin/txect01$.Inexistente?P_LINGUA=001&P_TIPO=002&P_COD_LIS=${venda.codigoRastreio}">
-                              ${venda.codigoRastreio}
-                          </a> 
-                      </label>
-                  </g:if>
-              </g:else>
-
-
-
-            </div>
-            
+          <sec:ifAllGranted roles="ROLE_ADMIN">
+            <div class="row">
+              <div class="col-md-3"> <label> <span class="caption"> Nome: </span> </label> ${venda.cliente.nome}</div>
+              <div class="col-md-3"><label> <span class="caption"> Telefone: </span> </label>${venda.cliente.dddTelefone}-${venda.cliente.telefone}</div>
+              <div class="col-md-3"><label> <span class="caption"> Celular: </span> </label>${venda.cliente.dddCelular}-${venda.cliente.celular}</div>
+              <div class="col-md-3"><label> <span class="caption"> Email: </span> </label>${venda.cliente.email}</div>
+            </div>   
+          </sec:ifAllGranted>
+          <div class="row">
+            <div class="col-md-4"> <label> <span class="caption"> Estado: </span> </label> ${venda.cliente.endereco.uf.nome}</div>
+            <div class="col-md-4"><label> <span class="caption"> Cidade: </span> </label> ${venda.cliente.endereco.cidade.nome}</div>
+            <div class="col-md-4"><label> <span class="caption"> Bairro: </span> </label>${venda.cliente.endereco.bairro}</div>
+          </div>          
+          <div class="row">
+            <div class="col-md-12"><label> <span class="caption"> Endereço: </span>  </label>${venda.cliente.endereco.complemento}</div> 
           </div>
+          <div class="row">
+                         
+            <g:if test="${venda.cliente.isDentroDaAreaDeEntregaRapida()}">
+              <div class="col-md-4">
+                <label> <span class="caption"> Dia da Entrega: </span> </label><g:formatDate format="EEEE, dd/MM/yyyy" date="${venda.dataEntrega}"/>
+              </div>              
+            </g:if>
+            <g:else>
+
+              <div class="col-md-4">
+                <label> <span class="caption"> CEP: </span> </label>${venda.cliente.endereco.cep}
+              </div>              
+
+               <g:if test="${venda.codigoRastreio}">
+                  <div class="col-md-4">
+                    <label> <span class="caption"> Código de Rastreio: </span> </label> <a target="_blank" href="${venda.trackingURL}"> ${venda.codigoRastreio} </a> 
+                  </div>                   
+              </g:if>       
+
+            </g:else>
 
         </div>
 
 
+       <div class="row" style="margin:20px 0px;"> 
 
-
-
-      <div class="row-flow" style="margin:20px 0px;"> 
-
-        <table class="table table-bordered" style="background-color:white;">
-          <thead >
+          <table class="table table-bordered table-striped table-condensed">
+           <thead>
             <tr>
-              <th> Descrição </th>
-              <th> Quantidade </th>
-              <th> Preço Unitário </th>
-              <th> Valor Total do Item </th>
-            </tr>             
-          </thead>
-          <tbody>
-            <g:each in="${venda.itensVenda}" var="itemVenda">
-              <g:set var="produto" value="${itemVenda.produto}"/>
-              
-              <tr>
-                <td style="text-align:left !important;">
-                  <g:img dir="img/produtos" style="float:left;" file="${produto.fotoMiniatura}"/>
-
-                  <div>
-                    <label>${produto.nome }</label>
-
-                    <g:if test="${produto.isMultiUnidade()}">
-                      <p> <small> ${produto.tipoUnitario}: ${itemVenda.unidade} </small> </p>
+              <th class="col-sm-1">Produto</th>
+              <th>Descrição</th>
+              <th class="col-sm-1">Preço</th>
+              <th class="col-sm-1">Quantidade</th>
+              <th class="col-sm-1">Total</th>
+            </tr>
+           </thead>
+           <tbody>
+            <!-- renderizando items -->
+            <g:each in="${venda.itensVenda}" var="item">
+                <g:set var="produto" value="${item.produto}"/>
+                <tr>
+                  <td> 
+                    <a href="${createLink(uri:produto.nomeAsURL,absolute:true)}">
+                      <asset:image src="produtos/${produto.fotoMiniatura}" alt="${produto.nome}" title="${produto.nome}" class="img-cart" />
+                    </a>
+                  </td>
+                  <td>
+                    <a href="${createLink(uri:produto.nomeAsURL,absolute:true)}">
+                      <strong>${produto.nome} </strong> ${ (produto.marca)? (" - " + produto.marca):''}
+                    </a>
+                    <g:if test="${produto.unidades.size() > 1}">
+                      <p>${produto.tipoUnitario} : ${item.unidade}</p>
                     </g:if>
-
-                  </div>
-                </td>
-
-
-
-                <td style="position:relative;">
-
-                  <p> <span class="badge badge-warning">${itemVenda.quantidade}</span>  </p>
-
-                </td>
-                
-                <td>
-                  <g:formatNumber number="${itemVenda.precoAPrazoEmReais}" type="currency" 
-                    currencyCode="BRL" />
-                </td>
-                
-                <td>
-                  <g:formatNumber number="${itemVenda.subTotalAPrazo}" type="currency" 
-                    currencyCode="BRL" />
-                </td>
-
-              </tr>
-
+                  </td>
+                  <td><g:formatNumber number="${item.precoAPrazoEmReais}" type="currency" currencyCode="BRL" /></td>
+                  <td>
+                    <p style="text-align:center;font-size:15px;"> 
+                      <span class="badge alert-success">${item.quantidade}</span>  
+                    </p>
+                  </td>
+                  <td><g:formatNumber number="${item.subTotalAPrazo}" type="currency" currencyCode="BRL" /></td>
+                </tr>
             </g:each>
-                  
-          </tbody>
-        </table>
+
+            <tr>
+              <td colspan="6">&nbsp;</td>
+            </tr>              
+           </tbody>
+
+          </table>
 
       </div>  
-
-
-
-
 
 
         <div class="well" style="background-color:white;">
@@ -179,7 +175,7 @@
             </div>
           </div>
 
-          <g:if test="${!cliente.isDentroDaAreaDeEntregaRapida()}">
+          <g:if test="${!venda.cliente.isDentroDaAreaDeEntregaRapida()}">
 
             <div id="div-frete" style="clear:both;">
               <h5 style="display:inline;color:blue;">Frete</h5>
@@ -239,7 +235,7 @@
 
       <div class="well" style="background-color:white;">
 
-        <legend> <i class="icon-money"></i> Forma de Pagamento </legend>
+        <legend> <i class="fa fa-money"></i> Forma de Pagamento </legend>
         <div class="row-fluid">
 
           <div class="span6">

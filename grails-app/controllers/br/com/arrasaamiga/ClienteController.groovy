@@ -3,6 +3,7 @@ package br.com.arrasaamiga
 import org.springframework.security.web.savedrequest.*
 import grails.plugin.springsecurity.annotation.Secured
 
+@Secured(['permitAll'])
 class ClienteController {
 
 
@@ -11,7 +12,7 @@ class ClienteController {
     def index() { }
 
     def cadastro(){
-    	[cliente: new Cliente(usuario:new Usuario(),endereco:new Endereco())]
+    	[cliente: new Cliente(email:params.email ,usuario:new Usuario(),endereco:new Endereco())]
     }
 
    def salvarNovoCliente() {
@@ -30,7 +31,13 @@ class ClienteController {
 
         if (savedRequest){
 
-        	redirect(url:savedRequest.redirectUrl)
+            // caso o usuário tenha feito o cadastro enquanto estava fazendo uma compra, o envia
+            // para o checkout
+            String url = createLink(controller:'shoppingCart',action:'confirmAddress',absolute:true)
+            if (savedRequest.redirectUrl?.equals(url))
+                redirect(controller:'shoppingCart',action:'checkout')
+            else
+                redirect(url:savedRequest.redirectUrl)
         
         }else{
 

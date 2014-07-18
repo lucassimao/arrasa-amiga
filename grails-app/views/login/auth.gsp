@@ -1,109 +1,80 @@
 <html>
 <head>
-	
-	
 	<meta name='layout' content='main'/>
 
-	<style type='text/css' media='screen'>
+  <script type="text/javascript">
+      window.setTimeout(function() {
+          $(".alert").fadeTo(1000, 0).slideUp(500, function(){
+              $(this).alert('close'); 
+          });
+      }, 3000);
+  </script>
 
-      .form-signin {
-        max-width: 330px;
-        padding: 19px 29px 29px;
-        margin: 10px auto 20px;
-
-        background-color: #fff;
-        border: 1px solid #e5e5e5;
-        -webkit-border-radius: 5px;
-           -moz-border-radius: 5px;
-                border-radius: 5px;
-        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-           -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-                box-shadow: 0 1px 2px rgba(0,0,0,.05);
-      }
-      .form-signin .form-signin-heading,
-      .form-signin .checkbox {
-        margin-bottom: 10px;
-      }
-      .form-signin input[type="text"],
-      .form-signin input[type="password"] {
-        font-size: 16px;
-        height: auto;
-        margin-bottom: 15px;
-        padding: 7px 9px;
-      }
-
-	</style>
 </head>
-
 <body>
+    <g:set var="ocultarRodape" value="${true}" scope="request"/>
 
 
-<g:set var="ocultarRodape" value="${true}" scope="request"/>
+    <g:if test="${flash.message}">
+      <div class="alert alert-danger alert-dismissible">
+         <button type="button" class="close" data-dismiss="alert">&times;</button>
+         ${flash.message}
+      </div>
+    </g:if>   
 
-<g:if test='${flash.message}'>
-	<div class='alert alert-error' style="margin-top:10px;">
-		<button type="button" class="close" data-dismiss="alert">&times;</button>
-		${flash.message}
-	</div>
-</g:if>
+    <!-- begin:content -->
+    <div class="container">
 
-<form action='${postUrl}'  method='POST' id='loginForm' class="form-signin">
-        <h4 class="form-signin-heading"> Já possui uma conta na Arrasa Amiga?</h4>
-        <small> Para continuar, digite seu email e senha: </small>
-       
-        <input type='text' class="input-block-level" style="margin-top:10px;"
-        		placeholder="Seu e-mail aqui" name='j_username' id='username'/>
+      <!-- begin:article -->
+      <div class="row">
 
-        <input type='password' placeholder="Sua senha aqui" 
-        		class='input-block-level' name='j_password' id='password'/>
+        <!-- begin:content -->
+        <div class="content">
 
+          <div class="row">
+            <div class="col-md-12">
 
-          <button class="btn btn-large btn-primary" type="submit">Entrar</button>
+              <div class="row">
+                <div class="col-md-6 col-sm-6">
+                  <h3>Primeira vez por aqui ?</h3>
+                  <h5> Abra sua conta na Arrasa Amiga</h5>
+                  <hr />
+                  <form role="form" action="${createLink(controller:'cliente',action:'cadastro',absolute:true)}">
+                    <div class="form-group">
+                      <label for="email">Informe o seu email</label>
+                      <input name="email" type="email" value="" class="form-control" placeholder="Email">
+                    </div>
+                    <button class="btn btn-primary" type="submit">Abrir uma conta</button>
+                  </form>
+                </div>
 
+                <div class="col-md-6 col-sm-6">
+                  <h3> Já tem cadastro?</h3>
+                  <h5> Informe seu email e senha para continuar</h5>
+                  <hr />
+                  <form role="form" action="${postUrl}"  method='POST'>
+                    <div class="form-group">
+                      <label for="username">Email</label>
+                      <input name='j_username' type="text" class="form-control" placeholder="Informe aqui seu email">
+                    </div>
+                    <div class="form-group">
+                      <label for="password">Senha</label>
+                      <input name='j_password' type="password" class="form-control" placeholder="Senha">
+                    </div>
+                    <button class="btn btn-large btn-primary" type="submit">Entrar</button>
+                    <a href="${createLink(uri:'/pwdrecovery')}" style="float:right;">Esqueceu sua senha?</a><br><br>
+                  </form>
+                </div>
+              </div>
 
-        
-        <p style="text-align:center;margin-top:15px;">
-    			<a id="pop" title="Psiu!" 
-    			data-content="Clica aqui se essa for sua primeira vez na Arrasa Amiga :-)" 
-    			data-placement="right" data-toggle="popover"  
-    			href="${createLink(controller:'cliente',action:'cadastro')}" data-delay="500" data-animation="animation"
-    			data-html="true">Ainda não criou sua conta ? </a>
-        </p>
+                
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end:article -->
 
-        <p style="text-align:center;margin-top:15px;">
-          <a href="${createLink(uri:'/pwdrecovery')}" data-html="true">Esqueceu sua senha ? </a>
-        </p>
-        
-</form>
+    </div>
 
-
-<g:javascript>
-
-  $(function () {
-        
-        
-          $('body').popover({
-              selector: '[data-toggle="popover"]'
-          });
-
-          $('body').tooltip({
-              selector: 'a[rel="tooltip"], [data-toggle="tooltip"]'
-          });
-
-          $('#pop').hover(function(){
-              
-              $('#pop').popover('show');
-              setTimeout(function(){$('#pop').popover('hide')}, 3000);
-
-          }, function(){});
-
-          $("#pop").popover('show');
-          setTimeout(function(){$('#pop').popover('hide')}, 3000);
-
-
-        $("#username").focus();
-    });
-
-</g:javascript>
 </body>
 </html>

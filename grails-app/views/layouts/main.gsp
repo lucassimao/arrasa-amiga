@@ -14,6 +14,7 @@
     <meta name="description" content="${ pageProperty(name:'page.description') }" />
     <meta name="keywords" content="${ pageProperty(name:'page.keywords') }">
 
+
     <!-- metatags facebook -->
     
     <meta property="fb:admins" content="1665191676"/>
@@ -88,7 +89,11 @@
                   <li id="your-account">
                     <div class="hidden-xs">
                       <h4> Bem vinda </h4>
-                      <p><a href="${createLink(controller:'cliente',action:'pedidos',absolute:true)}"> Minha conta </a></p>
+                      <p>
+                        <a href="${createLink(controller:'cliente',action:'pedidos',absolute:true)}"> Minha conta </a>
+                        |
+                        <a href="${createLink(controller:'logout',absolute:true)}"> Sair </a>
+                      </p>
                     </div>
                     <div class="visible-xs">
                       <a href="login.html" class="btn btn-primary"><i class="fa fa-user"></i></a>
@@ -118,7 +123,7 @@
                   <p><a href="${createLink(controller:'shoppingCart')}"> <strong> <cart:qtdeTotalItens/> Produto(s)</strong> </a></p>
                 </div>
                 <div class="visible-xs">
-                  <a href="cart.html" class="btn btn-primary"><span class="cart-item">3</span> <i class="fa fa-shopping-cart"></i></a>
+                  <a href="cart.html" class="btn btn-primary"><span class="cart-item"><cart:qtdeTotalItens/></span> <i class="fa fa-shopping-cart"></i></a>
                 </div>
               </li>
             </ul>
@@ -163,7 +168,7 @@
 
     <!-- Le javascript -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <asset:javascript src="jquery.js"/>
+    <g:javascript library="jquery" plugin="jquery"/>
     <asset:javascript src="bootstrap.js"/>
     <asset:javascript src="masonry.pkgd.min.js"/>
     <asset:javascript src="imagesloaded.pkgd.min.js"/>

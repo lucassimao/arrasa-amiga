@@ -113,17 +113,12 @@
 
           <div class="row">
             <div class="col-md-10" style="float: none; margin: 0 auto;">              
-              <h2>Cadastro</h2>
-              <hr />
-              <g:form class="form-horizontal" action='salvarNovoCliente'>
 
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">Nome</label>
-                  <div class="col-sm-9">
-                    <input id="input-nome" type="text" value="${cliente.nome}" name="nome" 
-                          class="form-control ${hasErrors(bean: cliente, field: 'nome', 'error')}" placeholder="Nome Completo">
-                  </div>
-                </div>
+              <g:form class="form-horizontal" action='checkout'>
+
+                <h3>Confirme os dados para entrega</h3>
+                <hr />
+
 
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Telefone</label>
@@ -148,28 +143,6 @@
                         </div>
                     </div>
                 </div>
-
-              <h3>Dados da Conta</h3>
-              <hr />                
-
-
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">Email</label>
-                  <div class="col-sm-9">
-                        <input type="email" value="${cliente.email}" name="email" placeholder="Email"
-                            class="form-control ${hasErrors(bean: cliente, field: 'email', 'error')}" >
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">Senha</label>
-                  <div class="col-sm-9">
-                    <input type="password" class="form-control ${hasErrors(bean: cliente, field: 'senha', 'error')}" name="senha">
-                  </div>
-                </div>
-                
-                <h3>Endereço para entregas</h3>
-                <hr />
-
 
                 <div class="form-group">
                   <label class="col-sm-3 control-label">Estado</label>

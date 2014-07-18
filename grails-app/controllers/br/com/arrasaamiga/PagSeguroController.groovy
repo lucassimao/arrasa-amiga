@@ -8,17 +8,19 @@ import br.com.uol.pagseguro.service.TransactionSearchService
 import grails.plugin.springsecurity.annotation.Secured
 
 
+@Secured(['permitAll'])
 class PagSeguroController {
 
     def pagSeguroService
     def emailService
+    def shoppingCartService
 
     def index() {
 
     	redirect(uri:'/')
     }
 
-    @Secured(['IS_AUTHENTICATED_FULLY'])
+    @Secured(['isAuthenticated()'])
     def retorno(){
 
     	def codigoTransacao = params.transacao
@@ -30,19 +32,13 @@ class PagSeguroController {
         venda.status = StatusVenda.fromPagSeguroTransactionStatus(transacaoPagSeguro.status)
         venda.descontoPagSeguroEmCentavos = transacaoPagSeguro.getDiscountAmount() * 100
         venda.taxasPagSeguroEmCentavos = transacaoPagSeguro.getFeeAmount() * 100
-        venda.save()
+        venda.save(flush:true)
 
 
 
         if (venda.status != StatusVenda.Cancelada){
 
-            if (!venda.carrinho.checkedOut){
-                
-                venda.carrinho.checkedOut = true
-                venda.carrinho.save()
-            
-            }
-
+            shoppingCartService.checkout()
             redirect(controller:'venda',action:'show',id:venda.id)
             return
 
@@ -57,7 +53,8 @@ class PagSeguroController {
     def notificacoes(){
         def venda = Venda.get(params.id)
 
-        if (venda.status?.equals(StatusVenda.Cancelada)){ // proteção, caso essa venda ja tenha sido cancelada ñ faz mais nada
+        // proteção, caso essa venda ja tenha sido cancelada ñ faz mais nada
+        if (venda.status?.equals(StatusVenda.Cancelada)){ 
             return 
         }
 
@@ -71,7 +68,7 @@ class PagSeguroController {
         }
 
         venda.status = StatusVenda.fromPagSeguroTransactionStatus(transaction.status)
-        venda.save()
+        venda.save(flush:true)
 
 
         switch(venda.status){

@@ -59,6 +59,7 @@ grails {
     }
 }
 
+grails.views.javascript.library="jquery"
 
 grails.converters.encoding = "UTF-8"
 // scaffolding templates configuration
@@ -88,6 +89,7 @@ grails.hibernate.osiv.readonly = false
 environments {
     development {
         grails.logging.jul.usebridge = true
+        grails.serverURL = "http://localhost:8080/${appName}"
     }
     production {
         grails.logging.jul.usebridge = false

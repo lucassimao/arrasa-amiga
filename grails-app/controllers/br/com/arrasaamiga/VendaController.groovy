@@ -6,23 +6,23 @@ import groovyx.net.http.*
 import static groovyx.net.http.ContentType.*
 import static groovyx.net.http.Method.*
 
+@Secured(['permitAll'])
 class VendaController {
 
 
-        @Secured(['IS_AUTHENTICATED_FULLY'])
+
+        @Secured(['isAuthenticated()'])
         def show(Long id){
 
                 def venda = Venda.get(id)
 
                 if (venda){
-                        [numeroPedido: String.format("%05d", venda.id) , venda : venda,
-                        enderecoEntrega: venda.cliente.endereco,cliente: venda.cliente]
+                        [numeroPedido: String.format("%05d", venda.id) , venda : venda]
 
                 }else{
                         println "Erro ao carregar venda ${id}"
                         render 'Venda não encontrada'
                 }
-
 
         }
 
@@ -75,21 +75,7 @@ class VendaController {
 
         }
 
-        @Secured(['IS_AUTHENTICATED_FULLY'])
-        def showFull(Long id){
 
-                def venda = Venda.get(id)
-
-                if (venda){
-                        [ numeroPedido: String.format("%05d", venda.id) , venda : venda,cliente: venda.cliente]
-
-                }else{
-                        println "Erro ao carregar venda ${id}"
-                        render 'Venda não encontrada'
-                }
-
-
-        }
 
         @Secured(['IS_AUTHENTICATED_FULLY'])
         def marcarComoEntregue(Long id){
