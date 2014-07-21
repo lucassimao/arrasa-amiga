@@ -17,8 +17,16 @@
 
 				$('#div-financeiro').css('display','none');
 
-				<g:remoteFunction action="recalcularTotais" onComplete="\$('#div-financeiro').fadeIn(500);"
-								  update="div-financeiro" params="{formaPagamento : formaPagamento, servicoCorreio: servicoCorreio }" />				
+				<g:remoteFunction action="recalcularTotais" onComplete="\$('#div-financeiro').fadeIn(500);ocultarLoading();" before="mostrarLoading()"
+					update="div-financeiro" params="{formaPagamento : formaPagamento, servicoCorreio: servicoCorreio }" />				
+			}
+
+			function mostrarLoading(){
+				$('#div-loading').css('display','block');
+			}			
+
+			function ocultarLoading(){
+				$('#div-loading').css('display','none');
 			}
 			
 					
@@ -176,8 +184,8 @@
 				<div class="row" style="padding:5px;">
 
 					<g:if test="${venda.cliente.isFromTeresina()}">
-						<div id="div-pagamento-avista" class="col-md-6">
-							<label class="radio">
+						<div id="div-pagamento-avista" class="col-md-6" >
+							<label class="radio" style="cursor:pointer;">
 								<input  name="formaPagamento" type="radio" value="AVista" ${venda.formaPagamento.equals(FormaPagamento.AVista)?'checked':''}>
 								<span> Pagamento em Dinheiro </span>
 							</label>
@@ -187,7 +195,7 @@
 					</g:if>
 
 					<div id="div-pagamento-pagseguro" class="col-md-6">
-						<label class="radio">
+						<label class="radio" style="cursor:pointer;">
 							<input name="formaPagamento" type="radio" 
 								value="PagSeguro" ${!venda.cliente.isFromTeresina() || venda.formaPagamento.equals(FormaPagamento.PagSeguro)?'checked':''} > 
 							<span class="forma-pagamento-selecionado"> Cartão de Crédito / Boleto Bancário </span>						
@@ -200,7 +208,12 @@
 			</div>
 
 
-			<div id="div-financeiro" class="well" style="background-color:white;"></div>
+			<div id="div-financeiro" class="well" style="background-color:white;">
+			</div>
+			
+			<div id="div-loading" class="well" style="background-color:white;text-align:center;display:none;">
+				<asset:image src="ajax-loader.gif"/>
+			</div>
 
 			<g:if test="${venda.cliente.isFromTeresina()}"> 
 
@@ -224,7 +237,7 @@
 						</p>
 						<g:each in="${diasDeEntrega}" var="diaDeEntrega">
 							<div class="col-md-4">
-								<label class="radio" style="display: inline-block;">
+								<label class="radio" style="display: inline-block;cursor:pointer;">
 									<input type="radio" value="${diaDeEntrega.time}" name="dataEntrega" > 
 									<span> <g:formatDate format="EEEE, dd/MM/yyyy" date="${diaDeEntrega}"/> </span>
 								</label>

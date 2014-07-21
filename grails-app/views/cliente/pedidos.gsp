@@ -167,35 +167,31 @@
 										</div>
 									</div>
 
-									<g:if test="${!cliente.isDentroDaAreaDeEntregaRapida()}">
-
-										<div id="div-frete" style="clear:both;">
-
-											<h5 style="display:inline;color:blue;">Frete</h5>
-
-											<div style="float:right;font-weight:bold;"> 
-												<div style="color:blue;font-size:10px;text-align:right;">
-													+ <g:formatNumber number="${pedido.freteEmReais}" type="currency" currencyCode="BRL" />
-												</div>
-											</div>
-
-										</div>
-
-									</g:if>
-
-									<g:if test="${pedido.taxaEntregaEmReais > 0}">
+									<g:if test="${cliente.isDentroDaAreaDeEntregaRapida()}">
 
 										<div style="clear:both;">
 											<h5 style="display:inline;color:blue;">Taxa de Entrega</h5>
 
 											<div style="float:right;font-weight:bold;"> 
 												<div style="color:blue;font-size:10px;text-align:right;">
-													+ <g:formatNumber number="${pedido.taxaEntregaEmReais}" type="currency" currencyCode="BRL" />
+													+ <g:formatNumber number="${pedido.freteEmReais}" type="currency" currencyCode="BRL" />
 												</div>
 											</div>
 										</div>
 
 									</g:if>
+									<g:else>
+
+										<div id="div-frete" style="clear:both;">
+											<h5 style="display:inline;color:blue;">Frete</h5>
+											<div style="float:right;font-weight:bold;"> 
+												<div style="color:blue;font-size:10px;text-align:right;">
+													+ <g:formatNumber number="${pedido.freteEmReais}" type="currency" currencyCode="BRL" />
+												</div>
+											</div>
+										</div>
+
+									</g:else>
 
 									<g:if test="${pedido.descontoEmReais > 0}">
 

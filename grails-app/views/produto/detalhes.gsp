@@ -10,6 +10,15 @@
 		<parameter name="og:image" value="${assetPath(src:'produtos/'+produtoInstance.fotoMiniatura)}"/>
     
     <meta name="layout" content="main"/>  
+
+    <script type="text/javascript">
+        window.setTimeout(function() {
+            $(".alert").fadeTo(500, 0).slideUp(500, function(){
+                $(this).alert('close'); 
+            });
+        }, 3000);
+    </script>
+
 	</head>
 	<body>
 
@@ -37,10 +46,23 @@
           </div>
 
           <div class="row">
+
             <div class="col-md-12">
 
-            
-              <div class="row">    
+              <g:if test='${flash.message}'>
+                <div class='alert alert-info'>
+                  <button type="button" class="close" data-dismiss="alert">&times;</button>
+                  ${flash.message}
+                </div>
+              </g:if>
+
+              <g:if test='${flash.info}'>
+                <div class='alert alert-warning'>
+                  <button type="button" class="close" data-dismiss="alert">&times;</button>
+                  <i class="icon-ok"> </i> ${flash.info}
+                </div>
+              </g:if>
+                
 
                <!-- begin:product-image-slider-->
                 <div class="col-md-7 col-sm-7">
@@ -72,16 +94,12 @@
                 </div>
                  <!-- end:product-image-slider -->
 
-                <!-- begin:product-spesification -->
+                <!-- begin:product-specification -->
                 <div class="col-md-5 col-sm-5">
                   <div class="single-desc">
 
                     <g:form  name="form-produto" action="add" controller="shoppingCart" method="post" id="${produtoInstance.id}">
                       
-                      <span class="visible-xs">
-                          <strong> ${produtoInstance.marca} / In Stock</strong>
-                      </span>
-
                       <table>
                         <tbody>
 
@@ -238,7 +256,9 @@
                 </div>
                 <!-- end:product-specification -->
               </div>
+            </div>
               <!-- break -->
+
               <!-- begin:product-detail -->
               <div class="row">
                 <div class="col-md-12 content-detail">
@@ -308,8 +328,6 @@
               </g:if>
               <!-- end:related-product -->
 
-            </div>
-          </div>
         </div>
         <!-- end:content -->
       </div>

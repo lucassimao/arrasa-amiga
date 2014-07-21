@@ -30,10 +30,9 @@
         <div class="widget">
           <h3><span> Facebook</span></h3>
           
-          <div class="fb-like" style="float:right;" 
+          <div class="fb-like" style="margin-left:4px;float:right;width: 100% !important;" 
               data-href="https://www.facebook.com/arrasaamiga" 
-              data-send="true" data-width="450" 
-              data-show-faces="true" data-font="tahoma"></div>
+              data-send="true" data-show-faces="true" data-font="tahoma"></div>
 
         </div>
 

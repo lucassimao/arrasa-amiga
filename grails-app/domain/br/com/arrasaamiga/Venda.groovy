@@ -23,7 +23,7 @@ class Venda {
     def correiosService
    
 
-	static transients = ['urlRastreioCorreios','valorTotal','taxaEntregaEmReais','valorItensAPrazo', 'valorItensAVista',
+	static transients = ['urlRastreioCorreios','valorTotal','valorItensAPrazo', 'valorItensAVista',
                          'descontoEmReais','freteEmReais','descontoParaCompraAVista','descontoPagSeguroEmReais',
                          'paymentURL','pagSeguroService','detalhesPagamento','itensVenda','correiosService']
 
@@ -51,12 +51,11 @@ class Venda {
     }
 
     public Double getValorTotal(){
-        def valorItensAPrazo = new BigDecimal(getValorItensAPrazo().toString())
-        def freteEmCentavos = new BigDecimal(getFreteEmReais().toString())
-        def descontoEmCentavos = new BigDecimal(getDescontoEmReais().toString())
-        def taxaEntregaEmCentavos = new BigDecimal(getTaxaEntregaEmReais().toString())
+        BigDecimal valorItensAPrazo = new BigDecimal(getValorItensAPrazo().toString())
+        BigDecimal freteEmReais = new BigDecimal(getFreteEmReais().toString())
+        BigDecimal descontoEmReais = new BigDecimal(getDescontoEmReais().toString())
 
-        return (valorItensAPrazo + freteEmCentavos  - descontoEmCentavos + taxaEntregaEmCentavos).doubleValue()
+        return (valorItensAPrazo + freteEmReais  - descontoEmReais).doubleValue()
     }
 
     public Double getValorItensAPrazo(){
@@ -70,7 +69,7 @@ class Venda {
 
     public Double getFreteEmReais(){
         if (cliente.isDentroDaAreaDeEntregaRapida())
-            return 0
+            return 2d
         else{
 
             if (this.freteEmCentavos > 0){
@@ -98,16 +97,6 @@ class Venda {
         }else{
             return 0
         }
-    }
-
-    public Double getTaxaEntregaEmReais(){
-        
-        if (cliente.isDentroDaAreaDeEntregaRapida()){
-            return 2
-        }else{
-            return 0
-        }
-        
     }
 
     public String getDetalhesPagamento(){
@@ -205,7 +194,7 @@ class Venda {
 
 
 
-        paymentRequest.extraAmount = new BigDecimal(formatter.format(this.freteEmReais + this.taxaEntregaEmReais) ) 
+        paymentRequest.extraAmount = new BigDecimal(formatter.format(this.freteEmReais) ) 
         paymentRequest.setReference(this.id.toString())
 
         paymentRequest.redirectURL = "http://www.arrasaamiga.com.br/pagSeguro/retorno/${this.id}"

@@ -96,7 +96,7 @@
                       </p>
                     </div>
                     <div class="visible-xs">
-                      <a href="login.html" class="btn btn-primary"><i class="fa fa-user"></i></a>
+                      <a href="${createLink(controller:'cliente',action:'pedidos',absolute:true)}" class="btn btn-primary"><i class="fa fa-user"></i></a>
                     </div>
                   </li>
 
@@ -110,7 +110,7 @@
                       <p> <a href="${createLink(controller:'cliente',action:'cadastro')}"> Cadastre-se aqui </a></p>
                     </div>
                     <div class="visible-xs">
-                      <a href="login.html" class="btn btn-primary"><i class="fa fa-user"></i></a>
+                      <a href="${createLink(controller:'login')}"><i class="fa fa-user"></i></a>
                     </div>
                   </li>
 
@@ -123,7 +123,9 @@
                   <p><a href="${createLink(controller:'shoppingCart')}"> <strong> <cart:qtdeTotalItens/> Produto(s)</strong> </a></p>
                 </div>
                 <div class="visible-xs">
-                  <a href="cart.html" class="btn btn-primary"><span class="cart-item"><cart:qtdeTotalItens/></span> <i class="fa fa-shopping-cart"></i></a>
+                  <a href="${createLink(controller:'shoppingCart')}" class="btn btn-primary">
+                      <span class="cart-item"><cart:qtdeTotalItens/></span> <i class="fa fa-shopping-cart"></i>
+                  </a>
                 </div>
               </li>
             </ul>
@@ -156,6 +158,7 @@
         </div>
       </div>
       <!-- end:nav-menus -->
+
 
       <g:layoutBody/>
 
