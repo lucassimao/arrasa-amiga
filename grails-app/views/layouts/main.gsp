@@ -74,13 +74,20 @@
 
       <!-- begin:logo -->
       <div class="row">
-        <div class="col-md-6 col-sm-6 col-xs-6">
+
+        <div class="col-md-8 col-sm-8 col-xs-8">
           <div class="logo">
+            <!--
             <h1><a href="${createLink(uri:'/',absolute:true)}">Arrasa<span> amiga</span> </a></h1>
-            <p>Produtos para maquiagem a pronta entrega</p>
+            -->
+            <a href="${createLink(uri:'/',absolute:true)}">
+              <asset:image  src="logo3.png" class="img-responsive"/>
+            </a>
+            <!-- <p>Produtos para maquiagem a pronta entrega</p> -->
           </div>
         </div>
-        <div class="col-md-6 col-sm-6 col-xs-6">
+
+        <div class="col-md-4 col-sm-4 col-xs-4">
           <div class="account">
             <ul>
 
@@ -107,10 +114,12 @@
                   <li id="your-account">
                     <div class="hidden-xs">
                       <h4><a href="${createLink(controller:'login')}"> Login </a></h4>
-                      <p> <a href="${createLink(controller:'cliente',action:'cadastro')}"> Cadastre-se aqui </a></p>
+                      <p><a href="${createLink(controller:'cliente',action:'cadastro')}"> Cadastre-se aqui </a></p>
                     </div>
                     <div class="visible-xs">
-                      <a href="${createLink(controller:'login')}"><i class="fa fa-user"></i></a>
+                      <a href="${createLink(controller:'login')}" class="btn btn-primary">
+                        <i class="fa fa-user"></i>                        
+                      </a>
                     </div>
                   </li>
 
@@ -134,30 +143,81 @@
       </div> 
       <!-- end:logo -->
 
-      <!-- begin:nav-menus -->
-      <div class="row">
-        <div class="col-md-12">
-          <div class="nav-menus">
-            <ul class="nav nav-pills">
-              <li class="${(!grupoRaiz && controllerName == 'home' && actionName =='index')?'active':''}"><a href="${createLink(uri:'/',absolute:true)}">Home</a></li>
+      <g:if test="${!ocultarMenu}">
+          <!-- begin:menu p/ mobile -->
+          <nav class="navbar navbar-default visible-xs" role="navigation">
+            <div class="container">
+              <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-mobile">
+                  <span class="sr-only">Menu</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Menu</a>
+              </div>
 
-              <g:each in="${GrupoDeProduto.findAllByPaiIsNull()}" var="grupo">
-                  <g:render template="/layouts/menuitem" model="[grupo:grupo,isRoot:true,grupoRaiz:grupoRaiz]"/>
-              </g:each>
+              <div class="collapse navbar-collapse" id="navbar-mobile">
+                <ul class="nav navbar-nav navbar-right">
+                  
+                  <li class="${(!grupoRaiz && controllerName == 'home' && actionName =='index')?'active':''}">
+                    <a href="${createLink(uri:'/',absolute:true)}">Home</a>
+                  </li>
 
-              <li class="${(controllerName == 'home' && actionName =='comocomprar')?'active':''}" >
-                <a href="${createLink(action:'comocomprar',controller:'home',absolute:true,params: [cidade:Cidade.teresina.id])}">Como Comprar </a>
-              </li>
+                  <g:each in="${GrupoDeProduto.findAllByPaiIsNull()}" var="grupo">
+                      <g:render template="/layouts/menuitem" model="[grupo:grupo,isRoot:true,grupoRaiz:grupoRaiz]"/>
+                  </g:each>
+
+                  <li class="divider-vertical"></li>
+                  <li class="dropdown">
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#"> MAIS <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                      <li class="${(controllerName == 'home' && actionName =='comocomprar')?'active':''}" >
+                        <a href="${createLink(action:'comocomprar',controller:'home',absolute:true,params: [cidade:Cidade.teresina.id])}">Como Comprar </a>
+                      </li>
+                      <li class="divider"></li>
+                      <li class="${ (request.forwardURI?.endsWith('contato') )?'active':''}">
+                        <a href="${createLink(uri:'/contato',absolute:true)}">Contato</a>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
               
-              <li class="${ (request.forwardURI?.endsWith('contato') )?'active':''}">
-                <a href="${createLink(uri:'/contato',absolute:true)}">Contato</a>
-              </li>
+            </div>
+          </nav>
+          <!-- end: menu p/ mobile -->
+      </g:if>
 
-            </ul>
+
+      <g:if test="${!ocultarMenu}">
+          <!-- begin:nav-menus -->
+          <div class="row hidden-xs">
+            
+            <div class="col-md-12">
+              <div class="nav-menus" id="navbar-mobile">
+                <ul class="nav nav-pills">
+                  
+                  <li class="${(!grupoRaiz && controllerName == 'home' && actionName =='index')?'active':''}"><a href="${createLink(uri:'/',absolute:true)}">Home</a></li>
+
+                  <g:each in="${GrupoDeProduto.findAllByPaiIsNull()}" var="grupo">
+                      <g:render template="/layouts/menuitem" model="[grupo:grupo,isRoot:true,grupoRaiz:grupoRaiz]"/>
+                  </g:each>
+
+                  <li class="${(controllerName == 'home' && actionName =='comocomprar')?'active':''}" >
+                    <a href="${createLink(action:'comocomprar',controller:'home',absolute:true,params: [cidade:Cidade.teresina.id])}">Como Comprar </a>
+                  </li>
+                  
+                  <li class="${ (request.forwardURI?.endsWith('contato') )?'active':''}">
+                    <a href="${createLink(uri:'/contato',absolute:true)}">Contato</a>
+                  </li>
+
+                </ul>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <!-- end:nav-menus -->
+          <!-- end:nav-menus -->
+      </g:if>
 
 
       <g:layoutBody/>

@@ -10,7 +10,21 @@
 
 	<body>
 
+		<g:set var="ocultarMenu" value="${true}"  scope="request"/>
 		<g:set var="ocultarRodape" value="${true}" scope="request"/>
+
+      <div class="row">
+        <!-- breadcrumb -->
+        <div class="col-md-12">
+            <ol class="breadcrumb" style="background-color:white;border:1px solid #ccc;">
+              <li><a href="${createLink(absolute:true,uri: '/' )}">Home</a></li>
+          	  <li class="active">
+          	  	<a href="#"> Meus Pedidos </a>
+          	  </li>
+            </ol>
+        </div>
+        <!-- end breadcumb -->
+      </div>		
 
 		<div class="well" style="background-color:white;margin-top:10px;">
 

@@ -46,17 +46,40 @@
     [2. GLOBAL STYLE]
     ==================
 */
+
+
 body {
     margin: 0;
+    /*padding-top: 10px;*/
     padding-top: 60px;
     padding-bottom: 20px;
     font-family: 'Roboto Condensed', sans-serif;
     font-size: 14px;
     line-height: 16px;
     color: #333;
-    background: #fff;
     overflow-x: hidden; 
     scrollbar-face-color: #121212;
+    background-image: -webkit-gradient(
+        linear,
+        right top,
+        right bottom,
+        color-stop(0.19, #FAFAFA),
+        color-stop(0.82, #F1F1F1)
+    );
+    background-image: -o-linear-gradient(bottom, #FAFAFA 19%, #F1F1F1 82%);
+    background-image: -moz-linear-gradient(bottom, #FAFAFA 19%, #F1F1F1 82%);
+    background-image: -webkit-linear-gradient(bottom, #FAFAFA 19%, #F1F1F1 82%);
+    background-image: -ms-linear-gradient(bottom, #FAFAFA 19%, #F1F1F1 82%);
+    background-image: linear-gradient(to bottom, #FAFAFA 19%, #F1F1F1 82%);
+
+}
+
+body > .container{
+    background: #fff;
+    -webkit-border-radius: 10px;
+       -moz-border-radius: 10px;
+         -o-border-radius: 10px;
+            border-radius: 10px;       
 }
 
 h1,
@@ -614,7 +637,7 @@ a:hover.no-underline{
     font-weight: 600;
     font-size: 16px;
     line-height: 20px;
-    border-top: 2px solid #333;
+    border-bottom: 2px solid #333;
     margin-top: 10px;
     padding-top: 10px;
 }

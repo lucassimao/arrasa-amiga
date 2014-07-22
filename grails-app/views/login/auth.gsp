@@ -12,27 +12,17 @@
 
 </head>
 <body>
+    <g:set var="ocultarMenu" value="${true}"  scope="request"/>
     <g:set var="ocultarRodape" value="${true}" scope="request"/>
 
 
-    <g:if test="${flash.message}">
-      <div class="alert alert-danger alert-dismissible">
-         <button type="button" class="close" data-dismiss="alert">&times;</button>
-         ${flash.message}
-      </div>
-    </g:if>   
-
-    <!-- begin:content -->
-    <div class="container">
-
-      <!-- begin:article -->
-      <div class="row">
-
-        <!-- begin:content -->
-        <div class="content">
-
-          <div class="row">
-            <div class="col-md-12">
+            <hr/>
+            <g:if test="${flash.message}">
+              <div class="alert alert-danger alert-dismissible">
+                 <button type="button" class="close" data-dismiss="alert">&times;</button>
+                 ${flash.message}
+              </div>
+            </g:if>   
 
               <div class="row">
                 <div class="col-md-6 col-sm-6">
@@ -67,14 +57,6 @@
                 </div>
               </div>
 
-                
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- end:article -->
-
-    </div>
 
 </body>
 </html>

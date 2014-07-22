@@ -16,7 +16,7 @@
 	<body>
 
       <!-- begin:home-slider -->
-      <div id="home-slider" class="carousel slide" data-ride="carousel">
+      <div id="home-slider" class="carousel slide hidden-xs" data-ride="carousel">
         <ol class="carousel-indicators">
           <li data-target="#home-slider" data-slide-to="0" class="active"></li>
           <li data-target="#home-slider" data-slide-to="1" class=""></li>
