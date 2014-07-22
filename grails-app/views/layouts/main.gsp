@@ -70,7 +70,7 @@
 
 
     <!-- begin:content -->
-    <div class="container">
+    <div class="container" style="${sec.ifAllGranted(roles:'ROLE_ADMIN'){'padding-top: 65px;'}}">
 
       <!-- begin:logo -->
       <div class="row">
@@ -83,7 +83,7 @@
             <a href="${createLink(uri:'/',absolute:true)}">
               <asset:image  src="logo3.png" class="img-responsive"/>
             </a>
-            <!-- <p>Produtos para maquiagem a pronta entrega</p> -->
+             <!--<p>Produtos para maquiagem a pronta entrega</p>-->
           </div>
         </div>
 

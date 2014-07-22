@@ -8,12 +8,13 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
+      <a class="navbar-brand" href="#">Administração</a>
     </div>
 
     <div class="collapse navbar-collapse" id="clotheshop-navbar">
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="${createLink(controller:'produto',absolute:true)}">ADMINISTRAÇÃO</a></li>
-        <!-- <li class="active"><a href="#">USD</a></li> -->
+        <!--<li><a href="${createLink(controller:'produto',absolute:true)}">ADMINISTRAÇÃO</a></li>
+         <li class="active"><a href="#">USD</a></li> -->
         <li><a href="${createLink(controller:'produto',absolute:true)}">PRODUTOS</a></li>
         <li><a href="${createLink(controller:'venda',absolute:true)}">VENDAS</a></li>
         <li class="divider-vertical"></li>
