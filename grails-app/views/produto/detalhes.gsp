@@ -33,7 +33,7 @@
             <!-- breadcrumb -->
             <div class="col-md-12">
                 <ol class="breadcrumb" style="background-color:white;border:1px solid #ccc;">
-                  <li><a href="${createLink(absolute:true,uri: '/' )}">Home</a></li>
+                  <li><a href="${createLink(absolute:true,uri: '/' )}"> <i class="fa fa-home"></i> Home</a></li>
                   <g:each in="${produtoInstance.grupoPadrao?.ancestrais}" var="grupo" status="i">
                   	<li><a href="${createLink(absolute:true,uri: ('/produtos/' + grupo.nome) )}">${grupo.nome}</a></li>
               	  </g:each>

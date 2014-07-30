@@ -3,18 +3,28 @@ package br.com.arrasaamiga
 import org.springframework.security.web.savedrequest.*
 import grails.plugin.springsecurity.annotation.Secured
 
-@Secured(['permitAll'])
+@Secured(['isAuthenticated()'])
 class ClienteController {
 
 
 	def springSecurityService
 
-    def index() { }
+    def index() { 
+        def user = springSecurityService.currentUser
+        def cliente = Cliente.findByUsuario(user)
+
+        [cliente: cliente,pedidos: Venda.findAllByCliente(cliente,[max: 3,sort:'dateCreated',order:'desc'])]
+    }
+
+    def favoritos(){
+
+    }
 
     def cadastro(){
     	[cliente: new Cliente(email:params.email ,usuario:new Usuario(),endereco:new Endereco())]
     }
 
+   @Secured(['permitAll'])
    def salvarNovoCliente() {
 		
         def cliente = new Cliente(params)
@@ -47,12 +57,11 @@ class ClienteController {
 
     }
 
-    @Secured(['isAuthenticated()'])
     def pedidos(){
         def user = springSecurityService.currentUser
         def cliente = Cliente.findByUsuario(user)
 
-        [pedidos: Venda.findAllByCliente(cliente)]
+        [pedidos: Venda.findAllByCliente(cliente,[sort:'dateCreated',order:'desc'])]
     }
 
 }

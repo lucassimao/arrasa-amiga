@@ -632,19 +632,29 @@ a:hover.no-underline{
     min-height:300px;
 }
 
-.product-item .caption h5{
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 20px;
-    border-bottom: 2px solid #333;
-    margin-top: 10px;
-    padding-top: 10px;
+.product-item img{
 }
 
+.product-item .caption h5{
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 20px;
+    border-top: 2px solid #333;
+    margin-top: 5px;
+    padding-top: 5px;
+    margin-bottom: 0px;
+}
+
+.product-item .caption .product-item-brand{
+    margin: 0px;
+    padding: 0px;
+}
 .product-item .caption .product-item-price{
+    margin-top:2px;
     font-size: 14px;
     line-height: 16px;
-    font-weight: 400;
+    font-weight: 800;
+    color:#00ADEF;
 }
 
 .product-item .product-item-badge{

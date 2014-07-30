@@ -97,7 +97,7 @@
                     <div class="hidden-xs">
                       <h4> Bem vinda </h4>
                       <p>
-                        <a href="${createLink(controller:'cliente',action:'pedidos',absolute:true)}"> Minha conta </a>
+                        <a href="${createLink(controller:'cliente',action:'index',absolute:true)}"> Minha conta </a>
                         |
                         <a href="${createLink(controller:'logout',absolute:true)}"> Sair </a>
                       </p>
@@ -222,8 +222,9 @@
 
       <g:layoutBody/>
 
-
-      <g:render template="/layouts/footer"/>
+      <g:if test="${!ocultarRodape}">
+        <g:render template="/layouts/footer"/>
+      </g:if>
 
     </div>
     <!-- end:content -->

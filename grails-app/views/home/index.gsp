@@ -86,8 +86,8 @@
 
 				    <div class="caption">
 				      <h5>  ${produto.nome} </h5>
-				      <p>  ${produto.marca} </p>
-				      <p> <g:formatNumber number="${produto.precoAPrazoEmReais}" type="currency" currencyCode="BRL" /> </p>
+				      <p class="product-item-brand">  ${produto.marca} </p>
+				      <p class="product-item-price"> <g:formatNumber number="${produto.precoAPrazoEmReais}" type="currency" currencyCode="BRL" /> </p>
 				    </div>
 				    
 				    <g:if test="${ produto.dateCreated && ( (produto.dateCreated - hoje) < 30 ) }">

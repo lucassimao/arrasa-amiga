@@ -170,10 +170,17 @@
             </div>
         </div>
 
-        <g:if test="${!cliente.isDentroDaAreaDeEntregaRapida()}">
+        
 
             <div id="div-frete" style="clear:both;">
-                <h5 style="display:inline;color:blue;">Frete</h5>
+                <h5 style="display:inline;color:blue;">
+                    <g:if test="${cliente.isDentroDaAreaDeEntregaRapida()}">
+                        Taxa de Entrega
+                    </g:if>
+                    <g:else>
+                        Frete
+                    </g:else>
+                </h5>
 
                 <div style="float:right;font-weight:bold;"> 
                     <div style="color:blue;font-size:12px;text-align:right;">
@@ -182,7 +189,6 @@
                 </div>
             </div>
 
-        </g:if>
 
         <g:if test="${venda.descontoEmReais > 0}">
 
@@ -192,20 +198,6 @@
                 <div style="float:right;font-weight:bold;"> 
                     <div style="color:blue;font-size:12px;text-align:right;">
                         - <g:formatNumber number="${venda.descontoEmReais}" type="currency" currencyCode="BRL" />
-                    </div>
-                </div>
-            </div>
-
-        </g:if>
-
-        <g:if test="${venda.taxaEntregaEmReais > 0}">
-
-            <div style="clear:both;">
-                <h5 style="display:inline;color:blue;">Taxa de Entrega</h5>
-
-                <div style="float:right;font-weight:bold;"> 
-                    <div style="color:blue;font-size:10px;text-align:right;">
-                        + <g:formatNumber number="${venda.taxaEntregaEmReais}" type="currency" currencyCode="BRL" />
                     </div>
                 </div>
             </div>
