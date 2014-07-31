@@ -175,20 +175,17 @@
             </div>
           </div>
 
-          <g:if test="${!venda.cliente.isDentroDaAreaDeEntregaRapida()}">
+          <div id="div-frete" style="clear:both;">
+            <h5 style="display:inline;color:blue;"> ${ venda.cliente.isDentroDaAreaDeEntregaRapida()?'Taxa de Entrega':'Frete'}</h5>
 
-            <div id="div-frete" style="clear:both;">
-              <h5 style="display:inline;color:blue;">Frete</h5>
-
-              <div style="float:right;font-weight:bold;"> 
-                <div style="color:blue;font-size:10px;text-align:right;">
-                  + <g:formatNumber number="${venda.freteEmReais}" type="currency" currencyCode="BRL" />
-                </div>
+            <div style="float:right;font-weight:bold;"> 
+              <div style="color:blue;font-size:10px;text-align:right;">
+                + <g:formatNumber number="${venda.freteEmReais}" type="currency" currencyCode="BRL" />
               </div>
-
             </div>
 
-          </g:if>
+          </div>
+
 
           <g:if test="${venda.descontoEmReais > 0}">
               
@@ -201,20 +198,6 @@
                   </div>
                 </div>
               </div>
-
-          </g:if>
-
-          <g:if test="${venda.taxaEntregaEmReais > 0}">
-            
-            <div style="clear:both;">
-              <h5 style="display:inline;color:blue;">Taxa de Entrega</h5>
-
-              <div style="float:right;font-weight:bold;"> 
-                <div style="color:blue;font-size:10px;text-align:right;">
-                  + <g:formatNumber number="${venda.taxaEntregaEmReais}" type="currency" currencyCode="BRL" />
-                </div>
-              </div>
-            </div>
 
           </g:if>
 
@@ -248,9 +231,9 @@
 
       <hr>
 
-      <div  class="row-fluid">
+      <div class="row">
           <div>
-              <a href="${createLink(uri:'/')}" style="float:right;" id="btnFecharVenda" class="btn btn-success">
+              <a href="${createLink(uri:'/',absolute:true)}" style="float:right;" id="btnFecharVenda" class="btn btn-success">
                  <i class="icon-home icon-white"></i>
                  Ir Para Página Principal
               </a>

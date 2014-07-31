@@ -88,16 +88,6 @@
 
 
 
-    <!-- begin:content -->
-    <div class="container">
-
-      <!-- begin:article -->
-      <div class="row">
-
-        <!-- begin:content -->
-        <div class="content">
-
-          <div class="row">
 
             <div class="col-md-12">           
 
@@ -172,8 +162,6 @@
 
               </table>
 
-            </div>
-          </div>
 
 		  <g:form action="fecharVenda">
 
@@ -280,13 +268,7 @@
 	      </g:form>
 
         </div>
-        <!-- end:content -->
-      </div>
-      <!-- end:article -->
 
-
-    </div>
-    <!-- end:content -->
 
 
 	</body>

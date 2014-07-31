@@ -102,16 +102,7 @@
   	</div>
   </g:hasErrors>
 
-    <!-- begin:content -->
-    <div class="container">
 
-      <!-- begin:article -->
-      <div class="row">
-
-        <!-- begin:content -->
-        <div class="content">
-
-          <div class="row">
             <div class="col-md-10" style="float: none; margin: 0 auto;">              
 
               <g:form class="form-horizontal" action='checkout'>
@@ -195,15 +186,8 @@
                 </div>
               </g:form>
             </div>
-          </div>
-        </div>
-        <!-- end:content -->
-      </div>
-      <!-- end:article -->
+          
 
-
-    </div>
-    <!-- end:content -->
 
 </body>
 </html>
