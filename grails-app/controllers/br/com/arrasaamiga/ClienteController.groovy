@@ -20,6 +20,14 @@ class ClienteController {
 
     }
 
+    def atualizarCadastro(){
+        def user = springSecurityService.currentUser
+        def cliente = Cliente.findByUsuario(user)
+
+        [cliente:cliente]        
+    }
+
+    @Secured(['permitAll'])
     def cadastro(){
     	[cliente: new Cliente(email:params.email ,usuario:new Usuario(),endereco:new Endereco())]
     }
@@ -56,6 +64,7 @@ class ClienteController {
        	
 
     }
+
 
     def pedidos(){
         def user = springSecurityService.currentUser
