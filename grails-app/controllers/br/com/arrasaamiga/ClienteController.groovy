@@ -29,7 +29,7 @@ class ClienteController {
 
     @Secured(['permitAll'])
     def cadastro(){
-    	[cliente: new Cliente(email:params.email ,usuario:new Usuario(),endereco:new Endereco())]
+    	[cliente: new Cliente(usuario:new Usuario(),endereco:new Endereco())]
     }
 
    @Secured(['permitAll'])

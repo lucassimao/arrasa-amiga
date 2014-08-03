@@ -12,9 +12,7 @@
 
 </head>
 <body>
-    <g:set var="ocultarMenu" value="${true}"  scope="request"/>
-    <g:set var="ocultarRodape" value="${true}" scope="request"/>
-
+    
 
             <hr/>
             <g:if test="${flash.message}">
@@ -29,13 +27,10 @@
                   <h3>Primeira vez por aqui ?</h3>
                   <h5> Abra sua conta na Arrasa Amiga</h5>
                   <hr />
-                  <form role="form" action="${createLink(controller:'cliente',action:'cadastro',absolute:true)}">
-                    <div class="form-group">
-                      <label for="email">Informe o seu email</label>
-                      <input name="email" type="email" value="" class="form-control" placeholder="Email">
-                    </div>
-                    <button class="btn btn-primary" type="submit">Abrir uma conta</button>
-                  </form>
+                  <a href="${createLink(controller:'cliente',action:'cadastro',absolute:true)}" class="btn btn-primary">
+                    Abrir uma conta
+                  </a>
+
                 </div>
 
                 <div class="col-md-6 col-sm-6">
