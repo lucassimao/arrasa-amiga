@@ -41,15 +41,19 @@ class Cliente {
 
     def afterInsert(){
         Cliente.withNewSession{
-            log.info 'Novo cliente. Autenticando ' + this.email
-            springSecurityService.reauthenticate(getEmail())
+            if (usuario){
+                log.info 'Novo cliente. Autenticando ' + this.email
+                springSecurityService.reauthenticate(getEmail())
+            }
         }
     }
 
     def afterUpdate(){
         Cliente.withNewSession{
-            log.info 'Atualizando cliente. Autenticando ' + this.email
-            springSecurityService.reauthenticate(getEmail())
+            if (usuario){
+                log.info 'Atualizando cliente. Autenticando ' + this.email
+                springSecurityService.reauthenticate(getEmail())
+            }
         }
     }    
 
