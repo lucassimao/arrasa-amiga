@@ -24,7 +24,7 @@ class ShoppingCartFactoryService {
 	def getShoppingCart() {
 		def sessionID = getSessionID()
 		def shoppingCart = ShoppingCart.findBySessionIDAndCheckedOut(sessionID, false)
-		
+
 		if (!shoppingCart) {
 			shoppingCart = createShoppingCart()
 		}

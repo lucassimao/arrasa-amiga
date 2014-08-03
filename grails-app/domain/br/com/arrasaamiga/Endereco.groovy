@@ -9,20 +9,11 @@ class Endereco {
 	Uf uf
 
     static constraints = {
-    	cep(blank:true,nullable:true,validator:{val,obj->
-
-            if (obj.cidade?.id != Cidade.teresina.id){
-                return val?.trim()?.size()>0
-            }
-
-            return true
-
-        })
-    	complemento(blank:false,nullable:false)
-    	bairro(blank:false,nullable:false)
-    	cidade(blank:false,nullable:false)
-    	uf(nullable:false)
-
+        cep(blank:true,nullable:true)
+        complemento(blank:true,nullable:true)
+        bairro(blank:true,nullable:true)
+        cidade(blank:true,nullable:true)
+        uf(nullable:true)
     }
 
     public void setCidade(Cidade cidade){

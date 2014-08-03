@@ -30,6 +30,8 @@ class EstoqueController {
                 property('id')
                 produto{
                     property('nome')
+                    property('precoAVistaEmCentavos')
+                    property('precoAPrazoEmCentavos')
                 }
 
                 property('unidade')

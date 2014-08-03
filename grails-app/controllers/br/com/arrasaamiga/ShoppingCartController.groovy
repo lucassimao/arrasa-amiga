@@ -5,6 +5,63 @@ import grails.converters.*
 import br.com.uol.pagseguro.domain.*
 import br.com.uol.pagseguro.exception.PagSeguroServiceException
 import grails.plugins.springsecurity.Secured
+import org.springframework.validation.FieldError
+import grails.validation.Validateable
+
+@Validateable
+class EnderecoCommand{
+    String cep
+    String complemento
+    String bairro
+    Cidade cidade
+    Uf uf
+
+    static constraints = {
+        cep(blank:true,nullable:true,validator:{val,obj->
+
+            if (obj.cidade?.id != Cidade.teresina.id){
+                return val?.trim()?.size()>0
+            }
+
+            return true
+
+        })
+        complemento(blank:false,nullable:false)
+        bairro(blank:false,nullable:false)
+        cidade(blank:false,nullable:false)
+        uf(nullable:false)
+
+    }        
+}
+// Command p/ cadastro de cliente pelo site web
+@Validateable
+class ClienteCommand{
+    String nome
+    String celular
+    String dddCelular
+    String dddTelefone
+    String telefone
+    String email
+    Usuario usuario
+    EnderecoCommand endereco
+
+    static constraints = {
+        nome(blank:false,nullable:false)
+        email(blank:false,nullable:false,validator:{val,obj->
+
+            def other = Usuario.findByUsername(val)
+            return ( other == null || other.id == obj.usuario?.id)
+        })
+        celular(blank:false,nullable:false,maxSize:9)
+        dddCelular(blank:false,nullable:false,maxSize:2)
+        telefone(blank:false,nullable:false,maxSize:9)
+        dddTelefone(blank:false,nullable:false,maxSize:2)
+        endereco(nullable:false)
+        usuario(nullable:true)
+
+    }
+
+}
 
 class ShoppingCartController {
 
@@ -173,8 +230,7 @@ class ShoppingCartController {
     }
 
     
-    def fecharVenda(){
-
+    def fecharVenda(ClienteCommand clienteCmd){
 
         def shoppingCart = shoppingCartService.shoppingCart
 
@@ -184,8 +240,7 @@ class ShoppingCartController {
             return
         }
 
-
-       if (params.dataEntrega){
+        if (params.dataEntrega){
 
             try{
             
@@ -199,31 +254,47 @@ class ShoppingCartController {
                 return 
 
             }
+
         }
 
-        def venda = new Venda(params)
+
+        def venda =  new Venda(params)
         venda.carrinho = shoppingCart
         venda.status = StatusVenda.AguardandoPagamento
 
-        def user = (springSecurityService.currentUser)?:Usuario.findByUsername(params.cliente.email)
-        
-        if (user){
-            venda.cliente = Cliente.findByUsuario(user)
-            venda.cliente.properties = params.cliente
-        }else{
-            venda.cliente.usuario.enabled = true
+
+        def user = springSecurityService.currentUser
+        if (!user){
             venda.cliente.senha = '12345'
+            venda.cliente.usuario.enabled=true
         }
+
+
 
         def model = [ venda: venda, diasDeEntrega: getProximosDiasDeEntrega() ]
 
-        if (!venda.cliente.validate()){ 
+        clienteCmd.validate()
+        clienteCmd.endereco.validate()    
+
+        if (clienteCmd.hasErrors() || clienteCmd.endereco.hasErrors() ){ 
+
+            clienteCmd.errors.allErrors.each {FieldError error ->
+                String field = error.field
+                String code = error.code
+                venda.cliente.errors.rejectValue(field,code)
+            }
+
+            clienteCmd.endereco.errors.allErrors.each{FieldError error->
+                String field = error.field
+                String code = error.code
+                venda.cliente.endereco.errors.rejectValue(field, code)
+            }
+
             flash.message = "Amiga, os campos em destaque devem ser preenchidos" 
             render(view: "checkout",model: model  ) 
             return              
-        }
+        } 
 
-        
         // para clientes que nao são de Teresina, o pagamento deve ser necessariamente via PagSeguro
         if ( !venda.cliente.isDentroDaAreaDeEntregaRapida() && venda.formaPagamento != FormaPagamento.PagSeguro  ){
 
@@ -251,19 +322,14 @@ class ShoppingCartController {
 
         }      
 
-        venda.cliente.save()
-        springSecurityService.reauthenticate(venda.cliente.email)
-
-
         if ( venda.formaPagamento == FormaPagamento.AVista ){
 
             venda.carrinho.checkedOut = true
-            venda.carrinho.save()
             venda.save(flush:true)
-            
+
+
             emailService.notificarAdministradores(venda)
-            emailService.notificarCliente(venda)
-            
+            emailService.notificarCliente(venda)            
 
             redirect(action:'show',controller:'venda', id:venda.id)
             return
@@ -296,8 +362,7 @@ class ShoppingCartController {
                 
                 e.printStackTrace()
 
-                venda.delete() // não deu pra mandar pro pag seguro ... exclui venda
-                Estoque.reporItens(venda.itensVenda)
+                venda.delete(flush:true) // não deu pra mandar pro pag seguro ... exclui venda
                 
                 flash.message = e.toString() 
                 render(view: "checkout",model:model)
@@ -307,8 +372,7 @@ class ShoppingCartController {
 
                 e.printStackTrace()
 
-                venda.delete() // não deu pra mandar pro pag seguro ... exclui venda
-                Estoque.reporItens(venda.itensVenda)
+                venda.delete(flush:true) // não deu pra mandar pro pag seguro ... exclui venda
                 
                 flash.message = e.toString() 
                 render(view: "checkout",model:model)

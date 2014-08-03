@@ -19,25 +19,29 @@ class BootStrap {
 	        UsuarioGrupoDeUsuario.create testUser, adminRole, true
     	}
 
+        
         JSON.registerObjectMarshaller(Venda) { venda->
             def map= [:]
             map['id'] = venda.id
-            map['vendedor'] = venda.vendedor?.id
+            map['vendedor'] = venda.vendedor?.username
             map['freteEmCentavos'] = venda.freteEmCentavos
             map['formaPagamento'] = venda.formaPagamento.name()
             map['status'] = venda.status.name()
-            map['dataEntrega'] = venda.dataEntrega?.format('dd/MM/yyyy')
+            map['dataEntrega'] = venda.dataEntrega?.time
             map['servicoCorreio'] = venda.servicoCorreio?.name()
             map['cliente'] = [:]
-            map['cliente']['nome'] = venda.cliente.nome
-            map['cliente']['celular'] = "${venda.cliente.dddCelular}-${venda.cliente.dddCelular}"
-            map['cliente']['telefone'] = "${venda.cliente.dddTelefone}-${venda.cliente.telefone}"
-            map['endereco'] =  [:]
-            map['endereco']['cep'] = venda.cliente.endereco.cep
-            map['endereco']['complemento'] = venda.cliente.endereco.complemento
-            map['endereco']['bairro'] = venda.cliente.endereco.bairro
-            map['endereco']['cidade'] = venda.cliente.endereco.cidade.nome
-            map['endereco']['uf'] = venda.cliente.endereco.uf.nome
+            map['cliente']['id'] = venda.cliente?.id
+            map['cliente']['nome'] = venda.cliente?.nome
+            map['cliente']['dddCelular'] = (venda.cliente?.dddCelular)?:''
+            map['cliente']['celular'] = (venda.cliente?.celular)?:''
+            map['cliente']['dddTelefone'] = (venda.cliente?.dddTelefone)?:''
+            map['cliente']['telefone'] = (venda.cliente?.telefone)?:''
+            map['cliente']['endereco'] =  [:]
+            map['cliente']['endereco']['cep'] = (venda.cliente?.endereco?.cep)?:''
+            map['cliente']['endereco']['complemento'] = (venda.cliente?.endereco?.complemento)?:''
+            map['cliente']['endereco']['bairro'] = (venda.cliente?.endereco?.bairro)?:''
+            map['cliente']['endereco']['cidade'] = (venda.cliente?.endereco?.cidade?.nome)?:''
+            map['cliente']['endereco']['uf'] = (venda.cliente?.endereco?.uf?.nome)?:''
             map['items'] = []
 
             venda.itensVenda.each{ 
@@ -49,9 +53,6 @@ class BootStrap {
 
                 map['items'] << item
             }
-
-
-
 
             return map 
         }

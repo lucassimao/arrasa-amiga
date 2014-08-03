@@ -21,17 +21,5 @@ class Estoque  {
     	quantidade(min:0)
     }
 
-    public static void reporItens(Set itens){
-        
-        itens.each{item->
-
-            def estoque = Estoque.findByProdutoAndUnidade(item.produto, item.unidade)
-            println "Repondo ${item.quantidade} de ${item.produto.nome} - ${item.unidade} ... "
-            estoque.quantidade += item.quantidade
-            estoque.save()
-        }
-    }
-
-
 
 }

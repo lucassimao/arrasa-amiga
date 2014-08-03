@@ -4,20 +4,21 @@ import grails.plugins.springsecurity.Secured
 import grails.rest.RestfulController
 import static org.springframework.http.HttpStatus.*
 import static org.springframework.http.HttpMethod.*
-
+import grails.converters.JSON
 
 
 class VendaController extends RestfulController {
 
     static responseFormats = ['html', 'json']
 
+    def shoppingCartService
 
     VendaController() {
         super(Venda)
     }
 
     
-    @Secured(['IS_AUTHENTICATED_FULLY'])
+    @Secured(['isAuthenticated()'])
     def show(Long id){
 
         def venda = Venda.get(id)
@@ -38,6 +39,61 @@ class VendaController extends RestfulController {
                     respond venda
                 else
                     render status: NOT_FOUND
+            }
+        }
+
+    }
+
+    /* 
+     *   TODO verificar se a nova versão corrigiu o bug do metodo update
+     */
+    def update(){
+
+        def venda = Venda.get(params.id)
+        venda.properties = params
+
+        if (venda.hasErrors()){
+            println venda.errors
+            respond venda.errors
+
+        }else{
+            venda.save(flush:true)
+            render status:OK
+            
+        }
+
+    }
+
+    def save(){
+        request.withFormat{
+
+            json{
+                def json = request.JSON
+
+                def venda = new Venda()
+                venda.dataEntrega = new Date(json.dataEntrega)
+                venda.cliente = new Cliente(json.cliente)
+                venda.cliente.endereco.cidade= Cidade.teresina
+                venda.cliente.endereco.uf = Uf.piaui
+                venda.vendedor = Usuario.findByUsername(json.vendedor)
+                venda.formaPagamento =  FormaPagamento.valueOf(json.formaPagamento)
+
+                if (venda.formaPagamento == FormaPagamento.JaPagou)
+                    venda.status = StatusVenda.PagamentoRecebido
+                else
+                    venda.status = StatusVenda.AguardandoPagamento
+
+
+                JSON.parse(json.itens).each{obj->
+                    def estoque = Estoque.get(obj.estoqueId)
+                    shoppingCartService.addToShoppingCart(estoque.produto, estoque.unidade, obj.quantidade)
+                }
+
+                venda.carrinho = shoppingCartService.shoppingCart  
+                venda.carrinho.checkedOut = true              
+
+                venda.save(flush:true)
+                render status: OK               
             }
         }
 
@@ -92,23 +148,27 @@ class VendaController extends RestfulController {
 
     }
 
-    @Secured(['IS_AUTHENTICATED_FULLY'])
+    //@Secured(['IS_AUTHENTICATED_FULLY'])
     def excluir(Long id){
+
         def v = Venda.load(id)
-
-        // repõe os itens no estoque somente se a venda tiver sido a vista
-        if (v.formaPagamento?.equals(FormaPagamento.AVista)) 
-            Estoque.reporItens(v.itensVenda)
-        
         v.delete(flush:true)
-
         flash.message = 'A venda foi excluida'
-        
-        if (params.offset && params.max)
-            redirect(action:'list', params:[offset:params.offset, max: params.max] )
-        else
-            redirect(action:'list')
-            
+
+
+        withFormat{
+            html { 
+
+                if (params.offset && params.max)
+                    redirect(action:'list', params:[offset:params.offset, max: params.max] )
+                else
+                    redirect(action:'list')
+
+            }
+            json { 
+                render status: OK
+            }
+        }            
             
     }
 
@@ -120,7 +180,9 @@ class VendaController extends RestfulController {
     def index() {
         withFormat{
             html { redirect(action: "list", params: params) }
-            json { respond Venda.list() }
+            json { 
+                respond Venda.findAllByStatusNotEqual(StatusVenda.Entregue) 
+            }
         }
         
     }

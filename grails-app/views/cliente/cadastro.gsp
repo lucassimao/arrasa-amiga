@@ -181,7 +181,7 @@
 
         <legend style="font-weight:bold;"> Endereço para entregas </legend>
 
-          <div class="control-group ${hasErrors(bean: cliente, field: 'endereco.uf', 'error')}">
+          <div class="control-group ${hasErrors(bean: cliente.endereco, field: 'uf', 'error')}">
               <label style="font-weight:bold;"> Estado: </label>
               <g:select value="${ (cliente?.endereco?.uf?.id)?:Uf.piaui.id }" id="select-uf"
                   name="endereco.uf.id" optionValue="nome" optionKey="id" from="${br.com.arrasaamiga.Uf.list()}" />
@@ -193,7 +193,7 @@
               </g:eachError>
           </div>
 
-          <div class="control-group ${hasErrors(bean: cliente, field: 'endereco.cidade', 'error')}">
+          <div class="control-group ${hasErrors(bean: cliente.endereco, field: 'cidade', 'error')}">
               <label style="font-weight:bold;"> Cidade: </label>
 
               <g:select class="input-xlarge" value="${cliente?.endereco?.cidade?.id}" 
@@ -206,7 +206,7 @@
               </g:eachError>
           </div>
 
-          <div class="control-group ${hasErrors(bean: cliente, field: 'endereco.bairro', 'error')}">
+          <div class="control-group ${hasErrors(bean: cliente.endereco, field: 'bairro', 'error')}">
               <label style="font-weight:bold;"> Bairro: </label>
               <input name="endereco.bairro"  value="${cliente?.endereco?.bairro}" type="text" >
 
@@ -218,7 +218,7 @@
           </div>
 
 
-          <div class="control-group ${hasErrors(bean: cliente, field: 'endereco.complemento', 'error')}">
+          <div class="control-group ${hasErrors(bean: cliente.endereco, field: 'complemento', 'error')}">
               <label style="font-weight:bold;"> Endereço: </label>
               <input class="input-xxlarge" value="${cliente?.endereco?.complemento}" 
                 placeholder="casa, quadra, apartamento, rua, número, ponto de referência ... "  
@@ -231,7 +231,7 @@
               </g:eachError>
           </div>
 
-          <div id="div-cep" class="control-group ${hasErrors(bean: cliente, field: 'endereco.cep', 'error')}">
+          <div id="div-cep" class="control-group ${hasErrors(bean: cliente.endereco, field: 'cep', 'error')}">
               
               <label style="font-weight:bold;"> CEP: </label>
               <input name="endereco.cep" value="${cliente?.endereco?.cep}" type="text">

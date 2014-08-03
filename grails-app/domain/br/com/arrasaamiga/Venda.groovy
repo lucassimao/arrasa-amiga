@@ -46,10 +46,8 @@ class Venda {
 
     static mapping = {
         autoTimestamp true
-    }
-
-    def beforeInsert(){
-        this.freteEmCentavos = getFreteEmReais() * 100
+        cliente cascade: 'save-update'
+        carrinho cascade: 'save-update'
     }
 
     /* Atualizando o estoque dos itens comprados */
@@ -66,6 +64,21 @@ class Venda {
             }
 
         }
+    }
+
+    def afterDelete(){
+
+        Estoque.withNewSession{session->
+
+            this.itensVenda.each{item->
+
+                def estoque = Estoque.findByProdutoAndUnidade(item.produto, item.unidade)
+                println "Repondo ${item.quantidade} de ${item.produto.nome} - ${item.unidade} ... "
+                estoque.quantidade += item.quantidade
+                estoque.save(flush:true)
+            }
+
+        }        
     }
 
     public Double getValorTotal(){

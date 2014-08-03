@@ -235,7 +235,7 @@
 									<li class="${(controllerName == 'shoppingCart' && actionName=='index')?'active':''}">
 										<g:link controller="shoppingCart">
 											<i class="icon-shopping-cart  icon-large"></i>	
-											Carrinho  ( <cart:qtdeTotalItens/>  )  
+											Carrinho  (  <cart:qtdeTotalItens/>  )  
 										</g:link>
 									</li>
 

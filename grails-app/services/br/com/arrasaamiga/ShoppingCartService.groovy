@@ -10,7 +10,7 @@ class ShoppingCartService {
     def shoppingCartFactoryService
 
 	def getShoppingCart() {
-		return shoppingCartFactoryService.shoppingCart
+		return  shoppingCartFactoryService.shoppingCart
 	}
 
     def addToShoppingCart(Produto produto, String unidade, Integer qtde) {

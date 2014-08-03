@@ -115,7 +115,7 @@ class HomeController {
 		params['ordem[]'].eachWithIndex{id, index->
 			def p = Produto.load(id)
 			p.ordem = index
-			p.save()
+			p.save(flush:true)
 		}
 
 		render 'ok'

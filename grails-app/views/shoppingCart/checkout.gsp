@@ -149,7 +149,7 @@
 
 				$("#select-uf").change();		
 
-				<g:if test="${venda?.cliente?.hasErrors()}">
+				<g:if test="${venda?.cliente?.hasErrors() || venda?.cliente?.endereco?.hasErrors()}">
 				    $('html, body').animate({
 				        scrollTop: $("#anchor-form-informacoes-entrega").offset().top - 45
 				    }, 1500);
@@ -274,7 +274,8 @@
 						    <fieldset>
 						    	 
 						    	  <g:if test="${venda?.cliente?.usuario?.id}">
-						    	  		<g:hiddenField value="${venda.cliente.usuario.id}" name="cliente.usuario.id"/> 
+						    	  		<g:hiddenField value="${venda.cliente?.usuario?.id}" name="cliente.usuario.id"/> 
+						    	  		<g:hiddenField value="${venda.cliente?.id}" name="cliente.id"/> 
 						    	  </g:if>
 
 						          <div class="control-group ${hasErrors(bean: venda.cliente, field: 'nome', 'error')}">
@@ -311,7 +312,7 @@
 
 
 
-						          <div style="clear:both;float:left;margin-right:10px;" class="control-group ${hasErrors(bean: venda.cliente, field: 'endereco.uf', 'error')}">
+						          <div style="clear:both;float:left;margin-right:10px;" class="control-group ${hasErrors(bean: venda.cliente.endereco, field: 'uf', 'error')}">
 						              <label style="font-weight:bold;"> Estado: </label>
 
 						              <g:select class="input-medium" value="${ (venda?.cliente?.endereco?.uf?.id)?:Uf.get(17).id }" 
@@ -321,7 +322,7 @@
 
 						          </div>
 
-						          <div style="float:left;margin-right:10px;" class="control-group ${hasErrors(bean: venda.cliente, field: 'endereco.cidade', 'error')}">
+						          <div style="float:left;margin-right:10px;" class="control-group ${hasErrors(bean: venda.cliente.endereco, field: 'cidade', 'error')}">
 						              <label style="font-weight:bold;"> Cidade: </label>
 
 						              <g:select class="input-medium" value="${venda?.cliente?.endereco?.cidade?.id}" 
@@ -330,19 +331,19 @@
 						          </div>
 
 
-						          <div style="float:left;margin-right:10px;" class="control-group ${hasErrors(bean: venda.cliente, field: 'endereco.bairro', 'error')}">
+						          <div style="float:left;margin-right:10px;" class="control-group ${hasErrors(bean: venda.cliente.endereco, field: 'bairro', 'error')}">
 						              <label style="font-weight:bold;"> Bairro: </label>
 						              <input name="cliente.endereco.bairro"  value="${venda?.cliente?.endereco?.bairro}" type="text" >
 						          </div>
 
-						          <div id="div-cep" style="display:none;" class="control-group ${hasErrors(bean: venda.cliente, field: 'endereco.cep', 'error')}">
+						          <div id="div-cep" style="display:none;" class="control-group ${hasErrors(bean: venda.cliente.endereco, field: 'cep', 'error')}">
 						              
 						              <label style="font-weight:bold;"> CEP: </label>
 						              <input class="input-small" name="cliente.endereco.cep" value="${ venda?.cliente?.endereco?.cep }" type="text" >
 
 						          </div>						          
 
-						          <div style="clear:both;" class="control-group ${hasErrors(bean: venda.cliente, field: 'endereco.complemento', 'error')}">
+						          <div style="clear:both;" class="control-group ${hasErrors(bean: venda.cliente.endereco, field: 'complemento', 'error')}">
 						          	<label style="font-weight:bold;"> Complemento: </label>
 						          	<input class="input-xxlarge" value="${venda?.cliente?.endereco?.complemento}" 
 						          		placeholder="casa, quadra, apartamento, rua, número, ponto de referência ... "  
