@@ -44,7 +44,7 @@
               <a href="${createLink(controller:'cliente',action:'index',absolute:true)}" class="btn">Minha Conta</a>
               <a href="${createLink(controller:'cliente',action:'favoritos',absolute:true)}" class="btn btn-primary">Favoritos</a>
               <a href="${createLink(controller:'cliente',action:'pedidos',absolute:true)}" class="btn">Meus Pedidos</a>
-              <a href="${createLink(controller:'cliente',action:'pedidos',absolute:true)}" class="btn">Editar Dados</a>
+              <a href="${createLink(controller:'cliente',action:'edit',absolute:true)}" class="btn">Editar Cadastro</a>
             </div>
           </nav>
         </div>
@@ -56,7 +56,7 @@
               <li><a href="${createLink(controller:'cliente',action:'index')}">Minha Conta</a></li>
               <li class="active"><a href="${createLink(controller:'cliente',action:'favoritos')}">Favoritos</a></li>
               <li ><a href="${createLink(controller:'cliente',action:'pedidos')}">Meus Pedidos</a></li>
-              <li><a href="#">Editar Dados</a></li>
+              <li> <a href="${createLink(controller:'cliente',action:'edit',absolute:true)}">Editar Cadastro</a></li>
             </ul>
           </nav>
         </div>

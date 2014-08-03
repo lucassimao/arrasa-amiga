@@ -115,7 +115,7 @@
             <div class="col-md-10" style="float: none; margin: 0 auto;">              
               <h2>Cadastro</h2>
               <hr />
-              <g:form class="form-horizontal" action='salvarNovoCliente'>
+              <g:form class="form-horizontal" action='save'>
 
                 <div class="form-group">
                   <label class="col-sm-3 control-label">Nome</label>

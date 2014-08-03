@@ -7,7 +7,14 @@
 	<title>Atualização de Dados</title>
 
 
+
       <asset:script>
+
+        window.setTimeout(function() {
+            $(".alert").fadeTo(500, 0).slideUp(500, function(){
+                $(this).alert('close'); 
+            });
+        }, 2000);
 
         $(function(){
 
@@ -128,7 +135,7 @@
                     <a href="${createLink(controller:'cliente',action:'index',absolute:true)}" class="btn ">Minha Conta</a>
                     <a href="${createLink(controller:'cliente',action:'favoritos',absolute:true)}" class="btn">Favoritos</a>
                     <a href="${createLink(controller:'cliente',action:'pedidos',absolute:true)}" class="btn">Meus Pedidos</a>
-                    <a href="${createLink(controller:'cliente',action:'atualizarCadastro',absolute:true)}" class="btn btn-primary">Editar Cadastro</a>
+                    <a href="${createLink(controller:'cliente',action:'edit',absolute:true)}" class="btn btn-primary">Editar Cadastro</a>
                 </div>
             </nav>
         </div>
@@ -140,7 +147,7 @@
                     <li ><a href="${createLink(controller:'cliente',action:'index')}">Minha Conta</a></li>
                     <li><a href="${createLink(controller:'cliente',action:'favoritos')}">Favoritos</a></li>
                     <li><a href="${createLink(controller:'cliente',action:'pedidos')}">Meus Pedidos</a></li>
-                    <li class="active"><a href="${createLink(controller:'cliente',action:'atualizarCadastro')}">Editar Cadastro</a></li>
+                    <li class="active"><a href="${createLink(controller:'cliente',action:'edit')}">Editar Cadastro</a></li>
                 </ul>
             </nav>
         </div>
@@ -149,7 +156,16 @@
 
               <h5>Editar Cadastro</h5>
 
-              <g:form class="form-horizontal" action='salvarNovoCliente'>
+              <g:form class="form-horizontal" action='update'>
+
+                <g:if test="${flash.message}">
+                  <div class="alert alert-success">
+                     <button type="button" class="close" data-dismiss="alert">&times;</button>
+                     ${flash.message}
+                  </div>
+                </g:if> 
+
+                <g:hiddenField name="id" value="${cliente.id}"/>
 
                 <div class="form-group">
                   <label class="col-sm-2 control-label">Nome</label>

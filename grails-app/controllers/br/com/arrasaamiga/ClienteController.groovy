@@ -20,7 +20,7 @@ class ClienteController {
 
     }
 
-    def atualizarCadastro(){
+    def edit(){
         def user = springSecurityService.currentUser
         def cliente = Cliente.findByUsuario(user)
 
@@ -33,10 +33,11 @@ class ClienteController {
     }
 
    @Secured(['permitAll'])
-   def salvarNovoCliente() {
+   def save() {
 		
         def cliente = new Cliente(params)
         cliente.usuario.enabled = true
+        
 
         if ( !cliente.save(flush: true)) {
             render(view: "cadastro", model: [cliente: cliente])
@@ -64,6 +65,26 @@ class ClienteController {
        	
 
     }
+
+
+   @Secured(['permitAll'])
+   def update() {
+        
+
+        def cliente = Cliente.get(params.id)
+        cliente.properties = params
+
+        if ( !cliente.save(flush: true)) {
+            render(view: "edit", model: [cliente: cliente])
+            return
+        }
+
+        flash.message = 'Seus dados foram atualizados com sucesso!'
+        springSecurityService.reauthenticate cliente.email
+
+        redirect(controller:'cliente',action:'edit',model:[cliente: cliente])            
+
+    }    
 
 
     def pedidos(){
