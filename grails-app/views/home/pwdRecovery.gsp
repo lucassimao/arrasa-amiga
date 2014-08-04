@@ -45,14 +45,34 @@
     </div>
 </g:elseif>
 
-<g:form action="pwdRecovery" controller="home"  class="form-signin">
-        <h4 class="form-signin-heading"> Informe seu email </h4>
-        <small> Email: </small>
-       
-        <input type='text' class="input-block-level" value="${email}" style="margin-top:10px;"	placeholder="Seu e-mail aqui" name='email'/>
+<hr>
 
+<div class="row">
+
+  <div class="col-md-4 col-sm-4">
+  </div>  
+
+  <div class="col-md-4 col-sm-4">
+    <g:form action="pwdRecovery" controller="home">
+
+        <h4 class="form-signin-heading"> Informe seu email: </h4>
+
+        <div class="form-group">
+          <input type='text' class="form-control" value="${email}" 
+            style="margin-top:10px;"  placeholder="Seu e-mail aqui" name='email'/>
+        </div>
+                        
+        <a href="${createLink(uri:'/',absolute:true)}" class="btn btn-default"> Voltar</a>
         <button class="btn btn-large btn-primary" type="submit">Enviar nova senha</button>
-        
-</g:form>
+    </g:form>
+  </div>
+
+  <div class="col-md-4 col-sm-4">
+  </div>
+</div>
+
+<hr>
+
+
 </body>
 </html>
