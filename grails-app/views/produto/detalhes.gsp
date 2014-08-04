@@ -17,7 +17,12 @@
                 $(this).alert('close'); 
             });
         }, 3000);
+
     </script>
+
+    <style type="text/css">
+      .fb_iframe_widget, .fb_iframe_widget span, .fb_iframe_widget iframe {width: 100% !important;}
+    </style>
 
 	</head>
 	<body>
@@ -135,6 +140,7 @@
                                     <g:if test="${produtoInstance.precoAVistaEmCentavos < produtoInstance.precoAPrazoEmCentavos }">                       
                                       <p><small> * Desconto à vista </small></p>     
                                     </g:if>
+
 
                                     <div class="fb-like" style="float:right;margin-right:1px;" 
                                           data-href="${createLink(uri:produtoInstance.nomeAsURL, absolute:true)}" data-width="100px" 
@@ -265,7 +271,11 @@
                     <ul id="myTab" class="nav nav-tabs">
                       <li class="active"><a href="#desc" data-toggle="tab">Descrição</a></li>
                       <!-- tag do facebook deve ser uma div -->
-                      <li class=""><a href="#comentarios" data-toggle="tab"> <span class="fb-comments-count" data-href="${request.requestURL}"></span> Comentários </a></li>
+                      <li class="">
+                        <a href="#comentarios" data-toggle="tab">
+                          <span id="fb-comments-count"></span> Comentários 
+                        </a>
+                      </li>
                     </ul>
 
                     <div id="myTabContent" class="tab-content">
@@ -273,8 +283,10 @@
                         <p class="comentarios">${produtoInstance.descricao}</p>
                       </div>
                       <div class="tab-pane fade" id="comentarios">
-                        <div class="fb-comments" data-width="100%" 
-                            data-href="${request.requestURL}" data-colorscheme="light"></div>
+                        <div class="fb-comments"
+                            data-width="100%"
+                            data-href="${createLink(uri:produtoInstance.nomeAsURL,absolute:true)}" 
+                            data-colorscheme="light"></div>
                       </div>
                     </div>
                 </div>
@@ -354,6 +366,15 @@
             $("#btn-delete-cart-item").click(function(event){
               event.preventDefault();
               $(this).parents('form').submit();
+            });
+
+            $.ajax({
+              url:"https://graph.facebook.com/?ids=${createLink(uri:produtoInstance.nomeAsURL,absolute:true)}"
+            }).success(function(data, textStatus, jqXHR){
+                var comments_count = data['${createLink(uri:produtoInstance.nomeAsURL,absolute:true)}'].comments;
+
+                if (comments_count > 0)
+                  $("#fb-comments-count").html(comments_count);
             });
 
             

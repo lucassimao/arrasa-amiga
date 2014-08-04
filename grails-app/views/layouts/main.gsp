@@ -20,14 +20,7 @@
     <meta property="fb:admins" content="1665191676"/>
     <meta property="fb:admins" content="100002204592399"/>
     <meta property="fb:admins" content="100002253748681"/>
-
-    <g:if env="production">
-        <meta property="fb:app_id" content="592257150816024"/> 
-    </g:if>    
-
-    <g:if env="development">
-        <meta property="fb:app_id" content="538200826283779"/> 
-    </g:if>
+    <!--<meta property="fb:app_id" content="592257150816024"/> -->
     
     <meta property="og:site_name" content="Arrasa Amiga"/>
     <meta property="og:type" content="website" /> 
@@ -242,6 +235,7 @@
 
     <asset:script type="text/javascript">
 
+
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -251,23 +245,14 @@
         ga('send', 'pageview');
 
         $(document).ready(function() {
-          
           $.ajaxSetup({ cache: true });
-
-          $.getScript('//connect.facebook.net/pt_BR/all.js#xfbml=1', function(){
-              FB.init({
-
-                <g:if env="production">
-                    appId: '592257150816024', xfbml: true 
-                </g:if>    
-                <g:elseif env="development">
-                    appId: '538200826283779', xfbml: true
-                </g:elseif>
-              });     
-
+          $.getScript('//connect.facebook.net/pt_BR/sdk.js', function(){
+            FB.init({
+              appId: '538200826283779',
+              xfbml      : true,
+              version    : 'v2.0'
+            });  
           });
-
-
         });
 
     </asset:script>
