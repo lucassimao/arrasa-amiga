@@ -1096,6 +1096,18 @@ a:hover.no-underline{
     position: relative;
 }
 
+.footer .widget .whatsapp{
+    background-image: url('whatsapp.png');
+    background-repeat: no-repeat;
+    padding-top: 5px;
+    padding-left: 30px;  /* width of the image plus a little extra padding */
+    display: block;  /* may not need this, but I've found I do */    
+}
+
+
+
+
+
 .footer .widget h3 span:before{
     content: "";
     position: absolute;

@@ -6,7 +6,7 @@
     <div class="row">
       <div class="col-md-3 col-sm-6">
         <div class="widget">
-          <h3><span> Contato </span></h3>
+          <h3> <span class="whatsapp"> Contato </span></h3>
           <address>
             Contato : (86) 9910-8321  <br>
             Contato : (86) 9915-9682  <br>
