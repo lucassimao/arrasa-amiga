@@ -36,14 +36,16 @@
 			.right{
 				float:right;
 			}
-			p{
+
+			h3+p{
 				text-indent: 2em;
+				padding-left: 20px;
 				text-align: justify;
 			}
-			p, h3{
-				padding-left: 20px;
-			}
 
+			h3{
+				padding-left: 20px;
+			}			
 
 		</style>
 
@@ -52,12 +54,14 @@
 
 	<body>
 
+		
 		<div id="round">
 			<div>
 				<div class="round-box">	1 </div>
 			</div>
 		</div>
 
+		
 		<div class="row">
 			<div class="col-md-6 col-sm-6 col-xs-6">
 				<h3> Página Principal</h3>
@@ -265,9 +269,6 @@
 					<asset:image class="img-responsive" src="how-to-buy/correios31.jpg"/>
 				</div>			
 			</div>									
-
-
-
 		</g:else>
 			
 	</body>

@@ -19,88 +19,84 @@
 
 		</style>
 
-
-		<script type="text/javascript">
-
-			$(function(){
-
-				$("#flash").fadeOut(3000);
-
-			});
-
-		</script>
-
-
 	</head>
 
 
 	<body>
 
-		<g:form action="salvarContato" controller="home">
+	
+		<div class="jumbotron" style="background-color:white;">
 
-			<div class="well" style="background-color:white;margin-top:10px;">
+			<legend> <i class="fa fa-envelope"></i> Envie sua sugestão ou dúvida </legend>
 
-				<legend> <i class="icon-envelope"></i> Envie por aqui sua sugestão ou dúvida </legend>
-
-					<g:hasErrors bean="${cmd}">
-						<div style="margin-left:30%;">
-							<h4> Preencha os campos destacados </h4>
-						</div>
-					</g:hasErrors>
-
-					<g:if test="${flash.message}">
-						<div id="flash" style="text-align:center;border:1px solid blue;">
-							<h4> ${flash.message} </h4>
-						</div>					
-					</g:if>
-
-				<div class="row-fluid">
-
-					<div class="span12">
-
-						<fieldset>
-
-							<div class="control-group ${hasErrors(bean: cmd, field:'nome','error')}">
-								<label style="font-weight:bold;"> Nome: </label>
-								<input type="text" value="${cmd?.nome}" name="nome" class="input-xxlarge">
-							</div>
-
-
-							<div style="float:left;" class="control-group ${hasErrors(bean: cmd, field:'email','error')}">
-								<label style="font-weight:bold;"> Email: </label>
-								<input type="text" value="${cmd?.email}" name="email" class="input-large" >
-
-							</div>
-
-							<div style="float:left;margin-left:10px;"  class="control-group ${hasErrors(bean: cmd, field:'dddCelular','error')}">
-								<label style="font-weight:bold;"> Celular: </label> 
-								<input type="text" value="${cmd?.dddCelular}" placeholder="DDD" maxlength="2" name="dddCelular" class="input-mini" >
-							</div>
-
-							<div  class="control-group ${hasErrors(bean: cmd, field:'celular','error')}">
-								<input style="margin-top:25px;margin-left:5px;" type="text" value="${cmd?.celular}" placeholder="numero" maxlength="9" name="celular" class="input-small">
-							</div>
-
-							<div class="control-group ${hasErrors(bean: cmd, field:'mensagem','error')}">
-								<label style="font-weight:bold;"> Mensagem: </label>
-								<textarea rows="7"  value="${cmd?.mensagem}" name="mensagem" class="input-xxlarge">${cmd?.mensagem}</textarea>
-							</div>	
-
-						</fieldset>
-					</div>
+			<g:hasErrors bean="${cmd}">
+				<div class="alert alert-danger" style="margin-top:10px;">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+			  <i class="icon-edit"></i>
+				Preencha os campos destacados 
 				</div>
+			</g:hasErrors>
 
-				<div class="row-fluid">
-	                <a href="${createLink(action:'index',controller:'home')}" class="btn btn-success">
-	                    <i class="icon-backward icon-white"></i> Voltar
+			<g:if test="${flash.message}">
+				<div id="flash" class="alert alert-success" style="margin-top:10px;">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+			  		<i class="icon-edit"></i>${flash.message}
+				</div>							
+			</g:if>
+
+			<g:form action="salvarContato" class="form-horizontal" controller="home">
+
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">Nome:</label>
+                  <div class="col-sm-10">
+                    <input id="input-nome" type="text" value="${cmd?.nome}" name="nome" 
+                          class="form-control ${hasErrors(bean: cmd, field:'nome','error')}" placeholder="Nome">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">Email:</label>
+                  <div class="col-sm-10">
+                    <input id="input-email" type="text" value="${cmd?.email}" name="email" 
+                          class="form-control ${hasErrors(bean: cmd, field:'email','error')}" placeholder="Email">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">Celular:</label>
+                  <div class="col-sm-10" style="padding-left:0;">
+	                  <div class="col-xs-4">
+	                    <input id="input-dddCelular" type="text" value="${cmd?.dddCelular}" name="dddCelular" 
+	                          class="form-control ${hasErrors(bean: cmd, field:'dddCelular','error')}" placeholder="DDD">
+	                  </div>
+	                  <div class="col-xs-6">
+	                    <input id="input-celular" type="text" value="${cmd?.celular}" name="celular" 
+	                          class="form-control ${hasErrors(bean: cmd, field:'celular','error')}" placeholder="Numero">
+	                  </div>		        
+                  </div>          
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">Mensagem:</label>
+                  <div class="col-sm-10">
+                    <textarea class="form-control ${hasErrors(bean: cmd, field:'mensagem','error')}" rows="7" value="${cmd?.mensagem}" name="mensagem"></textarea>
+                  </div>
+                </div>		
+
+				<div class="pull-right">
+	                <a href="${createLink(uri:'/',absolute:true)}" class="btn btn-default">
+	                    <i class="fa fa-backward icon-white"></i> Voltar
 	                </a>	
-
-	                <button type="submit" style="margin-left:44%" class="btn btn-success">
-	                   <i class="icon-ok-circle icon-white"></i>  Enviar
+	                <button type="submit" class="btn btn-primary">
+	                   <i class="fa fa-check-circle icon-white"></i>  Enviar
 	                </button>
-				</div>
-			</div>
-		</g:form>
+				</div>                                
+
+			</g:form>
+
+		</div>
+
+
 			
 	</body>
 </html>

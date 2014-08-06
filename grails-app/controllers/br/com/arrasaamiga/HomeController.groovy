@@ -89,6 +89,7 @@ class HomeController {
 			return
 
 		}else{
+			println cmd.errors
 			render view:'/home/contato', model:[cmd:cmd]
 			return			
 		}
@@ -98,7 +99,7 @@ class HomeController {
 
 		if (params.cidade){
 			def cidade = Cidade.get(params.cidade)
-			
+
 			boolean hasEntregaRapida = true
 			if (cidade.id != Cidade.teresina.id)
 				hasEntregaRapida = false
