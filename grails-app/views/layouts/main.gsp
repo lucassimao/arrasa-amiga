@@ -198,8 +198,8 @@
                       <g:render template="/layouts/menuitem" model="[grupo:grupo,isRoot:true,grupoRaiz:grupoRaiz]"/>
                   </g:each>
 
-                  <li class="${(controllerName == 'home' && actionName =='comocomprar')?'active':''}" >
-                    <a href="${createLink(action:'comocomprar',controller:'home',absolute:true,params: [cidade:Cidade.teresina.id])}">Como Comprar </a>
+                  <li class="${(request.forwardURI?.endsWith('comoComprar'))?'active':''}" >
+                    <a href="#" id="btnComoComprar">Como Comprar </a>
                   </li>
                   
                   <li class="${ (request.forwardURI?.endsWith('contato') )?'active':''}">
@@ -246,6 +246,7 @@
 
         $(document).ready(function() {
           $.ajaxSetup({ cache: true });
+          
           $.getScript('//connect.facebook.net/pt_BR/sdk.js', function(){
             FB.init({
               appId: '538200826283779',
@@ -253,6 +254,32 @@
               version    : 'v2.0'
             });  
           });
+
+          $("#btnComoComprar").click(function(){
+
+              var modal = $('.modal');
+
+              if (modal.length > 0){
+                  $(modal).modal();              
+              }else{
+
+                  $.ajax({
+                      url: "${createLink(action:'comoComprar',controller:'home',absolute:true)}",
+                      settings: {'cache':true}
+                  }).success(function( data, textStatus, jqXHR ) {
+                      var modal = $(data);
+                      $('body').append(modal);
+                      $(modal).filter('.modal').modal();                    
+                  
+                  }).fail(function(){
+                      window.location = 'http://www.arrasaamiga.com.br';
+                  });
+
+              }
+
+          })
+
+
         });
 
     </asset:script>

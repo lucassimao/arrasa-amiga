@@ -102,19 +102,6 @@ class ShoppingCartController {
     	redirect(action: "index")
     }
 
-    def getCidades(int idUf){
-        def uf = Uf.get(idUf)
-        def cidades = Cidade.findAllByUf(uf)
-
-        def retorno = []
-
-        cidades.each{c->
-            retorno << ['id':c.id,'nome':c.nome]
-        }
-
-        render ( retorno as JSON)
-    }
-
     @Secured(['isAuthenticated()'])
     def recalcularTotais(){
 

@@ -21,6 +21,7 @@ class SalvarContatoCommand{
 	}
 }
 
+@Secured(['permitAll'])
 class HomeController {
 
 
@@ -93,22 +94,34 @@ class HomeController {
 		}
 	}
 
-	def comocomprar(){
+	def comoComprar(){
 
-		try{
+		if (params.cidade){
 			def cidade = Cidade.get(params.cidade)
+			
+			boolean hasEntregaRapida = true
+			if (cidade.id != Cidade.teresina.id)
+				hasEntregaRapida = false
 
-			if ( cidade.id == Cidade.teresina.id  ){
-				render(view:'comocomprar',model:[cidade: cidade.nome])
-			}else{
-				render(view:'comocomprar-outras-cidades',model:[cidade: cidade.nome])
-			}
-
-		}catch(Exception e){
-			render(view:'comocomprar-outras-cidades',model:[cidade: ''])
+			render(view:'comoComprar',model:[cidade: cidade, hasEntregaRapida: hasEntregaRapida])
+		}else{
+			render template:'modalSelectCidade'
 		}
 
 	}
+
+    def getCidades(int idUf){
+        def uf = Uf.get(idUf)
+        def cidades = Cidade.findAllByUf(uf)
+
+        def retorno = []
+
+        cidades.each{c->
+            retorno << ['id':c.id,'nome':c.nome]
+        }
+
+        render ( retorno as JSON)
+    }	
 
 	@Secured(['ROLE_ADMIN'])
 	def organizarHome(){
@@ -129,7 +142,7 @@ class HomeController {
 		params['ordem[]'].eachWithIndex{id, index->
 			def p = Produto.load(id)
 			p.ordem = index
-			p.save()
+			p.save(flush:true)
 		}
 
 		render 'ok'
