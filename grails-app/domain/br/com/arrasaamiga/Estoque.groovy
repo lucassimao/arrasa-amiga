@@ -28,7 +28,7 @@ class Estoque  {
             def estoque = Estoque.findByProdutoAndUnidade(item.produto, item.unidade)
             println "Removendo ${item.quantidade} de ${item.produto.nome} - ${item.unidade} ... "
             estoque.quantidade -= item.quantidade
-            estoque.save()
+            estoque.save(flush: true)
         }
     }
 
@@ -39,7 +39,7 @@ class Estoque  {
             def estoque = Estoque.findByProdutoAndUnidade(item.produto, item.unidade)
             println "Repondo ${item.quantidade} de ${item.produto.nome} - ${item.unidade} ... "
             estoque.quantidade += item.quantidade
-            estoque.save()
+            estoque.save(flush: true)
         }
     }
 
