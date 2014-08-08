@@ -87,31 +87,30 @@
 
 
     <div class="col-md-3 col-sm-3 col-xs-6">
-        <div class="thumbnail product-item">
-            <a href="${createLink(uri: produto.nomeAsURL, absolute: true)}">
+        <a class="product-item-link" href="${createLink(uri: produto.nomeAsURL, absolute: true)}">
+            <div class="thumbnail product-item">
                 <asset:image src="produtos/${produto.fotoMiniatura}" alt="${produto.nome}" title="${produto.nome}"/>
-            </a>
 
+                <div class="caption">
+                    <h5>${produto.nome}</h5>
 
-            <div class="caption">
-                <h5>${produto.nome}</h5>
+                    <p class="product-item-brand">${produto.marca}</p>
 
-                <p class="product-item-brand">${produto.marca}</p>
+                    <p class="product-item-price"><g:formatNumber number="${produto.precoAPrazoEmReais}" type="currency"
+                                                                  currencyCode="BRL"/></p>
+                </div>
 
-                <p class="product-item-price"><g:formatNumber number="${produto.precoAPrazoEmReais}" type="currency"
-                                                              currencyCode="BRL"/></p>
+                <g:if test="${produto.dateCreated && ((produto.dateCreated - hoje) < 30)}">
+                    <div class="product-item-badge badge-sale">Novo</div>
+                </g:if>
+
+                <div class="buy-item">
+                    <a class="btn btn-primary" href="${createLink(uri: produto.nomeAsURL, absolute: true)}">
+                        <span><i class="fa fa-shopping-cart"></i> Comprar</span>
+                    </a>
+                </div>
             </div>
-
-            <g:if test="${produto.dateCreated && ((produto.dateCreated - hoje) < 30)}">
-                <div class="product-item-badge badge-sale">Novo</div>
-            </g:if>
-
-            <div class="buy-item">
-                <a class="btn btn-primary" href="${createLink(uri: produto.nomeAsURL, absolute: true)}">
-                    <span><i class="fa fa-shopping-cart"></i> Comprar</span>
-                </a>
-            </div>
-        </div>
+        </a>
     </div>
 
 
