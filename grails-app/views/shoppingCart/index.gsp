@@ -1,136 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta name="layout" content="main"/>  
+<head>
+    <meta name="layout" content="main"/>
     <title>Carrinho</title>
 
     <style type="text/css">
-      table th.col-sm-1 { text-align: center;}
+        table th.col-sm-1, table th.col-sm-2 {
+            text-align: center;
+        }
+
+        h6{
+            margin: 0px;
+            padding: 0px;
+        }
     </style>
 
-    <script type="text/javascript">
-        window.setTimeout(function() {
-            $(".alert").fadeTo(500, 0).slideUp(500, function(){
-                $(this).alert('close'); 
+    <asset:script>
+        window.setTimeout(function () {
+            $(".alert").fadeTo(500, 0).slideUp(500, function () {
+                $(this).alert('close');
             });
-        }, 3000);
-    </script>
+        }, 2000);
 
-  </head>
+        $(".mini-button").click(function(){
+            $(this).parent().submit();
+        });
+    </asset:script>
 
-  <body>
+</head>
 
-    <g:set var="ocultarRodape" value="${false}" scope="request"/>
+<body>
 
-        <div class="col-md-12">           
+<g:set var="ocultarRodape" value="${false}" scope="request"/>
 
-          <h3>Carrinho de Compras</h3>
-          <hr />
+<div class="col-md-12">
 
-          <g:if test="${flash.message}">
-            <div class="alert alert-success">
-               <button type="button" class="close" data-dismiss="alert">&times;</button>
-               ${flash.message}
-            </div>
-          </g:if>              
-            
-          <table class="table table-bordered table-striped table-condensed">
-           <thead>
+    <h3>Carrinho de Compras</h3>
+    <hr/>
+
+    <g:if test="${flash.message}">
+        <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            ${flash.message}
+        </div>
+    </g:if>
+
+    <table class="table table-bordered table-striped table-condensed">
+        <thead>
+        <tr>
+            <th class="col-sm-6">Produto</th>
+            <th class="col-sm-1">Preço</th>
+            <th class="col-sm-2">Quantidade</th>
+            <th class="col-sm-1">Excluir</th>
+            <th class="col-sm-1">Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- renderizando items -->
+        <g:each in="${itens}" var="item">
+            <g:set var="produto" value="${item.produto}"/>
+
             <tr>
-              <th class="col-sm-1">Produto</th>
-              <th>Descrição</th>
-              <th class="col-sm-1">Preço</th>
-              <th class="col-sm-1">Quantidade</th>
-              <th class="col-sm-1">Total</th>
-              <th class="col-sm-1">Excluir</th>
-            </tr>
-           </thead>
-           <tbody>
-            <!-- renderizando items -->
-            <g:each in="${itens}" var="item">
-                <g:set var="produto" value="${item.produto}"/>
-                <tr>
-                  <td> 
-                    <a href="${createLink(uri:produto.nomeAsURL,absolute:true)}">
-                      <asset:image src="produtos/${produto.fotoMiniatura}" alt="${produto.nome}" title="${produto.nome}" class="img-cart" />
+                <td>
+                    <a href="${createLink(uri: produto.nomeAsURL, absolute: true)}">
+                        <asset:image style="float:left;" src="produtos/${produto.fotoMiniatura}" alt="${produto.nome}"
+                                     title="${produto.nome}" class="img-cart"/>
                     </a>
-                  </td>
-                  <td>
-                    <a href="${createLink(uri:produto.nomeAsURL,absolute:true)}">
-                      <strong>${produto.nome} </strong> ${ (produto.marca)? (" - " + produto.marca):''}
-                    </a>
+
+                    <span class="hidden-xs">
+                        <strong>${produto.nome}</strong> ${(produto.marca) ? (" - " + produto.marca) : ''}
+                    </span>
+
                     <g:if test="${produto.unidades.size() > 1}">
-                      <p>${produto.tipoUnitario} : ${item.unidade}</p>
+                        <h6 class="hidden-xs">${produto.tipoUnitario}: ${item.unidade}</h6>
                     </g:if>
-                  </td>
-                  <td><g:formatNumber number="${item.precoAPrazoEmReais}" type="currency" currencyCode="BRL" /></td>
-                  <td>
 
-                    <p style="text-align:center;font-size:15px;"> 
-                      <span class="badge alert-success">${item.quantidade}</span>  
-                    </p>
+                </td>
 
-                    <div style="width:80px;display:block;margin-left:auto;margin-right:auto;">
+                <td style="text-align: center;vertical-align: middle;">
+                    ${formatNumber(number: produto.precoAPrazoEmReais, type: 'currency', currencyCode: 'BRL')}
+                </td>
 
-                        <g:form action="add" class="form-inline" controller="shoppingCart" style="float:left;margin-right:5px;">
-                          <g:hiddenField name="id" value="${produto.id}"/>
-                          <g:hiddenField name="unidade" value="${item.unidade}"/>
-                          <g:hiddenField name="quantidade" value="${1}"/>
+                <td style="text-align: center;vertical-align: middle;">
 
-                          <button type="submit" class="btn btn-primary">
+                    <g:form action="add" controller="shoppingCart" style="display:inline;">
+                        <g:hiddenField name="id" value="${produto.id}"/>
+                        <g:hiddenField name="unidade" value="${item.unidade}"/>
+                        <g:hiddenField name="quantidade" value="${1}"/>
+
+                        <button type="submit" class="btn btn-primary hidden-xs">
                             <i class="fa fa-plus"></i>
-                          </button>  
-                        </g:form>
+                        </button>
+                        <a href="#" class="mini-button visible-xs pull-left">
+                            <i class="fa fa-plus"></i>
+                        </a>
+                    </g:form>
 
-                        <g:form action="removerProduto" class="form-inline" controller="shoppingCart">
-                          <g:hiddenField name="id" value="${produto.id}"/>
-                          <g:hiddenField name="unidade" value="${item.unidade}"/>
-                          <g:hiddenField name="quantidade" value="${1}"/>
+                    <span class="badge alert-success" style="clear: both;margin:0 3px;">${item.quantidade}</span>
 
-                          <button type="submit" class="btn btn-primary">
+                    <g:form action="removerProduto" controller="shoppingCart" style="display:inline;">
+                        <g:hiddenField name="id" value="${produto.id}"/>
+                        <g:hiddenField name="unidade" value="${item.unidade}"/>
+                        <g:hiddenField name="quantidade" value="${1}"/>
+
+                        <button type="submit" class="btn btn-primary hidden-xs">
                             <i class="fa fa-minus"></i>
-                          </button>                            
-                        </g:form>  
+                        </button>
 
-                    </div>                     
-                  </td>
-                  <td><g:formatNumber number="${item.subTotalAPrazo}" type="currency" currencyCode="BRL" /></td>
-                  <td style="text-align: center;vertical-align:middle;">
+                        <a href="#" class="mini-button visible-xs pull-right">
+                            <i class="fa fa-minus"></i>
+                        </a>
+                    </g:form>
 
-                        <g:form class="form-inline" action="removerProduto" controller="shoppingCart">
-                          <g:hiddenField name="id" value="${produto.id}"/>
-                          <g:hiddenField name="unidade" value="${item.unidade}"/>
-                          <g:hiddenField name="quantidade" value="${item.quantidade}"/>
+                </td>
+                <td style="text-align: center;vertical-align: middle;">
 
-                          <button type="submit" class="btn btn-primary">
-                            <i class="fa fa-trash-o"></i>
-                          </button>                          
-                        </g:form> 
+                    <div class="btn-group">
+                        <g:form action="removerProduto" controller="shoppingCart">
+                            <g:hiddenField name="id" value="${produto.id}"/>
+                            <g:hiddenField name="unidade" value="${item.unidade}"/>
+                            <g:hiddenField name="quantidade" value="${item.quantidade}"/>
 
-                  </td>
-                </tr>
-            </g:each>
+                            <button type="submit" class="btn btn-default">
+                                <i class="fa fa-trash-o"></i>
+                            </button>
+                        </g:form>
+                    </div>
 
-            <tr>
-              <td colspan="6">&nbsp;</td>
+                </td>
+                <td style="text-align: center;vertical-align: middle;">
+                    <g:formatNumber number="${item.subTotalAPrazo}" type="currency" currencyCode="BRL"/>
+                </td>
             </tr>
-            <tr>
-              <td colspan="4" class="text-right">
+        </g:each>
+
+        <tr>
+            <td colspan="6">&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="4" class="text-right">
                 <strong>SubTotal</strong>
-              </td>
-              <td colspan="2" class="text-left"><g:formatNumber number="${valorTotal}" type="currency" currencyCode="BRL" /></td>
-            </tr>
+            </td>
+            <td colspan="2" class="text-left">
+                <g:formatNumber number="${valorTotal}" type="currency" currencyCode="BRL"/>
+            </td>
+        </tr>
 
-           </tbody>
+        </tbody>
 
-          </table>
-          
-          <a class="btn btn-primary" href="${createLink(uri:'/',absolute:true)}"><i class="fa fa-angle-double-left"></i> Escolher + produtos</a>
-          <a class="btn btn btn-success pull-right" href="${createLink(controller:'shoppingCart',action:'confirmAddress')}">
-            Continuar <i class="fa fa-angle-double-right"></i>
-          </a>
-    </div>
+    </table>
 
 
-  </body>
+
+
+
+    <a class="btn btn-primary" href="${createLink(uri: '/', absolute: true)}"><i
+            class="fa fa-angle-double-left"></i> Escolher + produtos</a>
+    <a class="btn btn btn-success pull-right"
+       href="${createLink(controller: 'shoppingCart', action: 'confirmAddress')}">
+        Continuar <i class="fa fa-angle-double-right"></i>
+    </a>
+</div>
+
+</body>
 </html>
