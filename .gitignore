@@ -1,4 +1,5 @@
 *.ids
+*.ipr
 *.iws
 *.iml
 target/*
