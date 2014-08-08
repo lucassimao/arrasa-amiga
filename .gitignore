@@ -1,4 +1,9 @@
+*.ids
+*.iws
+*.iml
 target/*
+layout v1.1/*
+projectFilesBackup/*
 *.log
 arrasa-amiga.sublime-workspace
 web-app/img/produtos/*

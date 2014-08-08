@@ -166,8 +166,8 @@
                   <li class="dropdown">
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#"> MAIS <b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                      <li class="${(controllerName == 'home' && actionName =='comocomprar')?'active':''}" >
-                        <a href="${createLink(action:'comocomprar',controller:'home',absolute:true,params: [cidade:Cidade.teresina.id])}">Como Comprar </a>
+                      <li class="${(request.forwardURI?.endsWith('comoComprar'))?'active':''}" >
+                        <a id="btnComoComprar" href="#">Como Comprar </a>
                       </li>
                       <li class="divider"></li>
                       <li class="${ (request.forwardURI?.endsWith('contato') )?'active':''}">
