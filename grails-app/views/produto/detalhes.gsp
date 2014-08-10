@@ -28,6 +28,10 @@
         .btn-circle {
             border-radius: 15px;
         }
+
+        #btn-comprar{
+            font-size: 1em;
+        }
     </style>
 
 </head>
@@ -207,7 +211,7 @@
                     <tr id="tr-comprar">
                         <td colspan="3">
                             <a href="#" id="btn-comprar" class="btn btn-sm btn-success btn-circle">
-                                <i class="fa fa-shopping-cart"></i> Comprar <i class="fa fa-angle-double-right"></i>
+                                <i class="fa fa-shopping-cart"></i> Adicionar ao Carrinho <i class="fa fa-angle-double-right"></i>
                             </a>
                         </td>
                     </tr>
@@ -231,7 +235,7 @@
                         <tr id="tr-comprar">
                             <td colspan="2">
                                 <a href="#" id="btn-comprar" class="btn btn-sm btn-success btn-circle">
-                                    <i class="fa fa-shopping-cart"></i> Comprar <i class="fa fa-angle-double-right"></i>
+                                    <i class="fa fa-shopping-cart"></i> Adicionar ao Carrinho <i class="fa fa-angle-double-right"></i>
                                 </a>
                             </td>
                         </tr>

@@ -41,7 +41,7 @@
 
               $.ajax({
                 
-                url: "${createLink(controller:'shoppingCart',action:'getCidades',absolute:true)}",
+                url: "${createLink(controller:'home',action:'getCidades',absolute:true)}",
                 data: {'idUf': idUf},
                 settings: {'cache':true}
 
