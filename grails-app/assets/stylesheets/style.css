@@ -664,13 +664,15 @@ a:hover.product-item-link {
 
 .product-item .product-item-badge{
     position: absolute;
+    /*transform:rotate(20deg);
+    -ms-transform:rotate(20deg); *//* IE 9 */
+    /*-webkit-transform:rotate(20deg);*/ /* Opera, Chrome, and Safari */
     top: 4px;
-    left: 4px;
+    right: 3px;
     padding: 5px 12px 6px;
     color: #fff;
     font-size: 12px;
     line-height: 14px;
-    font-weight: 600;
     background: #333;
     -webkit-border-radius: 4px 0 4px 0;
        -moz-border-radius: 4px 0 4px 0;
@@ -679,7 +681,9 @@ a:hover.product-item-link {
 }
 
 .product-item .product-item-badge.badge-sale{
-    background: #f89406;
+    background: #F06EC2;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
 }
 
 .product-item .buy-item{
