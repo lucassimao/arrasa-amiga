@@ -167,7 +167,7 @@
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#"> MAIS <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                       <li class="${(request.forwardURI?.endsWith('comoComprar'))?'active':''}" >
-                        <a id="btnComoComprar" href="#">Como Comprar </a>
+                        <a class="btnComoComprar" href="#">Como Comprar </a>
                       </li>
                       <li class="divider"></li>
                       <li class="${ (request.forwardURI?.endsWith('contato') )?'active':''}">
@@ -199,7 +199,7 @@
                   </g:each>
 
                   <li class="${(request.forwardURI?.endsWith('comoComprar'))?'active':''}" >
-                    <a href="#" id="btnComoComprar">Como Comprar </a>
+                    <a href="#" class="btnComoComprar">Como Comprar </a>
                   </li>
                   
                   <li class="${ (request.forwardURI?.endsWith('contato') )?'active':''}">
@@ -255,10 +255,9 @@
             });  
           });
 
-          $("#btnComoComprar").click(function(){
+          $(".btnComoComprar").click(function(){
 
               var modal = $('.modal');
-
               if (modal.length > 0){
                   $(modal).modal();              
               }else{

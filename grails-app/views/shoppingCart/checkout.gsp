@@ -8,6 +8,21 @@
 	<head>
 		<meta name="layout" content="main"/>
 
+
+        <style type="text/css">
+            table th.col-sm-1, table th.col-sm-1 {
+                text-align: center;
+            }
+            table tr td:nth-child(3),table tr td:nth-child(4),table tr td:nth-child(5){
+                text-align: center;vertical-align: middle;
+            }
+            h6{
+                margin: 0px;padding: 0px;
+                text-align: center;
+            }
+        </style>
+
+
 		<asset:script>
 
 
@@ -73,6 +88,13 @@
 				        scrollTop: $("#anchor-entrega-teresina").offset().top - 45
 				    }, 1500);
 
+
+                    window.setTimeout(function() {
+                        $("#messageDataEntregaFlash").fadeTo(1000, 0).slideUp(500, function(){
+                            $(this).alert('close');
+                        });
+                    }, 3000);
+
 				</g:if>
 
 			});
@@ -107,11 +129,10 @@
                <thead>
                 <tr>
                   <th class="col-sm-1">Produto</th>
-                  <th>Descrição</th>
+                  <th class="hidden-xs">Descrição</th>
                   <th class="col-sm-1">Preço</th>
                   <th class="col-sm-1">Quantidade</th>
                   <th class="col-sm-1">Total</th>
-                  <th class="col-sm-1">Excluir</th>
                 </tr>
                </thead>
                <tbody>
@@ -119,39 +140,34 @@
                 <g:each in="${venda.itensVenda}" var="item">
                     <g:set var="produto" value="${item.produto}"/>
                     <tr>
-                      <td> 
-                        <a href="${createLink(uri:produto.nomeAsURL,absolute:true)}">
-                          <asset:image src="produtos/${produto.fotoMiniatura}" alt="${produto.nome}" title="${produto.nome}" class="img-cart" />
-                        </a>
-                      </td>
-                      <td>
-                        <a href="${createLink(uri:produto.nomeAsURL,absolute:true)}">
-                          <strong>${produto.nome} </strong> ${ (produto.marca)? (" - " + produto.marca):''}
-                        </a>
-                        <g:if test="${produto.unidades.size() > 1}">
-                          <p>${produto.tipoUnitario} : ${item.unidade}</p>
-                        </g:if>
-                      </td>
-                      <td><g:formatNumber number="${item.precoAPrazoEmReais}" type="currency" currencyCode="BRL" /></td>
-                      <td>
-                        <p style="text-align:center;font-size:15px;"> 
-                          <span class="badge alert-success">${item.quantidade}</span>  
-                        </p>
-                      </td>
-                      <td><g:formatNumber number="${item.subTotalAPrazo}" type="currency" currencyCode="BRL" /></td>
-                      <td>
 
-                            <g:form class="form-inline" action="removerProduto" controller="shoppingCart">
-                              <g:hiddenField name="id" value="${produto.id}"/>
-                              <g:hiddenField name="unidade" value="${item.unidade}"/>
-                              <g:hiddenField name="quantidade" value="${item.quantidade}"/>
+                        <td>
+                            <h6 class="visible-xs">
+                                ${produto.nome}
+                                <g:if test="${produto.isMultiUnidade()}">
+                                    - ${item.unidade}
+                                </g:if>
+                            </h6>
+                            <a href="${createLink(uri: produto.nomeAsURL, absolute: true)}">
+                                <asset:image src="produtos/${produto.fotoMiniatura}" alt="${produto.nome}"
+                                title="${produto.nome}" class="img-cart"/>
+                            </a>
+                        </td>
 
-                              <button type="submit" class="btn btn-primary">
-                                <i class="fa fa-trash-o"></i>
-                              </button>                          
-                            </g:form> 
-
-                      </td>
+                        <td class="hidden-xs">
+                            <a href="${createLink(uri: produto.nomeAsURL, absolute: true)}">
+                                <strong>${produto.nome}</strong> ${(produto.marca) ? (" - " + produto.marca) : ''}
+                            </a>
+                            <g:if test="${produto.unidades.size() > 1}">
+                                <p>${produto.tipoUnitario} : ${item.unidade}</p>
+                            </g:if>
+                        </td>
+                        <td><g:formatNumber number="${item.precoAPrazoEmReais}" type="currency"
+                                            currencyCode="BRL"/></td>
+                        <td>
+                            <span class="badge alert-success">${item.quantidade}</span>
+                        </td>
+                        <td><g:formatNumber number="${item.subTotalAPrazo}" type="currency" currencyCode="BRL"/></td>
                     </tr>
                 </g:each>
 
@@ -186,7 +202,7 @@
 						<label class="radio" style="cursor:pointer;">
 							<input name="formaPagamento" type="radio" 
 								value="PagSeguro" ${!venda.cliente.isFromTeresina() || venda.formaPagamento.equals(FormaPagamento.PagSeguro)?'checked':''} > 
-							<span class="forma-pagamento-selecionado"> Cartão de Crédito / Boleto Bancário </span>						
+							<span class="forma-pagamento-selecionado"> Cartão de Crédito </span>
 						</label>
 						<p> A compra será finalizada na próxima tela </p>
 						<p> <em> ** Desconto para boleto bancário **</em> </p>
@@ -263,7 +279,7 @@
 	      	<a href="${createLink(uri:'/',absolute:true)}" class="btn btn-primary">
 	      		<i class="fa fa-angle-double-left"></i> Escolher + produtos
 	      	</a>
-	      	<button type="submit" class="btn btn-success pull-right">Concluir Pedido</button>
+	      	<button type="submit" class="btn btn-success pull-right">Fechar pedido</button>
 
 	      </g:form>
 

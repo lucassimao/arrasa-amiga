@@ -94,21 +94,25 @@
                 <div class="caption">
                     <h5>${produto.nome}</h5>
 
-                    <p class="product-item-brand">${produto.marca}</p>
+                    <p class="product-item-brand">${produto.marca?:''}</p>
+                    <asset:image src="rating/rating-4_6.gif"/>
 
-                    <p class="product-item-price"><g:formatNumber number="${produto.precoAPrazoEmReais}" type="currency"
-                                                                  currencyCode="BRL"/></p>
+                    <p class="product-item-price">
+                        <g:formatNumber number="${produto.precoAPrazoEmReais}" type="currency" currencyCode="BRL"/>
+                    <h6>ou 5x de R$ 26,63 sem juros</h6>
+                </p>
                 </div>
 
                 <g:if test="${produto.dateCreated && ((produto.dateCreated - hoje) < 30)}">
                     <div class="product-item-badge badge-sale">Novo</div>
                 </g:if>
 
-                <div class="buy-item">
-                    <a class="btn btn-primary" href="${createLink(uri: produto.nomeAsURL, absolute: true)}">
-                        <span><i class="fa fa-shopping-cart"></i> Comprar</span>
-                    </a>
-                </div>
+
+            %{--           <div class="buy-item">
+                           <a class="btn btn-primary" href="${createLink(uri: produto.nomeAsURL, absolute: true)}">
+                               <span><i class="fa fa-shopping-cart"></i> Comprar</span>
+                           </a>
+                       </div>--}%
             </div>
         </a>
     </div>

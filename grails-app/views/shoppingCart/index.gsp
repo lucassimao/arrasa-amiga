@@ -9,6 +9,10 @@
             text-align: center;
         }
 
+        table tbody td{
+            font-size: .9em;
+        }
+
         h6{
             margin: 0px;
             padding: 0px;
@@ -63,7 +67,7 @@
             <tr>
                 <td>
                     <a href="${createLink(uri: produto.nomeAsURL, absolute: true)}">
-                        <asset:image style="float:left;" src="produtos/${produto.fotoMiniatura}" alt="${produto.nome}"
+                        <asset:image style="float:left;margin-right: 5px;" src="produtos/${produto.fotoMiniatura}" alt="${produto.nome}"
                                      title="${produto.nome}" class="img-cart"/>
                     </a>
 
@@ -138,10 +142,10 @@
             <td colspan="6">&nbsp;</td>
         </tr>
         <tr>
-            <td colspan="4" class="text-right">
+            <td colspan="4" class="text-right" style="vertical-align: middle;">
                 <strong>SubTotal</strong>
             </td>
-            <td colspan="2" class="text-left">
+            <td colspan="2" class="text-left" style="text-align: center;vertical-align: middle;">
                 <g:formatNumber number="${valorTotal}" type="currency" currencyCode="BRL"/>
             </td>
         </tr>
