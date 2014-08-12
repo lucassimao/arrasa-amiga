@@ -1,17 +1,6 @@
 <%@ page import="br.com.arrasaamiga.Cidade" %>
 
 
-
-<div class="row">
-     <div class="col-md-12">
-         <div class="fb-comments"
-              data-width="100%"
-              data-href="http://www.arrasaamiga.com.br"
-              data-colorscheme="light"></div>
-     </div>
-</div>
-
-
 <!-- begin:footer -->
 <div class="row">
     <div class="col-md-12 footer">
