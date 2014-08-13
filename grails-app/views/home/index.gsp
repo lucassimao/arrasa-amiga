@@ -99,14 +99,15 @@
 
                     <p class="product-item-price">
                         <g:formatNumber number="${produto.precoAPrazoEmReais}"
-                            type="currency" currencyCode="BRL"></g:formatNumber>
-                        <h6>
-                            ou 5x de
-                            <g:formatNumber number="${produto.calcularValorParcela(5)}" type="currency" currencyCode="BRL"/>
-                            sem juros
-                        </h6>
-                    </p>
+                                        type="currency" currencyCode="BRL"></g:formatNumber>
+                    <h6>
+                        ou 5x de
+                        <g:formatNumber number="${produto.calcularValorParcela(5)}" type="currency" currencyCode="BRL"/>
+                        sem juros
+                    </h6>
+                </p>
                 </div>
+
 
                 <g:if test="${produto.dateCreated && ((produto.dateCreated - hoje) < 30)}">
                     <div class="product-item-badge badge-sale">Novo</div>
@@ -143,6 +144,13 @@
 
 
 <!-- end:best-seller -->
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="fb-comments" data-width="100%"
+             data-href="http://www.arrasaamiga.com.br"  data-colorscheme="light"></div>
+    </div>
+</div>
 
 </body>
 </html>
