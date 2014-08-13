@@ -1,6 +1,7 @@
 *.ids
 *.ipr
 *.iws
+.idea/*
 *.iml
 target/*
 layout v1.1/*
@@ -9,3 +10,4 @@ projectFilesBackup/*
 arrasa-amiga.sublime-workspace
 web-app/img/produtos/*
 grails-app/assets/images/produtos/*
+grails-app/assets/images/banners/*.*

@@ -640,8 +640,8 @@ a:hover.product-item-link {
 
 .product-item .caption h5{
     font-weight: 600;
-    font-size: 15px;
-    line-height: 20px;
+    font-size: 1em;
+    /*line-height: 20px;*/
     border-top: 2px solid #333;
     margin-top: 5px;
     padding-top: 5px;
@@ -668,6 +668,7 @@ a:hover.product-item-link {
 
 .product-item .caption h6 {
     margin: 0px;
+    font-size: .8em;
 }
 
 .product-item .product-item-badge{
