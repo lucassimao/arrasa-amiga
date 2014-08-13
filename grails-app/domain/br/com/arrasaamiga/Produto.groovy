@@ -167,5 +167,10 @@ class Produto {
 
     }
 
+    public BigDecimal calcularValorParcela(int numeroParcelas){
+        int valorParceladoEmCentavos = this.precoAPrazoEmCentavos/numeroParcelas
+        return new BigDecimal(valorParceladoEmCentavos/100.0)
+    }
+
 
 }

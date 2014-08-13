@@ -635,7 +635,7 @@ a:hover.no-underline{
 
 
 a:hover.product-item-link {
-    text-decoration: none;
+    /*text-decoration: none;*/
 }
 
 .product-item .caption h5{
@@ -822,10 +822,11 @@ a:hover.product-item-link {
 }
 
 .single-desc .price{
-    color: #f89406;
-    font-weight: 400;
     font-size: 27px;
     line-height: 29px;
+    font-weight: 800;
+    color:#F06EC2;
+
 }
 
 .single-desc .price-old{

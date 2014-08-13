@@ -138,8 +138,8 @@
 
                         <p>
                             <small>
-                                Em até 5x de R$
-                                ${formatNumber(number: produtoInstance.precoAPrazoEmReais / 5, type: 'currency', currencyCode: 'BRL')}
+                                Em até 5x de
+                                <g:formatNumber number="${produtoInstance.calcularValorParcela(5)}" type="currency" currencyCode="BRL"/>
                                 no cartão
                             </small>
                         </p>
@@ -322,31 +322,31 @@
                 <g:each in="${produtosRelacionados}" var="pRelacionado">
 
                     <div class="col-md-3 col-sm-6 col-xs-6">
-                        <div class="thumbnail product-item">
-                            <a href="${createLink(uri: pRelacionado.nomeAsURL, absolute: true)}">
+                        <a href="${createLink(uri: pRelacionado.nomeAsURL, absolute: true)}">
+                            <div class="thumbnail product-item">
+
                                 <asset:image src="produtos/${pRelacionado.fotoMiniatura}" alt="${pRelacionado.nome}"
-                                             title="${pRelacionado.nome}"/>
-                            </a>
+                                                 title="${pRelacionado.nome}"/>
 
-                            <div class="caption">
-                                <h5>${pRelacionado.nome}</h5>
+                                <div class="caption">
+                                    <h5>${pRelacionado.nome}</h5>
 
-                                <p>${pRelacionado.marca}</p>
+                                    <p class="product-item-brand">${pRelacionado.marca ?: ''}</p>
+                                    <asset:image src="rating/rating-4_6.gif"/>
 
-                                <p>
-                                    <g:formatNumber number="${pRelacionado.precoAPrazoEmReais}" type="currency"
-                                                    currencyCode="BRL"/>
+                                    <p class="product-item-price">
+                                        <g:formatNumber number="${pRelacionado.precoAPrazoEmReais}"
+                                                        type="currency" currencyCode="BRL"></g:formatNumber>
+                                    <h6>
+                                        ou 5x de
+                                        <g:formatNumber number="${pRelacionado.calcularValorParcela(5)}" type="currency" currencyCode="BRL"/>
+                                        sem juros
+                                    </h6>
                                 </p>
-
-                                <div class="buy-item">
-                                    <a class="btn btn-primary"
-                                       href="${createLink(uri: pRelacionado.nomeAsURL, absolute: true)}">
-                                        <span><i class="fa fa-shopping-cart"></i> Comprar</span>
-                                    </a>
                                 </div>
 
                             </div>
-                        </div>
+                        </a>
                     </div>
 
                 </g:each>

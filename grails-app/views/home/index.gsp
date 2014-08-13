@@ -94,13 +94,18 @@
                 <div class="caption">
                     <h5>${produto.nome}</h5>
 
-                    <p class="product-item-brand">${produto.marca?:''}</p>
+                    <p class="product-item-brand">${produto.marca ?: ''}</p>
                     <asset:image src="rating/rating-4_6.gif"/>
 
                     <p class="product-item-price">
-                        <g:formatNumber number="${produto.precoAPrazoEmReais}" type="currency" currencyCode="BRL"/>
-                    <h6>ou 5x de R$ 26,63 sem juros</h6>
-                </p>
+                        <g:formatNumber number="${produto.precoAPrazoEmReais}"
+                            type="currency" currencyCode="BRL"></g:formatNumber>
+                        <h6>
+                            ou 5x de
+                            <g:formatNumber number="${produto.calcularValorParcela(5)}" type="currency" currencyCode="BRL"/>
+                            sem juros
+                        </h6>
+                    </p>
                 </div>
 
                 <g:if test="${produto.dateCreated && ((produto.dateCreated - hoje) < 30)}">
