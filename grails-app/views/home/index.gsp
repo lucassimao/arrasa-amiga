@@ -144,13 +144,14 @@
 
 
 <!-- end:best-seller -->
-
-<div class="row">
-    <div class="col-md-12">
-        <div class="fb-comments" data-width="100%"
-             data-href="http://www.arrasaamiga.com.br"  data-colorscheme="light"></div>
+<browser:isNotMobile>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="fb-comments" data-width="100%"
+                 data-href="http://www.arrasaamiga.com.br" data-colorscheme="light"></div>
+        </div>
     </div>
-</div>
+</browser:isNotMobile>
 
 </body>
 </html>
