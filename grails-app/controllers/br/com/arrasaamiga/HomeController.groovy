@@ -33,6 +33,7 @@ class HomeController {
 	def index(){
         def user = springSecurityService.currentUser
         def cliente = Cliente.findByUsuario(user)
+        def banners = Banner.findAllByVisivel(true)
 
         List subGrupos = []
         def grupoDeProduto = GrupoDeProduto.findByNome(params.grupoDeProduto)
@@ -56,7 +57,7 @@ class HomeController {
 		}
 
 
-		[produtos:produtos,grupoRaiz:grupoDeProduto?.grupoRaiz?.nome]
+		[produtos:produtos,grupoRaiz:grupoDeProduto?.grupoRaiz?.nome,banners:banners]
 
 	}
 

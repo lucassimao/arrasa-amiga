@@ -12,8 +12,7 @@ class Banner {
     static constraints = {
         arquivo nullable: false, blank: false
         link nullable: true,blank: true
-        titulo nullable: false,blank: false
-        comentario nullable: false,blank:false
-
+        titulo nullable: true,blank: true
+        comentario nullable: true,blank:true
     }
 }

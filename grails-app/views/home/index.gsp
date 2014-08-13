@@ -15,53 +15,41 @@
 
 <body>
 
-<!-- begin:home-slider -->
-<div id="home-slider" class="carousel slide" data-ride="carousel">
-    <ol class="carousel-indicators">
-        <li data-target="#home-slider" data-slide-to="0" class="active"></li>
-        <li data-target="#home-slider" data-slide-to="1" class=""></li>
-        <li data-target="#home-slider" data-slide-to="2" class=""></li>
-    </ol>
+<g:if test="${banners}">
+    <!-- begin:home-slider -->
 
-    <div class="carousel-inner">
-        <div class="item active">
-            <asset:image src="layout-WB0BMF1K5/slider1.png"/>
+    <div id="home-slider" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+            <g:each in="${0..<banners.size()}" var="idx">
+                <li data-target="#home-slider" data-slide-to="${idx}" class="${(idx==0)?'active':''}"></li>
+            </g:each>
+        </ol>
 
-            <div class="carousel-caption hidden-xs">
-                <h3>First slide label</h3>
+        <div class="carousel-inner">
 
-                <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-            </div>
+            <g:each in="${banners}" status="i" var="banner">
+
+                    <div class="item ${(i == 0) ? 'active' : ''}">
+                        <a href="${banner.link}" target="_blank">
+                            <asset:image src="banners/${banner.arquivo}"/>
+                            <div class="carousel-caption hidden-xs">
+                                <h1 style="color:#F06EC2"><strong> ${banner.titulo} </strong></h1>
+                                <p><h3><strong> ${banner.comentario} </strong></h3></p>
+                            </div>
+                        </a>
+                    </div>
+
+            </g:each>
         </div>
-
-        <div class="item">
-            <asset:image src="layout-WB0BMF1K5/slider2.png"/>
-
-            <div class="carousel-caption hidden-xs">
-                <h3>Second slide label</h3>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            </div>
-        </div>
-
-        <div class="item">
-            <asset:image src="layout-WB0BMF1K5/slider3.png"/>
-
-            <div class="carousel-caption hidden-xs">
-                <h3>Third slide label</h3>
-
-                <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-            </div>
-        </div>
+        <a class="left carousel-control" href="#home-slider" data-slide="prev">
+            <i class="fa fa-angle-left"></i>
+        </a>
+        <a class="right carousel-control" href="#home-slider" data-slide="next">
+            <i class="fa fa-angle-right"></i>
+        </a>
     </div>
-    <a class="left carousel-control" href="#home-slider" data-slide="prev">
-        <i class="fa fa-angle-left"></i>
-    </a>
-    <a class="right carousel-control" href="#home-slider" data-slide="next">
-        <i class="fa fa-angle-right"></i>
-    </a>
-</div>
-<!-- end:home-slider -->
+    <!-- end:home-slider -->
+</g:if>
 
 
 
@@ -74,7 +62,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="page-header">
-            <!-- <h2> Mais procurados <small> Most sold product in this month</small></h2> -->
+            <!-- <h2> Mais procurados <small> Produtos mais vendidos este mês</small></h2> -->
         </div>
     </div>
 </div>
@@ -112,13 +100,6 @@
                 <g:if test="${produto.dateCreated && ((produto.dateCreated - hoje) < 30)}">
                     <div class="product-item-badge badge-sale">Novo</div>
                 </g:if>
-
-
-            %{--           <div class="buy-item">
-                           <a class="btn btn-primary" href="${createLink(uri: produto.nomeAsURL, absolute: true)}">
-                               <span><i class="fa fa-shopping-cart"></i> Comprar</span>
-                           </a>
-                       </div>--}%
             </div>
         </a>
     </div>

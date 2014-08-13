@@ -16,61 +16,66 @@
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
 			<ol class="property-list banner">
-			
+
 				<g:if test="${bannerInstance?.arquivo}">
 				<li class="fieldcontain">
 					<span id="arquivo-label" class="property-label">Banner</span>
-					
-						<span class="property-value" aria-labelledby="arquivo-label"><asset:image src="banners/${fieldValue(bean: bannerInstance, field: 'arquivo')}" /></span>
-					
+
+						<span class="property-value" aria-labelledby="arquivo-label">
+                            <a target="_blank" href="${assetPath(src:'banners/' +bannerInstance.arquivo)}">
+                                <asset:image style="width:25%;" src="banners/${fieldValue(bean: bannerInstance, field: 'arquivo')}" />
+                            </a>
+                            <p> <small> Click para ampliar </small></p>
+                        </span>
+
 				</li>
 				</g:if>
-			
+
 				<g:if test="${bannerInstance?.link}">
 				<li class="fieldcontain">
 					<span id="link-label" class="property-label"><g:message code="banner.link.label" default="Link" /></span>
-					
+
 						<span class="property-value" aria-labelledby="link-label"><a target="_blank" href="${fieldValue(bean:bannerInstance,field: 'link')}"> <g:fieldValue bean="${bannerInstance}" field="link"/></a> </span>
-					
+
 				</li>
 				</g:if>
-			
+
 				<g:if test="${bannerInstance?.titulo}">
 				<li class="fieldcontain">
 					<span id="titulo-label" class="property-label"><g:message code="banner.titulo.label" default="Titulo" /></span>
-					
+
 						<span class="property-value" aria-labelledby="titulo-label"><g:fieldValue bean="${bannerInstance}" field="titulo"/></span>
-					
+
 				</li>
 				</g:if>
-			
+
 				<g:if test="${bannerInstance?.comentario}">
 				<li class="fieldcontain">
 					<span id="comentario-label" class="property-label"><g:message code="banner.comentario.label" default="Comentario" /></span>
-					
+
 						<span class="property-value" aria-labelledby="comentario-label"><g:fieldValue bean="${bannerInstance}" field="comentario"/></span>
-					
+
 				</li>
 				</g:if>
-			
+
 				<g:if test="${bannerInstance?.dateCreated}">
 				<li class="fieldcontain">
 					<span id="dateCreated-label" class="property-label"><g:message code="banner.dateCreated.label" default="Data de Cadastro" /></span>
-					
+
 						<span class="property-value" aria-labelledby="dateCreated-label"><g:formatDate date="${bannerInstance?.dateCreated}" /></span>
-					
+
 				</li>
 				</g:if>
-			
+
 				<g:if test="${bannerInstance?.visivel}">
 				<li class="fieldcontain">
 					<span id="visivel-label" class="property-label"><g:message code="banner.visivel.label" default="Visivel" /></span>
-					
+
 						<span class="property-value" aria-labelledby="visivel-label"><g:formatBoolean boolean="${bannerInstance?.visivel}" /></span>
-					
+
 				</li>
 				</g:if>
-			
+
 			</ol>
 			<g:form url="[resource:bannerInstance, action:'delete']" method="DELETE">
 				<fieldset class="buttons">
