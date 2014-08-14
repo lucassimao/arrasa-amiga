@@ -235,10 +235,10 @@
 
     <style type="text/css">
       .transition {
-          -webkit-transform: scale(1.3);
-          -moz-transform: scale(1.3);
-          -o-transform: scale(1.3);
-          transform: scale(1.3);
+          -webkit-transform: scale(1.2);
+          -moz-transform: scale(1.2);
+          -o-transform: scale(1.2);
+          transform: scale(1.2);
       }
     </style>
 
