@@ -75,6 +75,7 @@ grails.project.dependency.resolution = {
         compile ':asset-pipeline:1.8.11'
         compile ":spring-security-core:2.0-RC3"
         compile ":browser-detection:0.4.3"
+        compile ":quartz:1.0.2"
         //compile ":asynchronous-mail:1.0"
         compile ":mail:1.0.6"
 

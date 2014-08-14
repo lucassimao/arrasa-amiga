@@ -20,13 +20,14 @@ class Produto {
 
     int ordem
     Boolean visivel
+    double stars
 
     Date dateCreated
     Date lastUpdated
 
 	static hasMany = [fotos:FotoProduto,unidades:String,keywords:String,grupos:GrupoDeProduto]
     
-	static transients = ['precoAVistaEmReais','precoAPrazoEmReais','estoques','grupoPadrao','stars',
+	static transients = ['precoAVistaEmReais','precoAPrazoEmReais','estoques','grupoPadrao',
                         'produtosRelacionados','quantidadeEmEstoque','nomeAsURL','multiUnidade',
                         'descontoAVistaEmReais']
 
@@ -174,14 +175,5 @@ class Produto {
         int valorParceladoEmCentavos = this.precoAPrazoEmCentavos/numeroParcelas
         return new BigDecimal(valorParceladoEmCentavos/100.0)
     }
-
-    public double getStars(){
-        def quantidadeDoProdutoMaisVendido = ItemVenda.executeQuery("select count(i.produto) from ItemVenda i group by i.produto order by count(i.produto) desc", [max:1])
-        def quantidadeVendidaDoProdutoAtual = ItemVenda.countByProduto(this)
-        return (quantidadeVendidaDoProdutoAtual*5.0)/quantidadeDoProdutoMaisVendido
-    }
-
-
-
 
 }
