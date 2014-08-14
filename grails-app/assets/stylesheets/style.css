@@ -226,6 +226,9 @@ a:hover.no-underline{
 }
 
 
+
+
+
 /*
     ==================
     [3. LOGO]
@@ -635,7 +638,15 @@ a:hover.no-underline{
 
 
 a:hover.product-item-link {
-    /*text-decoration: none;*/
+    text-decoration: none;
+}
+
+
+.product-item img{
+    -webkit-transition: all .4s ease-in-out;
+    -moz-transition: all .4s ease-in-out;
+    -o-transition: all .4s ease-in-out;
+    -ms-transition: all .4s ease-in-out;
 }
 
 .product-item .caption h5{

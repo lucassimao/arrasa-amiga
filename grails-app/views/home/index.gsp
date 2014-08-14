@@ -9,6 +9,7 @@
     <parameter name="keywords" value="Maquiagem, blushes, NYX, batom, sombra, paleta,Teresina, Piauí, maquiadora"/>
     <parameter name="og:image" value="${assetPath(src: 'top.jpg')}"/>
     <meta name="layout" content="main"/>
+    <asset:stylesheet href="jquery.raty.css"/>
 
 </head>
 
@@ -83,7 +84,7 @@
                     <h5>${produto.nome}</h5>
 
                     <p class="product-item-brand">${produto.marca ?: ''}</p>
-                    <asset:image src="rating/rating-4_6.gif"/>
+                    <div class="star-rating" data-score="${produto.stars}"></div>
 
                     <p class="product-item-price">
                         <g:formatNumber number="${produto.precoAPrazoEmReais}"

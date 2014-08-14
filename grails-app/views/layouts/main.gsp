@@ -231,6 +231,16 @@
     <asset:javascript src="masonry.pkgd.min.js"/>
     <asset:javascript src="imagesloaded.pkgd.min.js"/>
     <asset:javascript src="script.js"/>
+    <asset:javascript src="jquery.raty.js"/>
+
+    <style type="text/css">
+      .transition {
+          -webkit-transform: scale(1.3);
+          -moz-transform: scale(1.3);
+          -o-transform: scale(1.3);
+          transform: scale(1.3);
+      }
+    </style>
 
 
     <asset:script type="text/javascript">
@@ -254,6 +264,16 @@
               version    : 'v2.0'
             });  
           });
+
+        $(".star-rating").raty({path:'${createLink(uri:'/assets',absolute: true)}',readOnly:true,
+                                    score: function() { return $(this).attr('data-score'); }});
+
+        $('.thumbnail img').hover(function() {
+            $(this).addClass('transition');
+
+        }, function() {
+            $(this).removeClass('transition');
+        });
 
           $(".btnComoComprar").click(function(){
 
