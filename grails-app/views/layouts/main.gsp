@@ -275,6 +275,7 @@
             $(this).removeClass('transition');
         });
 
+
           $(".btnComoComprar").click(function(){
 
               var modal = $('.modal');

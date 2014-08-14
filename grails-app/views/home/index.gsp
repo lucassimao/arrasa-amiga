@@ -98,8 +98,8 @@
                 </div>
 
 
-                <g:if test="${produto.dateCreated && ((produto.dateCreated - hoje) < 30)}">
-                    <div class="product-item-badge badge-sale">Novo</div>
+                <g:if test="${produto.dateCreated && ((hoje - produto.dateCreated) < 30)}">
+                    <div class="product-item-badge badge-sale">Novo </div>
                 </g:if>
             </div>
         </a>
