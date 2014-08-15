@@ -1,53 +1,50 @@
 package br.com.arrasaamiga
 
 class ShoppingCart {
-	
-	static hasMany = [itens : ItemVenda]
-	Date dateCreated
-   	Date lastUpdated
-	
-	static mapping = {
-		itens lazy: false, cascade: 'all'
-	}
 
-	static transients = ['valorTotalAPrazo','valorTotalAVista']
+    static hasMany = [itens: ItemVenda]
+    Date dateCreated
+    Date lastUpdated
 
-	public int getQuantidade(Produto produto, String unidade){
-		
-		def set = this.itens.findAll{ itemVenda-> 
+    static mapping = {
+        itens lazy: false, cascade: 'all'
+    }
 
-			itemVenda.produto.id == produto.id && itemVenda.unidade.equals(unidade) 
-		
-		}
+    static transients = ['valorTotalAPrazo', 'valorTotalAVista']
 
-		return set.sum(0){ it.quantidade }
+    public int getQuantidade(Produto produto, String unidade) {
 
-	}
-
-    public Double getValorTotalAPrazo(){
-        int total = 0
-
-        this.itens?.each{ itemVenda ->
-
-            total +=  itemVenda.precoAPrazoEmCentavos * itemVenda.quantidade
+        def set = this.itens.findAll { itemVenda ->
+            itemVenda.produto.id == produto.id && itemVenda.unidade.equals(unidade)
         }
 
-        return total/100.0
+        return set.sum(0) { it.quantidade }
+
+    }
+
+    public Double getValorTotalAPrazo() {
+        int total = 0
+
+        this.itens?.each { itemVenda ->
+
+            total += itemVenda.precoAPrazoEmCentavos * itemVenda.quantidade
+        }
+
+        return total / 100.0
 
     }
 
 
-    public Double getValorTotalAVista(){
+    public Double getValorTotalAVista() {
         int total = 0
-        
-        this.itens?.each{ itemVenda ->
+
+        this.itens?.each { itemVenda ->
             total += itemVenda.precoAVistaEmCentavos * itemVenda.quantidade
         }
 
-        return total/100.0
+        return total / 100.0
 
     }
-
 
 
 }

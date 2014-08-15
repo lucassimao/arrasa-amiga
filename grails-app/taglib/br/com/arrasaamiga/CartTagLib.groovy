@@ -2,15 +2,27 @@ package br.com.arrasaamiga
 
 class CartTagLib {
 
-	static namespace = 'cart'
+    static namespace = 'cart'
 
-	def shoppingCartService
+    def shoppingCartService
 
-	def qtdeTotalItens = { attrs, body ->
-		def cart = shoppingCartService.shoppingCart
-		def qtde = cart.itens?.sum {c-> c.quantidade }
+    def qtdeTotalItens = { attrs, body ->
+        try {
 
-		out << ( (qtde)?:0)
-	}
+            def cart = shoppingCartService.shoppingCart
+            def qtde = 0
+
+            if (cart?.itens) {
+                qtde = cart.itens.sum { c -> c.quantidade }
+            }
+
+            out << qtde
+
+        } catch (Exception e) {
+            e.printStackTrace()
+            return 0
+        }
+
+    }
 
 }

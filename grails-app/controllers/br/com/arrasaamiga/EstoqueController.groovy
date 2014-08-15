@@ -1,10 +1,7 @@
 package br.com.arrasaamiga
 
-import org.springframework.dao.DataIntegrityViolationException
-import grails.plugin.springsecurity.annotation.Secured
 import grails.converters.JSON
-
-
+import grails.plugin.springsecurity.annotation.Secured
 
 class EstoqueController {
 
@@ -16,28 +13,28 @@ class EstoqueController {
     }
 
 
-    def listAsJson(){
+    def listAsJson() {
         def c = Estoque.createCriteria()
 
-        def results = c.list () {
+        def results = c.list() {
 
-            produto{
-                and{
-                    eq('visivel',true) 
-                }
+            produto {
+                eq('visivel', true)
                 order('nome')
             }
 
-            projections{
+            projections {
                 property('id')
-                produto{
+                produto {
                     property('nome')
+                    property('precoAVistaEmCentavos')
+                    property('precoAPrazoEmCentavos')
                 }
 
                 property('unidade')
                 property('quantidade')
             }
-        }       
+        }
 
         render results as JSON
 
@@ -49,17 +46,17 @@ class EstoqueController {
 
         def c = Estoque.createCriteria()
 
-        def results = c.list (params) {
-            produto{
-                and{
-                    eq('visivel',true)
-                    order('nome') 
+        def results = c.list(params) {
+            produto {
+                and {
+                    eq('visivel', true)
+                    order('nome')
                 }
             }
         }
 
 
-        [estoqueInstanceList: results , estoqueInstanceTotal: Estoque.count()]
+        [estoqueInstanceList: results, estoqueInstanceTotal: Estoque.count()]
     }
 
     @Secured(['ROLE_ADMIN'])
@@ -86,7 +83,7 @@ class EstoqueController {
 
         [estoqueInstance: estoqueInstance, pedidosEmAberto: Pedido.findAllByStatus(StatusPedido.Aguardando)]
     }
-    
+
 
     @Secured(['ROLE_ADMIN'])
     def update(Long id, Long version) {
@@ -101,8 +98,8 @@ class EstoqueController {
         if (version != null) {
             if (estoqueInstance.version > version) {
                 estoqueInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
-                          [message(code: 'estoque.label', default: 'Estoque')] as Object[],
-                          "Another user has updated this Estoque while you were editing")
+                        [message(code: 'estoque.label', default: 'Estoque')] as Object[],
+                        "Another user has updated this Estoque while you were editing")
                 render(view: "edit", model: [estoqueInstance: estoqueInstance])
                 return
             }
@@ -114,10 +111,10 @@ class EstoqueController {
         pedido.status = StatusPedido.Recebido
         pedido.dataRecebimento = new Date()
 
-        estoqueInstance.entradas << new EntradaEstoque(pedido:pedido,dataEntrada: new Date())
+        estoqueInstance.entradas << new EntradaEstoque(pedido: pedido, dataEntrada: new Date())
 
 
-        if (!estoqueInstance.save(flush: true) && pedido.save(flush:true)) {
+        if (!estoqueInstance.save(flush: true) && pedido.save(flush: true)) {
             render(view: "entrada", model: [estoqueInstance: estoqueInstance, pedidosEmAberto: Pedido.findAllByStatus(StatusPedido.Aguardando)])
             return
         }

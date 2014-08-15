@@ -1,13 +1,22 @@
 package br.com.arrasaamiga
 
+import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
+import grails.rest.RestfulController
 
-import groovyx.net.http.*
-import static groovyx.net.http.ContentType.*
-import static groovyx.net.http.Method.*
+import static org.springframework.http.HttpStatus.NOT_FOUND
+import static org.springframework.http.HttpStatus.OK
 
 @Secured(['permitAll'])
-class VendaController {
+class VendaController extends RestfulController {
+
+    static responseFormats = ['html', 'json']
+
+    def shoppingCartService
+
+    VendaController() {
+        super(Venda)
+    }
 
 
     @Secured(['isAuthenticated()'])
@@ -15,12 +24,79 @@ class VendaController {
 
         def venda = Venda.get(id)
 
-        if (venda) {
-            [numeroPedido: String.format("%05d", venda.id), venda: venda]
+        withFormat {
+            html {
+                if (venda) {
+                    [numeroPedido   : String.format("%05d", venda.id), venda: venda,
+                     enderecoEntrega: venda.cliente.endereco, cliente: venda.cliente]
+
+                } else {
+                    println "Erro ao carregar venda ${id}"
+                    render 'Venda não encontrada'
+                }
+            }
+            json {
+                if (venda)
+                    respond venda
+                else
+                    render status: NOT_FOUND
+            }
+        }
+
+    }
+
+    /* 
+     *   TODO verificar se a nova versão corrigiu o bug do metodo update
+     */
+
+    def update() {
+
+        def venda = Venda.get(params.id)
+        venda.properties = params
+
+        if (venda.hasErrors()) {
+            println venda.errors
+            respond venda.errors
 
         } else {
-            println "Erro ao carregar venda ${id}"
-            render 'Venda não encontrada'
+            venda.save(flush: true)
+            render status: OK
+
+        }
+
+    }
+
+    def save() {
+        request.withFormat {
+
+            json {
+                def json = request.JSON
+
+                def venda = new Venda()
+                venda.dataEntrega = new Date(json.dataEntrega)
+                venda.cliente = new Cliente(json.cliente)
+                venda.cliente.endereco.cidade = Cidade.teresina
+                venda.cliente.endereco.uf = Uf.piaui
+                venda.vendedor = Usuario.findByUsername(json.vendedor)
+                venda.formaPagamento = FormaPagamento.valueOf(json.formaPagamento)
+
+                if (venda.formaPagamento == FormaPagamento.JaPagou)
+                    venda.status = StatusVenda.PagamentoRecebido
+                else
+                    venda.status = StatusVenda.AguardandoPagamento
+
+
+                JSON.parse(json.itens).each { obj ->
+                    def estoque = Estoque.get(obj.estoqueId)
+                    shoppingCartService.addToShoppingCart(estoque.produto, estoque.unidade, obj.quantidade)
+                }
+
+                venda.carrinho = shoppingCartService.shoppingCart
+                venda.carrinho.checkedOut = true
+
+                venda.save(flush: true)
+                render status: OK
+            }
         }
 
     }
@@ -40,40 +116,21 @@ class VendaController {
 
     }
 
-    def save() {
-        println request.JSON
 
-        /*
-        def http = new HTTPBuilder( 'https://android.googleapis.com/gcm/send' )
-        http.post( POST, JSON ) {
-                //uri.path = '/ajax/services/search/web'
-                //uri.query = [ v:'1.0', q: 'Calvin and Hobbes' ]
+    @Secured(['IS_AUTHENTICATED_FULLY'])
+    def showFull(Long id) {
 
-                headers.'Authorization' = 'AIzaSyB-UkU5kwTKcsSYoWONSBXSEXvPFEP9c-M'
-                headers.'Content-Type' = 'application/json'
-                body = [
-                        "registration_ids":['1']
-                ]
+        def venda = Venda.get(id)
 
-                // response handler for a success response code:
-                response.success = { resp, json ->
-                        println resp.statusLine
+        if (venda) {
+            [numeroPedido: String.format("%05d", venda.id), venda: venda, cliente: venda.cliente]
 
-                // parse the JSON response object:
-                        json.responseData.results.each {
-                                println "  ${it.titleNoFormatting} : ${it.visibleUrl}"
-                        }
-                }
-
-                // handler for any failure status code:
-                response.failure = { resp ->
-                        println "Unexpected error: ${resp.statusLine.statusCode} : ${resp.statusLine.reasonPhrase}"
-                }
-        }*/
-
+        } else {
+            println "Erro ao carregar venda ${id}"
+            render 'Venda não encontrada'
+        }
 
     }
-
 
     @Secured(['IS_AUTHENTICATED_FULLY'])
     def marcarComoEntregue(Long id) {
@@ -93,23 +150,27 @@ class VendaController {
 
     }
 
-    @Secured(['IS_AUTHENTICATED_FULLY'])
+    //@Secured(['IS_AUTHENTICATED_FULLY'])
     def excluir(Long id) {
+
         def v = Venda.load(id)
-
-        // repõe os itens no estoque somente se a venda tiver sido a vista
-        if (v.formaPagamento?.equals(FormaPagamento.AVista))
-            Estoque.reporItens(v.itensVenda)
-
-        v.delete()
-
+        v.delete(flush: true)
         flash.message = 'A venda foi excluida'
 
-        if (params.offset && params.max)
-            redirect(action: 'list', params: [offset: params.offset, max: params.max])
-        else
-            redirect(action: 'list')
 
+        withFormat {
+            html {
+
+                if (params.offset && params.max)
+                    redirect(action: 'list', params: [offset: params.offset, max: params.max])
+                else
+                    redirect(action: 'list')
+
+            }
+            json {
+                render status: OK
+            }
+        }
 
     }
 
@@ -118,9 +179,14 @@ class VendaController {
 
     }
 
-    @Secured(['IS_AUTHENTICATED_FULLY'])
     def index() {
-        redirect(action: "list", params: params)
+        withFormat {
+            html { redirect(action: "list", params: params) }
+            json {
+                respond Venda.findAllByStatusInList([StatusVenda.Entregue, StatusVenda.AguardandoPagamento])
+            }
+        }
+
     }
 
     @Secured(['IS_AUTHENTICATED_FULLY'])
@@ -128,7 +194,7 @@ class VendaController {
         params.max = Math.min(max ?: 10, 100)
         params.sort = 'dateCreated'
         params.order = 'desc'
-        [vendaInstanceList: Venda.list(params), vendaInstanceTotal: Venda.count()]
+        respond Venda.list(params), model: [vendaInstanceTotal: Venda.count()]
     }
 
 

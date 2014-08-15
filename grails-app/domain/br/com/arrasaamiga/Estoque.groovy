@@ -1,29 +1,30 @@
 package br.com.arrasaamiga
 
-class Estoque  {
+class Estoque {
 
-	Produto produto
+    Produto produto
     String unidade
     int quantidade
 
     List entradas
 
     static belongsTo = Produto
-    static hasMany = [entradas:EntradaEstoque]
+    static hasMany = [entradas: EntradaEstoque]
 
     static mapping = {
-    	entradas cascade: 'all-delete-orphan'
+        entradas cascade: 'all-delete-orphan'
     }
-    
+
     static constraints = {
-    	produto(nullable:false)
-    	unidade(nullable:false,blank:false,unique:'produto')
-    	quantidade(min:0)
+        produto(nullable: false)
+        unidade(nullable: false, blank: false, unique: 'produto')
+        quantidade(min: 0)
     }
 
-    public static void removerItens(Set itens){
 
-        itens.each{item->
+    public static void removerItens(Set itens) {
+
+        itens.each { item ->
 
             def estoque = Estoque.findByProdutoAndUnidade(item.produto, item.unidade)
             println "Removendo ${item.quantidade} de ${item.produto.nome} - ${item.unidade} ... "
@@ -32,9 +33,9 @@ class Estoque  {
         }
     }
 
-    public static void reporItens(Set itens){
-        
-        itens.each{item->
+    public static void reporItens(Set itens) {
+
+        itens.each { item ->
 
             def estoque = Estoque.findByProdutoAndUnidade(item.produto, item.unidade)
             println "Repondo ${item.quantidade} de ${item.produto.nome} - ${item.unidade} ... "
@@ -42,7 +43,6 @@ class Estoque  {
             estoque.save(flush: true)
         }
     }
-
 
 
 }

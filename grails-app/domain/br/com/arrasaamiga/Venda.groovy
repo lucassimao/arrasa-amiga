@@ -21,6 +21,7 @@ class Venda {
     ShoppingCart carrinho
     ServicoCorreio servicoCorreio
     String codigoRastreio
+    Usuario vendedor
 
     def pagSeguroService
     def correiosService
@@ -42,15 +43,48 @@ class Venda {
         transacaoPagSeguro(blank: true, nullable: true)
         carrinho(nullable: true)
         servicoCorreio(nullable: true)
+        vendedor(nullable: true)
     }
 
     static mapping = {
         autoTimestamp true
-        carrinho cascade: 'all'
+        cliente cascade: 'save-update'
+        carrinho cascade: 'save-update'
     }
 
-    def beforeInsert() {
-        this.freteEmCentavos = getFreteEmReais() * 100
+    /* Atualizando o estoque dos itens comprados */
+
+    def afterInsert() {
+
+        Estoque.withNewSession { session ->
+
+            this.itensVenda.each { item ->
+
+                def estoque = Estoque.findByProdutoAndUnidade(item.produto, item.unidade)
+                println "Removendo ${item.quantidade} de ${item.produto.nome} - ${item.unidade} ... "
+                estoque.quantidade -= item.quantidade
+                estoque.save(flush: true)
+            }
+
+        }
+    }
+
+    def afterDelete() {
+
+        Estoque.withNewSession { session ->
+
+            // se ja tiver sido cancelada pelo pagseguro, o PagSeguroController ja repõe os items
+            if (this.status != StatusVenda.Cancelada) {
+
+                this.itensVenda.each { item ->
+
+                    def estoque = Estoque.findByProdutoAndUnidade(item.produto, item.unidade)
+                    println "Repondo ${item.quantidade} de ${item.produto.nome} - ${item.unidade} ... "
+                    estoque.quantidade += item.quantidade
+                    estoque.save(flush: true)
+                }
+            }
+        }
     }
 
     public Double getValorTotal() {
@@ -203,7 +237,6 @@ class Venda {
 
         paymentRequest.redirectURL = "http://www.arrasaamiga.com.br/pagSeguro/retorno/${this.id}"
         paymentRequest.notificationURL = "http://www.arrasaamiga.com.br/pagSeguro/notificacoes/${this.id}"
-
         paymentRequest.setShippingType(ShippingType.NOT_SPECIFIED)
 
 

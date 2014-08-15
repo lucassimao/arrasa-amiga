@@ -119,7 +119,7 @@
             <ol class="breadcrumb" style="background-color:white;border:1px solid #ccc;">
               <li><a href="${createLink(absolute:true,uri: '/' )}"> <i class="fa fa-home"></i> Home</a></li>
               <li class="active">
-                <a href="#"> Minha Conta </a>
+                  <a href="${createLink(absolute: true, action: 'index')}">Minha Conta</a>
               </li>
             </ol>
         </div>
@@ -158,14 +158,23 @@
 
               <g:form class="form-horizontal" action='update'>
 
+                  <g:hiddenField name="usuario.id" value="${cliente.usuario.id}"/>
+
                 <g:if test="${flash.message}">
                   <div class="alert alert-success">
                      <button type="button" class="close" data-dismiss="alert">&times;</button>
-                     ${flash.message}
+                      <i class="fa fa-check-circle"></i> ${flash.message}
                   </div>
-                </g:if> 
+                </g:if>
 
-                <g:hiddenField name="id" value="${cliente.id}"/>
+                  <g:if test="${flash.validationMessage}">
+                      <div class="alert alert-danger">
+                          <button type="button" class="close" data-dismiss="alert">&times;</button>
+                          <i class="fa fa-exclamation-triangle"></i> ${flash.validationMessage}
+                      </div>
+                  </g:if>
+
+                  <g:hiddenField name="id" value="${cliente.id}"/>
 
                 <div class="form-group">
                   <label class="col-sm-2 control-label">Nome</label>
@@ -221,14 +230,16 @@
                 <div class="form-group">
                   <label class="col-sm-2 control-label">Bairro</label>
                   <div class="col-sm-9">
-                    <input type="text" class="form-control ${hasErrors(bean: cliente, field: 'endereco.bairro', 'error')}" 
+                      <input type="text"
+                             class="form-control ${hasErrors(bean: cliente.endereco, field: 'bairro', 'error')}"
                                 value="${cliente.endereco?.bairro}" name="endereco.bairro">
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="col-sm-2 control-label">Endereço</label>
                   <div class="col-sm-9">
-                    <input type="text" class="form-control ${hasErrors(bean: cliente, field: 'endereco.complemento', 'error')}" 
+                      <input type="text"
+                             class="form-control ${hasErrors(bean: cliente.endereco, field: 'complemento', 'error')}"
                           value="${cliente.endereco?.complemento}" name="endereco.complemento">
                     <span class="help-block">Casa, quadra, apartamento, rua, número, ponto de referência ... </span>
                   </div>
@@ -236,7 +247,8 @@
                 <div class="form-group" id="div-cep">
                   <label class="col-sm-2 control-label">Cep</label>
                   <div class="col-sm-9">
-                    <input type="text" class="form-control ${hasErrors(bean: cliente, field: 'endereco.cep', 'error')}" 
+                      <input type="text"
+                             class="form-control ${hasErrors(bean: cliente.endereco, field: 'cep', 'error')}"
                             value="${cliente.endereco?.cep}" name="endereco.cep" style="max-width:100px;">
                   </div>
                 </div>

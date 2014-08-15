@@ -5,18 +5,16 @@ class Cliente {
 	String nome
 	String celular
     String dddCelular
-
     String dddTelefone
 	String telefone
-
 	Endereco endereco
-
 	Usuario usuario
-
     Date dateCreated
 
-	static embedded = ['endereco']
-	static transients = ['email','senha','fromTeresina','dentroDaAreaDeEntregaRapida']
+    def springSecurityService
+
+    static embedded = ['endereco']
+    static transients = ['email','senha','fromTeresina','dentroDaAreaDeEntregaRapida']
 
 
     static mapping = {
@@ -27,23 +25,36 @@ class Cliente {
 
 
     static constraints = {
-    	nome(blank:false,nullable:false)
-    	email(email:true,blank:false,nullable:false,validator: {val,obj->
-            
-            def other = Usuario.findByUsername(val)
-            return ( other == null || other.id == obj.usuario.id )
-        })
-        senha(blank:false,nullable:false)
-    	celular(blank:false,nullable:false,maxSize:9)
-        dddCelular(blank:false,nullable:false,maxSize:2)
-    	telefone(blank:false,nullable:false,maxSize:9)
-        dddTelefone(blank:false,nullable:false,maxSize:2)
-    	endereco(nullable:false)
-    	usuario(nullable:false)
-        dateCreated(nullable:true)
-
+        nome(blank: false, nullable: false)
+        email(email: true, blank: true, nullable: true)
+        celular(blank: true, nullable: true, maxSize: 9)
+        dddCelular(blank: true, nullable: true, maxSize: 2)
+        telefone(blank: true, nullable: true, maxSize: 9)
+        dddTelefone(blank: true, nullable: true, maxSize: 2)
+        endereco(nullable: true)
+        usuario(nullable: true)
+        dateCreated(nullable: true)
 
     }
+
+    def afterInsert() {
+        Cliente.withNewSession {
+            if (usuario) {
+                log.info 'Novo cliente. Autenticando ' + this.email
+                springSecurityService.reauthenticate(getEmail())
+            }
+        }
+    }
+
+    def afterUpdate() {
+        Cliente.withNewSession {
+            if (usuario) {
+                log.info 'Atualizando cliente. Autenticando ' + this.email
+                springSecurityService.reauthenticate(getEmail())
+            }
+        }
+    }
+
 
     public boolean isFromTeresina(){
 
@@ -75,10 +86,10 @@ class Cliente {
     }
 
     public void setEmail(String email){
-    	if (!this.usuario)
-    		this.usuario = new Usuario()
+        if (!this.usuario)
+            this.usuario = new Usuario()
 
-    	this.usuario.username = email
+        this.usuario.username = email
     }
 
     public String getSenha(){
