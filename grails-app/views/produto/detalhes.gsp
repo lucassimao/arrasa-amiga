@@ -332,7 +332,7 @@
                                     <h5>${pRelacionado.nome}</h5>
 
                                     <p class="product-item-brand">${pRelacionado.marca ?: ''}</p>
-                                    <asset:image src="rating/rating-4_6.gif"/>
+                                    <div class="star-rating" data-score="${pRelacionado.stars}"></div>
 
                                     <p class="product-item-price">
                                         <g:formatNumber number="${pRelacionado.precoAPrazoEmReais}"
