@@ -35,6 +35,7 @@ class HomeController {
         def cliente = Cliente.findByUsuario(user)
         def banners = Banner.findAllByVisivel(true)
 
+
         List subGrupos = []
         def grupoDeProduto = GrupoDeProduto.findByNome(params.grupoDeProduto)
         if (grupoDeProduto){

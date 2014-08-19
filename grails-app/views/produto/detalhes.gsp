@@ -322,7 +322,7 @@
                 <g:each in="${produtosRelacionados}" var="pRelacionado">
 
                     <div class="col-md-3 col-sm-6 col-xs-6">
-                        <a href="${createLink(uri: pRelacionado.nomeAsURL, absolute: true)}">
+                        <a class="product-item-link" href="${createLink(uri: pRelacionado.nomeAsURL, absolute: true)}">
                             <div class="thumbnail product-item">
 
                                 <asset:image src="produtos/${pRelacionado.fotoMiniatura}" alt="${pRelacionado.nome}"

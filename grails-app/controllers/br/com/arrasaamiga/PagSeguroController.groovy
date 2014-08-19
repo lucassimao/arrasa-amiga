@@ -13,7 +13,6 @@ class PagSeguroController {
 
     def pagSeguroService
     def emailService
-    def shoppingCartService
 
     def index() {
 
@@ -38,7 +37,7 @@ class PagSeguroController {
 
         if (venda.status != StatusVenda.Cancelada){
 
-            shoppingCartService.checkout()
+            session.shoppingCart = null
             redirect(controller:'venda',action:'show',id:venda.id)
             return
 

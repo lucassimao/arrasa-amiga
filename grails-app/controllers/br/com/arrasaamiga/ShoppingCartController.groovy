@@ -3,11 +3,11 @@ package br.com.arrasaamiga
 import br.com.uol.pagseguro.domain.Error
 import br.com.uol.pagseguro.exception.PagSeguroServiceException
 import grails.plugin.springsecurity.annotation.Secured
+import org.springframework.web.context.request.RequestContextHolder
 
 @Secured(['permitAll'])
 class ShoppingCartController {
 
-    def shoppingCartService
     def springSecurityService
     def emailService
 
@@ -15,15 +15,15 @@ class ShoppingCartController {
     static allowedMethods = [add: "POST", removerProduto: "POST"]
 
     def index() {
-        def total = shoppingCartService.shoppingCart.valorTotalAPrazo
-
-        ['valorTotal': total, itens: shoppingCartService.itens]
-
+        def shoppingCart = getShoppingCart()
+        def total = shoppingCart.valorTotalAPrazo
+        ['valorTotal': total, itens: shoppingCart.itens]
     }
 
     def add(Long id, Integer quantidade, String unidade) {
 
         def produtoInstance = Produto.get(id)
+        def shoppingCart = getShoppingCart()
 
         if (!produtoInstance) {
             flash.message = "Produto ${id} desconhecido"
@@ -51,7 +51,6 @@ class ShoppingCartController {
             return
         }
 
-        def shoppingCart = shoppingCartService.getShoppingCart()
         def qtdeAnterior = shoppingCart.getQuantidade(produtoInstance, unidade)
         // quantidade desse item que o cliente ja adicionou no carrinho
 
@@ -67,7 +66,7 @@ class ShoppingCartController {
             return
         }
 
-        shoppingCartService.addToShoppingCart(produtoInstance, unidade, quantidade)
+        addToShoppingCart(produtoInstance, unidade, quantidade)
 
         if (qtdeAnterior == 0) {
             flash.message = " ${quantidade} ${produtoInstance.nome} adicionados(as) ao seu carrinho de compras"
@@ -83,17 +82,12 @@ class ShoppingCartController {
         def produto = Produto.get(id)
 
         if (quantidade) {
-
-            shoppingCartService.removeFromShoppingCart(produto, unidade, quantidade)
-
+            removeFromShoppingCart(produto, unidade, quantidade)
             flash.message = "${quantidade} ${produto.nome} removido(a) do seu carrinho de compras"
 
         } else {
-
-            quantidade = shoppingCartService.shoppingCart.getQuantidade(produto, unidade)
-
-            shoppingCartService.removeFromShoppingCart(produto, unidade, quantidade)
-
+            quantidade = getShoppingCart().getQuantidade(produto, unidade)
+            removeFromShoppingCart(produto, unidade, quantidade)
             flash.message = "${produto.nome} removido(a) do seu carrinho de compras"
         }
 
@@ -104,7 +98,7 @@ class ShoppingCartController {
     def recalcularTotais() {
 
         def venda = new Venda()
-        venda.carrinho = shoppingCartService.shoppingCart
+        venda.carrinho = getShoppingCart()
         venda.cliente = Cliente.findByUsuario(springSecurityService.currentUser)
         venda.formaPagamento = FormaPagamento.valueOf(params.formaPagamento)
 
@@ -136,7 +130,7 @@ class ShoppingCartController {
             return
         }
 
-        def shoppingCart = shoppingCartService.shoppingCart
+        def shoppingCart = getShoppingCart()
         def itens = shoppingCart.itens
 
         if (!itens) {
@@ -158,7 +152,7 @@ class ShoppingCartController {
     def fecharVenda() {
 
 
-        def shoppingCart = shoppingCartService.shoppingCart
+        def shoppingCart = getShoppingCart()
 
         if (!shoppingCart.itens) {
             flash.message = 'Seu carrinho está vazio!'
@@ -170,8 +164,6 @@ class ShoppingCartController {
         venda.carrinho = shoppingCart
         venda.status = StatusVenda.AguardandoPagamento
         venda.cliente = Cliente.findByUsuario(springSecurityService.currentUser)
-
-
 
         def model = [venda: venda, diasDeEntrega: getProximosDiasDeEntrega()]
 
@@ -210,7 +202,7 @@ class ShoppingCartController {
         if (venda.formaPagamento == FormaPagamento.AVista) {
 
             venda.save(flush: true, failOnError: true)
-            shoppingCartService.checkout()
+            session.shoppingCart = null
             emailService.notificarAdministradores(venda)
             emailService.notificarCliente(venda)
 
@@ -237,12 +229,9 @@ class ShoppingCartController {
                 Iterator itr = e.getErrorList().iterator();
 
                 while (itr.hasNext()) {
-
                     Error error = (Error) itr.next();
-
                     println "Código do erro: ${error.getCode()}";
                     println "Código do erro: ${error.getMessage()}";
-
                 }
 
                 e.printStackTrace()
@@ -265,6 +254,54 @@ class ShoppingCartController {
 
         }
 
+    }
+
+
+
+    private void addToShoppingCart(Produto produto, String unidade, Integer qtde) {
+
+        def shoppingCart = getShoppingCart()
+
+        def itemVenda = shoppingCart.itens.find { itemVenda ->
+            itemVenda.produto.id == produto.id && itemVenda.unidade.equals(unidade)
+        }
+
+        if (itemVenda) {
+            itemVenda.quantidade += qtde
+        } else {
+
+            itemVenda = new ItemVenda(produto: produto, unidade: unidade, quantidade: qtde)
+            itemVenda.precoAVistaEmCentavos = produto.precoAVistaEmCentavos
+            itemVenda.precoAPrazoEmCentavos = produto.precoAPrazoEmCentavos
+
+            shoppingCart.addToItens(itemVenda)
+        }
+
+    }
+
+    private void removeFromShoppingCart(Produto produto, String unidade, Integer quantidade) {
+        def shoppingCart = getShoppingCart()
+
+        def itemVenda = shoppingCart.itens.find { itemVenda ->
+            itemVenda.produto.id == produto.id && itemVenda.unidade.equals(unidade)
+        }
+
+        if (itemVenda) {
+            itemVenda.quantidade -= quantidade
+
+            if (itemVenda.quantidade == 0) {
+                shoppingCart.removeFromItens(itemVenda)
+            }
+        }
+
+    }
+
+
+    private ShoppingCart getShoppingCart() {
+        if (!session.shoppingCart) {
+            session.shoppingCart = new ShoppingCart()
+        }
+        return session.shoppingCart
     }
 
 

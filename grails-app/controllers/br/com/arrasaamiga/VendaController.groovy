@@ -12,7 +12,6 @@ class VendaController extends RestfulController {
 
     static responseFormats = ['html', 'json']
 
-    def shoppingCartService
 
     VendaController() {
         super(Venda)
@@ -88,10 +87,10 @@ class VendaController extends RestfulController {
 
                 JSON.parse(json.itens).each { obj ->
                     def estoque = Estoque.get(obj.estoqueId)
-                    shoppingCartService.addToShoppingCart(estoque.produto, estoque.unidade, obj.quantidade)
+                    addToShoppingCart(estoque.produto, estoque.unidade, obj.quantidade)
                 }
 
-                venda.carrinho = shoppingCartService.shoppingCart
+                venda.carrinho = getShoppingCart()
                 venda.carrinho.checkedOut = true
 
                 venda.save(flush: true)
@@ -195,6 +194,34 @@ class VendaController extends RestfulController {
         params.sort = 'dateCreated'
         params.order = 'desc'
         respond Venda.list(params), model: [vendaInstanceTotal: Venda.count()]
+    }
+
+    private void addToShoppingCart(Produto produto, String unidade, Integer qtde) {
+
+        def shoppingCart = getShoppingCart()
+
+        def itemVenda = shoppingCart.itens.find { itemVenda ->
+            itemVenda.produto.id == produto.id && itemVenda.unidade.equals(unidade)
+        }
+
+        if (itemVenda) {
+            itemVenda.quantidade += qtde
+        } else {
+
+            itemVenda = new ItemVenda(produto: produto, unidade: unidade, quantidade: qtde)
+            itemVenda.precoAVistaEmCentavos = produto.precoAVistaEmCentavos
+            itemVenda.precoAPrazoEmCentavos = produto.precoAPrazoEmCentavos
+
+            shoppingCart.addToItens(itemVenda)
+        }
+
+    }
+
+    private ShoppingCart getShoppingCart() {
+        if (!session.shoppingCart) {
+            session.shoppingCart = new ShoppingCart()
+        }
+        return session.shoppingCart
     }
 
 
