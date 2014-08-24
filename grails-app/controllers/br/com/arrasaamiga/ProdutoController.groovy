@@ -23,7 +23,6 @@ class ProdutoController {
     def springSecurityService
     def dataSource
     def assetResourceLocator
-    def shoppingCartService
 
     def getTags(){
         def sql = new Sql(dataSource)
@@ -355,7 +354,7 @@ class ProdutoController {
         List unidades = estoques.sort{ e1, e2-> e2.quantidade <=> e1.quantidade }.collect{ it.unidade } 
 
         [produtoInstance: produtoInstance,unidades: unidades,
-            shoppingCart: shoppingCartService.shoppingCart,
+            shoppingCart: session.shoppingCart,
             estoques: estoques,cliente:cliente, grupoRaiz: produtoInstance.grupoPadrao?.getGrupoRaiz()?.nome]
     }
 
