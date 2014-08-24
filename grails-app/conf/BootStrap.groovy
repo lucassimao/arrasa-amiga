@@ -55,7 +55,7 @@ class BootStrap {
 
 
 
-        JSON.registerObjectMarshaller(Venda) { venda ->
+        JSON.registerObjectMarshaller(Venda) {Venda venda ->
             def map = [:]
             map['id'] = venda.id
             map['vendedor'] = venda.vendedor?.username
