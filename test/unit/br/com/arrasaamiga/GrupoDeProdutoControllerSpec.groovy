@@ -11,8 +11,7 @@ class GrupoDeProdutoControllerSpec extends Specification {
 
     def populateValidParams(params) {
         assert params != null
-        // TODO: Populate valid properties like...
-        //params["name"] = 'someValidName'
+        params["nome"] = 'Grupo XPTO'
     }
 
     void "Test the index action returns the correct model"() {

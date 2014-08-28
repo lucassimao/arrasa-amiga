@@ -38,7 +38,7 @@ class BannerController {
         def multipartFile = request.getFile('bannerFile')
         String originalFilename = null
 
-        if(!multipartFile.empty){
+        if(!multipartFile?.empty){
             originalFilename = "img${System.currentTimeMillis()}${multipartFile?.originalFilename}"
             bannerInstance.arquivo = originalFilename
             bannerInstance.clearErrors()
@@ -50,7 +50,7 @@ class BannerController {
         }
 
         String uploadDir = getUploadDir()
-        multipartFile.transferTo(new File(uploadDir + File.separator + originalFilename))
+        multipartFile?.transferTo(new File(uploadDir + File.separator + originalFilename))
 
         bannerInstance.save flush:true
 
@@ -77,7 +77,7 @@ class BannerController {
         def multipartFile = request.getFile('bannerFile')
         String originalFilename = null
 
-        if(!multipartFile.empty){
+        if(!multipartFile?.empty){
             originalFilename = "img${System.currentTimeMillis()}${multipartFile?.originalFilename}"
             bannerInstance.arquivo = originalFilename
             bannerInstance.clearErrors()
@@ -89,7 +89,7 @@ class BannerController {
         }
 
         String uploadDir = getUploadDir()
-        multipartFile.transferTo(new File(uploadDir + File.separator + originalFilename))
+        multipartFile?.transferTo(new File(uploadDir + File.separator + originalFilename))
 
         bannerInstance.save flush:true
 
