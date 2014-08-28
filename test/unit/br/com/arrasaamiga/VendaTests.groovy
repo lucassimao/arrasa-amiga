@@ -10,12 +10,11 @@ import org.junit.*
 /**
  * See the API for {@link grails.test.mixin.support.GrailsUnitTestMixin} for usage instructions
  */
-@TestMixin(DomainClassUnitTestMixin)
-@TestFor(ItemVenda)  
+@TestFor(ItemVenda)
+@Mock(ShoppingCart)
 class VendaTests {
 
     void setUp() {
-    	mockDomain(ShoppingCart)
     }
 
     void tearDown() {
@@ -39,16 +38,15 @@ class VendaTests {
     }
 
     void testFreteEmReaisParaClienteNaAreaDeEntrega(){
-    	def clienteMock = mockFor(Cliente,true)
-    	clienteMock.demand.isDentroDaAreaDeEntregaRapida(1){-> return true }
+        def freteExperado = 2d
 
-    	def v = new Venda()
-    	v.cliente = clienteMock.createMock()
+        def clienteMock = mockFor(Cliente,true)
+        clienteMock.demand.isDentroDaAreaDeEntregaRapida(1){-> return true }
 
-    	def freteExperado = 0
+        def v = new Venda()
+        v.cliente = clienteMock.createMock()
 
     	assertEquals freteExperado, v.freteEmReais, 0
-
 
     	clienteMock.verify()
 
@@ -59,8 +57,9 @@ class VendaTests {
     	def clienteMock = mockFor(Cliente,true)
     	clienteMock.demand.isDentroDaAreaDeEntregaRapida(2){-> return false }
 
-    	def correiosServiceMock = mockFor(CorreiosService)
-    	def expectedFreteEmReais = 19.99
+        def expectedFreteEmReais = 19.99
+
+        def correiosServiceMock = mockFor(CorreiosService)
     	correiosServiceMock.demand.calcularFrete(1){String cep, ServicoCorreio sc-> return expectedFreteEmReais }
 
 
@@ -114,13 +113,20 @@ class VendaTests {
     }
 
     void testGetTaxaDeEntrega(){
+        def freteForaDaAreaDeEntrega = 29.99d // ** HARD CODED **
+        def freteDentroDaAreaDeEntrega = 2d
+
+        def correiosServiceMock = mockFor(CorreiosService,true)
+        correiosServiceMock.demand.calcularFrete(1){cep,servico-> return freteForaDaAreaDeEntrega}
+
      	def clienteForaDaAreaDeEntregaMock = mockFor(Cliente,true)
     	clienteForaDaAreaDeEntregaMock.demand.isDentroDaAreaDeEntregaRapida(1){-> return false }
 
     	def vendaForaDaAreaDeEntrega = new Venda()
     	vendaForaDaAreaDeEntrega.cliente = clienteForaDaAreaDeEntregaMock.createMock()
+        vendaForaDaAreaDeEntrega.correiosService = correiosServiceMock.createMock()
 
-    	assertEquals 0, vendaForaDaAreaDeEntrega.taxaEntregaEmReais, 0 
+    	assertEquals freteForaDaAreaDeEntrega, vendaForaDaAreaDeEntrega.freteEmReais, 0
 
 
      	def clienteDentroDaAreaDeEntregaMock = mockFor(Cliente,true)
@@ -129,9 +135,8 @@ class VendaTests {
     	def vendaDentroDaAreaDeEntrega = new Venda()
     	vendaDentroDaAreaDeEntrega.cliente = clienteDentroDaAreaDeEntregaMock.createMock()
 
-    	def taxaEntrega = 2 // ** HARD CODED **
 
-    	assertEquals taxaEntrega, vendaDentroDaAreaDeEntrega.taxaEntregaEmReais, 0 
+    	assertEquals freteDentroDaAreaDeEntrega, vendaDentroDaAreaDeEntrega.freteEmReais, 0
    	
     }
 
@@ -162,7 +167,7 @@ class VendaTests {
 
     void testValorTotalAVistaDentroDaAreaDeEntrega(){
       	def clienteDentroDaAreaDeEntregaMock = mockFor(Cliente,true)
-    	clienteDentroDaAreaDeEntregaMock.demand.isDentroDaAreaDeEntregaRapida(2){-> return true }
+    	clienteDentroDaAreaDeEntregaMock.demand.isDentroDaAreaDeEntregaRapida(1){-> return true }
 
     	def carrinhoMock = mockFor(ShoppingCart,true)
     	carrinhoMock.demand.getValorTotalAVista(1){ -> return 12.31  }
@@ -187,7 +192,7 @@ class VendaTests {
 
     void testValorTotalAPrazoDentroDaAreaDeEntrega(){
       	def clienteDentroDaAreaDeEntregaMock = mockFor(Cliente,true)
-    	clienteDentroDaAreaDeEntregaMock.demand.isDentroDaAreaDeEntregaRapida(2){-> return true }
+    	clienteDentroDaAreaDeEntregaMock.demand.isDentroDaAreaDeEntregaRapida(1){-> return true }
 
     	def carrinhoMock = mockFor(ShoppingCart,true)
     	carrinhoMock.demand.getValorTotalAVista(0){ -> return 12.31  }
@@ -209,7 +214,7 @@ class VendaTests {
 
     void testValorTotalAVistaForaDaAreaDeEntrega(){
  		def clienteDentroDaAreaDeEntregaMock = mockFor(Cliente,true)
-    	clienteDentroDaAreaDeEntregaMock.demand.isDentroDaAreaDeEntregaRapida(2){-> return false }
+    	clienteDentroDaAreaDeEntregaMock.demand.isDentroDaAreaDeEntregaRapida(1){-> return false }
 
     	def carrinhoMock = mockFor(ShoppingCart,true)
     	carrinhoMock.demand.getValorTotalAVista(1){ -> return 12.31  }
@@ -238,7 +243,7 @@ class VendaTests {
 
     void testValorTotalAPrazoForaDaAreaDeEntrega(){
  		def clienteDentroDaAreaDeEntregaMock = mockFor(Cliente,true)
-    	clienteDentroDaAreaDeEntregaMock.demand.isDentroDaAreaDeEntregaRapida(2){-> return false }
+    	clienteDentroDaAreaDeEntregaMock.demand.isDentroDaAreaDeEntregaRapida(1){-> return false }
 
     	def carrinhoMock = mockFor(ShoppingCart,true)
     	carrinhoMock.demand.getValorTotalAVista(0){ -> return 3.31  }
