@@ -66,7 +66,7 @@ class ShoppingCartController {
             return
         }
 
-        addToShoppingCart(produtoInstance, unidade, quantidade)
+        shoppingCart.add(produtoInstance, unidade, quantidade)
 
         if (qtdeAnterior == 0) {
             flash.message = " ${quantidade} ${produtoInstance.nome} adicionados(as) ao seu carrinho de compras"
@@ -80,16 +80,10 @@ class ShoppingCartController {
 
     def removerProduto(Long id, String unidade, Integer quantidade) {
         def produto = Produto.get(id)
+        def shoppingCart = getShoppingCart()
 
-        if (quantidade) {
-            removeFromShoppingCart(produto, unidade, quantidade)
-            flash.message = "${quantidade} ${produto.nome} removido(a) do seu carrinho de compras"
-
-        } else {
-            quantidade = getShoppingCart().getQuantidade(produto, unidade)
-            removeFromShoppingCart(produto, unidade, quantidade)
-            flash.message = "${produto.nome} removido(a) do seu carrinho de compras"
-        }
+        shoppingCart.remove(produto, unidade, quantidade)
+        flash.message = "${quantidade} ${produto.nome} removido(a) do seu carrinho de compras"
 
         redirect(action: "index")
     }
@@ -252,46 +246,6 @@ class ShoppingCartController {
 
             }
 
-        }
-
-    }
-
-
-
-    private void addToShoppingCart(Produto produto, String unidade, Integer qtde) {
-
-        def shoppingCart = getShoppingCart()
-
-        def itemVenda = shoppingCart.itens.find { itemVenda ->
-            itemVenda.produto.id == produto.id && itemVenda.unidade.equals(unidade)
-        }
-
-        if (itemVenda) {
-            itemVenda.quantidade += qtde
-        } else {
-
-            itemVenda = new ItemVenda(produto: produto, unidade: unidade, quantidade: qtde)
-            itemVenda.precoAVistaEmCentavos = produto.precoAVistaEmCentavos
-            itemVenda.precoAPrazoEmCentavos = produto.precoAPrazoEmCentavos
-
-            shoppingCart.addToItens(itemVenda)
-        }
-
-    }
-
-    private void removeFromShoppingCart(Produto produto, String unidade, Integer quantidade) {
-        def shoppingCart = getShoppingCart()
-
-        def itemVenda = shoppingCart.itens.find { itemVenda ->
-            itemVenda.produto.id == produto.id && itemVenda.unidade.equals(unidade)
-        }
-
-        if (itemVenda) {
-            itemVenda.quantidade -= quantidade
-
-            if (itemVenda.quantidade == 0) {
-                shoppingCart.removeFromItens(itemVenda)
-            }
         }
 
     }

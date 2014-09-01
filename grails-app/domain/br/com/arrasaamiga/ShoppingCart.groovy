@@ -19,7 +19,6 @@ class ShoppingCart {
         }
 
         return set.sum(0) { it.quantidade }
-
     }
 
     public Double getValorTotalAPrazo() {
@@ -43,6 +42,42 @@ class ShoppingCart {
         }
 
         return total / 100.0
+
+    }
+
+
+    public void remove(Produto produto, String unidade, Integer quantidade) {
+
+        def itemVenda = this.itens.find { itemVenda ->
+            itemVenda.produto.id == produto.id && itemVenda.unidade.equals(unidade)
+        }
+
+        if (itemVenda) {
+            itemVenda.quantidade -= quantidade
+
+            if (itemVenda.quantidade == 0) {
+                this.removeFromItens(itemVenda)
+            }
+        }
+    }
+
+    public void add(Produto produto, String unidade, Integer qtde) {
+
+
+        def itemVenda = this.itens.find { ItemVenda itemVenda ->
+            ( itemVenda.produto.id == produto.id ) && ( itemVenda.unidade.equals(unidade) )
+        }
+
+        if (itemVenda) {
+            itemVenda.quantidade += qtde
+        } else {
+
+            itemVenda = new ItemVenda(produto: produto, unidade: unidade, quantidade: qtde)
+            itemVenda.precoAVistaEmCentavos = produto.precoAVistaEmCentavos
+            itemVenda.precoAPrazoEmCentavos = produto.precoAPrazoEmCentavos
+
+            this.addToItens(itemVenda)
+        }
 
     }
 
