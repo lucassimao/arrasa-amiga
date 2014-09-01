@@ -17,16 +17,23 @@ class Estoque {
 
     static constraints = {
         produto(nullable: false)
-        unidade(nullable: false, blank: false, unique: 'produto')
+        unidade(nullable: false, blank: false)
         quantidade(min: 0)
     }
 
 
     public static void removerItens(Set itens) {
 
-        itens.each { item ->
+        itens.each { ItemVenda item ->
 
             def estoque = Estoque.findByProdutoAndUnidade(item.produto, item.unidade)
+
+            if (estoque == null)
+                throw new IllegalArgumentException("Estoque inexistente para produto ${item.produto} e unidade ${item.unidade} ")
+
+            if (estoque.quantidade < item.quantidade)
+                throw new IllegalArgumentException("Tentativa de retirar ${item.quantidade} itens, mas so existe ${estoque.quantidade} ")
+
             println "Removendo ${item.quantidade} de ${item.produto.nome} - ${item.unidade} ... "
             estoque.quantidade -= item.quantidade
             estoque.save(flush: true)
@@ -38,6 +45,10 @@ class Estoque {
         itens.each { item ->
 
             def estoque = Estoque.findByProdutoAndUnidade(item.produto, item.unidade)
+
+            if (estoque == null)
+                throw new IllegalArgumentException("Estoque inexistente para produto ${item.produto} e unidade ${item.unidade} ")
+
             println "Repondo ${item.quantidade} de ${item.produto.nome} - ${item.unidade} ... "
             estoque.quantidade += item.quantidade
             estoque.save(flush: true)
