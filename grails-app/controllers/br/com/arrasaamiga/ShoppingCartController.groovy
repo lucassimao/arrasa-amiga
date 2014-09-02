@@ -27,19 +27,19 @@ class ShoppingCartController {
 
         if (!produtoInstance) {
             flash.message = "Produto ${id} desconhecido"
-            redirect(uri: '/', absolute: true)
+            redirect(action:'index',absolute: true)
             return
         }
 
         if (!produtoInstance.unidades.contains(unidade)) {
             flash.message = "${produtoInstance.nome} não contem a unidade ${unidade}"
-            redirect(uri: produtoInstance.nomeAsURL, absolute: true)
+            redirect(action:'index',absolute: true)
             return
         }
 
         if (quantidade <= 0) {
             flash.message = "Quantidade inválida: ${quantidade}"
-            redirect(uri: produtoInstance.nomeAsURL, absolute: true)
+            redirect(action:'index',absolute: true)
             return
         }
 
@@ -47,7 +47,7 @@ class ShoppingCartController {
 
         if (qtdeEmEstoque == 0) {
             flash.message = "Este produto esta em falta temporariamente ;-("
-            redirect(uri: produtoInstance.nomeAsURL, absolute: true)
+            redirect(action:'index',absolute: true)
             return
         }
 
