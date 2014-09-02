@@ -62,7 +62,7 @@ grails.project.dependency.resolution = {
          runtime 'mysql:mysql-connector-java:5.1.25'
          runtime 'commons-codec:commons-codec:1.8'
          compile "org.codehaus.groovy.modules.http-builder:http-builder:0.7"
-         test "org.grails:grails-datastore-test-support:1.0-grails-2.4"
+         test "org.grails:grails-datastore-test-support:1.0.1-grails-2.4"
     }
 
     plugins {
@@ -70,8 +70,8 @@ grails.project.dependency.resolution = {
         // plugins for the compile step
         build ":tomcat:7.0.54"
 
-        compile ":scaffolding:2.1.1"
-        compile ":cache:1.1.6"
+        compile ":scaffolding:2.1.2"
+        compile ":cache:1.1.7"
         compile ':asset-pipeline:1.9.9'
         compile ":spring-security-core:2.0-RC3"
         compile ":browser-detection:0.4.3"
@@ -80,7 +80,7 @@ grails.project.dependency.resolution = {
         compile ":mail:1.0.6"
 
         // plugins needed at runtime but not for compilation
-        runtime ":hibernate4:4.3.5.4"
+        runtime ":hibernate4:4.3.5.5"
         runtime ":database-migration:1.4.0"
         runtime ":console:1.3"
         runtime ":jquery:1.11.1"
