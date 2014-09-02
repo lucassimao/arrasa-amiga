@@ -23,8 +23,7 @@
 
     <meta property="og:site_name" content="Arrasa Amiga"/>
     <meta property="og:type" content="website"/>
-    <meta property="og:url"
-          content="${(request.requestURL?.equals('/')) ? 'http://www.arrasaamiga.com.br' : request.requestURL}"/>
+    <meta property="og:url"  content="${(request.requestURL?.equals('/')) ? 'http://www.arrasaamiga.com.br' : request.requestURL}"/>
     <meta property="og:title" name="title" content="${layoutTitle()}"/>
     <meta property="og:description" content="${pageProperty(name: 'page.description')}"/>
     <meta property="og:image" content="${pageProperty(name: 'page.og:image')}"/>
@@ -33,17 +32,12 @@
 
     <asset:link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 
-    <!-- Bootstrap core CSS -->
-    <asset:stylesheet href="bootstrap.css"/>
-
-    <!-- Custom styles for this template -->
+    <!-- Custom styles and dependencies  for this template -->
     <asset:stylesheet href="style.css"/>
-    <asset:stylesheet href="responsive.css"/>
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-    <asset:javascript src="html5shiv.js"/>
-    <asset:javascript src="respond.min.js"/>
+        <asset:javascript src="ie8support.js"/>
     <![endif]-->
 
     <g:layoutHead/>
@@ -236,85 +230,9 @@
 </div>
 <!-- end:content -->
 
-
 <!-- Le javascript -->
 <!-- Placed at the end of the document so the pages load faster -->
-<g:javascript library="jquery" plugin="jquery"/>
-<asset:javascript src="bootstrap.js"/>
-<asset:javascript src="masonry.pkgd.min.js"/>
-<asset:javascript src="imagesloaded.pkgd.min.js"/>
-<asset:javascript src="script.js"/>
-<asset:javascript src="jquery.raty.js"/>
-
-<style type="text/css">
-.transition {
-    -webkit-transform: scale(1.2);
-    -moz-transform: scale(1.2);
-    -o-transform: scale(1.2);
-    transform: scale(1.2);
-}
-</style>
-
-
-<asset:script type="text/javascript">
-
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-43736713-1', 'arrasaamiga.com.br');
-    ga('send', 'pageview');
-
-    $(document).ready(function() {
-      $.ajaxSetup({ cache: true });
-
-      $.getScript('//connect.facebook.net/pt_BR/sdk.js', function(){
-        FB.init({
-          appId: '538200826283779',
-          xfbml      : true,
-          version    : 'v2.0'
-        });
-      });
-
-    $(".star-rating").raty({path:'${createLink(uri: '/assets', absolute: true)}',readOnly:true,
-                                    score: function() { return $(this).attr('data-score'); }});
-
-        $('.thumbnail img').hover(function() {
-            $(this).addClass('transition');
-
-        }, function() {
-            $(this).removeClass('transition');
-        });
-
-
-          $(".btnComoComprar").click(function(){
-
-              var modal = $('.modal');
-              if (modal.length > 0){
-                  $(modal).modal();              
-              }else{
-
-                  $.ajax({
-                      url: "${createLink(action: 'comoComprar', controller: 'home', absolute: true)}",
-                      settings: {'cache':true}
-                  }).success(function( data, textStatus, jqXHR ) {
-                      var modal = $(data);
-                      $('body').append(modal);
-                      $(modal).filter('.modal').modal();                    
-                  
-                  }).fail(function(){
-                      window.location = 'http://www.arrasaamiga.com.br';
-                  });
-
-              }
-
-          })
-
-
-        });
-
-</asset:script>
+<asset:javascript src="application.js"/>
 
 <asset:deferredScripts/>
 

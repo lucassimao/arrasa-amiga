@@ -153,3 +153,7 @@ grails {
                  "mail.smtp.socketFactory.fallback": "false"]
     }
 }
+
+grails.assets.minifyJs=true
+grails.assets.minifyCss=true
+//grails.assets.bundle=true

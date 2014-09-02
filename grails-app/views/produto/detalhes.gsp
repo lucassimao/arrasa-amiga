@@ -365,7 +365,7 @@
 
 <g:render template="aviseme" model="[produtoInstance: produtoInstance]"/>
 
-<asset:script type="text/javascript">
+<script type="text/javascript">
 
     $(function(){
 
@@ -514,7 +514,7 @@
 
     });
 
-</asset:script>
+</script>
 
 </body>
 

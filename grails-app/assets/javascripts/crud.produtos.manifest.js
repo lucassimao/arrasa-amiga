@@ -1,6 +1,8 @@
 //= require jquery
 //= require jquery.form.min.js
 //= require jquery.jeditable.js
+//= require_self
+//= require tagedit.manifest.js
 
 var model =  (function(){
 	

@@ -1,4 +1,10 @@
 /*
+*=require bootstrap.css
+*=require responsive.css
+*=require_self
+*/
+
+/*
     ========================================
     CLOTHESHOP - SHOPPING CART THEME
     ========================================
@@ -223,6 +229,13 @@ a.no-underline{
 
 a:hover.no-underline{
     text-decoration: none !important;
+}
+
+.transition {
+    -webkit-transform: scale(1.2);
+    -moz-transform: scale(1.2);
+    -o-transform: scale(1.2);
+    transform: scale(1.2);
 }
 
 

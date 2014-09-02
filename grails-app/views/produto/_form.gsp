@@ -121,15 +121,14 @@
 
 <asset:stylesheet href="tagedit.manifest.css"/>
 <asset:javascript src="crud.produtos.manifest.js"/>
-<asset:javascript src="tagedit.manifest.js"/>
 
 
-<asset:script type="text/javascript">
+<script type="text/javascript">
 
 	$(function(){
 	
 		$("#tagedit-keywords input").tagedit({
-			autocompleteURL: "${createLink(action:'getTags',controller:'produto',abosolute:true)}",
+			autocompleteURL: "${createLink(action:'getTags',controller:'produto',absolute:true)}",
 			additionalListClass: 'keywords'
 		});
 
@@ -380,5 +379,5 @@
 	});
 
 
-</asset:script>
+</script>
 
