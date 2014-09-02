@@ -240,12 +240,9 @@
             <div id="div-entrega-teresina" class="well" style="background-color:white;">
                 <div class="row" style="padding:5px;">
                     <legend style="padding-bottom:5px;">
-                        <i class="fa fa-calendar"></i> Entrega
+                        <i class="fa fa-calendar"></i> Data da Entrega
                     </legend>
 
-                    <p style="text-align:justify;font-weigth:bold;">
-                        As entregas são feitas em domicílio a partir das 16:30. Selecione uma das seguintes datas para receber seu pedido:
-                    </p>
                     <g:each in="${diasDeEntrega}" var="diaDeEntrega">
                         <div class="col-md-4">
                             <label class="radio" style="display: inline-block;cursor:pointer;">
