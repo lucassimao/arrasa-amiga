@@ -154,6 +154,4 @@ grails {
     }
 }
 
-grails.assets.minifyJs=true
-grails.assets.minifyCss=true
-//grails.assets.bundle=true
+grails.assets.excludes = ['**/LICENSE','produtos/*.*']
