@@ -2,10 +2,6 @@ package br.com.arrasaamiga
 
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
-import grails.test.mixin.TestMixin
-import grails.test.mixin.domain.DomainClassUnitTestMixin
-import grails.test.mixin.support.GrailsUnitTestMixin
-import grails.test.mixin.web.UrlMappingsUnitTestMixin
 import spock.lang.Specification
 
 /**
@@ -13,7 +9,6 @@ import spock.lang.Specification
  */
 @TestFor(ShoppingCartController)
 @Mock([ShoppingCart,ItemVenda])
-@TestMixin(UrlMappingsUnitTestMixin)
 class ShoppingCartControllerSpec extends Specification {
 
     def setup() {
@@ -25,23 +20,6 @@ class ShoppingCartControllerSpec extends Specification {
                              [produto: Produto.load(2), unidade:'un2-a',quantidade:0],
                              [produto: Produto.load(2), unidade:'un2-b',quantidade:2]   ] )
 
-    }
-
-    def cleanup() {
-    }
-
-    void "teste adicionar produto valido"() {
-        when:
-            request.method = 'POST'
-            params.id = 1
-            params.unidade = 'un1'
-            params.quantidade = 5
-            controller.add()
-
-        then:
-            assertNotNull session.shoppingCart
-            assertEquals  '/shoppingCart/index', response.redirectedUrl
-            assertEquals 5, session.shoppingCart.getQuantidade(Produto.get(1),'un1')
     }
 
     void "teste adicionar produto inexistente"(){
@@ -76,13 +54,27 @@ class ShoppingCartControllerSpec extends Specification {
     }
 
 
-    void "teste adicionar zero unidades de algum produto"(){
+    void "teste adicionar zero unidades ou quantidade negativa de algum produto"(){
 
         when:
             request.method = 'POST'
             params.id = 1
             params.unidade = 'un1'
             params.quantidade = 0
+            controller.add()
+
+        then:
+            assertNotNull session.shoppingCart
+            assertTrue response.redirectedUrl.endsWith("shoppingCart/index")
+            assertTrue flash.message.contains("Quantidade inválida")
+            assertNull session.shoppingCart.itens
+
+        when:
+            response.reset()
+            request.method = 'POST'
+            params.id = 1
+            params.unidade = 'un1'
+            params.quantidade = -2
             controller.add()
 
         then:
@@ -109,7 +101,7 @@ class ShoppingCartControllerSpec extends Specification {
             assertNull session.shoppingCart.itens
     }
 
-    void "teste adicionar quantidade superior a existente em estoque de um produto"(){
+    void "teste comprar quantidade superior a existente em estoque de um produto"(){
 
         when:
             request.method = 'POST'
@@ -131,6 +123,98 @@ class ShoppingCartControllerSpec extends Specification {
             controller.add()
         then:
             assertEquals(2, session.shoppingCart.getQuantidade(Produto.load(2L),'un2-b'))
+
+    }
+
+    void "teste adicionar produto valido"() {
+        when:
+            request.method = 'POST'
+            params.id = 1
+            params.unidade = 'un1'
+            params.quantidade = 5
+            controller.add()
+
+        then:
+            assertNotNull session.shoppingCart
+            assertEquals  '/shoppingCart/index', response.redirectedUrl
+            assertEquals 5, session.shoppingCart.getQuantidade(Produto.get(1L),'un1')
+    }
+
+    void "test remover produto do carrinho"(){
+        when:
+            request.method = 'POST'
+            params.id = 1
+            params.unidade = 'un1'
+            params.quantidade = 5
+            controller.add()
+
+        then:
+            assertEquals 5, session.shoppingCart.getQuantidade(Produto.get(1L),'un1')
+
+        when: "tentar remover 2 unidades"
+            response.reset()
+            request.method = 'POST'
+            params.id = 1
+            params.unidade = 'un1'
+            params.quantidade = 2
+            controller.removerProduto()
+
+        then:
+            assertEquals 3, session.shoppingCart.getQuantidade(Produto.get(1L),'un1')
+
+    }
+
+    void "test remover totalmente um produto do carrinho"(){
+        when:
+            request.method = 'POST'
+            params.id = 1
+            params.unidade = 'un1'
+            params.quantidade = 5
+            controller.add()
+
+        then:
+            assertEquals 5, session.shoppingCart.getQuantidade(Produto.get(1L),'un1')
+
+        when: "tentar remover sem informar quantidade"
+            response.reset()
+            request.method = 'POST'
+            params.id = 1
+            params.unidade = 'un1'
+            params.remove("quantidade")
+            controller.removerProduto()
+
+        then:
+            assertEquals 5, session.shoppingCart.getQuantidade(Produto.get(1L),'un1')
+            assertEquals flash.message, 'Informe uma quantidade válida'
+            assertEquals  '/shoppingCart/index', response.redirectedUrl
+
+
+        when: "tentar remover sem informar a unidade"
+            response.reset()
+            request.method = 'POST'
+            params.id = 1
+            params.quantidade = 1
+            params.remove("unidade")
+            controller.removerProduto()
+
+        then:
+            assertEquals 5, session.shoppingCart.getQuantidade(Produto.get(1L),'un1')
+            assertTrue flash.message?.contains('não contem a unidade')
+            assertEquals  '/shoppingCart/index', response.redirectedUrl
+
+
+        when: "tentar remover corretamente com unidade e quantidade"
+            response.reset()
+            request.method = 'POST'
+            params.id = 1
+            params.quantidade = 5
+            params.unidade = 'un1'
+            controller.removerProduto()
+
+        then:
+            assertEquals 0, session.shoppingCart.getQuantidade(Produto.get(1L),'un1')
+            assertTrue flash.message?.contains('removido(a) do seu carrinho de compras')
+            assertEquals  '/shoppingCart/index', response.redirectedUrl
 
     }
 }

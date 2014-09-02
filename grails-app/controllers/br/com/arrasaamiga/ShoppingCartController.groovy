@@ -82,8 +82,19 @@ class ShoppingCartController {
         def produto = Produto.get(id)
         def shoppingCart = getShoppingCart()
 
-        shoppingCart.remove(produto, unidade, quantidade)
-        flash.message = "${quantidade} ${produto.nome} removido(a) do seu carrinho de compras"
+        if (!produto.unidades.contains(unidade)) {
+            flash.message = "${produto.nome} não contem a unidade ${unidade}"
+            redirect(action:'index')
+            return
+        }
+
+        if (quantidade > 0){
+            shoppingCart.remove(produto, unidade, quantidade)
+            flash.message = "${quantidade} ${produto.nome} removido(a) do seu carrinho de compras"
+        }else{
+            flash.message = 'Informe uma quantidade válida'
+        }
+
 
         redirect(action: "index")
     }
@@ -117,8 +128,7 @@ class ShoppingCartController {
         def cliente = Cliente.findByUsuario(user)
         cliente.properties = params
 
-        // verifica se foi enviada alguma atualização nos dados do cliente
-        // pois ele pode ter vindo de /shoppingCart/confirmAddress
+        // verifica se foi enviada alguma atualização nos dados do cliente pois ele pode ter vindo de /shoppingCart/confirmAddress
         if (cliente.isDirty() && !cliente.save(flush: true)) {
             render view: 'confirmAddress', model: [cliente: cliente]
             return
