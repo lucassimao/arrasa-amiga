@@ -67,7 +67,7 @@
             <tr>
                 <td>
                     <a href="${createLink(uri: produto.nomeAsURL, absolute: true)}">
-                        <asset:image style="float:left;margin-right: 5px;" src="produtos/${produto.fotoMiniatura}" alt="${produto.nome}"
+                        <img style="float:left;margin-right: 5px;" src="${resource(dir:'images/produtos',file:produto.fotoMiniatura)}" alt="${produto.nome}"
                                      title="${produto.nome}" class="img-cart"/>
                     </a>
 

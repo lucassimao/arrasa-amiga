@@ -27,7 +27,10 @@ $(document).ready(function() {
         });
     });
 
-    $(".star-rating").raty({path:'assets',readOnly:true,
+    var path = (location.hostname == 'localhost')?'/arrasa-amiga/':'/' ;
+
+
+    $(".star-rating").raty({path: path+'assets',readOnly:true,
         score: function() { return $(this).attr('data-score'); }});
 
     $('.thumbnail img').hover(function() {

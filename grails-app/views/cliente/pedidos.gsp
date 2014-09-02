@@ -172,7 +172,8 @@
 												<tr>
 
 													<td style="text-align:left !important;">
-														<asset:image class="hidden-xs" style="float:left;" src="produtos/${produto.fotoMiniatura}"/>
+														<img class="hidden-xs" style="float:left;"
+                                                             src="${resource(dir:'images/produtos',file:produto.fotoMiniatura)}"/>
 														<div>
 															<label>${produto.nome }</label>
 															<g:if test="${produto.isMultiUnidade()}">

@@ -7,7 +7,7 @@
 	</div>
 
 
-	<asset:image src="produtos/${foto.arquivo}" class="produto-foto" style="margin-right:5px;border:1px solid blue;width:70px;height:70px;float:left;"/>
+	<img src="${resource(dir:'images/produtos',file:foto.arquivo)}" class="produto-foto" style="margin-right:5px;border:1px solid blue;width:70px;height:70px;float:left;"/>
 
 	<div class="comentario" style="position:relative;height:70px;overflow: hidden;">
 		<p> ${ (foto.comentario)?:'Forneça uma descrição para essa foto'} </p>

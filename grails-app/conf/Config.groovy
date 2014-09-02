@@ -133,12 +133,13 @@ grails.plugin.springsecurity.logout.postOnly = false
 
 
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
-        '/'          : ['permitAll'],
-        '/home/**'   : ['permitAll'],
-        '/index.gsp' : ['permitAll'],
-        '/assets/**' : ['permitAll'],
-        '/plugins/**': ['permitAll'],
-        '/console/**': ['ROLE_ADMIN']
+        '/'                     : ['permitAll'],
+        '/home/**'              : ['permitAll'],
+        '/index.gsp'            : ['permitAll'],
+        '/assets/**'            : ['permitAll'],
+        '/images/produtos/**'   : ['permitAll'],
+        '/plugins/**'           : ['permitAll'],
+        '/console/**'           : ['ROLE_ADMIN']
 ]
 
 grails {
@@ -154,4 +155,4 @@ grails {
     }
 }
 
-grails.assets.excludes = ['**/LICENSE','produtos/*.*']
+grails.assets.excludes = ['**/LICENSE']

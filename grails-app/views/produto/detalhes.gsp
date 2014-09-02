@@ -7,7 +7,7 @@
     <title>${produtoInstance.nome}</title>
     <parameter name="description" value="${produtoInstance.descricao}"/>
     <parameter name="keywords" value="${produtoInstance.keywords?.join(',')}"/>
-    <parameter name="og:image" value="${assetPath(src: 'produtos/' + produtoInstance.fotoMiniatura)}"/>
+    <parameter name="og:image" value="${resource(dir: 'produtos', file: produtoInstance.fotoMiniatura)}"/>
 
     <meta name="layout" content="main"/>
 
@@ -84,7 +84,7 @@
             <g:each in="${produtoInstance.fotos}" var="foto" status="i">
                 <div class="item ${(i == 0) ? 'active' : ''}">
                     <div class="product-single">
-                        <asset:image id="img${foto.id}" src="produtos/${foto.arquivo}" class="img-responsive"/>
+                        <img id="img${foto.id}" src="${resource(dir:'images/produtos',file:foto.arquivo)}" class="img-responsive"/>
                         <div class="carousel-caption">
                             <h3>${foto.comentario}</h3>
                         </div>
@@ -325,7 +325,8 @@
                         <a class="product-item-link" href="${createLink(uri: pRelacionado.nomeAsURL, absolute: true)}">
                             <div class="thumbnail product-item">
 
-                                <asset:image src="produtos/${pRelacionado.fotoMiniatura}" alt="${pRelacionado.nome}"
+
+                                <img src="${resource(dir:'images/produtos',file:pRelacionado.fotoMiniatura)}" alt="${pRelacionado.nome}"
                                                  title="${pRelacionado.nome}"/>
 
                                 <div class="caption">
@@ -365,7 +366,7 @@
 
 <g:render template="aviseme" model="[produtoInstance: produtoInstance]"/>
 
-<script type="text/javascript">
+<asset:script type="text/javascript">
 
     $(function(){
 
@@ -514,7 +515,7 @@
 
     });
 
-</script>
+</asset:script>
 
 </body>
 

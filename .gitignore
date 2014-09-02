@@ -3,11 +3,12 @@
 *.iws
 .idea/*
 *.iml
+out/*
 target/*
 layout v1.1/*
 projectFilesBackup/*
 *.log
 arrasa-amiga.sublime-workspace
-web-app/img/produtos/*
+web-app/images/produtos/*
 grails-app/assets/images/produtos/*
 grails-app/assets/images/banners/*.*

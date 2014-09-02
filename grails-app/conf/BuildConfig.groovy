@@ -24,6 +24,11 @@ grails.project.fork = [
 
 grails.project.dependency.resolver = "maven" // or ivy
 
+// removendo arquivos de fotos de produtos enviados em ambiente de desenvolvimento
+grails.war.resources = { stagingDir ->
+    delete { fileset(dir: "${stagingDir}/images/produtos", includes: '*') }
+}
+
 grails.project.dependency.resolution = {
     // inherit Grails' default dependencies
     inherits("global") {
@@ -67,7 +72,7 @@ grails.project.dependency.resolution = {
 
         compile ":scaffolding:2.1.1"
         compile ":cache:1.1.6"
-        compile ':asset-pipeline:1.9.4'
+        compile ':asset-pipeline:1.9.9'
         compile ":spring-security-core:2.0-RC3"
         compile ":browser-detection:0.4.3"
         compile ":quartz:1.0.2"

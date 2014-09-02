@@ -22,7 +22,6 @@ class ProdutoController {
     def grailsApplication
     def springSecurityService
     def dataSource
-    def assetResourceLocator
 
     def getTags(){
         def sql = new Sql(dataSource)
@@ -147,7 +146,7 @@ class ProdutoController {
         }
 
         String uploadDir = getUploadDir()
-        
+
         if (multipartFileMiniatura.originalFilename)
             multipartFileMiniatura.transferTo(new File(uploadDir + File.separator + produtoInstance.fotoMiniatura))
 
@@ -306,7 +305,7 @@ class ProdutoController {
          
         if (multipartFileMiniatura.originalFilename){
 
-            String uploadDir =  getUploadDir() 
+            String uploadDir =  getUploadDir()
             multipartFileMiniatura.transferTo(new File(uploadDir + File.separator + produtoInstance.fotoMiniatura))
         }
 
@@ -475,24 +474,8 @@ class ProdutoController {
     }
 
 
-    private static String getUploadDir(){
-
-
-        Environment.executeForCurrentEnvironment {
-            
-            production {
-                return grailsApplication.mainContext.getResource('images/produtos').file.absolutePath 
-            }
-
-            development {
-                def grailsSettings = BuildSettingsHolder.settings
-                String separator = File.separator
-                String baseDir = grailsSettings.baseDir.absolutePath
-                String assetsFolder = "${baseDir}${separator}grails-app${separator}assets${separator}" 
-                return "${assetsFolder}images${separator}produtos"
-            }
-        }
-
+    private String getUploadDir(){
+        return grailsApplication.mainContext.getResource('images/produtos').file.absolutePath
     }
 
 }

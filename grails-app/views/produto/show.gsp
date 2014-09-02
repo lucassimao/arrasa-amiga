@@ -138,7 +138,7 @@
 							<span id="fotoMiniatura-label" class="property-label"><g:message code="produto.fotoMiniatura.label" default="Foto Miniatura" /></span>
 							
 							<span class="property-value" aria-labelledby="fotoMiniatura-label">
-								<asset:image src="produtos/${produtoInstance.fotoMiniatura}"  />
+								<img src="${resource(dir:'images/produtos',file: produtoInstance.fotoMiniatura)}"  />
 
 							</span>
 							
@@ -163,7 +163,7 @@
 
 									<div style="height:80px;margin-top:10px;padding:5px;" class="produto-unidade-foto">
 
-										<asset:image src="produtos/${fotoProduto.arquivo}" class="produto-foto" style="margin-right:5px;border:1px solid blue;width:70px;height:70px;float:left;"/>
+										<img src="${resource(dir:'images/produtos',file: fotoProduto.arquivo)}" class="produto-foto" style="margin-right:5px;border:1px solid blue;width:70px;height:70px;float:left;"/>
 
 										<div class="comentario" style="position:relative;height:70px;overflow: hidden;">
 											<p> ${fotoProduto.comentario} </p>

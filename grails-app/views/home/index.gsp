@@ -78,7 +78,7 @@
     <div class="col-md-3 col-sm-3 col-xs-6">
         <a class="product-item-link" href="${createLink(uri: produto.nomeAsURL, absolute: true)}">
             <div class="thumbnail product-item">
-                <asset:image src="produtos/${produto.fotoMiniatura}" alt="${produto.nome}" title="${produto.nome}"/>
+                <img src="${resource(dir:'images/produtos',file:produto.fotoMiniatura)}" alt="${produto.nome}" title="${produto.nome}"/>
 
                 <div class="caption">
                     <h5>${produto.nome}</h5>
