@@ -291,7 +291,16 @@ class ShoppingCartController {
 
     private List getProximosDiasDeEntrega() {
 
-        def hoje = new Date()
+        def calendar = new GregorianCalendar()
+        calendar.time = new Date()
+
+        calendar.set(Calendar.HOUR_OF_DAY,0)
+        calendar.set(Calendar.MINUTE,0)
+        calendar.set(Calendar.SECOND,0)
+        calendar.set(Calendar.MILLISECOND,0)
+
+
+        def hoje = calendar.time
         def diasDeEntraga = []
 
         Date segunda, quarta, sexta
