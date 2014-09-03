@@ -138,7 +138,7 @@ class ShoppingCartController {
         def itens = shoppingCart.itens
 
         if (!itens) {
-            flash.message = 'Seu carrinho está vazio!'
+            flash.message = message(code: "shoppingCart.empty")
             redirect(action: 'index')
             return
         }
@@ -159,7 +159,7 @@ class ShoppingCartController {
         def shoppingCart = getShoppingCart()
 
         if (!shoppingCart.itens) {
-            flash.message = 'Seu carrinho está vazio!'
+            flash.message = message(code: "shoppingCart.empty")
             redirect(action: 'index')
             return
         }
@@ -174,10 +174,8 @@ class ShoppingCartController {
         try {
             venda.dataEntrega = new Date(Long.valueOf(params.dataEntrega))
             venda.clearErrors()
-
         } catch (Exception e) {
-
-            flash.messageDataEntrega = "A data da entrega deve ser uma data válida"
+            flash.messageDataEntrega = message(code:'shoppingCart.dataEntrega.invalida')
             render(view: "checkout", model: model)
             return
         }
@@ -185,7 +183,7 @@ class ShoppingCartController {
         // para clientes que nao são de Teresina, o pagamento deve ser necessariamente via PagSeguro
         if (!venda.cliente.isDentroDaAreaDeEntregaRapida() && venda.formaPagamento != FormaPagamento.PagSeguro) {
 
-            flash.message = "Forma de pagamento inválida!"
+            flash.message = message(code:'shoppingCart.formaPagamento.invalida')
             render(view: "checkout", model: model)
             return
         }
@@ -194,7 +192,7 @@ class ShoppingCartController {
         if (venda.cliente.isDentroDaAreaDeEntregaRapida()) {
 
             if (!validarDataEntrega(venda.dataEntrega)) {
-                flash.messageDataEntrega = "Apenas as datas apresentadas são aceitas"
+                flash.messageDataEntrega = message(code:'shoppingCart.dataEntrega.naoPermitida')
                 render(view: "checkout", model: model)
                 return
             }
@@ -291,16 +289,7 @@ class ShoppingCartController {
 
     private List getProximosDiasDeEntrega() {
 
-        def calendar = new GregorianCalendar()
-        calendar.time = new Date()
-
-        calendar.set(Calendar.HOUR_OF_DAY,0)
-        calendar.set(Calendar.MINUTE,0)
-        calendar.set(Calendar.SECOND,0)
-        calendar.set(Calendar.MILLISECOND,0)
-
-
-        def hoje = calendar.time
+        def hoje = new Date()
         def diasDeEntraga = []
 
         Date segunda, quarta, sexta

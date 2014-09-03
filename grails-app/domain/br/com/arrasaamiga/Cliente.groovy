@@ -11,7 +11,7 @@ class Cliente {
 	Usuario usuario
     Date dateCreated
 
-    def springSecurityService
+    transient springSecurityService
 
     static embedded = ['endereco']
     static transients = ['email','senha','fromTeresina','dentroDaAreaDeEntregaRapida']
@@ -38,18 +38,17 @@ class Cliente {
     }
 
     def afterInsert() {
-        Cliente.withNewSession {
-            if (usuario) {
-                log.info 'Novo cliente. Autenticando ' + this.email
-                springSecurityService.reauthenticate(getEmail())
-            }
-        }
+        reautenticar()
     }
 
     def afterUpdate() {
+        reautenticar()
+    }
+
+    protected void reautenticar() {
         Cliente.withNewSession {
             if (usuario) {
-                log.info 'Atualizando cliente. Autenticando ' + this.email
+                log.info 'Autenticando ' + this.email
                 springSecurityService.reauthenticate(getEmail())
             }
         }
