@@ -3,6 +3,7 @@ package br.com.arrasaamiga
 import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
 import grails.rest.RestfulController
+import grails.transaction.*
 
 import static org.springframework.http.HttpStatus.NOT_FOUND
 import static org.springframework.http.HttpStatus.OK
@@ -44,14 +45,14 @@ class VendaController extends RestfulController {
 
     }
 
-    /* 
+    /*
      *   TODO verificar se a nova versão corrigiu o bug do metodo update
-     */
+    */
 
     def update() {
 
         def venda = Venda.get(params.id)
-        venda.properties = params
+        venda.properties = request
 
         if (venda.hasErrors()) {
             println venda.errors
@@ -146,30 +147,6 @@ class VendaController extends RestfulController {
             redirect(action: 'list')
         }
 
-
-    }
-
-    //@Secured(['IS_AUTHENTICATED_FULLY'])
-    def excluir(Long id) {
-
-        def v = Venda.load(id)
-        v.delete(flush: true)
-        flash.message = 'A venda foi excluida'
-
-
-        withFormat {
-            html {
-
-                if (params.offset && params.max)
-                    redirect(action: 'list', params: [offset: params.offset, max: params.max])
-                else
-                    redirect(action: 'list')
-
-            }
-            json {
-                render status: OK
-            }
-        }
 
     }
 
