@@ -79,6 +79,7 @@ class VendaController extends RestfulController {
                 venda.cliente.endereco.uf = Uf.piaui
                 venda.vendedor = Usuario.findByUsername(json.vendedor)
                 venda.formaPagamento = FormaPagamento.valueOf(json.formaPagamento)
+                venda.carrinho = new ShoppingCart()
 
                 if (venda.formaPagamento == FormaPagamento.JaPagou)
                     venda.status = StatusVenda.PagamentoRecebido
@@ -88,10 +89,9 @@ class VendaController extends RestfulController {
 
                 JSON.parse(json.itens).each { obj ->
                     def estoque = Estoque.get(obj.estoqueId)
-                    addToShoppingCart(estoque.produto, estoque.unidade, obj.quantidade)
+                    venda.carrinho.add(estoque.produto, estoque.unidade, obj.quantidade)
                 }
 
-                venda.carrinho = getShoppingCart()
                 venda.carrinho.checkedOut = true
 
                 venda.save(flush: true)
@@ -172,34 +172,5 @@ class VendaController extends RestfulController {
         params.order = 'desc'
         respond Venda.list(params), model: [vendaInstanceTotal: Venda.count()]
     }
-
-    private void addToShoppingCart(Produto produto, String unidade, Integer qtde) {
-
-        def shoppingCart = getShoppingCart()
-
-        def itemVenda = shoppingCart.itens.find { itemVenda ->
-            itemVenda.produto.id == produto.id && itemVenda.unidade.equals(unidade)
-        }
-
-        if (itemVenda) {
-            itemVenda.quantidade += qtde
-        } else {
-
-            itemVenda = new ItemVenda(produto: produto, unidade: unidade, quantidade: qtde)
-            itemVenda.precoAVistaEmCentavos = produto.precoAVistaEmCentavos
-            itemVenda.precoAPrazoEmCentavos = produto.precoAPrazoEmCentavos
-
-            shoppingCart.addToItens(itemVenda)
-        }
-
-    }
-
-    private ShoppingCart getShoppingCart() {
-        if (!session.shoppingCart) {
-            session.shoppingCart = new ShoppingCart()
-        }
-        return session.shoppingCart
-    }
-
 
 }
