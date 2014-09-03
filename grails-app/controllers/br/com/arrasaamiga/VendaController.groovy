@@ -18,36 +18,9 @@ class VendaController extends RestfulController {
         super(Venda)
     }
 
-
-    @Secured(['isAuthenticated()'])
-    def show(Long id) {
-
-        def venda = Venda.get(id)
-
-        withFormat {
-            html {
-                if (venda) {
-                    [numeroPedido   : String.format("%05d", venda.id), venda: venda,
-                     enderecoEntrega: venda.cliente.endereco, cliente: venda.cliente]
-
-                } else {
-                    println "Erro ao carregar venda ${id}"
-                    render 'Venda não encontrada'
-                }
-            }
-            json {
-                if (venda)
-                    respond venda
-                else
-                    render status: NOT_FOUND
-            }
-        }
-
-    }
-
     /*
      *   TODO verificar se a nova versão corrigiu o bug do metodo update
-    */
+
 
     def update() {
 
@@ -64,7 +37,7 @@ class VendaController extends RestfulController {
 
         }
 
-    }
+    }*/
 
     def save() {
         request.withFormat {
