@@ -156,3 +156,5 @@ grails {
 }
 
 grails.assets.excludes = ['**/LICENSE']
+// usando o formato padrão do Grails yyyy-MM-dd'T'hh:mm:ss'Z'
+//grails.databinding.dateFormats = ['MMddyyyy', 'yyyy-MM-dd HH:mm:ss.S', "yyyy-MM-dd'T'hh:mm:ss'Z'"]

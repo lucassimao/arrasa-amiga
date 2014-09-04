@@ -9,6 +9,7 @@ hibernate {
     cache.use_query_cache = false
     cache.region.factory_class = 'org.hibernate.cache.ehcache.EhCacheRegionFactory'
     singleSession = true // configure OSIV singleSession mode
+    flush.mode = 'manual'
 }
 // environment specific settings
 environments {
@@ -35,8 +36,12 @@ environments {
     }
     test {
         dataSource {
-            dbCreate = "update"
-            url = "jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE"
+            dialect= org.hibernate.dialect.MySQL5InnoDBDialect
+            dbCreate = "create-drop"
+            driverClassName = "com.mysql.jdbc.Driver"
+            url = "jdbc:mysql://localhost/arrasaamigatests"
+            username= 'root'
+            password = 'root'
         }
     }
     production {

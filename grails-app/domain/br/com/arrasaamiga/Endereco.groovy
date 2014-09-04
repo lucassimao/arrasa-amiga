@@ -18,10 +18,12 @@ class Endereco {
 
     public void setCidade(Cidade cidade) {
 
-        switch (cidade?.id) {
-            case Cidade.teresina.id:
-                this.cep = '64000-001'
-                break
+        if (cidade) {
+            switch (cidade.id) {
+                case Cidade.teresina?.id:
+                    this.cep = '64000-001'
+                    break
+            }
         }
 
         this.@cidade = cidade
@@ -30,14 +32,17 @@ class Endereco {
 
     public void setCep(String _cep) {
 
-        switch (cidade?.id) {
-            case Cidade.teresina.id:
-                this.@cep = '64000-001'
-                break
-            default:
-                this.@cep = _cep
+        if (cidade) {
+            switch (cidade.id) {
+                case Cidade.teresina?.id:
+                    this.@cep = '64000-001'
+                    break
+                default:
+                    this.@cep = _cep
+            }
+        } else {
+            this.@cep = _cep
         }
-
     }
 
 

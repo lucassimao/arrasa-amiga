@@ -18,63 +18,6 @@ class VendaController extends RestfulController {
         super(Venda)
     }
 
-    /*
-     *   TODO verificar se a nova versão corrigiu o bug do metodo update
-
-
-    def update() {
-
-        def venda = Venda.get(params.id)
-        venda.properties = request
-
-        if (venda.hasErrors()) {
-            println venda.errors
-            respond venda.errors
-
-        } else {
-            venda.save(flush: true)
-            render status: OK
-
-        }
-
-    }*/
-
-    def save() {
-        request.withFormat {
-
-            json {
-                def json = request.JSON
-
-                def venda = new Venda()
-                venda.dataEntrega = new Date(json.dataEntrega)
-                venda.cliente = new Cliente(json.cliente)
-                venda.cliente.endereco.cidade = Cidade.teresina
-                venda.cliente.endereco.uf = Uf.piaui
-                venda.vendedor = Usuario.findByUsername(json.vendedor)
-                venda.formaPagamento = FormaPagamento.valueOf(json.formaPagamento)
-                venda.carrinho = new ShoppingCart()
-
-                if (venda.formaPagamento == FormaPagamento.JaPagou)
-                    venda.status = StatusVenda.PagamentoRecebido
-                else
-                    venda.status = StatusVenda.AguardandoPagamento
-
-
-                JSON.parse(json.itens).each { obj ->
-                    def estoque = Estoque.get(obj.estoqueId)
-                    venda.carrinho.add(estoque.produto, estoque.unidade, obj.quantidade)
-                }
-
-                venda.carrinho.checkedOut = true
-
-                venda.save(flush: true)
-                render status: OK
-            }
-        }
-
-    }
-
-
     @Secured(['IS_AUTHENTICATED_FULLY'])
     def setTrackingCode(Long id, String trackingCode) {
 
