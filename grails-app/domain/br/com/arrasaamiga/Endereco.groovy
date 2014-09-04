@@ -19,7 +19,7 @@ class Endereco {
     public void setCidade(Cidade cidade) {
 
         switch (cidade?.id) {
-            case Cidade.teresina.id:
+            case Cidade.teresina?.id:
                 this.cep = '64000-001'
                 break
         }
@@ -31,7 +31,7 @@ class Endereco {
     public void setCep(String _cep) {
 
         switch (cidade?.id) {
-            case Cidade.teresina.id:
+            case Cidade.teresina?.id:
                 this.@cep = '64000-001'
                 break
             default:
