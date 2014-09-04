@@ -10,8 +10,8 @@ import org.junit.*
 /**
  * See the API for {@link grails.test.mixin.support.GrailsUnitTestMixin} for usage instructions
  */
-@TestFor(ItemVenda)
-@Mock(ShoppingCart)
+@TestFor(Venda)
+@Mock([ShoppingCart,ItemVenda])
 class VendaTests {
 
     void setUp() {
