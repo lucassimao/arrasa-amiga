@@ -4,6 +4,7 @@ import grails.test.mixin.TestMixin
 import grails.test.mixin.domain.DomainClassUnitTestMixin
 import spock.lang.Shared
 import spock.lang.Specification
+import spock.lang.Unroll
 
 /**
  * See the API for {@link grails.test.mixin.support.GrailsUnitTestMixin} for usage instructions
@@ -46,11 +47,11 @@ class EstoqueSpec extends Specification {
             quantidadeFinalEmEstoque == estoque.quantidade
 
         where:
-            unidade | quantidadeVendida | idProduto | quantidadeFinalEmEstoque
-            'un-1a' | 2                 | 1         |  8
-            'un-1a' | 5                 | 1         |  5
-            'un-2'  | 5                 | 2         |  25
-            'un-2'  | 15                | 2         |  15
+            unidade | quantidadeVendida | idProduto || quantidadeFinalEmEstoque
+            'un-1a' | 2                 | 1         ||  8
+            'un-1a' | 5                 | 1         ||  5
+            'un-2'  | 5                 | 2         ||  25
+            'un-2'  | 15                | 2         ||  15
     }
 
     void "testando a reposição de produtos no estoque"() {
@@ -68,9 +69,9 @@ class EstoqueSpec extends Specification {
             quantidadeEmEstoque == estoque.quantidade
 
         where:
-            unidade | quantidadeVendida | idProduto | quantidadeEmEstoque
-            'un-1a' | 2                 | 1         |  12
-            'un-2'  | 5                 | 2         |  35
+            unidade | quantidadeVendida | idProduto || quantidadeEmEstoque
+            'un-1a' | 2                 | 1         ||  12
+            'un-2'  | 5                 | 2         ||  35
     }
 
     void "testando a retirada de quantidades maiores do que as disponiveis no estoque"() {
