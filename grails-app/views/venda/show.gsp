@@ -42,7 +42,7 @@
 
         <h2><i class="icon-ok icon-white"></i> Recebemos seu pedido</h2>
 
-        <h5>Obrigada, ${venda.cliente.nome}.</h5>
+        <h5>Obrigada, ${vendaInstance.cliente.nome}.</h5>
         <small>Você será informada(o) por e-mail sobre o andamento do pedido até a chegada ao endereço escolhido.</small>
 
     </div>
@@ -52,15 +52,15 @@
 <div class="well" style="text-align:center;background-color:white;color:rgb(102, 102, 102);">
 
     <sec:ifNotGranted roles="ROLE_ADMIN">
-        <h3>O número do seu Pedido é #${numeroPedido}</h3>
+        <h3>O número do seu Pedido é #${vendaInstance.id.toString().padLeft(6,'0')}</h3>
     </sec:ifNotGranted>
     <sec:ifAllGranted roles="ROLE_ADMIN">
-        <h3>Pedido #${numeroPedido}</h3>
+        <h3>Pedido #${vendaInstance.id.toString().padLeft(6,'0')}</h3>
     </sec:ifAllGranted>
 
     <hr>
 
-    <g:if test="${venda.formaPagamento.equals(FormaPagamento.AVista)}">
+    <g:if test="${vendaInstance.formaPagamento.equals(FormaPagamento.AVista)}">
         <asset:image class="hidden-xs" style="margin-top:45px;" src="timeline-02.png"/>
     </g:if>
     <g:else>
@@ -78,58 +78,58 @@
 
         <div class="col-md-1 col-xs-3"><span class="caption">Nome:</span></div>
 
-        <div class="col-md-5 col-xs-9">${venda.cliente.nome}</div>
+        <div class="col-md-5 col-xs-9">${vendaInstance.cliente.nome}</div>
 
         <div class="col-md-1 col-xs-3"><span class="caption">Email:</span></div>
 
-        <div class="col-md-5 col-xs-9">${venda.cliente.email}</div>
+        <div class="col-md-5 col-xs-9">${vendaInstance.cliente.email}</div>
 
 
         <div class="col-md-1 col-xs-3"><span class="caption">Telefone:</span></div>
 
-        <div class="col-md-5 col-xs-9">${venda.cliente.dddTelefone}-${venda.cliente.telefone}</div>
+        <div class="col-md-5 col-xs-9">${vendaInstance.cliente.dddTelefone}-${vendaInstance.cliente.telefone}</div>
 
         <div class="col-md-1 col-xs-3"><span class="caption">Celular:</span></div>
 
-        <div class="col-md-5 col-xs-9">${venda.cliente.dddCelular}-${venda.cliente.celular}</div>
+        <div class="col-md-5 col-xs-9">${vendaInstance.cliente.dddCelular}-${vendaInstance.cliente.celular}</div>
 
 
         <div class="col-md-1 col-xs-3"><span class="caption">Estado:</span></div>
 
-        <div class="col-md-5 col-xs-9">${venda.cliente.endereco.uf.nome}</div>
+        <div class="col-md-5 col-xs-9">${vendaInstance.cliente.endereco.uf.nome}</div>
 
         <div class="col-md-1 col-xs-3"><span class="caption">Cidade:</span></div>
 
-        <div class="col-md-5 col-xs-9">${venda.cliente.endereco.cidade.nome}</div>
+        <div class="col-md-5 col-xs-9">${vendaInstance.cliente.endereco.cidade.nome}</div>
 
 
         <div class="col-md-1 col-xs-3"><span class="caption">Bairro:</span></div>
 
-        <div class="col-md-5 col-xs-9">${venda.cliente.endereco.bairro}</div>
+        <div class="col-md-5 col-xs-9">${vendaInstance.cliente.endereco.bairro}</div>
 
         <div class="col-md-1 col-xs-3"><span class="caption">Endereço:</span></div>
 
-        <div class="col-md-5 col-xs-9">${venda.cliente.endereco.complemento}</div>
+        <div class="col-md-5 col-xs-9">${vendaInstance.cliente.endereco.complemento}</div>
 
 
 
 
-        <g:if test="${venda.cliente.isDentroDaAreaDeEntregaRapida()}">
+        <g:if test="${vendaInstance.cliente.isDentroDaAreaDeEntregaRapida()}">
             <div class="col-md-1 col-xs-3"><span class="caption">Entrega:</span></div>
 
             <div class="col-md-11 col-xs-9"><g:formatDate format="EEEE, dd/MM/yyyy"
-                                                           date="${venda.dataEntrega}"/></div>
+                                                           date="${vendaInstance.dataEntrega}"/></div>
         </g:if>
         <g:else>
 
             <div class="col-md-1 col-xs-3"><span class="caption">CEP:</span></div>
 
-            <div class="col-md-5 col-xs-9">${venda.cliente.endereco.cep}</div>
+            <div class="col-md-5 col-xs-9">${vendaInstance.cliente.endereco.cep}</div>
 
-            <g:if test="${venda.codigoRastreio}">
+            <g:if test="${vendaInstance.codigoRastreio}">
                 <div class="col-md-1 col-xs-3"><span class="caption">Código de Rastreio:</span></div>
 
-                <div class="col-md-5 col-xs-9">${venda.codigoRastreio}</div>
+                <div class="col-md-5 col-xs-9">${vendaInstance.codigoRastreio}</div>
             </g:if>
         </g:else>
 
@@ -152,7 +152,7 @@
         </thead>
         <tbody>
         <!-- renderizando items -->
-        <g:each in="${venda.itensVenda}" var="item">
+        <g:each in="${vendaInstance.itensVenda}" var="item">
             <g:set var="produto" value="${item.produto}"/>
             <tr>
                 <td>
@@ -195,30 +195,30 @@
         <h4 style="display:inline;color:#666;">Subtotal</h4>
 
         <div style="float:right;font-weight:bold;font-size:15px;color:#666;">
-            <g:formatNumber number="${venda.valorItensAPrazo}" type="currency" currencyCode="BRL"/>
+            <g:formatNumber number="${vendaInstance.valorItensAPrazo}" type="currency" currencyCode="BRL"/>
         </div>
     </div>
 
     <div id="div-frete" style="clear:both;">
-        <h5 style="display:inline;color:blue;">${venda.cliente.isDentroDaAreaDeEntregaRapida() ? 'Taxa de Entrega' : 'Frete'}</h5>
+        <h5 style="display:inline;color:blue;">${vendaInstance.cliente.isDentroDaAreaDeEntregaRapida() ? 'Taxa de Entrega' : 'Frete'}</h5>
 
         <div style="float:right;font-weight:bold;">
             <div style="color:blue;font-size:10px;text-align:right;">
-                + <g:formatNumber number="${venda.freteEmReais}" type="currency" currencyCode="BRL"/>
+                + <g:formatNumber number="${vendaInstance.freteEmReais}" type="currency" currencyCode="BRL"/>
             </div>
         </div>
 
     </div>
 
 
-    <g:if test="${venda.descontoEmReais > 0}">
+    <g:if test="${vendaInstance.descontoEmReais > 0}">
 
         <div id="div-desconto" style="clear:both;">
             <h5 style="display:inline;color:blue;">Desconto</h5>
 
             <div style="float:right;font-weight:bold;">
                 <div style="color:blue;font-size:10px;text-align:right;">
-                    - <g:formatNumber number="${venda.descontoEmReais}" type="currency" currencyCode="BRL"/>
+                    - <g:formatNumber number="${vendaInstance.descontoEmReais}" type="currency" currencyCode="BRL"/>
                 </div>
             </div>
         </div>
@@ -232,7 +232,7 @@
         <h4 style="color:#666;display:inline;">Valor Total</h4>
 
         <div style="float:right;font-weight:bold;font-size:35px;color:#00adef;">
-            <g:formatNumber number="${venda.valorTotal}" type="currency" currencyCode="BRL"/>
+            <g:formatNumber number="${vendaInstance.valorTotal}" type="currency" currencyCode="BRL"/>
         </div>
     </div>
 
@@ -246,7 +246,7 @@
     <div class="row-fluid">
 
         <div class="span6">
-            ${venda.detalhesPagamento}
+            ${vendaInstance.detalhesPagamento}
         </div>
 
     </div>

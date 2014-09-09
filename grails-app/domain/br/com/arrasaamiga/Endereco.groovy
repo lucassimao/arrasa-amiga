@@ -16,29 +16,5 @@ class Endereco {
         uf(nullable: true)
     }
 
-    public void setCidade(Cidade cidade) {
-
-        switch (cidade?.id) {
-            case Cidade.teresina?.id:
-                this.cep = '64000-001'
-                break
-        }
-
-        this.@cidade = cidade
-    }
-
-
-    public void setCep(String _cep) {
-
-        switch (cidade?.id) {
-            case Cidade.teresina?.id:
-                this.@cep = '64000-001'
-                break
-            default:
-                this.@cep = _cep
-        }
-
-    }
-
 
 }

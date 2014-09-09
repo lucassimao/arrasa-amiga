@@ -115,7 +115,6 @@
 <div class="col-md-12">
 
     <h3>Entrega e Pagamento</h3>
-    <h5>Visualize os detalhes do seu pedido, escolha a forma de pagamento e a data de entrega</h5>
 
     <hr/>
 

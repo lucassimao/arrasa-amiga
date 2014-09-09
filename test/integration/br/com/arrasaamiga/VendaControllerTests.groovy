@@ -40,6 +40,8 @@ class VendaControllerTests extends GroovyTestCase {
             new Uf(nome:'Piaui',sigla: 'PI').save(flush:true)
             new Cidade(nome: 'Teresina',uf:Uf.piaui).save(flush:true)
 
+            assertNotNull Uf.piaui
+            assertNotNull Cidade.teresina
 
         }
     }
@@ -137,7 +139,7 @@ class VendaControllerTests extends GroovyTestCase {
         controller.params.id = Venda.first().id
         controller.request.json = [cliente: [nome: novoNome, dddCelular: dddCelular, celular: celular,
                                              telefone: telefone, dddTelefone: dddTelefone,
-                                             endereco: [/*cep:cep,complemento:complemento,cidade:[Cidade.teresina.id],uf:[Uf.piaui.id]*/]]] as JSON
+                                             endereco: [cep:cep,complemento:complemento,cidade:[Cidade.teresina.id],uf:[Uf.piaui.id]]]] as JSON
         controller.update()
 
         sessionFactory.currentSession.flush()
@@ -150,8 +152,8 @@ class VendaControllerTests extends GroovyTestCase {
         assertEquals telefone, Venda.first().cliente.telefone
         assertEquals celular, Venda.first().cliente.celular
         assertEquals dddCelular, Venda.first().cliente.dddCelular
-        //assertEquals cep, Venda.first().cliente.endereco.cep
-        //assertEquals complemento, Venda.first().cliente.endereco.complemento
+        assertEquals cep, Venda.first().cliente.endereco.cep
+        assertEquals complemento, Venda.first().cliente.endereco.complemento
 
     }
 
@@ -173,7 +175,7 @@ class VendaControllerTests extends GroovyTestCase {
 
         def controller = new VendaController()
 
-        // atulaizando o nome do cliente
+        // atualizando o nome do cliente
         controller.request.method = 'POST'
         controller.params.id = Venda.first().id
         controller.marcarComoEntregue()
