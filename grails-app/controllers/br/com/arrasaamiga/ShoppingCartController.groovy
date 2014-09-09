@@ -171,15 +171,6 @@ class ShoppingCartController {
 
         def model = [venda: venda, diasDeEntrega: getProximosDiasDeEntrega()]
 
-        try {
-            venda.dataEntrega = new Date(Long.valueOf(params.dataEntrega))
-            venda.clearErrors()
-        } catch (Exception e) {
-            flash.messageDataEntrega = message(code:'shoppingCart.dataEntrega.invalida')
-            render(view: "checkout", model: model)
-            return
-        }
-
         // para clientes que nao são de Teresina, o pagamento deve ser necessariamente via PagSeguro
         if (!venda.cliente.isDentroDaAreaDeEntregaRapida() && venda.formaPagamento != FormaPagamento.PagSeguro) {
 
@@ -190,6 +181,15 @@ class ShoppingCartController {
 
 
         if (venda.cliente.isDentroDaAreaDeEntregaRapida()) {
+
+            try {
+                venda.dataEntrega = new Date(Long.valueOf(params.dataEntrega))
+                venda.clearErrors()
+            } catch (Exception e) {
+                flash.messageDataEntrega = message(code:'shoppingCart.dataEntrega.invalida')
+                render(view: "checkout", model: model)
+                return
+            }
 
             if (!validarDataEntrega(venda.dataEntrega)) {
                 flash.messageDataEntrega = message(code:'shoppingCart.dataEntrega.naoPermitida')
