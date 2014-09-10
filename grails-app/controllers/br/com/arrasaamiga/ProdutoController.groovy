@@ -14,6 +14,7 @@ import grails.util.BuildSettingsHolder
 import groovy.json.JsonBuilder
 import grails.util.Environment
 
+
 @Secured(['permitAll'])
 class ProdutoController {
 
@@ -61,14 +62,17 @@ class ProdutoController {
         String uploadDir = getUploadDir()
 
         def multipartFile = request.getFile('foto')
-        String originalFilename = "img${System.currentTimeMillis()}${multipartFile.originalFilename}"
+        if (multipartFile) {
 
-        if (originalFilename){
+            String originalFilename = "img${System.currentTimeMillis()}${multipartFile.originalFilename}"
+
             multipartFile.transferTo(new File(uploadDir + File.separator + originalFilename))
-        }
-        def foto = new FotoProduto(arquivo:originalFilename)
+            def foto = new FotoProduto(arquivo: originalFilename)
 
-        render(template:'addNewFoto',model:[foto: foto])
+            render(template: 'addNewFoto', model: [foto: foto])
+        }else{
+            render status: 400, text: 'A imagem deve ser enviada'
+        }
     }
 
 
