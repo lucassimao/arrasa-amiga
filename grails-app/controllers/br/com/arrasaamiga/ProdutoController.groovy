@@ -243,7 +243,7 @@ class ProdutoController {
         }
 
         produtoInstance.grupos = []
-        bindData(produtoInstance, params, [include: ['grupos','visivel','nome','descricao','tipoUnitario','marca']])
+        bindData(produtoInstance, params, [include: ['grupos','visivel','nome','descricao','tipoUnitario','marca','precoAVistaEmReais','precoAPrazoEmReais']])
         assert count == produtoInstance.grupos?.size()
 
         def miniaturaAnterior = produtoInstance.fotoMiniatura
@@ -256,15 +256,16 @@ class ProdutoController {
 
 
         produtoInstance.fotos*.delete()
-        produtoInstance.fotos.clear()
+        produtoInstance.fotos?.clear()
         produtoInstance.unidades.clear()
 
         def unidades = (params.unidades)?JSON.parse(params.unidades):[]
         def fotos = (params.fotosUnidades)?JSON.parse(params.fotosUnidades):[]
         def comentarios = (params.fotoComentario)?JSON.parse(params.fotoComentario):[]
 
-        unidades.each{ unidade -> 
 
+
+        unidades.each{ unidade ->
 
             if (!Estoque.findByProdutoAndUnidade( produtoInstance, unidade ) ){
                 
@@ -294,7 +295,9 @@ class ProdutoController {
 
         }
 
+
         if (!produtoInstance.save(flush: true)) {
+            Estoque.executeUpdate("delete from Estoque where produto=:produto and unidade not in :unidades", [produto:produtoInstance,unidades:unidades])
             render(view: "edit", model: [produtoInstance: produtoInstance])
             return
         }

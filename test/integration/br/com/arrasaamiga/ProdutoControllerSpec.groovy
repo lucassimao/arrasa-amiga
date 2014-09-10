@@ -12,7 +12,8 @@ import static org.junit.Assert.*
  */
 class ProdutoControllerSpec extends IntegrationSpec {
 
-    static boolean testDataGenerated = false
+
+    def sessionFactory
 
 
     protected void setup() {
@@ -34,6 +35,46 @@ class ProdutoControllerSpec extends IntegrationSpec {
         new Estoque(produto: produto2, unidade: 'un', quantidade: 5).save(flush: true)
 
         assert 2 == Estoque.count()
+    }
+
+
+    @IgnoreRest
+    void "test atualizar produto"() {
+        given:
+            def produto = Produto.first()
+            def novoNome = 'Produto 1 - Atualizado'
+            def novasUnidades = ['UN', 'Caixa', 'Lote']
+            def novoValorAVistaEmCentavos = 1299
+            def novoValorAPrazoEmCentavos = 2199
+
+        when:
+            def controller = new ProdutoController()
+            controller.request.method = 'POST'
+            controller.params.id = produto.id
+            controller.params.nome = novoNome
+            controller.params.unidades = (novasUnidades as JSON).toString()
+            controller.params.precoAVistaEmReais = '12.99'
+            controller.params.precoAPrazoEmReais = '21.99'
+
+            controller.update()
+            sessionFactory.currentSession.flush()
+            sessionFactory.currentSession.clear()
+
+        then:
+            controller.response.redirectedUrl.matches('.*/show/\\d+$')
+            def updatedProduto = Produto.findByNome(novoNome)
+            assertNotNull produto
+            produto.id == updatedProduto.id
+
+            updatedProduto.precoAVistaEmCentavos == novoValorAVistaEmCentavos
+            updatedProduto.precoAPrazoEmCentavos == novoValorAPrazoEmCentavos
+
+            def estoques = Estoque.findAllByProduto(updatedProduto)
+            estoques.size() == 3
+
+            updatedProduto.unidades.containsAll(novasUnidades)
+            assertNull Estoque.findByProdutoAndUnidade(updatedProduto,'un')
+
     }
 
     @Unroll
