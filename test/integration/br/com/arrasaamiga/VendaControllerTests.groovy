@@ -13,37 +13,34 @@ class VendaControllerTests extends GroovyTestCase {
 
     def sessionFactory
 
-    static boolean testDataGenerated = false
 
     protected void setUp() {
 
-        if (!testDataGenerated) {
+        Estoque.executeUpdate('delete Estoque')
+        Estoque.executeUpdate('delete Produto')
 
-            testDataGenerated = true
+        def produto1 = new Produto(descricao: 'Produto 1', nome: 'P1', tipoUnitario: 'un', unidades: ['un'] as List)
+        produto1.save(flush: true)
 
-            def produto1 = new Produto(descricao: 'Produto 1', nome: 'P1', tipoUnitario: 'un', unidades: ['un'] as List)
-            produto1.save(flush: true)
+        def produto2 = new Produto(descricao: 'Produto 2', nome: 'P2', tipoUnitario: 'un', unidades: ['un'] as List)
+        produto2.save(flush: true)
 
-            def produto2 = new Produto(descricao: 'Produto 2', nome: 'P2', tipoUnitario: 'un', unidades: ['un'] as List)
-            produto2.save(flush: true)
+        assertEquals 2, Produto.count()
 
-            assertEquals 2, Produto.count()
+        def e1 = new Estoque(produto: produto1, unidade: 'un', quantidade: 10)
+        e1.save(flush: true)
 
-            def e1 = new Estoque(produto: produto1, unidade: 'un', quantidade: 10)
-            e1.save(flush: true)
+        def e2 = new Estoque(produto: produto2, unidade: 'un', quantidade: 5)
+        e2.save(flush: true)
 
-            def e2 = new Estoque(produto: produto2, unidade: 'un', quantidade: 5)
-            e2.save(flush: true)
+        assertEquals 2, Estoque.count()
 
-            assertEquals 2, Estoque.count()
+        new Uf(nome: 'Piaui', sigla: 'PI').save(flush: true)
+        new Cidade(nome: 'Teresina', uf: Uf.piaui).save(flush: true)
 
-            new Uf(nome:'Piaui',sigla: 'PI').save(flush:true)
-            new Cidade(nome: 'Teresina',uf:Uf.piaui).save(flush:true)
+        assertNotNull Uf.piaui
+        assertNotNull Cidade.teresina
 
-            assertNotNull Uf.piaui
-            assertNotNull Cidade.teresina
-
-        }
     }
 
     void testSalvarVendaEmFormatoJSON() {
@@ -79,12 +76,6 @@ class VendaControllerTests extends GroovyTestCase {
         assertEquals 1, Estoque.findByProdutoAndUnidade(produto2, 'un').quantidade
 
     }
-
-    protected void cleanup() {
-        Estoque.executeUpdate('delete Estoque')
-        Estoque.executeUpdate('delete Produto')
-    }
-
 
     void testAtualizarDataDeEntregaEmFormatoJSON() {
         def produto1 = Produto.findByNome('P1')
@@ -136,15 +127,15 @@ class VendaControllerTests extends GroovyTestCase {
         def controller = new VendaController()
         def novoNome = 'Novo nome p/ o cliente'
         String dddTelefone = '86', telefone = '32206522',
-               celular = '88353101', dddCelular = '99', cep='64023620',complemento='complemento xpto'
+               celular = '88353101', dddCelular = '99', cep = '64023620', complemento = 'complemento xpto'
 
         // atulaizando o nome do cliente
         controller.request.method = 'PUT'
         controller.request.contentType = MimeType.JSON
         controller.params.id = Venda.first().id
-        controller.request.json = [cliente: [nome: novoNome, dddCelular: dddCelular, celular: celular,
+        controller.request.json = [cliente: [nome    : novoNome, dddCelular: dddCelular, celular: celular,
                                              telefone: telefone, dddTelefone: dddTelefone,
-                                             endereco: [cep:cep,complemento:complemento,cidade:[Cidade.teresina.id],uf:[Uf.piaui.id]]]] as JSON
+                                             endereco: [cep: cep, complemento: complemento, cidade: [Cidade.teresina.id], uf: [Uf.piaui.id]]]] as JSON
         controller.update()
 
         sessionFactory.currentSession.flush()
@@ -193,8 +184,6 @@ class VendaControllerTests extends GroovyTestCase {
 
 
     }
-
-
 
 
     protected String formatarData(Date data) {

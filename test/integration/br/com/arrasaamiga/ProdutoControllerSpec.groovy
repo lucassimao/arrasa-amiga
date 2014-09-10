@@ -17,6 +17,9 @@ class ProdutoControllerSpec extends IntegrationSpec {
 
     protected void setup() {
 
+        Estoque.executeUpdate('delete from Estoque')
+        Produto.executeUpdate('delete from Produto')
+
         def produto1 = new Produto(descricao: 'Produto 1', nome: 'P1', keywords: ['limpeza', 'cabelo', 'hair', 'shampoo', 'parecido 2'],
                 tipoUnitario: 'un', unidades: ['un'] as List)
         produto1.save(flush: true)
@@ -31,11 +34,6 @@ class ProdutoControllerSpec extends IntegrationSpec {
         new Estoque(produto: produto2, unidade: 'un', quantidade: 5).save(flush: true)
 
         assert 2 == Estoque.count()
-    }
-
-    protected void  cleanup() {
-        Estoque.executeUpdate('delete from Estoque')
-        Produto.executeUpdate('delete from Produto')
     }
 
     @Unroll
