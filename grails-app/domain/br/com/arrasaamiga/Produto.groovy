@@ -48,6 +48,7 @@ class Produto {
 
     static mapping = {
         fotos cascade: 'all-delete-orphan'
+        keywords cascade: 'delete'
     }
 
 

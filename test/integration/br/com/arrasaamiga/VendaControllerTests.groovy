@@ -80,6 +80,11 @@ class VendaControllerTests extends GroovyTestCase {
 
     }
 
+    protected void cleanup() {
+        Estoque.executeUpdate('delete Estoque')
+        Estoque.executeUpdate('delete Produto')
+    }
+
 
     void testAtualizarDataDeEntregaEmFormatoJSON() {
         def produto1 = Produto.findByNome('P1')

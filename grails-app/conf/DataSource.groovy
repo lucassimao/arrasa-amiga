@@ -36,7 +36,7 @@ environments {
     }
     test {
         dataSource {
-            dialect= org.hibernate.dialect.MySQL5InnoDBDialect
+            //dialect= org.hibernate.dialect.MySQL5InnoDBDialect
             dbCreate = "create-drop"
             driverClassName = "com.mysql.jdbc.Driver"
             url = "jdbc:mysql://localhost/arrasaamigatests"

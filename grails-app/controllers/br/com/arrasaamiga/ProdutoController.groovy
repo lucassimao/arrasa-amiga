@@ -99,13 +99,9 @@ class ProdutoController {
     @Secured(['ROLE_ADMIN'])
     def save() {
 
-        params.precoAVistaEmReais = params.precoAVistaEmReais.replace('.',',')
-        params.precoAPrazoEmReais = params.precoAPrazoEmReais.replace('.',',')
-        
-        def unidades = JSON.parse(params.unidades)
-        def fotos = JSON.parse(params.fotosUnidades)
-        def comentarios = JSON.parse(params.fotoComentario)
-
+        def unidades = (params.unidades)?JSON.parse(params.unidades):[]
+        def fotos = (params.fotosUnidades)?JSON.parse(params.fotosUnidades):[]
+        def comentarios = (params.fotoComentario)?JSON.parse(params.fotoComentario):[]
 
 
         // corrigindo os grupos
@@ -118,6 +114,7 @@ class ProdutoController {
             params["grupos[${count}].id"] = pattern2.matcher(p)[0]
             ++count
         }
+
 
         def produtoInstance = new Produto(params)
         produtoInstance.keywords = params.list('palavrasChave[]')
@@ -140,7 +137,8 @@ class ProdutoController {
         }
         
         def multipartFileMiniatura = request.getFile('fotoMiniaturaFile')
-        produtoInstance.fotoMiniatura = "img${System.currentTimeMillis()}${multipartFileMiniatura.originalFilename}"
+        if (multipartFileMiniatura)
+            produtoInstance.fotoMiniatura = "img${System.currentTimeMillis()}${multipartFileMiniatura.originalFilename}"
 
         if (!produtoInstance.save(flush: true)) {
             produtoInstance.fotoMiniatura = ''
@@ -151,7 +149,7 @@ class ProdutoController {
 
         String uploadDir = getUploadDir()
 
-        if (multipartFileMiniatura.originalFilename)
+        if (multipartFileMiniatura)
             multipartFileMiniatura.transferTo(new File(uploadDir + File.separator + produtoInstance.fotoMiniatura))
 
 
@@ -245,17 +243,13 @@ class ProdutoController {
         }
 
         produtoInstance.grupos = []
-        bindData(produtoInstance, params, [include: ['grupos','visivel','nome','descricao','tipoUnitario']])
+        bindData(produtoInstance, params, [include: ['grupos','visivel','nome','descricao','tipoUnitario','marca']])
         assert count == produtoInstance.grupos?.size()
 
-        produtoInstance.precoAPrazoEmReais = Double.valueOf( params.precoAPrazoEmReais.replace(',','.') )
-        produtoInstance.precoAVistaEmReais = Double.valueOf( params.precoAVistaEmReais.replace(',','.') )
-
-        
         def miniaturaAnterior = produtoInstance.fotoMiniatura
         def multipartFileMiniatura = request.getFile('fotoMiniaturaFile')
 
-        if (multipartFileMiniatura.originalFilename)
+        if (multipartFileMiniatura)
             produtoInstance.fotoMiniatura =  multipartFileMiniatura.originalFilename
         else
              produtoInstance.fotoMiniatura = miniaturaAnterior
@@ -264,11 +258,10 @@ class ProdutoController {
         produtoInstance.fotos*.delete()
         produtoInstance.fotos.clear()
         produtoInstance.unidades.clear()
-        produtoInstance.marca = params.marca
 
-        def unidades = JSON.parse(params.unidades)
-        def fotos = JSON.parse(params.fotosUnidades)
-        def comentarios = JSON.parse(params.fotoComentario)
+        def unidades = (params.unidades)?JSON.parse(params.unidades):[]
+        def fotos = (params.fotosUnidades)?JSON.parse(params.fotosUnidades):[]
+        def comentarios = (params.fotoComentario)?JSON.parse(params.fotoComentario):[]
 
         unidades.each{ unidade -> 
 
@@ -307,8 +300,7 @@ class ProdutoController {
         }
 
          
-        if (multipartFileMiniatura.originalFilename){
-
+        if (multipartFileMiniatura){
             String uploadDir =  getUploadDir()
             multipartFileMiniatura.transferTo(new File(uploadDir + File.separator + produtoInstance.fotoMiniatura))
         }
