@@ -38,10 +38,20 @@ class ProdutoControllerSpec extends IntegrationSpec {
     }
 
 
-    @IgnoreRest
     void "test atualizar produto"() {
         given:
             def produto = Produto.first()
+            assertNull produto.fotos
+
+            def fotos = ['UN' : ['fotoUN1', 'fotoUN22'],
+                         'Caixa' : ['fotoCaixa1', 'fotoCaixa2', 'fotoCaixa3'],
+                         'Lote': ['fotoLote1', 'fotoLote2', 'fotoLote3', 'fotoLote4']]
+            def comentarios = ['fotoUN1' : 'Comentario 1',
+                               'fotoUN22' : 'Comentario 2',
+                               'fotoCaixa1' : 'Comentario 3',
+                               'fotoLote1': 'Comentario 4',
+                               'fotoLote4' : 'Comentario 5']
+
             def novoNome = 'Produto 1 - Atualizado'
             def novasUnidades = ['UN', 'Caixa', 'Lote']
             def novoValorAVistaEmCentavos = 1299
@@ -51,10 +61,13 @@ class ProdutoControllerSpec extends IntegrationSpec {
             def controller = new ProdutoController()
             controller.request.method = 'POST'
             controller.params.id = produto.id
+
             controller.params.nome = novoNome
             controller.params.unidades = (novasUnidades as JSON).toString()
             controller.params.precoAVistaEmReais = '12.99'
             controller.params.precoAPrazoEmReais = '21.99'
+            controller.params.fotoComentario = (comentarios as JSON).toString()
+            controller.params.fotosUnidades = (fotos as JSON).toString()
 
             controller.update()
             sessionFactory.currentSession.flush()
@@ -75,6 +88,20 @@ class ProdutoControllerSpec extends IntegrationSpec {
             updatedProduto.unidades.containsAll(novasUnidades)
             assertNull Estoque.findByProdutoAndUnidade(updatedProduto,'un')
 
+            updatedProduto.unidades.each { unidade ->
+                unidade in novasUnidades
+
+                def fotosDaUnidade = updatedProduto.fotos.findAll { FotoProduto fotoProduto -> fotoProduto.unidade.equals(unidade) }
+                fotosDaUnidade.size() == fotos[unidade].size()
+
+                fotosDaUnidade.each { FotoProduto foto ->
+                    if (comentarios[foto.arquivo]) {
+                        foto.comentario == comentarios[foto.arquivo]
+                    }
+                }
+
+            }
+
     }
 
     @Unroll
@@ -88,14 +115,14 @@ class ProdutoControllerSpec extends IntegrationSpec {
         controller.response.json.size() == quantidadeDeResultados
 
         where:
-        termo      | quantidadeDeResultados
-        'lim'      | 1
-        'limpeza'  | 1
-        'p'        | 5
-        'pó'       | 2
-        'po'       | 2
-        'PO'       | 2
-        'parecido' | 2
+            termo      | quantidadeDeResultados
+            'lim'      | 1
+            'limpeza'  | 1
+            'p'        | 5
+            'pó'       | 2
+            'po'       | 2
+            'PO'       | 2
+            'parecido' | 2
     }
 
     void "test salvar produto sem fotos e comentarios"() {

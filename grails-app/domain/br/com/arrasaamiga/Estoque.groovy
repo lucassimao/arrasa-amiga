@@ -13,7 +13,6 @@ class Estoque {
 
     static mapping = {
         entradas cascade: 'all-delete-orphan'
-        unidade column: 'unidade',sqlType: 'varchar(100) CHARACTER SET utf8 COLLATE utf8_bin'
     }
 
     static constraints = {

@@ -243,7 +243,8 @@ class ProdutoController {
         }
 
         produtoInstance.grupos = []
-        bindData(produtoInstance, params, [include: ['grupos','visivel','nome','descricao','tipoUnitario','marca','precoAVistaEmReais','precoAPrazoEmReais']])
+        bindData(produtoInstance, params, [include: ['grupos','visivel','nome','descricao',
+                                                     'tipoUnitario','marca','precoAVistaEmReais','precoAPrazoEmReais']])
         assert count == produtoInstance.grupos?.size()
 
         def miniaturaAnterior = produtoInstance.fotoMiniatura
@@ -297,12 +298,17 @@ class ProdutoController {
 
 
         if (!produtoInstance.save(flush: true)) {
-            Estoque.executeUpdate("delete from Estoque where produto=:produto and unidade not in :unidades", [produto:produtoInstance,unidades:unidades])
             render(view: "edit", model: [produtoInstance: produtoInstance])
             return
         }
 
-         
+        // removendo estoques que nao possuem mais
+        Estoque.findAllByProduto(produtoInstance)?.each{e->
+            if (!produtoInstance.unidades.contains(e.unidade)){
+                e.delete(flush:true)
+            }
+        }
+
         if (multipartFileMiniatura){
             String uploadDir =  getUploadDir()
             multipartFileMiniatura.transferTo(new File(uploadDir + File.separator + produtoInstance.fotoMiniatura))
