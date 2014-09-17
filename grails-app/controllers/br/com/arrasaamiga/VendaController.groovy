@@ -4,7 +4,9 @@ import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
 import grails.rest.RestfulController
 import grails.transaction.*
+import org.codehaus.groovy.grails.web.servlet.HttpHeaders
 
+import static org.springframework.http.HttpStatus.CREATED
 import static org.springframework.http.HttpStatus.NOT_FOUND
 import static org.springframework.http.HttpStatus.OK
 
@@ -71,11 +73,13 @@ class VendaController extends RestfulController {
 
     }
 
+
+
     def index() {
         withFormat {
             html { redirect(action: "list", params: params) }
             json {
-                respond Venda.findAllByStatusInList([StatusVenda.Entregue, StatusVenda.AguardandoPagamento])
+                respond Venda.findAllByStatusInList([StatusVenda.PagamentoRecebido, StatusVenda.AguardandoPagamento])
             }
         }
 

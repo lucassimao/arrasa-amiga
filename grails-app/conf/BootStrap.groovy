@@ -1,4 +1,5 @@
 import br.com.arrasaamiga.GrupoDeUsuario
+import br.com.arrasaamiga.TurnoEntrega
 import br.com.arrasaamiga.Usuario
 import br.com.arrasaamiga.UsuarioGrupoDeUsuario
 import br.com.arrasaamiga.Venda
@@ -12,34 +13,22 @@ class BootStrap {
 
     def init = { servletContext ->
 
+        File uploadDir = grailsApplication.mainContext.getResource('images/produtos').file
+        if (!uploadDir.exists()) {
+
+            boolean dirCreated = uploadDir.mkdirs()
+            if (!dirCreated)
+                throw new Error('Diretorio de imagens de produtos não foi criado')
+        }
+
 
         Environment.executeForCurrentEnvironment {
 
             production {
-                File uploadDir = grailsApplication.mainContext.getResource('images/produtos').file
-                if (!uploadDir.exists()) {
 
-                    boolean dirCreated = uploadDir.mkdirs()
-                    if (!dirCreated)
-                        throw new Error('Diretorio de imagens de produtos não foi criado')
-                }
             }
 
             development {
-                def grailsSettings = BuildSettingsHolder.settings
-                String separator = File.separator
-                String baseDir = grailsSettings.baseDir.absolutePath
-                String assetsFolder = "${baseDir}${separator}grails-app${separator}assets${separator}"
-                String uploadDir = "${assetsFolder}images${separator}produtos"
-                def dir = new File(uploadDir)
-
-                if (!dir.exists()) {
-
-                    boolean dirCreated = dir.mkdirs()
-                    if (!dirCreated)
-                        throw new Error('Diretorio de imagens de produtos não foi criado')
-                }
-
 
                 def adminRole = new GrupoDeUsuario(authority: 'ROLE_ADMIN').save(flush: true)
                 def userRole = new GrupoDeUsuario(authority: 'ROLE_CLIENTE').save(flush: true)
@@ -48,8 +37,6 @@ class BootStrap {
                 testUser.save(flush: true)
 
                 UsuarioGrupoDeUsuario.create testUser, adminRole, true
-
-
             }
         }
 
@@ -63,6 +50,7 @@ class BootStrap {
             map['formaPagamento'] = venda.formaPagamento.name()
             map['status'] = venda.status.name()
             map['dataEntrega'] = venda.dataEntrega?.time
+            map['turnoEntrega'] = (venda.turnoEntrega)?venda.turnoEntrega.name():TurnoEntrega.Manha.name()
             map['servicoCorreio'] = venda.servicoCorreio?.name()
             map['cliente'] = [:]
             map['cliente']['id'] = venda.cliente?.id
@@ -77,7 +65,7 @@ class BootStrap {
             map['cliente']['endereco']['bairro'] = (venda.cliente?.endereco?.bairro) ?: ''
             map['cliente']['endereco']['cidade'] = (venda.cliente?.endereco?.cidade?.nome) ?: ''
             map['cliente']['endereco']['uf'] = (venda.cliente?.endereco?.uf?.nome) ?: ''
-            map['items'] = []
+            map['itens'] = []
 
             venda.itensVenda.each {
                 def item = [:]
@@ -85,8 +73,10 @@ class BootStrap {
                 item['produto_nome'] = it.produto.nome
                 item['quantidade'] = it.quantidade
                 item['unidade'] = it.unidade
+                item['precoAVistaEmCentavos'] = it.precoAVistaEmCentavos
+                item['precoAPrazoEmCentavos'] = it.precoAPrazoEmCentavos
 
-                map['items'] << item
+                map['itens'] << item
             }
 
             return map

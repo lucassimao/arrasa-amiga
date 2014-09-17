@@ -96,11 +96,11 @@
 
         <div class="col-md-1 col-xs-3"><span class="caption">Estado:</span></div>
 
-        <div class="col-md-5 col-xs-9">${vendaInstance.cliente.endereco.uf.nome}</div>
+        <div class="col-md-5 col-xs-9">${vendaInstance.cliente.endereco.uf?.nome}</div>
 
         <div class="col-md-1 col-xs-3"><span class="caption">Cidade:</span></div>
 
-        <div class="col-md-5 col-xs-9">${vendaInstance.cliente.endereco.cidade.nome}</div>
+        <div class="col-md-5 col-xs-9">${vendaInstance.cliente.endereco.cidade?.nome}</div>
 
 
         <div class="col-md-1 col-xs-3"><span class="caption">Bairro:</span></div>

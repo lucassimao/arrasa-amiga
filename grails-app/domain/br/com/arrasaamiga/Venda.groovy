@@ -22,6 +22,7 @@ class Venda {
     ServicoCorreio servicoCorreio
     String codigoRastreio
     Usuario vendedor
+    TurnoEntrega turnoEntrega
 
     def pagSeguroService
     def correiosService
@@ -44,6 +45,7 @@ class Venda {
         carrinho(nullable: true)
         servicoCorreio(nullable: true)
         vendedor(nullable: true)
+        turnoEntrega(nullable:true)
     }
 
     static mapping = {

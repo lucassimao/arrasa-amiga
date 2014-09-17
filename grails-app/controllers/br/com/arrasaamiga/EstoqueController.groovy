@@ -14,49 +14,53 @@ class EstoqueController {
     }
 
     @Secured(['permitAll'])
-    def listAsJson() {
-        def c = Estoque.createCriteria()
-
-        def results = c.list() {
-
-            produto {
-                eq('visivel', true)
-                order('nome')
-            }
-
-            projections {
-                property('id')
-                produto {
-                    property('nome')
-                    property('precoAVistaEmCentavos')
-                    property('precoAPrazoEmCentavos')
-                }
-
-                property('unidade')
-                property('quantidade')
-            }
-        }
-
-        render results as JSON
-
-    }
-
     def list(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
 
-        def c = Estoque.createCriteria()
+        withFormat {
 
-        def results = c.list(params) {
-            produto {
-                and {
-                    eq('visivel', true)
-                    order('nome')
+            html {
+                params.max = Math.min(max ?: 10, 100)
+                def c = Estoque.createCriteria()
+
+                def results = c.list(params) {
+                    produto {
+                        and {
+                            eq('visivel', true)
+                            order('nome')
+                        }
+                    }
                 }
+
+                [estoqueInstanceList: results, estoqueInstanceTotal: Estoque.count()]
             }
+
+            json{
+                def c = Estoque.createCriteria()
+
+                def results = c.list() {
+
+                    produto {
+                        eq('visivel', true)
+                        order('nome')
+                    }
+
+                    projections {
+                        produto {
+                            property('id')
+                            property('nome')
+                            property('precoAVistaEmCentavos')
+                            property('precoAPrazoEmCentavos')
+                        }
+
+                        property('unidade')
+                        property('quantidade')
+                    }
+                }
+                render results as JSON
+            }
+
         }
 
-
-        [estoqueInstanceList: results, estoqueInstanceTotal: Estoque.count()]
     }
 
     def show(Long id) {
