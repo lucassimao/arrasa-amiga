@@ -69,7 +69,7 @@
 				<li style="float:right;">
 					<g:link class="create" style="background-image: url(${assetPath(src:'resize_big.png')});"
 						controller="home" action="organizarHome">
-						Organizar Página Inicial 
+						Ordenar Produtos
 					</g:link>
 				</li>
 				<li style="float:right;"><g:link class="create" action="create"> Cadastrar Novo Produto</g:link></li>

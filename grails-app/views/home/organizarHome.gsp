@@ -55,9 +55,8 @@
 
 		</style>
 
-		<g:javascript src="jquery-ui-1.10.3.custom.min.js" />
 
-		<g:javascript>
+		<asset:script>
 					
 			$(function(){
 
@@ -96,7 +95,7 @@
 			});
 
 
-		</g:javascript>
+		</asset:script>
 	</head>
 
 
@@ -120,7 +119,7 @@
       				<li id="${produto.id}" class="ui-state-default item-produto">
 
 							
-						<g:img dir="img/produtos" file="${produto.fotoMiniatura}" alt="${produto.nome}" title="${produto.nome}"/>
+						<g:img dir="images/produtos" file="${produto.fotoMiniatura}" alt="${produto.nome}" title="${produto.nome}"/>
 						<h5> ${produto.nome}</h5>
 						
 						<p class="label-preco"> 

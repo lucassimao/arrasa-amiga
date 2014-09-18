@@ -1,4 +1,5 @@
 //= require jquery
+//= require jquery-ui
 //= require bootstrap.js
 //= require masonry.pkgd.min.js
 //= require imagesloaded.pkgd.min.js
