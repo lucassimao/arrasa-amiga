@@ -250,7 +250,8 @@ class ProdutoController {
         def miniaturaAnterior = produtoInstance.fotoMiniatura
         def multipartFileMiniatura = request.getFile('fotoMiniaturaFile')
 
-        if (multipartFileMiniatura)
+
+        if (multipartFileMiniatura.originalFilename)
             produtoInstance.fotoMiniatura =  multipartFileMiniatura.originalFilename
         else
              produtoInstance.fotoMiniatura = miniaturaAnterior
@@ -309,7 +310,7 @@ class ProdutoController {
             }
         }
 
-        if (multipartFileMiniatura){
+        if (multipartFileMiniatura.originalFilename){
             String uploadDir =  getUploadDir()
             multipartFileMiniatura.transferTo(new File(uploadDir + File.separator + produtoInstance.fotoMiniatura))
         }

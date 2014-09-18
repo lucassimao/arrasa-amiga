@@ -103,7 +103,7 @@
 <div class="fieldcontain" style="margin-top:20px;border">
 	<label></label>
 
-	<assets:image file="plus.png" style="width:12px;"/>
+	<asset:image src="plus.png" style="width:12px;"/>
 	<a id="btn-Add-Unidade" href="#">  Adicionar Unidade </a>
 </div>
 
@@ -111,7 +111,7 @@
 
 
 <div class="fieldcontain required">
-	<label for="fotoMiniatura">
+	<label for="fotoMiniaturaFile">
 		Foto Miniatura
 		<span class="required-indicator">*</span>
 	</label>
@@ -123,7 +123,7 @@
 <asset:javascript src="crud.produtos.manifest.js"/>
 
 
-<script type="text/javascript">
+<asset:script>
 
 	$(function(){
 	
@@ -379,5 +379,5 @@
 	});
 
 
-</script>
+</asset:script>
 
