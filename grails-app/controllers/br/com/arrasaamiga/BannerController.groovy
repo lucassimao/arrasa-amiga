@@ -15,6 +15,8 @@ class BannerController {
 
     static allowedMethods = [save: "POST", update: ["PUT","POST"], delete: "DELETE"]
 
+    def grailsApplication
+
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
         respond Banner.list(params), model:[bannerInstanceCount: Banner.count()]
