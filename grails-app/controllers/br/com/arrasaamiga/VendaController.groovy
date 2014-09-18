@@ -82,15 +82,15 @@ class VendaController extends RestfulController {
                 respond Venda.findAllByStatusInList([StatusVenda.PagamentoRecebido, StatusVenda.AguardandoPagamento])
             }
         }
-
     }
 
     @Secured(['IS_AUTHENTICATED_FULLY'])
     def list(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
+        params.max = Math.min(max ?: 10, 1000)
         params.sort = 'dateCreated'
         params.order = 'desc'
-        respond Venda.list(params), model: [vendaInstanceTotal: Venda.count()]
+
+        [vendaInstanceList: Venda.list(params), vendaInstanceTotal: Venda.count()]
     }
 
 }

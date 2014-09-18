@@ -8,11 +8,10 @@
     <g:set var="entityName" value="${message(code: 'venda.label', default: 'Venda')}"/>
     <title><g:message code="default.list.label" args="[entityName]"/></title>
 
-    <script type="text/javascript">
+    <asset:script>
         $(function () {
 
-
-            $("#formTrackingCode").submit(function () {
+            $(".formTrackingCode").submit(function () {
                 var inputHidden = $(this).find("input[name='trackingCode']");
 
                 var trackingCode = prompt("Código de rastreio: ", $(inputHidden).val());
@@ -25,7 +24,7 @@
             });
 
         });
-    </script>
+    </asset:script>
 </head>
 
 <body>
@@ -77,14 +76,14 @@
                                             onclick="return confirm('Tem certeza');"/>
                         </g:form>
 
-                        <g:form style="display:inline">
+                        <g:form style="display:inline" method="delete">
                             <g:hiddenField name="id" value="${vendaInstance?.id}"/>
                             <g:hiddenField name="offset" value="${params.offset}"/>
                             <g:hiddenField name="max" value="${params.max}"/>
-                            <g:actionSubmit action="excluir" value="Excluir" onclick="return confirm('Tem certeza');"/>
+                            <g:actionSubmit action="delete" value="Excluir" onclick="return confirm('Tem certeza');"/>
                         </g:form>
 
-                        <g:form name="formTrackingCode" style="display:inline">
+                        <g:form class="formTrackingCode" style="display:inline">
                             <g:hiddenField name="id" value="${vendaInstance?.id}"/>
                             <g:hiddenField name="offset" value="${params.offset}"/>
                             <g:hiddenField name="max" value="${params.max}"/>
@@ -98,9 +97,8 @@
         </g:each>
         </tbody>
     </table>
-
     <div class="pagination">
-        <g:paginate total="${vendaInstanceTotal}"/>
+        <g:paginate total="${vendaInstanceTotal ?: 0}" />
     </div>
 </div>
 </body>
