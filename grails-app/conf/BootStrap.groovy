@@ -22,11 +22,17 @@ class BootStrap {
         }
 
 
+        File bannersDir = grailsApplication.mainContext.getResource('images/banners').file
+        if (!bannersDir.exists()) {
+
+            boolean dirCreated = bannersDir.mkdirs()
+            if (!dirCreated)
+                throw new Error('Diretorio de banners não foi criado')
+        }
+
+
+
         Environment.executeForCurrentEnvironment {
-
-            production {
-
-            }
 
             development {
 

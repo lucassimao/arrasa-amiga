@@ -133,23 +133,8 @@ class BannerController {
         }
     }
 
-    private static String getUploadDir(){
-
-
-        Environment.executeForCurrentEnvironment {
-
-            production {
-                return grailsApplication.mainContext.getResource('images/banners').file.absolutePath
-            }
-
-            development {
-                def grailsSettings = BuildSettingsHolder.settings
-                String separator = File.separator
-                String baseDir = grailsSettings.baseDir.absolutePath
-                String assetsFolder = "${baseDir}${separator}grails-app${separator}assets${separator}"
-                return "${assetsFolder}images${separator}banners"
-            }
-        }
+    private String getUploadDir(){
+        return grailsApplication.mainContext.getResource('images/banners').file.absolutePath
 
     }
 }

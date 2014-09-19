@@ -35,7 +35,7 @@
 				<g:each in="${bannerInstanceList}" status="i" var="bannerInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 					
-						<td><g:link action="show" id="${bannerInstance.id}"><asset:image style="width: 50px" src="banners/${fieldValue(bean: bannerInstance, field: 'arquivo')}" /> </g:link></td>
+						<td><g:link action="show" id="${bannerInstance.id}"><img style="width: 50px"  src="${resource(dir: 'images/banners',file: bannerInstance.arquivo)}" > </g:link></td>
 					
 
 						<td>${fieldValue(bean: bannerInstance, field: "titulo")}</td>

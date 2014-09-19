@@ -22,8 +22,8 @@
 					<span id="arquivo-label" class="property-label">Banner</span>
 
 						<span class="property-value" aria-labelledby="arquivo-label">
-                            <a target="_blank" href="${assetPath(src:'banners/' +bannerInstance.arquivo)}">
-                                <asset:image style="width:25%;" src="banners/${fieldValue(bean: bannerInstance, field: 'arquivo')}" />
+                            <a target="_blank" href="${resource(dir: 'images/banners',file: bannerInstance.arquivo)}">
+                                <img src="${resource(dir: 'images/banners',file: bannerInstance.arquivo)}" style="width:25%;"/>
                             </a>
                             <p> <small> Click para ampliar </small></p>
                         </span>
