@@ -172,7 +172,7 @@
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">MAIS <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li class="${(request.forwardURI?.endsWith('comoComprar')) ? 'active' : ''}">
-                                    <a class="btnComoComprar" href="#">Como Comprar</a>
+                                    <a class="btnComoComprar" data-target="${createLink(action:'comoComprar',controller:'home',absolute: true)}" href="#">Como Comprar</a>
                                 </li>
                                 <li class="divider"></li>
                                 <li class="${(request.forwardURI?.endsWith('contato')) ? 'active' : ''}">
@@ -206,7 +206,8 @@
                         </g:each>
 
                         <li class="${(request.forwardURI?.endsWith('comoComprar')) ? 'active' : ''}">
-                            <a href="#" class="btnComoComprar">Como Comprar</a>
+                            <a href="#" data-target="${createLink(action:'comoComprar',controller:'home',absolute: true)}"
+                                        class="btnComoComprar">Como Comprar</a>
                         </li>
 
                         <li class="${(request.forwardURI?.endsWith('contato')) ? 'active' : ''}">

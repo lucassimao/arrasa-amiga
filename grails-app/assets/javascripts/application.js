@@ -53,12 +53,13 @@ $(document).ready(function() {
     $(".btnComoComprar").click(function(){
 
         var modal = $('.modal');
+
         if (modal.length > 0){
             $(modal).modal();
         }else{
 
             $.ajax({
-                url: "home/comoComprar",
+                url: $(this).data('target'),
                 settings: {'cache':true}
             }).success(function( data, textStatus, jqXHR ) {
                 var modal = $(data);
