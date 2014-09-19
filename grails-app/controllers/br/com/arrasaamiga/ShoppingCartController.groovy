@@ -199,8 +199,6 @@ class ShoppingCartController {
 
         }
 
-        Estoque.removerItens(venda.itensVenda)
-
         if (venda.formaPagamento == FormaPagamento.AVista) {
 
             venda.save(flush: true, failOnError: true)

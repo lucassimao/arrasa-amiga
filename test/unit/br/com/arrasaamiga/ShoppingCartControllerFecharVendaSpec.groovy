@@ -232,7 +232,6 @@ class ShoppingCartControllerFecharVendaSpec extends Specification {
             controller.fecharVenda()
 
         then:
-            Estoque.findByProdutoAndUnidade(Produto.load(1L),'un1').quantidade == 7
             response.redirectedUrl == '/venda/show/' + Venda.first().id
 
     }
@@ -269,7 +268,6 @@ class ShoppingCartControllerFecharVendaSpec extends Specification {
             controller.fecharVenda()
 
         then:
-            Estoque.findByProdutoAndUnidade(Produto.load(1L),'un1').quantidade == 7
             response.redirectedUrl == paymentURLDeTeste.toString()
 
     }

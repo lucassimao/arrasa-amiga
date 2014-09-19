@@ -59,15 +59,7 @@ class Venda {
     def afterInsert() {
 
         Estoque.withNewSession { session ->
-
-            this.itensVenda.each { item ->
-
-                def estoque = Estoque.findByProdutoAndUnidade(item.produto, item.unidade)
-                println "Removendo ${item.quantidade} de ${item.produto.nome} - ${item.unidade} ... "
-                estoque.quantidade -= item.quantidade
-                estoque.save(flush: true)
-            }
-
+            Estoque.removerItens(this.itensVenda)
         }
     }
 
@@ -77,14 +69,7 @@ class Venda {
 
             // se ja tiver sido cancelada pelo pagseguro, o PagSeguroController ja repõe os items
             if (this.status != StatusVenda.Cancelada) {
-
-                this.itensVenda.each { item ->
-
-                    def estoque = Estoque.findByProdutoAndUnidade(item.produto, item.unidade)
-                    println "Repondo ${item.quantidade} de ${item.produto.nome} - ${item.unidade} ... "
-                    estoque.quantidade += item.quantidade
-                    estoque.save(flush: true)
-                }
+                Estoque.reporItens(this.itensVenda)
             }
         }
     }
