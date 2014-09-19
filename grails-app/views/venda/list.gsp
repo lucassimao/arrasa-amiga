@@ -84,13 +84,15 @@
                             <g:actionSubmit action="delete" value="Excluir" onclick="return confirm('Tem certeza');"/>
                         </g:form>
 
-                        <g:form class="formTrackingCode" style="display:inline">
-                            <g:hiddenField name="id" value="${vendaInstance?.id}"/>
-                            <g:hiddenField name="offset" value="${params.offset}"/>
-                            <g:hiddenField name="max" value="${params.max}"/>
-                            <g:hiddenField name="trackingCode" value="${vendaInstance.codigoRastreio}"/>
-                            <g:actionSubmit action="setTrackingCode" value="Código de Rastreio"/>
-                        </g:form>
+                        <g:if test="${!vendaInstance.cliente.isDentroDaAreaDeEntregaRapida()}">
+                            <g:form class="formTrackingCode" style="display:inline">
+                                <g:hiddenField name="id" value="${vendaInstance?.id}"/>
+                                <g:hiddenField name="offset" value="${params.offset}"/>
+                                <g:hiddenField name="max" value="${params.max}"/>
+                                <g:hiddenField name="trackingCode" value="${vendaInstance.codigoRastreio}"/>
+                                <g:actionSubmit action="setTrackingCode" value="Código de Rastreio"/>
+                            </g:form>
+                        </g:if>
                     </g:if>
                 </td>
 
