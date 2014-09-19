@@ -1,22 +1,10 @@
 /*
 *=require bootstrap.css
+*=require font-awesome.css
+*=require google-fonts.css
 *=require responsive.css
 *=require_self
 */
-
-/*
-    ========================================
-    CLOTHESHOP - SHOPPING CART THEME
-    ========================================
-    
-    @author         : Afriq Yasin Ramadhan
-    @version        : v1.1
-    @date-create    : 08/22/2012
-    @last-update    : 04/12/2014
-    @file-name      : style
-
-*/
-
 
 /*
     ========================================
@@ -42,9 +30,9 @@
     ==================
     [1. IMPORT SOURCE]
     ==================
-*/
 @import url(font-awesome.css);
 @import url(http://fonts.googleapis.com/css?family=Oregano:400italic|Roboto+Condensed:400,300,700);
+*/
 
 
 /*
