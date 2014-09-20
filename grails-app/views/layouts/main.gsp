@@ -62,7 +62,7 @@
     <!-- begin:logo -->
     <div class="row" style="max-height: 150px;overflow: hidden; ">
 
-        <div class="col-md-8 col-sm-8 col-xs-8">
+        <div class="col-md-7 col-sm-7 col-xs-6">
             <div class="logo">
                 <a href="${createLink(uri: '/', absolute: true)}">
                     <asset:image src="logo3.png" class="img-responsive"/>
@@ -70,7 +70,7 @@
             </div>
         </div>
 
-        <div class="col-md-4 col-sm-4 col-xs-4">
+        <div class="col-md-5 col-sm-5 col-xs-6">
             <div class="account">
                 <ul>
 
@@ -101,7 +101,10 @@
                             <div class="hidden-xs">
                                 <h4><a href="${createLink(controller: 'login')}">Login</a></h4>
 
-                                <p><a href="${createLink(controller: 'cliente', action: 'cadastro')}">Cadastre-se aqui</a>
+                                <p>
+                                    <a href="${createLink(controller: 'cliente', action: 'cadastro')}">
+                                        Cadastre-se aqui
+                                    </a>
                                 </p>
                             </div>
 
@@ -118,15 +121,16 @@
                     <li>
                         <div class="hidden-xs">
                             <h4><a href="${createLink(controller: 'shoppingCart')}">Carrinho</a></h4>
-
                             <p><a href="${createLink(controller: 'shoppingCart')}"><strong><cart:qtdeTotalItens/> Produto(s)</strong>
                             </a></p>
                         </div>
 
                         <div class="visible-xs">
                             <a href="${createLink(controller: 'shoppingCart')}" class="btn btn-primary">
-                                <span class="cart-item"><cart:qtdeTotalItens/></span> <i
-                                    class="fa fa-shopping-cart"></i>
+                                <span class="cart-item">
+                                    <cart:qtdeTotalItens/>
+                                </span>
+                                <i class="fa fa-shopping-cart"></i>
                             </a>
                         </div>
                     </li>
