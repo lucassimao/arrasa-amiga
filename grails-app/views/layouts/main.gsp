@@ -60,17 +60,13 @@
 <div class="container" style="${sec.ifAllGranted(roles: 'ROLE_ADMIN') { 'padding-top: 65px;' }}">
 
     <!-- begin:logo -->
-    <div class="row">
+    <div class="row" style="max-height: 150px;overflow: hidden; ">
 
         <div class="col-md-8 col-sm-8 col-xs-8">
             <div class="logo">
-                <!--
-            <h1><a href="${createLink(uri: '/', absolute: true)}">Arrasa<span> amiga</span> </a></h1>
-            -->
                 <a href="${createLink(uri: '/', absolute: true)}">
                     <asset:image src="logo3.png" class="img-responsive"/>
                 </a>
-                <!--<p>Produtos para maquiagem a pronta entrega</p>-->
             </div>
         </div>
 
@@ -201,8 +197,7 @@
                                 href="${createLink(uri: '/', absolute: true)}">Home</a></li>
 
                         <g:each in="${GrupoDeProduto.findAllByPaiIsNull()}" var="grupo">
-                            <g:render template="/layouts/menuitem"
-                                      model="[grupo: grupo, isRoot: true, grupoRaiz: grupoRaiz]"/>
+                            <g:render template="/layouts/menuitem" model="[grupo: grupo, isRoot: true, grupoRaiz: grupoRaiz]"/>
                         </g:each>
 
                         <li class="${(request.forwardURI?.endsWith('comoComprar')) ? 'active' : ''}">

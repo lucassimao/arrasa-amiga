@@ -327,7 +327,7 @@ a:hover.no-underline{
 .nav-menus{
     border-top: 2px solid #333;
     padding-top: 10px;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
 }
 
 .nav-menus .nav-pills > li > a{

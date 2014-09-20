@@ -63,7 +63,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="page-header">
-            <!-- <h2> Mais procurados <small> Produtos mais vendidos este mês</small></h2> -->
+             %{--<h2> Mais procurados <small> Produtos mais vendidos este mês</small></h2>--}%
         </div>
     </div>
 </div>
