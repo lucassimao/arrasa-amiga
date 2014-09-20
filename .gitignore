@@ -10,5 +10,6 @@ projectFilesBackup/*
 *.log
 arrasa-amiga.sublime-workspace
 web-app/images/produtos/*
+web-app/images/banners/*
 grails-app/assets/images/produtos/*
 grails-app/assets/images/banners/*.*

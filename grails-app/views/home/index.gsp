@@ -32,7 +32,7 @@
 
                     <div class="item ${(i == 0) ? 'active' : ''}">
                         <a href="${banner.link}" target="_blank">
-                            <asset:image src="banners/${banner.arquivo}"/>
+                            <img  src="${resource(dir: 'images/banners',file: banner.arquivo)}" >
                             <div class="carousel-caption hidden-xs">
                                 <h1 style="color:#F06EC2"><strong> ${banner.titulo} </strong></h1>
                                 <p><h3><strong> ${banner.comentario} </strong></h3></p>
