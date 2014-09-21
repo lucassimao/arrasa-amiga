@@ -153,15 +153,14 @@
         </tbody>
 
     </table>
+</div>
 
-
-
-
+<div class="col-md-12">
 
     <a class="btn btn-primary" href="${createLink(uri: '/')}"><i
             class="fa fa-angle-double-left"></i> Escolher + produtos</a>
-    <a class="btn btn btn-success pull-right"
-       href="${createLink(controller: 'shoppingCart', action: 'confirmAddress')}">
+
+    <a class="btn btn btn-success pull-right" href="${createLink(controller: 'shoppingCart', action: 'confirmAddress')}">
         Continuar <i class="fa fa-angle-double-right"></i>
     </a>
 </div>
