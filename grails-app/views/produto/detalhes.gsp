@@ -21,13 +21,13 @@
     </script>
 
     <style type="text/css">
-        .fb_iframe_widget, .fb_iframe_widget span, .fb_iframe_widget iframe {
-            width: 100% !important;
-        }
+    .fb_iframe_widget, .fb_iframe_widget span, .fb_iframe_widget iframe {
+        width: 100% !important;
+    }
 
-        .btn-circle {
-            border-radius: 15px;
-        }
+    .btn-circle {
+        border-radius: 15px;
+    }
 
     </style>
 
@@ -76,6 +76,15 @@
 </g:if>
 
 
+<div class="visible-xs">
+    <div class="heading-title">
+        <h2><span>${produtoInstance.nome}</span></h2>
+    </div>
+    <h5>${produtoInstance.marca}</h5>
+</div>
+
+
+
 <!-- begin:product-image-slider-->
 <div class="col-md-7 col-sm-7">
     <div id="product-single" class="carousel slide" data-ride="carousel">
@@ -84,9 +93,11 @@
             <g:each in="${produtoInstance.fotos}" var="foto" status="i">
                 <div class="item ${(i == 0) ? 'active' : ''}">
                     <div class="product-single">
-                        <img id="img${foto.id}" src="${resource(dir:'images/produtos',file:foto.arquivo)}" class="img-responsive"/>
+                        <img id="img${foto.id}" src="${resource(dir: 'images/produtos', file: foto.arquivo)}"
+                             class="img-responsive"/>
+
                         <div class="carousel-caption">
-                            <h3>${foto.comentario}</h3>
+                            %{--<h3>${foto.comentario}</h3>--}%
                         </div>
                     </div>
                 </div>
@@ -95,11 +106,9 @@
         </div>
 
         <a class="left carousel-control" href="#product-single" role="button" data-slide="prev">
-            <!-- <i class="fa fa-angle-left"></i> -->
             <span class="glyphicon glyphicon-chevron-left"></span>
         </a>
         <a class="right carousel-control" href="#product-single" data-slide="next">
-            <!--<i class="fa fa-angle-right"></i>-->
             <span class="glyphicon glyphicon-chevron-right"></span>
         </a>
     </div>
@@ -115,7 +124,7 @@
             <table>
                 <tbody>
 
-                <tr>
+                <tr class="hidden-xs">
                     <td colspan="3">
                         <div class="heading-title">
                             <h2><span>${produtoInstance.nome}</span></h2>
@@ -123,7 +132,7 @@
                     </td>
                 </tr>
 
-                <tr>
+                <tr class="hidden-xs">
                     <td colspan="3">
                         <h5>${produtoInstance.marca}</h5>
                     </td>
@@ -139,7 +148,8 @@
                         <p>
                             <small>
                                 Em até 5x de
-                                <g:formatNumber number="${produtoInstance.calcularValorParcela(5)}" type="currency" currencyCode="BRL"/>
+                                <g:formatNumber number="${produtoInstance.calcularValorParcela(5)}" type="currency"
+                                                currencyCode="BRL"/>
                                 no cartão
                             </small>
                         </p>
@@ -325,14 +335,15 @@
                         <a class="product-item-link" href="${createLink(uri: pRelacionado.nomeAsURL, absolute: true)}">
                             <div class="thumbnail product-item">
 
-
-                                <img src="${resource(dir:'images/produtos',file:pRelacionado.fotoMiniatura)}" alt="${pRelacionado.nome}"
-                                                 title="${pRelacionado.nome}"/>
+                                <img src="${resource(dir: 'images/produtos', file: pRelacionado.fotoMiniatura)}"
+                                     alt="${pRelacionado.nome}"
+                                     title="${pRelacionado.nome}"/>
 
                                 <div class="caption">
                                     <h5>${pRelacionado.nome}</h5>
 
                                     <p class="product-item-brand">${pRelacionado.marca ?: ''}</p>
+
                                     <div class="star-rating" data-score="${pRelacionado.stars}"></div>
 
                                     <p class="product-item-price">
@@ -340,7 +351,8 @@
                                                         type="currency" currencyCode="BRL"></g:formatNumber>
                                     <h6>
                                         ou 5x de
-                                        <g:formatNumber number="${pRelacionado.calcularValorParcela(5)}" type="currency" currencyCode="BRL"/>
+                                        <g:formatNumber number="${pRelacionado.calcularValorParcela(5)}" type="currency"
+                                                        currencyCode="BRL"/>
                                         sem juros
                                     </h6>
                                 </p>
