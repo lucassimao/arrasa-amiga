@@ -35,7 +35,7 @@
 
                 $.ajax({
 
-                    url: "${createLink(controller: 'home', action: 'getCidades', absolute: true)}",
+                    url: "${createLink(controller: 'home', action: 'getCidades')}",
                     data: {'idUf': idUf},
                     settings: {'cache':true}
 
@@ -66,7 +66,7 @@
                     $("#select-cidade").change();
 
                 }).fail(function(){
-                    window.location = "${createLink(controller: 'cliente', action: 'cadastro', absolute: true)}"
+                    window.location = "${createLink(controller: 'cliente', action: 'cadastro')}"
                 });
 
             });
@@ -95,21 +95,21 @@
 
     <g:form class="form-horizontal" action='checkout'>
 
-        <h3>Confirme os dados para entrega</h3>
+        <h3>Endereço de entrega</h3>
         <hr/>
 
 
         <div class="form-group">
 
-            <label class="col-md-2 control-label">Telefone:</label>
+            <label class="col-md-2 col-xs-3 control-label">Telefone:</label>
 
-            <div class="col-md-4 col-xs-3" style="max-width:70px;padding-right: 5px;">
+            <div class="col-md-4 col-xs-4" style="max-width:70px;padding-right: 5px;">
                 <input type="text" value="${cliente.dddTelefone}" name="dddTelefone"
                        class="form-control ${hasErrors(bean: cliente, field: 'dddTelefone', 'error')}"
                        placeholder="DDD"/>
             </div>
 
-            <div class="col-md-6 col-xs-9" style="max-width: 140px;padding: 0px;">
+            <div class="col-md-6 col-xs-5" style="padding: 0px;">
                 <input type="text" value="${cliente.telefone}" name="telefone"
                        class="form-control ${hasErrors(bean: cliente, field: 'telefone', 'error')}"
                        placeholder="Número"/>
@@ -117,15 +117,15 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">Celular</label>
+            <label class="col-sm-2 col-xs-3 control-label">Celular: </label>
 
-            <div class="col-md-4 col-xs-3" style="max-width:70px;padding-right: 5px;">
+            <div class="col-md-4 col-xs-4" style="max-width:70px;padding-right: 5px;">
                 <input type="text" value="${cliente.dddCelular}" name="dddCelular" style="max-width:50px;"
                        class="form-control ${hasErrors(bean: cliente, field: 'dddCelular', 'error')}"
                        placeholder="DDD"/>
             </div>
 
-            <div class="col-md-6 col-xs-9" style="max-width: 140px;padding: 0px;">
+            <div class="col-md-6 col-xs-5" style="padding: 0px;">
                 <input type="text" value="${cliente.celular}" name="celular"
                        class="form-control ${hasErrors(bean: cliente, field: 'celular', 'error')}"
                        placeholder="Número"/>

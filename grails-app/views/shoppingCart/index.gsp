@@ -158,7 +158,7 @@
 
 
 
-    <a class="btn btn-primary" href="${createLink(uri: '/', absolute: true)}"><i
+    <a class="btn btn-primary" href="${createLink(uri: '/')}"><i
             class="fa fa-angle-double-left"></i> Escolher + produtos</a>
     <a class="btn btn btn-success pull-right"
        href="${createLink(controller: 'shoppingCart', action: 'confirmAddress')}">
