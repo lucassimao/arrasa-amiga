@@ -64,7 +64,7 @@
 
         <div class="col-md-7 col-sm-7 col-xs-6">
             <div class="logo">
-                <a href="${createLink(uri: '/', absolute: true)}">
+                <a href="${createLink(uri: '/')}">
                     <asset:image src="logo3.png" class="img-responsive"/>
                 </a>
             </div>
@@ -81,14 +81,14 @@
                                 <h4>Bem vinda</h4>
 
                                 <p>
-                                    <a href="${createLink(controller: 'cliente', action: 'index', absolute: true)}">Minha conta</a>
+                                    <a href="${createLink(controller: 'cliente', action: 'index')}">Minha conta</a>
                                     |
-                                    <a href="${createLink(controller: 'logout', absolute: true)}">Sair</a>
+                                    <a href="${createLink(controller: 'logout')}">Sair</a>
                                 </p>
                             </div>
 
                             <div class="visible-xs">
-                                <a href="${createLink(controller: 'cliente', action: 'pedidos', absolute: true)}"
+                                <a href="${createLink(controller: 'cliente', action: 'pedidos')}"
                                    class="btn btn-primary"><i class="fa fa-user"></i></a>
                             </div>
                         </li>
@@ -159,7 +159,7 @@
                     <ul class="nav navbar-nav navbar-right">
 
                         <li class="${(!grupoRaiz && controllerName == 'home' && actionName == 'index') ? 'active' : ''}">
-                            <a href="${createLink(uri: '/', absolute: true)}">Home</a>
+                            <a href="${createLink(uri: '/')}">Home</a>
                         </li>
 
                         <g:each in="${GrupoDeProduto.findAllByPaiIsNull()}" var="grupo">
@@ -172,11 +172,11 @@
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">MAIS <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li class="${(request.forwardURI?.endsWith('comoComprar')) ? 'active' : ''}">
-                                    <a class="btnComoComprar" data-target="${createLink(action:'comoComprar',controller:'home',absolute: true)}" href="#">Como Comprar</a>
+                                    <a class="btnComoComprar" data-target="${createLink(action:'comoComprar',controller:'home')}" href="#">Como Comprar</a>
                                 </li>
                                 <li class="divider"></li>
                                 <li class="${(request.forwardURI?.endsWith('contato')) ? 'active' : ''}">
-                                    <a href="${createLink(uri: '/contato', absolute: true)}">Contato</a>
+                                    <a href="${createLink(uri: '/contato')}">Contato</a>
                                 </li>
                             </ul>
                         </li>
@@ -205,12 +205,12 @@
                         </g:each>
 
                         <li class="${(request.forwardURI?.endsWith('comoComprar')) ? 'active' : ''}">
-                            <a href="#" data-target="${createLink(action:'comoComprar',controller:'home',absolute: true)}"
+                            <a href="#" data-target="${createLink(action:'comoComprar',controller:'home')}"
                                         class="btnComoComprar">Como Comprar</a>
                         </li>
 
                         <li class="${(request.forwardURI?.endsWith('contato')) ? 'active' : ''}">
-                            <a href="${createLink(uri: '/contato', absolute: true)}">Contato</a>
+                            <a href="${createLink(uri: '/contato')}">Contato</a>
                         </li>
 
                     </ul>

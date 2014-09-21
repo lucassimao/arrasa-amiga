@@ -8,22 +8,22 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="${createLink(controller: 'produto', absolute: true)}">Administração</a>
+            <a class="navbar-brand" href="${createLink(controller: 'produto')}">Administração</a>
         </div>
 
         <div class="collapse navbar-collapse" id="clotheshop-navbar">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="${createLink(controller: 'produto', absolute: true)}">PRODUTOS</a></li>
-                <li><a href="${createLink(controller: 'venda', absolute: true)}">VENDAS</a></li>
+                <li><a href="${createLink(controller: 'produto')}">PRODUTOS</a></li>
+                <li><a href="${createLink(controller: 'venda')}">VENDAS</a></li>
                 <li class="divider-vertical"></li>
                 <li class="dropdown">
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">MAIS <b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li><a href="${createLink(controller: 'estoque', absolute: true)}">ESTOQUE</a></li>
-                        <li><a href="${createLink(controller: 'banner', absolute: true)}">BANNERS</a></li>
-                        <li><a href="${createLink(controller: 'aviso', absolute: true)}">AVISOS</a></li>
+                        <li><a href="${createLink(controller: 'estoque')}">ESTOQUE</a></li>
+                        <li><a href="${createLink(controller: 'banner')}">BANNERS</a></li>
+                        <li><a href="${createLink(controller: 'aviso')}">AVISOS</a></li>
                         <li class="divider"></li>
-                        <li><a href="${createLink(controller: 'logout', absolute: true)}">SAIR</a></li>
+                        <li><a href="${createLink(controller: 'logout')}">SAIR</a></li>
                     </ul>
                 </li>
             </ul>

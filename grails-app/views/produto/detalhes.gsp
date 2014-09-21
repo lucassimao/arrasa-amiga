@@ -87,7 +87,7 @@
 
 <!-- begin:product-image-slider-->
 <div class="col-md-7 col-sm-7">
-    <div id="product-single" class="carousel slide" data-ride="carousel">
+    <div id="product-single" class="carousel slide" data-ride="carousel" data-interval="false">
 
         <div class="carousel-inner">
             <g:each in="${produtoInstance.fotos}" var="foto" status="i">
@@ -418,17 +418,15 @@
           $(".carousel-inner img").each(function(index,img){
 
             if ( $(img).data('unidade') === unidade ){
-
-              $(".carousel").carousel(index);
-              $(".carousel").carousel('pause');
-              return false;
+                  $(".carousel").carousel(index);
+                  return false; // break
             }
 
           });
 
           $.ajax({
 
-              url: "${createLink(controller: 'produto', action: 'quantidadeEmEstoque', absolute: true)}",
+              url: "${createLink(controller: 'produto', action: 'quantidadeEmEstoque')}",
                           data: {'produtoId': ${produtoInstance.id} , 'unidade': unidade},
                           settings: {'cache':false}
 
@@ -451,6 +449,8 @@
                               var option = $("<option/>").text(count).attr("value",count);
                               $("#select-quantidade").append(option);
                             }
+
+                            $("#select-quantidade").focus();
 
                           }else{
 
