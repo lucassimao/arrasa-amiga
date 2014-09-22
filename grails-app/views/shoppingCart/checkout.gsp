@@ -209,8 +209,6 @@
                     </label>
 
                     <p>A compra será finalizada na próxima tela</p>
-
-                    <p><em>** Desconto para boleto bancário **</em></p>
                 </div>
             </div>
 
