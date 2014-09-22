@@ -67,7 +67,7 @@
 
                 <td><g:formatDate format="dd/MM/yyyy" date="${vendaInstance.dateCreated}"/></td>
                 <td>
-                    <g:if test="${vendaInstance.status != StatusVenda.Entregue && vendaInstance.status != StatusVenda.Cancelada}">
+                    <g:if test="${vendaInstance.status == StatusVenda.AguardandoPagamento || vendaInstance.status == StatusVenda.PagamentoRecebido}">
 
                         <g:form style="display:inline">
                             <g:hiddenField name="id" value="${vendaInstance?.id}"/>
