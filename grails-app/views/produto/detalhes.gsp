@@ -92,13 +92,13 @@
         <div class="carousel-inner">
             <g:each in="${produtoInstance.fotos}" var="foto" status="i">
                 <div class="item ${(i == 0) ? 'active' : ''}">
-                    <div class="product-single">
+                    <div class="product-single" style="margin: 0;padding: 0;">
                         <img id="img${foto.id}" src="${resource(dir: 'images/produtos', file: foto.arquivo)}"
                              class="img-responsive"/>
 
-                        <div class="carousel-caption">
-                            %{--<h3>${foto.comentario}</h3>--}%
-                        </div>
+                        %{--<div class="carousel-caption">
+                            ${foto.comentario}
+                        </div>--}%
                     </div>
                 </div>
             </g:each>
@@ -111,7 +111,9 @@
         <a class="right carousel-control" href="#product-single" data-slide="next">
             <span class="glyphicon glyphicon-chevron-right"></span>
         </a>
+        <p id="img-comentario" style="margin-top: 5px;font-weight: bold;"></p>
     </div>
+
 </div>
 <!-- end:product-image-slider -->
 
@@ -385,6 +387,7 @@
 
     <g:each in="${produtoInstance.fotos}" var="fotoProduto" status="i">
         $("#img${fotoProduto.id}").data('unidade',"${fotoProduto.unidade}");
+        $("#img${fotoProduto.id}").data('comentario',"${raw(fotoProduto.comentario)}");
     </g:each>
 
     $("#btn-comprar").click(function(event){
@@ -419,6 +422,7 @@
 
             if ( $(img).data('unidade') === unidade ){
                   $(".carousel").carousel(index);
+                  $("#img-comentario").text($(img).data('comentario'));
                   return false; // break
             }
 
