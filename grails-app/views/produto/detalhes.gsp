@@ -197,9 +197,9 @@
 
                     <tr>
                         <td colspan="3">
-                            <p id="msg-estoque-esgotado" style="display:none;">
+                            <p class="bg-warning" id="msg-estoque-esgotado" style="display:none;padding: 6px;">
                                 Ow Amiga, ${produtoInstance.tipoUnitario}
-                                <span style="font-weight:bold;" id="unidade"></span>
+                                <span style="font-weight:bolder;" id="unidade"></span>
                                 está em falta
                             </p>
 
