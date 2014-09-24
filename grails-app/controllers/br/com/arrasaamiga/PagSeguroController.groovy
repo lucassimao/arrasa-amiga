@@ -1,18 +1,15 @@
 package br.com.arrasaamiga
 
-import br.com.uol.pagseguro.domain.AccountCredentials
-import br.com.uol.pagseguro.domain.Transaction
-import br.com.uol.pagseguro.service.NotificationService
-import br.com.uol.pagseguro.exception.PagSeguroServiceException
-import br.com.uol.pagseguro.service.TransactionSearchService  
 import grails.plugin.springsecurity.annotation.Secured
-
+import org.apache.commons.logging.LogFactory
 
 @Secured(['permitAll'])
 class PagSeguroController {
 
     def pagSeguroService
     def emailService
+
+    private static final vendaLogger = LogFactory.getLog('grails.app.domain.br.com.arrasaamiga.Venda')
 
     def index() {
 
@@ -27,21 +24,29 @@ class PagSeguroController {
 
         def venda = Venda.get(params.id)
 
+
+        vendaLogger.debug " * retorno: venda ${venda.id}; codigoTransacao ${codigoTransacao}; transacaoPagSeguro ${transacaoPagSeguro} "
+        vendaLogger.debug " ** retorno: status anterior ${venda.status} "
+
         venda.transacaoPagSeguro = codigoTransacao
         venda.status = StatusVenda.fromPagSeguroTransactionStatus(transacaoPagSeguro.status)
         venda.descontoPagSeguroEmCentavos = transacaoPagSeguro.getDiscountAmount() * 100
         venda.taxasPagSeguroEmCentavos = transacaoPagSeguro.getFeeAmount() * 100
         venda.save(flush:true)
 
+        vendaLogger.debug " *** retorno: novo status ${venda.status} "
+
 
 
         if (venda.status != StatusVenda.Cancelada){
+            vendaLogger.debug("**** retorno: venda/show/${venda.id} e apagando carrinho")
 
             session.shoppingCart = null
             redirect(controller:'venda',action:'show',id:venda.id)
             return
 
         }else{
+            vendaLogger.debug("**** retorno: repondo os itens ${venda.itensVenda}")
 
             Estoque.reporItens(venda.itensVenda)
             redirect(controller:'venda',action:'cancelada')
@@ -52,6 +57,8 @@ class PagSeguroController {
     def notificacoes(){
         def venda = Venda.get(params.id)
 
+        vendaLogger.debug("* notificacoes p/ venda ${venda.id} com status ${venda.status}")
+
         // proteção, caso essa venda ja tenha sido cancelada ñ faz mais nada
         if (venda.status?.equals(StatusVenda.Cancelada)){ 
             return 
@@ -59,14 +66,17 @@ class PagSeguroController {
 
 
         def notificationCode = params.notificationCode
-        
+        vendaLogger.debug("** notificacoes notificationCode ${notificationCode}")
+
         def transaction = pagSeguroService.checkTransaction(notificationCode)
+        vendaLogger.debug("*** notificacoes transaction ${transaction.code} transacaoPagSeguro ${venda.transacaoPagSeguro}")
 
         if (!venda.transacaoPagSeguro){
             venda.transacaoPagSeguro = transaction.code
         }
 
         venda.status = StatusVenda.fromPagSeguroTransactionStatus(transaction.status)
+        vendaLogger.debug "**** notificacoes novo status ${venda.status}"
         venda.save(flush:true)
 
 

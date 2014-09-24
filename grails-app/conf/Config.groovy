@@ -111,6 +111,12 @@ log4j.main = {
     //    console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
     //}
 
+    appenders {
+        rollingFile name: "vendaAppender",  maxFileSize: 1024, file: "vendas.log"
+    }
+
+    all   vendaAppender: 'grails.app.domain.br.com.arrasaamiga.Venda'
+
     error 'org.codehaus.groovy.grails.web.servlet',        // controllers
             'org.codehaus.groovy.grails.web.pages',          // GSP
             'org.codehaus.groovy.grails.web.sitemesh',       // layouts

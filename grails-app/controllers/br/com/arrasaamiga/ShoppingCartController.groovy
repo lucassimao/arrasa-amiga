@@ -3,6 +3,7 @@ package br.com.arrasaamiga
 import br.com.uol.pagseguro.domain.Error
 import br.com.uol.pagseguro.exception.PagSeguroServiceException
 import grails.plugin.springsecurity.annotation.Secured
+import org.apache.commons.logging.LogFactory
 import org.springframework.web.context.request.RequestContextHolder
 
 @Secured(['permitAll'])
@@ -158,6 +159,7 @@ class ShoppingCartController {
 
         def shoppingCart = getShoppingCart()
 
+
         if (!shoppingCart.itens) {
             flash.message = message(code: "shoppingCart.empty")
             redirect(action: 'index')
@@ -199,6 +201,8 @@ class ShoppingCartController {
 
         }
 
+        def vendaLogger = LogFactory.getLog('grails.app.domain.br.com.arrasaamiga.Venda')
+
         if (venda.formaPagamento == FormaPagamento.AVista) {
 
             venda.save(flush: true, failOnError: true)
@@ -206,6 +210,7 @@ class ShoppingCartController {
             emailService.notificarAdministradores(venda)
             emailService.notificarCliente(venda)
 
+            vendaLogger.debug("venda a vista #${venda.id} salva")
 
             redirect(action: 'show', controller: 'venda', id: venda.id)
             return
@@ -219,6 +224,7 @@ class ShoppingCartController {
             try {
 
                 def paymentURL = venda.getPaymentURL()
+                vendaLogger.debug("venda pelo pagseguro #${venda.id} salva e redirecionando ...")
                 redirect(url: paymentURL)
 
                 return
