@@ -56,7 +56,6 @@
 
 <!-- mais vendidos, novidades -->
 <g:set var="count" value="${0}"/>
-<g:set var="hoje" value="${new Date()}"/>
 <g:set var="qtdeProdutosVisiveis" value="${produtos.size()}"/>
 
 
@@ -98,7 +97,7 @@
                 </div>
 
 
-                <g:if test="${produto.dateCreated && ((hoje - produto.dateCreated) < 30)}">
+                <g:if test="${produto.isNovidade()}">
                     <div class="product-item-badge badge-sale">Novo </div>
                 </g:if>
             </div>

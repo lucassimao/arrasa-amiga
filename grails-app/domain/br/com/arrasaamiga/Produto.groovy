@@ -29,7 +29,7 @@ class Produto {
     
 	static transients = ['precoAVistaEmReais','precoAPrazoEmReais','estoques','grupoPadrao',
                         'produtosRelacionados','quantidadeEmEstoque','nomeAsURL','multiUnidade',
-                        'descontoAVistaEmReais']
+                        'descontoAVistaEmReais','novidade']
 
     static constraints = {
     	nome nullable:false,blank:false
@@ -175,6 +175,11 @@ class Produto {
     public BigDecimal calcularValorParcela(int numeroParcelas){
         int valorParceladoEmCentavos = this.precoAPrazoEmCentavos/numeroParcelas
         return new BigDecimal(valorParceladoEmCentavos/100.0)
+    }
+
+    public boolean isNovidade(){
+        def hoje = new Date()
+        return ( this.dateCreated && ( (hoje - this.dateCreated) < 30) )
     }
 
 }
