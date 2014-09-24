@@ -76,8 +76,8 @@ grails.project.dependency.resolution = {
         compile ":spring-security-core:2.0-RC3"
         compile ":browser-detection:0.4.3"
         compile ":quartz:1.0.2"
-        //compile ":asynchronous-mail:1.0"
-        compile ":mail:1.0.6"
+        compile ":asynchronous-mail:1.1"
+        //compile ":mail:1.0.6"
 
         // plugins needed at runtime but not for compilation
         runtime ":hibernate4:4.3.5.5"
