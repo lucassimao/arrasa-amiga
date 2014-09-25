@@ -130,7 +130,7 @@
 </div>
 
 
-<div class="row" style="margin:20px 0px;">
+<div class="row" style="margin:0px;">
 
     <table class="table table-bordered table-striped table-condensed">
         <thead>
@@ -192,7 +192,7 @@
     </div>
 
     <div id="div-frete" style="clear:both;">
-        <h5 style="display:inline;color:blue;">${vendaInstance.cliente.isDentroDaAreaDeEntregaRapida() ? 'Taxa de Entrega' : 'Frete'}</h5>
+        <h6 style="display:inline;color:blue;">${vendaInstance.cliente.isDentroDaAreaDeEntregaRapida() ? 'Taxa de Entrega' : 'Frete'}</h6>
 
         <div style="float:right;font-weight:bold;">
             <div style="color:blue;font-size:10px;text-align:right;">
@@ -206,7 +206,7 @@
     <g:if test="${vendaInstance.descontoEmReais > 0}">
 
         <div id="div-desconto" style="clear:both;">
-            <h5 style="display:inline;color:blue;">Desconto</h5>
+            <h6 style="display:inline;color:blue;">Desconto</h6>
 
             <div style="float:right;font-weight:bold;">
                 <div style="color:blue;font-size:10px;text-align:right;">
@@ -221,7 +221,7 @@
     <div id="div-valor-total">
         <hr>
 
-        <h4 style="color:#666;display:inline;">Valor Total</h4>
+        <h3 style="color:#666;display:inline;font-weight: bold;">Valor Total</h3>
 
         <div style="float:right;font-weight:bold;font-size:35px;color:#00adef;">
             <g:formatNumber number="${vendaInstance.valorTotal}" type="currency" currencyCode="BRL"/>
@@ -247,15 +247,11 @@
 
 <hr>
 
-<div class="row">
-    <div>
-        <a href="${createLink(uri: '/', absolute: true)}" style="float:right;" id="btnFecharVenda"
-           class="btn btn-success">
-            <i class="icon-home icon-white"></i>
-            Ir Para Página Principal
-        </a>
-    </div>
-</div>
+<a href="${createLink(uri: '/', absolute: true)}"  id="btnFecharVenda"
+   class="btn btn-success pull-right">
+    <i class="fa fa-home icon-white"></i>
+    Ir Para Página Principal
+</a>
 
 </body>
 </html>
