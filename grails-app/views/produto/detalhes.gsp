@@ -295,7 +295,8 @@
             <!-- tag do facebook deve ser uma div -->
             <li class="">
                 <a href="#comentarios" data-toggle="tab">
-                    <span id="fb-comments-count"></span> Comentários
+                    <span id="fb-comments-count"></span>
+                    Comentários
                 </a>
             </li>
         </ul>
@@ -401,9 +402,9 @@
     });
 
     $.ajax({
-      url:"https://graph.facebook.com/?ids=${createLink(uri: produtoInstance.nomeAsURL, absolute: true)}"
+      url:"https://graph.facebook.com/comments/?ids=${createLink(uri: produtoInstance.nomeAsURL, absolute: true)}"
                 }).success(function(data, textStatus, jqXHR){
-                    var comments_count = data['${createLink(uri: produtoInstance.nomeAsURL, absolute: true)}'].comments;
+                    var comments_count = data['${createLink(uri: produtoInstance.nomeAsURL, absolute: true)}'].comments.data.length;
 
                     if (comments_count > 0)
                       $("#fb-comments-count").html(comments_count);
