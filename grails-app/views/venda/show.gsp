@@ -77,58 +77,50 @@
     <div class="row">
 
         <div class="col-md-1 col-xs-3"><span class="caption">Nome:</span></div>
-
         <div class="col-md-5 col-xs-9">${vendaInstance.cliente.nome}</div>
 
         <div class="col-md-1 col-xs-3"><span class="caption">Email:</span></div>
-
         <div class="col-md-5 col-xs-9">${vendaInstance.cliente.email}</div>
 
+    </div>
+    <div class="row">
 
         <div class="col-md-1 col-xs-3"><span class="caption">Telefone:</span></div>
-
         <div class="col-md-5 col-xs-9">${vendaInstance.cliente.dddTelefone}-${vendaInstance.cliente.telefone}</div>
 
         <div class="col-md-1 col-xs-3"><span class="caption">Celular:</span></div>
-
         <div class="col-md-5 col-xs-9">${vendaInstance.cliente.dddCelular}-${vendaInstance.cliente.celular}</div>
-
-
+    </div>
+    <div class="row">
         <div class="col-md-1 col-xs-3"><span class="caption">Estado:</span></div>
-
         <div class="col-md-5 col-xs-9">${vendaInstance.cliente.endereco.uf?.nome}</div>
 
         <div class="col-md-1 col-xs-3"><span class="caption">Cidade:</span></div>
-
         <div class="col-md-5 col-xs-9">${vendaInstance.cliente.endereco.cidade?.nome}</div>
-
-
+    </div>
+    <div class="row">
         <div class="col-md-1 col-xs-3"><span class="caption">Bairro:</span></div>
-
         <div class="col-md-5 col-xs-9">${vendaInstance.cliente.endereco.bairro}</div>
 
         <div class="col-md-1 col-xs-3"><span class="caption">Endereço:</span></div>
-
         <div class="col-md-5 col-xs-9">${vendaInstance.cliente.endereco.complemento}</div>
+    </div>
 
-
-
+    <div class="row">
 
         <g:if test="${vendaInstance.cliente.isDentroDaAreaDeEntregaRapida()}">
             <div class="col-md-1 col-xs-3"><span class="caption">Entrega:</span></div>
-
-            <div class="col-md-11 col-xs-9"><g:formatDate format="EEEE, dd/MM/yyyy"
-                                                           date="${vendaInstance.dataEntrega}"/></div>
+            <div class="col-md-11 col-xs-9">
+                <g:formatDate format="EEEE, dd/MM/yyyy"  date="${vendaInstance.dataEntrega}"/>
+            </div>
         </g:if>
         <g:else>
 
             <div class="col-md-1 col-xs-3"><span class="caption">CEP:</span></div>
-
             <div class="col-md-5 col-xs-9">${vendaInstance.cliente.endereco.cep}</div>
 
             <g:if test="${vendaInstance.codigoRastreio}">
                 <div class="col-md-1 col-xs-3"><span class="caption">Código de Rastreio:</span></div>
-
                 <div class="col-md-5 col-xs-9">${vendaInstance.codigoRastreio}</div>
             </g:if>
         </g:else>
