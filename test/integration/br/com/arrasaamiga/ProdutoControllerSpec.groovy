@@ -38,6 +38,48 @@ class ProdutoControllerSpec extends IntegrationSpec {
     }
 
 
+    void "test modificar unidades do produto"() {
+        given:
+            def produto = Produto.first()
+            def novasUnidades = ['UN', 'Caixa', 'Lote']
+            def unidadesAnteriores = ['un']
+
+        when:
+            def controller = new ProdutoController()
+            controller.request.method = 'POST'
+            controller.params.id = produto.id
+            controller.params.unidades = (novasUnidades as JSON).toString()
+
+            controller.update()
+            sessionFactory.currentSession.flush()
+            sessionFactory.currentSession.clear()
+
+        then:
+            controller.response.redirectedUrl.matches('.*/show/\\d+$')
+
+            def updatedProduto = Produto.get(produto.id)
+            assertNotNull updatedProduto
+            assertEquals updatedProduto.id, produto.id
+
+
+        def estoques = Estoque.findAllByProduto(updatedProduto)
+            assertEquals  novasUnidades.size() , estoques.size()
+
+            unidadesAnteriores.each{unidade->
+                assertNull Estoque.findByProdutoAndUnidade(updatedProduto,unidade)
+            }
+
+            updatedProduto.unidades.each { unidade ->
+                assertTrue novasUnidades.contains(unidade)
+
+                def e = Estoque.findByProdutoAndUnidade(updatedProduto,unidade)
+                assertNotNull e
+                assertEquals 0, e.quantidade
+            }
+
+    }
+
+
     void "test atualizar produto"() {
         given:
             def produto = Produto.first()
@@ -76,27 +118,27 @@ class ProdutoControllerSpec extends IntegrationSpec {
         then:
             controller.response.redirectedUrl.matches('.*/show/\\d+$')
             def updatedProduto = Produto.findByNome(novoNome)
-            assertNotNull produto
-            produto.id == updatedProduto.id
+            assertNotNull updatedProduto
+            assertEquals updatedProduto.id, produto.id
 
-            updatedProduto.precoAVistaEmCentavos == novoValorAVistaEmCentavos
-            updatedProduto.precoAPrazoEmCentavos == novoValorAPrazoEmCentavos
+            assertEquals novoValorAVistaEmCentavos, updatedProduto.precoAVistaEmCentavos
+            assertEquals novoValorAPrazoEmCentavos , updatedProduto.precoAPrazoEmCentavos
 
             def estoques = Estoque.findAllByProduto(updatedProduto)
-            estoques.size() == 3
+            assertEquals 3 , estoques.size()
 
             updatedProduto.unidades.containsAll(novasUnidades)
             assertNull Estoque.findByProdutoAndUnidade(updatedProduto,'un')
 
             updatedProduto.unidades.each { unidade ->
-                unidade in novasUnidades
+                assertTrue novasUnidades.contains(unidade)
 
                 def fotosDaUnidade = updatedProduto.fotos.findAll { FotoProduto fotoProduto -> fotoProduto.unidade.equals(unidade) }
-                fotosDaUnidade.size() == fotos[unidade].size()
+                assertTrue fotosDaUnidade.size() == fotos[unidade].size()
 
                 fotosDaUnidade.each { FotoProduto foto ->
                     if (comentarios[foto.arquivo]) {
-                        foto.comentario == comentarios[foto.arquivo]
+                        assertTrue foto.comentario == comentarios[foto.arquivo]
                     }
                 }
 
@@ -151,16 +193,16 @@ class ProdutoControllerSpec extends IntegrationSpec {
         produto.precoAPrazoEmCentavos == valorAPrazoEmCentavos
 
         def estoques = Estoque.findAllByProduto(produto)
-        estoques.size() == 3
+        assertTrue estoques.size() == 3
 
         def estoqueAmarelo = Estoque.findByProdutoAndUnidade(produto, 'amarelo')
-        estoqueAmarelo.quantidade == 0
+        assertTrue estoqueAmarelo.quantidade == 0
 
         def estoqueAzul = Estoque.findByProdutoAndUnidade(produto, 'azul')
-        estoqueAzul.quantidade == 0
+        assertTrue estoqueAzul.quantidade == 0
 
         def estoqueVerde = Estoque.findByProdutoAndUnidade(produto, 'verde')
-        estoqueVerde.quantidade == 0
+        assertTrue estoqueVerde.quantidade == 0
     }
 
 
@@ -200,23 +242,23 @@ class ProdutoControllerSpec extends IntegrationSpec {
         def produto = Produto.findByNome(nome)
         assertNotNull produto
 
-        produto.unidades.size() == 4
+        assertTrue produto.unidades.size() == 4
 
-        produto.keywords.size() == keywords.size()
-        produto.keywords.containsAll(keywords)
+        assertTrue produto.keywords.size() == keywords.size()
+        assertTrue produto.keywords.containsAll(keywords)
 
         def estoques = Estoque.findAllByProduto(produto)
-        estoques.size() == 4
+        assertTrue estoques.size() == 4
 
         produto.unidades.each { unidade ->
-            unidade in unidades
+            assertTrue unidade in unidades
 
             def fotosDaUnidade = produto.fotos.findAll { FotoProduto fotoProduto -> fotoProduto.unidade.equals(unidade) }
-            fotosDaUnidade.size() == fotos[unidade].size()
+            assertTrue fotosDaUnidade.size() == fotos[unidade].size()
 
             fotosDaUnidade.each { FotoProduto foto ->
                 if (comentarios[foto.arquivo]) {
-                    foto.comentario == comentarios[foto.arquivo]
+                    assertTrue foto.comentario == comentarios[foto.arquivo]
                 }
             }
 
