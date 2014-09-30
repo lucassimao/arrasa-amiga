@@ -1,11 +1,15 @@
 package br.com.arrasaamiga
 
 import br.com.uol.pagseguro.domain.AccountCredentials
+import br.com.uol.pagseguro.domain.PaymentRequest
+import br.com.uol.pagseguro.domain.ShippingType
 import br.com.uol.pagseguro.domain.Transaction
 import br.com.uol.pagseguro.domain.PaymentMethodCode
 import br.com.uol.pagseguro.exception.PagSeguroServiceException
 import br.com.uol.pagseguro.service.TransactionSearchService
 import br.com.uol.pagseguro.service.NotificationService
+
+import java.text.NumberFormat
 
 class PagSeguroService {
 
@@ -14,14 +18,12 @@ class PagSeguroService {
     def getAccountCredentials(){
     	String token = '9A9DE1A43A2045DEBBD66D629FC4F76B'
     	def accountCredentials = new AccountCredentials('lsimaocosta@gmail.com',token)
-
     	return accountCredentials
     }
 
     public Transaction getTransaction(String transacaoPagSeguro){
 
      	if (transacaoPagSeguro){
-
 	        try {  
 	            // Realiza a busca  
 	            return TransactionSearchService.searchByCode( getAccountCredentials(), transacaoPagSeguro)
@@ -32,35 +34,25 @@ class PagSeguroService {
 	        }  
 	  
     	}else{
-
     		throw new IllegalArgumentException('Transação inválida')
-
     	}   	
     }
 
     public StatusVenda getStatusTransacao(String transacaoPagSeguro){
     	Transaction transaction = getTransaction(transacaoPagSeguro)
     	return StatusVenda.fromPagSeguroTransactionStatus(transaction.status)
-
 	}
 
 
     public String getDetalhesPagamento(String transacaoPagSeguro){
-
-
     	Transaction transaction = getTransaction(transacaoPagSeguro)
     	return getDetalhesPagamento(transaction)
-
     }
 
 
     public String getDetalhesPagamento(Transaction transaction){
-
-
     	int numParcelas = transaction.getInstallmentCount()
-
     	PaymentMethodCode paymentMethodCode = transaction.getPaymentMethod().getCode()
-
 
     	switch(paymentMethodCode.value){
     		case 101: return "Cartão de crédito VISA em ${numParcelas}X"
@@ -95,13 +87,57 @@ class PagSeguroService {
 			case 701: return "Depósito em conta - Banco do Brasil"
 			default:
 				return "Pagamento codigo ${paymentMethodCode.value} ${paymentMethodCode}"
-
     	}
 
     }
 
     public Transaction checkTransaction(String notificationCode){
     	return NotificationService.checkTransaction( getAccountCredentials(), notificationCode)
+    }
+
+    public URL getPaymentURL(Venda venda) {
+
+        if (!venda.id)
+            throw new IllegalStateException("A venda deve estar salva!")
+
+        if (venda.formaPagamento == FormaPagamento.AVista) {
+            throw new IllegalStateException("Vendas a vista não devem requisitar URL de pagamento")
+        }
+
+        def formatter = NumberFormat.getInstance(Locale.US)
+        formatter.setMinimumFractionDigits(2)
+
+        def paymentRequest = new PaymentRequest()
+
+        paymentRequest.setCurrency(br.com.uol.pagseguro.domain.Currency.BRL)
+
+        // especificando os itens
+        venda.itensVenda.each { item ->
+            Double valorUnitario = item.precoAPrazoEmReais
+
+            paymentRequest.addItem( item.id.toString(), item.produto.nome, item.quantidade,
+                                    new BigDecimal(formatter.format(valorUnitario)),   null,   null )
+        }
+
+        // nome completo, email, DDD e número de telefone
+        Cliente cliente = venda.cliente
+        paymentRequest.setSender(cliente.nome, cliente.email, cliente.dddTelefone, cliente.telefone);
+
+        // país, estado, cidade, bairro, CEP, rua, número, complemento
+        Endereco endereco = cliente.endereco
+        paymentRequest.setShippingAddress( "BRA", endereco.uf.sigla,endereco.cidade.nome, endereco.bairro,
+                                            endereco.cep, endereco.complemento, "0", '' );
+
+
+
+        paymentRequest.extraAmount = new BigDecimal(formatter.format(venda.freteEmReais))
+        paymentRequest.setReference(venda.id.toString())
+
+        paymentRequest.redirectURL = "http://www.arrasaamiga.com.br/pagSeguro/retorno/${venda.id}"
+        paymentRequest.notificationURL = "http://www.arrasaamiga.com.br/pagSeguro/notificacoes/${venda.id}"
+        paymentRequest.setShippingType(ShippingType.NOT_SPECIFIED)
+
+        return paymentRequest.register(getAccountCredentials())
     }
 
 }

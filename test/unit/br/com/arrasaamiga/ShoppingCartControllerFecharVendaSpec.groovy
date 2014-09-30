@@ -240,11 +240,13 @@ class ShoppingCartControllerFecharVendaSpec extends Specification {
         given:
             controller.springSecurityService = grailsApplication.mainContext.getBean('springSecurityService')
             controller.emailService = grailsApplication.mainContext.getBean('emailService')
+
             def paymentURLDeTeste = new URL("http://www.site.qualquer.de.teste")
 
-            Venda.metaClass.getPaymentURL = {
-                return paymentURLDeTeste
-            }
+            def pagSeguroServiceStub = Mock(PagSeguroService)
+            pagSeguroServiceStub.getPaymentURL(_) >> paymentURLDeTeste
+            controller.pagSeguroService = pagSeguroServiceStub
+
 
         expect:
             Estoque.findByProdutoAndUnidade(Produto.load(1L),'un1').quantidade == 10

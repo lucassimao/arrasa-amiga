@@ -63,6 +63,7 @@ grails.project.dependency.resolution = {
          runtime 'commons-codec:commons-codec:1.8'
          compile "org.codehaus.groovy.modules.http-builder:http-builder:0.7"
          test "org.grails:grails-datastore-test-support:1.0.1-grails-2.4"
+         test "cglib:cglib-nodep:2.2"
     }
 
     plugins {

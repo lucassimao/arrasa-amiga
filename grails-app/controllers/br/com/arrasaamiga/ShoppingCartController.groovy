@@ -11,6 +11,7 @@ class ShoppingCartController {
 
     def springSecurityService
     def emailService
+    def pagSeguroService
 
 
     static allowedMethods = [add: "POST", removerProduto: "POST"]
@@ -221,10 +222,12 @@ class ShoppingCartController {
             // salva logo, pois precisa do ID da venda para registrar com a transação de pagamento do pagseguro
             // não elimina o carrinho ainda, pq nao sabe se vai dar certo. So vai eliminar no retorno do pag seguro
 
+            vendaLogger.debug("venda pagseguro #${venda.id} salva")
+
             try {
 
-                def paymentURL = venda.getPaymentURL()
-                vendaLogger.debug("venda pelo pagseguro #${venda.id} salva e redirecionando ...")
+                def paymentURL = pagSeguroService.getPaymentURL(venda)
+                vendaLogger.debug("venda pelo pagseguro #${venda.id} salva e redirecionando para ${paymentURL.toString()} ...")
                 redirect(url: paymentURL)
 
                 return

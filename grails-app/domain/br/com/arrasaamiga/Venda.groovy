@@ -1,11 +1,5 @@
 package br.com.arrasaamiga
 
-import br.com.uol.pagseguro.domain.Currency
-import br.com.uol.pagseguro.domain.PaymentRequest
-import br.com.uol.pagseguro.domain.ShippingType
-
-import java.text.NumberFormat
-
 class Venda {
 
 
@@ -24,13 +18,13 @@ class Venda {
     Usuario vendedor
     TurnoEntrega turnoEntrega
 
-    def pagSeguroService
-    def correiosService
+    transient def pagSeguroService
+    transient def correiosService
 
 
     static transients = ['urlRastreioCorreios', 'valorTotal', 'valorItensAPrazo', 'valorItensAVista',
                          'descontoEmReais', 'freteEmReais', 'descontoParaCompraAVista', 'descontoPagSeguroEmReais',
-                         'paymentURL', 'pagSeguroService', 'detalhesPagamento', 'itensVenda', 'correiosService']
+                         'detalhesPagamento', 'itensVenda']
 
     static constraints = {
         freteEmCentavos(min: 0)
@@ -45,7 +39,7 @@ class Venda {
         carrinho(nullable: true)
         servicoCorreio(nullable: true)
         vendedor(nullable: true)
-        turnoEntrega(nullable:true)
+        turnoEntrega(nullable: true)
     }
 
     static mapping = {
@@ -133,17 +127,11 @@ class Venda {
         } else {
 
             if (this.transacaoPagSeguro) {
-
                 return pagSeguroService.getDetalhesPagamento(transacaoPagSeguro)
-
             } else {
-
                 return 'Transação não foi finalizada. Cliente não concluiu compra'
-
             }
-
         }
-
     }
     /*
      *  Esse desconto existe para pagamentos via boleto
@@ -171,65 +159,6 @@ class Venda {
         def descontoEmCentavos = valorItensAPrazo - valorItensAVista
 
         return descontoEmCentavos.doubleValue()
-    }
-
-    public URL getPaymentURL() {
-
-        if (!this.id)
-            throw new IllegalStateException("A venda deve estar salva!")
-
-        if (this.formaPagamento == FormaPagamento.AVista) {
-            throw new IllegalStateException("Vendas a vista não devem requisitar URL de pagamento")
-        }
-
-        def formatter = NumberFormat.getInstance(Locale.US)
-        formatter.setMinimumFractionDigits(2)
-
-        def paymentRequest = new PaymentRequest()
-
-        paymentRequest.setCurrency(Currency.BRL)
-
-        // especificando os itens
-        this.itensVenda.each { item ->
-
-            Double valorUnitario = item.precoAPrazoEmReais
-
-            paymentRequest.addItem(
-                    item.id.toString(),
-                    item.produto.nome,
-                    item.quantidade,
-                    new BigDecimal(formatter.format(valorUnitario)),
-                    null,
-                    null
-            )
-        }
-
-        // nome completo, email, DDD e número de telefone
-        paymentRequest.setSender(this.cliente.nome, this.cliente.email, this.cliente.dddTelefone, this.cliente.telefone);
-
-        // país, estado, cidade, bairro, CEP, rua, número, complemento
-        paymentRequest.setShippingAddress(
-                "BRA",
-                cliente.endereco.uf.sigla,
-                cliente.endereco.cidade.nome,
-                cliente.endereco.bairro,
-                cliente.endereco.cep,
-                cliente.endereco.complemento,
-                "0",
-                ''
-        );
-
-
-
-        paymentRequest.extraAmount = new BigDecimal(formatter.format(this.freteEmReais))
-        paymentRequest.setReference(this.id.toString())
-
-        paymentRequest.redirectURL = "http://www.arrasaamiga.com.br/pagSeguro/retorno/${this.id}"
-        paymentRequest.notificationURL = "http://www.arrasaamiga.com.br/pagSeguro/notificacoes/${this.id}"
-        paymentRequest.setShippingType(ShippingType.NOT_SPECIFIED)
-
-
-        return paymentRequest.register(pagSeguroService.accountCredentials);
     }
 
 
