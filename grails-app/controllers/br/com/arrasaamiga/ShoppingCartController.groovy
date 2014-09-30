@@ -234,16 +234,15 @@ class ShoppingCartController {
 
             } catch (PagSeguroServiceException e) {
 
-                println "Erro ao tentar ir para o pagseguro : cliente ${venda.cliente.id} "
+                vendaLogger.debug "Erro ao tentar ir para o pagseguro : cliente ${venda.cliente.id} "
                 Iterator itr = e.getErrorList().iterator();
 
                 while (itr.hasNext()) {
                     Error error = (Error) itr.next();
-                    println "Código do erro: ${error.getCode()}";
-                    println "Código do erro: ${error.getMessage()}";
+                    vendaLogger.debug "Código do erro: ${error.getCode()}";
+                    vendaLogger.debug "Msg do erro: ${error.getMessage()}";
                 }
 
-                e.printStackTrace()
                 venda.delete(flush: true) // não deu pra mandar pro pag seguro ... exclui venda
 
                 flash.message = e.toString()
@@ -252,7 +251,8 @@ class ShoppingCartController {
 
             } catch (Exception e) {
 
-                e.printStackTrace()
+                vendaLogger.debug "Erro ao tentar ir para o pagseguro : venda #${venda.id} ",e
+
                 venda.delete(flush: true) // não deu pra mandar pro pag seguro ... exclui venda
 
                 flash.message = e.toString()

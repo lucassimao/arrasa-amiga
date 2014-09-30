@@ -5,6 +5,7 @@ import br.com.uol.pagseguro.domain.PaymentRequest
 import br.com.uol.pagseguro.domain.ShippingType
 import br.com.uol.pagseguro.domain.Transaction
 import br.com.uol.pagseguro.domain.PaymentMethodCode
+import br.com.uol.pagseguro.domain.TransactionStatus
 import br.com.uol.pagseguro.exception.PagSeguroServiceException
 import br.com.uol.pagseguro.service.TransactionSearchService
 import br.com.uol.pagseguro.service.NotificationService
@@ -40,8 +41,31 @@ class PagSeguroService {
 
     public StatusVenda getStatusTransacao(String transacaoPagSeguro){
     	Transaction transaction = getTransaction(transacaoPagSeguro)
-    	return StatusVenda.fromPagSeguroTransactionStatus(transaction.status)
+    	return getStatusTransacao(transaction.status)
 	}
+
+    public StatusVenda getStatusTransacao(TransactionStatus status) {
+
+        switch (status.value) {
+            case 1:
+                return StatusVenda.AguardandoPagamento
+            case 2:
+                return StatusVenda.EmAnalise
+            case 3:
+                return StatusVenda.PagamentoRecebido
+            case 4:
+                return StatusVenda.Disponivel
+            case 5:
+                return StatusVenda.EmDisputa
+            case 6:
+                return StatusVenda.Devolvida
+            case 7:
+                return StatusVenda.Cancelada
+            default:
+                throw new IllegalArgumentException("status esconhecido: ${status}")
+        }
+
+    }
 
 
     public String getDetalhesPagamento(String transacaoPagSeguro){

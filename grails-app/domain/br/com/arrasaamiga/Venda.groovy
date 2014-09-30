@@ -93,13 +93,9 @@ class Venda {
         else {
 
             if (this.freteEmCentavos > 0) {
-
                 return this.freteEmCentavos / 100.0
-
             } else {
-
                 return correiosService.calcularFrete(this.cliente?.endereco?.cep, this.servicoCorreio)
-
             }
         }
     }

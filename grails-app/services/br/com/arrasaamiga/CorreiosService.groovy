@@ -16,10 +16,9 @@ class CorreiosService {
     }
 
     public Double calcularFrete(String cepDestino,ServicoCorreio servico){
-    	
-    	def http = new HTTPBuilder( "http://ws.correios.com.br" )
 
-    	cepDestino = cepDestino.replace('-','')
+    	def http = new HTTPBuilder( "http://ws.correios.com.br" )
+    	cepDestino = cepDestino?.replace('-','')
 
     	try{
 

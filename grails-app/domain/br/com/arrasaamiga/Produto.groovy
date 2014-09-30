@@ -1,8 +1,5 @@
 package br.com.arrasaamiga
 
-import br.com.uol.pagseguro.domain.Item
-import groovy.sql.Sql
-
 class Produto {
 
 	String nome

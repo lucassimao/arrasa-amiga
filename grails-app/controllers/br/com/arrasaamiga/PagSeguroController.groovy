@@ -25,11 +25,11 @@ class PagSeguroController {
         def venda = Venda.get(params.id)
 
 
-        vendaLogger.debug " * retorno: venda ${venda.id}; codigoTransacao ${codigoTransacao}; transacaoPagSeguro ${transacaoPagSeguro} "
+        vendaLogger.debug " * retorno: venda ${venda.id}; transacaoPagSeguro ${transacaoPagSeguro} "
         vendaLogger.debug " ** retorno: status anterior ${venda.status} "
 
         venda.transacaoPagSeguro = codigoTransacao
-        venda.status = StatusVenda.fromPagSeguroTransactionStatus(transacaoPagSeguro.status)
+        venda.status = pagSeguroService.getStatusTransacao(transacaoPagSeguro.status)
         venda.descontoPagSeguroEmCentavos = transacaoPagSeguro.getDiscountAmount() * 100
         venda.taxasPagSeguroEmCentavos = transacaoPagSeguro.getFeeAmount() * 100
         venda.save(flush:true)
@@ -60,7 +60,8 @@ class PagSeguroController {
         vendaLogger.debug("* notificacoes p/ venda ${venda.id} com status ${venda.status}")
 
         // proteção, caso essa venda ja tenha sido cancelada ñ faz mais nada
-        if (venda.status?.equals(StatusVenda.Cancelada)){ 
+        if (venda.status?.equals(StatusVenda.Cancelada)){
+            render text: 'ok'
             return 
         }
 
@@ -75,13 +76,12 @@ class PagSeguroController {
             venda.transacaoPagSeguro = transaction.code
         }
 
-        venda.status = StatusVenda.fromPagSeguroTransactionStatus(transaction.status)
+        venda.status = pagSeguroService.getStatusTransacao(transaction.status)
         vendaLogger.debug "**** notificacoes novo status ${venda.status}"
         venda.save(flush:true)
 
 
         switch(venda.status){
-
             case StatusVenda.PagamentoRecebido:
                 emailService.notificarAdministradores(venda)
                 emailService.notificarCliente(venda)
@@ -92,10 +92,9 @@ class PagSeguroController {
                 emailService.notificarCliente(venda)
                 Estoque.reporItens(venda.itensVenda)
                 break
-
-            default:
-                println "Status da venda #${venda.id} alterado para ${venda.status}"
         }
+
+        vendaLogger.debug "Status da venda #${venda.id} alterado para ${venda.status}"
 
     }
 }
