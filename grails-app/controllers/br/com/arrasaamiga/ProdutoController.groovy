@@ -394,17 +394,20 @@ class ProdutoController {
 
         //parse data and convert to json object
         def data = JSON.parse(new String(base64.decode(signedRequest[1].getBytes("UTF-8"))))
+        def produto = Produto.load(data.registration.idProduto)
 
         //check signature algorithm
         if(!data.algorithm.equals("HMAC-SHA256")) {
-            //unknown algorithm is used
-            return null;
+            flash.info = 'Ocorreu um erro ao salvar seu aviso, entre em contato com a gente!'
+            redirect(uri: produto.nomeAsURL)
+            return null
         }
 
         //check if data is signed correctly
         if(!hmacSHA256(signedRequest[1], fbSecretKey).equals(sig)) {
-            //signature is not correct, possibly the data was tampered with
-            return null;
+            flash.info = 'Ocorreu um erro ao salvar seu aviso, entre em contato com a gente!'
+            redirect(uri: produto.nomeAsURL)
+            return null
         }
 
         //def oauth_token = data.oauth_token
@@ -413,7 +416,8 @@ class ProdutoController {
         aviso.nome = data.registration.name
         aviso.email = data.registration.email
         aviso.celular = data.registration.celular
-        aviso.produto = Produto.load(data.registration.idProduto)
+
+        aviso.produto = produto
         aviso.unidade = data.registration.unidade
         aviso.facebookUserId = data.user_id
 

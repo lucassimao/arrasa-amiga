@@ -17,18 +17,20 @@ ga('send', 'pageview');
 
 $(document).ready(function() {
 
+    var path = (location.hostname == 'localhost')?'/arrasa-amiga/':'/' ;
+    var isDevelopmentEnviroment = (location.hostname == 'localhost');
 
     $.ajaxSetup({ cache: true });
 
     $.getScript('//connect.facebook.net/pt_BR/sdk.js', function(){
         FB.init({
-            appId: '538200826283779',
+            appId: (isDevelopmentEnviroment)?'538200826283779':'592257150816024',
             xfbml      : true,
             version    : 'v2.0'
         });
     });
 
-    var path = (location.hostname == 'localhost')?'/arrasa-amiga/':'/' ;
+
 
 
     $(".star-rating").raty({path: path+'assets',readOnly:true,
