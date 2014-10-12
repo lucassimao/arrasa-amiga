@@ -65,11 +65,15 @@ class Cliente {
     }
 
     public void setCelular(String celular){
-        this.celular = celular?.trim()?.replace('-','').replace(' ','')
+        if (celular)
+            celular = celular.trim().replace('-','').replace(' ','')
+        this.celular = celular
     }
 
     public void setTelefone(String telefone){
-        this.telefone = telefone?.trim()?.replace('-','').replace(' ','')
+        if (telefone)
+            telefone = telefone.trim().replace('-','').replace(' ','')
+        this.telefone = telefone
     }
 
     public void setDddCelular(String dddCelular){

@@ -150,7 +150,7 @@ class PagSeguroService {
         // país, estado, cidade, bairro, CEP, rua, número, complemento
         Endereco endereco = cliente.endereco
         String complemento = endereco.complemento
-        if (complemento.length() > 60)
+        if (complemento?.length() > 60)
             complemento = complemento[0..<60]
         paymentRequest.setShippingAddress( "BRA", endereco.uf.sigla,endereco.cidade.nome, endereco.bairro,
                                             endereco.cep, complemento, "0", '' );
