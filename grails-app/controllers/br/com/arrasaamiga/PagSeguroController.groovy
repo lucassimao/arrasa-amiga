@@ -23,6 +23,7 @@ class PagSeguroController {
         def transacaoPagSeguro = pagSeguroService.getTransaction(codigoTransacao)
 
         def venda = Venda.get(params.id)
+        boolean vendaJaEstavaCancelada = ( venda.status == StatusVenda.Cancelada ) // ja recebeu a notificacao de cancelamento
 
 
         vendaLogger.debug " * retorno: venda ${venda.id}; transacaoPagSeguro ${transacaoPagSeguro} "
@@ -46,9 +47,13 @@ class PagSeguroController {
             return
 
         }else{
-            vendaLogger.debug("**** retorno: repondo os itens ${venda.itensVenda}")
 
-            Estoque.reporItens(venda.itensVenda)
+            if (!vendaJaEstavaCancelada){
+
+                vendaLogger.debug("**** retorno: repondo os itens ${venda.itensVenda}")
+                Estoque.reporItens(venda.itensVenda)
+
+            }
             redirect(controller:'venda',action:'cancelada')
             return           
         }
