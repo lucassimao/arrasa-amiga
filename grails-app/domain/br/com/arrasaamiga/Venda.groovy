@@ -53,21 +53,22 @@ class Venda {
     def afterInsert() {
 
         log.debug("Venda #${this.id} removendo itens ")
+
         Estoque.withNewSession { session ->
             Estoque.removerItens(this.itensVenda)
         }
+
     }
 
     def afterDelete() {
 
         Estoque.withNewSession { session ->
 
-            // se ja tiver sido cancelada pelo pagseguro, o PagSeguroController ja repõe os items
-            if (this.status != StatusVenda.Cancelada) {
-                log.debug("Venda #${this.id} repondo itens ")
-                Estoque.reporItens(this.itensVenda)
-            }
+            log.debug("Venda #${this.id} repondo itens ")
+            Estoque.reporItens(this.itensVenda)
         }
+
+
     }
 
     public Double getValorTotal() {

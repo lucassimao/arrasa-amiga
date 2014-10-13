@@ -194,7 +194,7 @@ class FecharVendaSpec extends IntegrationSpec {
             assertNotNull Venda.first().itensVenda.find{item-> item.unidade == 'un' && item.produto.id == produto1.id}
 
             // garantindo que o cliente e a loja so sao avisados quando o cliente efetivamente concui a compra
-            0 * mockEmailService.notificarAdministradores(_)
+            1 * mockEmailService.notificarAdministradores(_)
             0 * mockEmailService.notificarCliente(_)
 
             // o carrinho nao eh esvaziado, p/ caso nao dê certo da primeira vez e assim o cliente pode tentar novamente

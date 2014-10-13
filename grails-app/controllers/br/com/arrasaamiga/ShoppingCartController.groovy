@@ -219,6 +219,7 @@ class ShoppingCartController {
         } else {
 
             venda.save(flush: true)
+            emailService.notificarAdministradores(venda)
             // salva logo, pois precisa do ID da venda para registrar com a transação de pagamento do pagseguro
             // não elimina o carrinho ainda, pq nao sabe se vai dar certo. So vai eliminar no retorno do pag seguro
 

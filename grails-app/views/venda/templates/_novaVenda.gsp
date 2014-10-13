@@ -54,7 +54,7 @@
                     <th> Bairro </th>
                     <th> Complemento </th>
                     <th> 
-                         <g:if test="${!cliente.isDentroDaAreaDeEntregaRapida()}">
+                         <g:if test="${cliente.isDentroDaAreaDeEntregaRapida()}">
                             Data da Entrega
                          </g:if>
                          <g:else>

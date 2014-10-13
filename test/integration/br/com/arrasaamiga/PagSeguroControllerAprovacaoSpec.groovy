@@ -66,126 +66,6 @@ class PagSeguroControllerAprovacaoSpec extends Specification {
     def cleanup() {
     }
 
-    void "test transacao aprovado pelo pagseguro imediatamente"() {
-        given:
-            def transacaoPagSeguro = 'CODIGO-TRANSACAO-PAGSEGURO'
-            def notificationCode = 'CODIGO-DE-NOTIFICACAO-PAG-SEGURO'
-            def produto1 = Produto.findByNome('P1')
-
-            SpringSecurityUtils.reauthenticate 'cliente1@gmail.com', '12345'
-
-            def mockEmailService = Mock(EmailService)
-
-            def shoppingCartController = new ShoppingCartController()
-            shoppingCartController.emailService = mockEmailService
-
-            def pagSeguroServiceSpy = Spy(PagSeguroService)
-
-            def transaction = new Transaction(status: TransactionStatus.PAID, discountAmount: 0,
-                feeAmount: 1, sender: new Sender(email: 'cliente1@gmail.com'))
-
-            pagSeguroServiceSpy.checkTransaction(notificationCode) >> transaction
-            pagSeguroServiceSpy.getTransaction(transacaoPagSeguro) >> transaction
-
-            def pagSeguroController = new PagSeguroController()
-            pagSeguroController.emailService = mockEmailService
-            pagSeguroController.pagSeguroService = pagSeguroServiceSpy
-
-
-
-        expect:
-            Venda.count() == 0
-            ItemVenda.count() == 0
-            Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade == 10
-
-        when:
-            shoppingCartController.request.method = 'POST'
-
-            shoppingCartController.params.id = produto1.id
-            shoppingCartController.params.unidade = 'un'
-            shoppingCartController.params.quantidade = 3
-
-            shoppingCartController.add()
-
-        then:
-            shoppingCartController.session.shoppingCart.getQuantidade(produto1, 'un') == 3
-            shoppingCartController.response.reset()
-
-
-        when:
-            shoppingCartController.params.formaPagamento = FormaPagamento.PagSeguro.name()
-            shoppingCartController.fecharVenda()
-
-            sessionFactory.currentSession.flush()
-            sessionFactory.currentSession.clear()
-
-        then:
-            shoppingCartController.response.redirectedUrl.startsWith('https://pagseguro.uol.com.br/v2/checkout/payment.html?code=')
-
-            Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade == 7
-            Venda.count() == 1
-            ItemVenda.count() == 1
-
-            def venda = Venda.first()
-
-            venda.formaPagamento == FormaPagamento.PagSeguro
-            venda.status == StatusVenda.AguardandoPagamento
-
-            assertNotNull Venda.first().itensVenda.find{item-> item.unidade == 'un' && item.produto.id == produto1.id}
-
-            // garantindo que o cliente e a loja so sao avisados quando o cliente efetivamente concui a compra
-            0 * mockEmailService.notificarAdministradores(_)
-            0 * mockEmailService.notificarCliente(_)
-
-            // o carrinho nao eh esvaziado, p/ caso nao dê certo da primeira vez e assim o cliente pode tentar novamente
-            assertNotNull shoppingCartController.session.shoppingCart
-
-
-        when: "PagSeguro redireciona p/ o site"
-            pagSeguroController.response.reset()
-
-            pagSeguroController.params.transacao = transacaoPagSeguro
-            pagSeguroController.params.id = venda.id
-            pagSeguroController.retorno()
-
-            sessionFactory.currentSession.flush()
-            sessionFactory.currentSession.clear()
-
-            venda.refresh()
-
-        then:
-
-            venda.formaPagamento == FormaPagamento.PagSeguro
-            venda.status == StatusVenda.PagamentoRecebido
-
-            Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade == 7
-            pagSeguroController.response.redirectedUrl == "/venda/show/${venda.id}"
-
-            // itens permanecem ainda no carrinho, cliente pode tentar novamente
-            assertNull pagSeguroController.session.shoppingCart
-
-        when: "pagseguro envia notificação assincrona de aprovação"
-
-            pagSeguroController = new PagSeguroController()
-            pagSeguroController.pagSeguroService = pagSeguroServiceSpy
-            pagSeguroController.params.id = venda.id
-            pagSeguroController.params.notificationCode = notificationCode
-            pagSeguroController.notificacoes()
-
-
-            sessionFactory.currentSession.flush()
-            sessionFactory.currentSession.clear()
-
-            venda.refresh()
-
-        then:
-            // garantindo que o cliente e a loja so sao avisados
-            1 * mockEmailService.notificarAdministradores(_)
-            1 * mockEmailService.notificarCliente(_)
-            Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade == 7
-    }
-
-
     void "test transacao aprovada pelo pagseguro assincronamente"() {
         given:
             def transacaoPagSeguro = 'CODIGO-TRANSACAO-PAGSEGURO'
@@ -255,7 +135,7 @@ class PagSeguroControllerAprovacaoSpec extends Specification {
             assertNotNull Venda.first().itensVenda.find{item-> item.unidade == 'un' && item.produto.id == produto1.id}
 
             // garantindo que o cliente e a loja so sao avisados quando o cliente efetivamente concui a compra
-            0 * mockEmailService.notificarAdministradores(_)
+            1 * mockEmailService.notificarAdministradores(_)
             0 * mockEmailService.notificarCliente(_)
 
             // o carrinho nao eh esvaziado, p/ caso nao dê certo da primeira vez e assim o cliente pode tentar novamente

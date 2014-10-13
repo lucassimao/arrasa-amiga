@@ -8,11 +8,12 @@ class UrlMappings {
         }
 
         "/"(controller: "home", action: "index")
-        "/api/vendas"(resources: 'venda')
         "/contato"(view: '/home/contato')
         "/pwdrecovery"(view: '/home/pwdRecovery')
         "/$produto-$id"(controller: "produto", action: "detalhes")
         "/produtos/$grupoDeProduto"(controller: "home", action: "index")
+        "/api/vendas"(resources: 'venda',includes:['index','save','delete','update'])
+        "/api/estoque"(resources: 'estoque',includes:['index'])
         "500"(view: '/error')
     }
 }

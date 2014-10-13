@@ -46,6 +46,8 @@ grails.project.dependency.resolution = {
         grailsHome()
         grailsCentral()
 
+        mavenRepo 'http://repo.spring.io/milestone'
+
         mavenLocal()
         mavenCentral()
 
@@ -75,6 +77,9 @@ grails.project.dependency.resolution = {
         compile ":cache:1.1.7"
         compile ':asset-pipeline:1.9.9'
         compile ":spring-security-core:2.0-RC3"
+        compile ":spring-security-rest:1.4.1.RC2", {
+            excludes: 'spring-security-core'
+        }
         compile ":browser-detection:0.4.3"
         compile ":quartz:1.0.2"
         compile ":asynchronous-mail:1.1"
