@@ -66,118 +66,6 @@ class PagSeguroControllerCancelamentoSpec extends Specification {
     def cleanup() {
     }
 
-    void "test transacao cancelada pelo pagseguro imediatamente"() {
-        given:
-            def transacaoPagSeguro = 'CODIGO-TRANSACAO-PAGSEGURO'
-            def notificationCode = 'CODIGO-DE-NOTIFICACAO-PAG-SEGURO'
-            def produto1 = Produto.findByNome('P1')
-
-            SpringSecurityUtils.reauthenticate 'cliente1@gmail.com', '12345'
-
-            def mockEmailService = Mock(EmailService)
-
-            def shoppingCartController = new ShoppingCartController()
-            shoppingCartController.emailService = mockEmailService
-
-            def pagSeguroServiceSpy = Spy(PagSeguroService)
-            pagSeguroServiceSpy.checkTransaction(notificationCode) >> new Transaction(status: TransactionStatus.CANCELLED,discountAmount: 0,
-                feeAmount: 1,sender: new Sender(email:'cliente1@gmail.com'))
-            pagSeguroServiceSpy.getTransaction(transacaoPagSeguro) >> new Transaction(status: TransactionStatus.CANCELLED,discountAmount: 0,
-                                                                                    feeAmount: 1,sender: new Sender(email:'cliente1@gmail.com'))
-
-            def pagSeguroController = new PagSeguroController()
-            pagSeguroController.emailService = mockEmailService
-            pagSeguroController.pagSeguroService = pagSeguroServiceSpy
-
-
-
-        expect:
-            Venda.count() == 0
-            ItemVenda.count() == 0
-            Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade == 10
-
-        when:
-            shoppingCartController.request.method = 'POST'
-
-            shoppingCartController.params.id = produto1.id
-            shoppingCartController.params.unidade = 'un'
-            shoppingCartController.params.quantidade = 3
-
-            shoppingCartController.add()
-
-        then:
-            shoppingCartController.session.shoppingCart.getQuantidade(produto1, 'un') == 3
-            shoppingCartController.response.reset()
-
-
-        when:
-            shoppingCartController.params.formaPagamento = FormaPagamento.PagSeguro.name()
-            shoppingCartController.fecharVenda()
-
-            sessionFactory.currentSession.flush()
-            sessionFactory.currentSession.clear()
-
-        then:
-            shoppingCartController.response.redirectedUrl.startsWith('https://pagseguro.uol.com.br/v2/checkout/payment.html?code=')
-
-            Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade == 7
-            Venda.count() == 1
-            ItemVenda.count() == 1
-
-            def venda = Venda.first()
-
-            venda.formaPagamento == FormaPagamento.PagSeguro
-            venda.status == StatusVenda.AguardandoPagamento
-
-            assertNotNull Venda.first().itensVenda.find{item-> item.unidade == 'un' && item.produto.id == produto1.id}
-
-            // garantindo que o cliente e a loja so sao avisados quando o cliente efetivamente concui a compra
-            0 * mockEmailService.notificarAdministradores(_)
-            0 * mockEmailService.notificarCliente(_)
-
-            // o carrinho nao eh esvaziado, p/ caso nao dê certo da primeira vez e assim o cliente pode tentar novamente
-            assertNotNull shoppingCartController.session.shoppingCart
-
-
-        when: "PagSeguro redireciona p/ o site"
-            pagSeguroController.response.reset()
-
-            pagSeguroController.params.transacao = transacaoPagSeguro
-            pagSeguroController.params.id = venda.id
-            pagSeguroController.retorno()
-
-            sessionFactory.currentSession.flush()
-            sessionFactory.currentSession.clear()
-
-            venda.refresh()
-
-        then:
-
-            venda.formaPagamento == FormaPagamento.PagSeguro
-            venda.status == StatusVenda.Cancelada
-
-            Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade == 10
-            pagSeguroController.response.redirectedUrl == '/venda/cancelada'
-
-            // itens permanecem ainda no carrinho, cliente pode tentar novamente
-            assertNotNull pagSeguroController.session.shoppingCart.itens.find{item-> item.unidade == 'un' && item.produto.id == produto1.id}
-
-        when: "pagseguro envia notificação assincrona de cancelamento"
-
-
-            pagSeguroController = new PagSeguroController()
-            pagSeguroController.pagSeguroService = pagSeguroServiceSpy
-            pagSeguroController.params.id = venda.id
-            pagSeguroController.params.notificationCode = notificationCode
-
-            pagSeguroController.notificacoes()
-
-        then:
-            pagSeguroController.response.text == 'ok'
-            Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade == 10
-    }
-
-
     void "test transacao cancelada pelo pagseguro assincronamente"() {
         given:
             def transacaoPagSeguro = 'CODIGO-TRANSACAO-PAGSEGURO'
@@ -234,7 +122,7 @@ class PagSeguroControllerCancelamentoSpec extends Specification {
         then:
             shoppingCartController.response.redirectedUrl.startsWith('https://pagseguro.uol.com.br/v2/checkout/payment.html?code=')
 
-            Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade == 7
+            Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade == 10
             Venda.count() == 1
             ItemVenda.count() == 1
 
@@ -272,7 +160,7 @@ class PagSeguroControllerCancelamentoSpec extends Specification {
             venda.transacaoPagSeguro == transacaoPagSeguro
             Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade == 10
 
-            1 * mockEmailService.notificarAdministradores(_)
-            1 * mockEmailService.notificarCliente(_)
+            0 * mockEmailService.notificarAdministradores(_)
+            0 * mockEmailService.notificarCliente(_)
     }
 }

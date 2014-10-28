@@ -182,7 +182,8 @@ class FecharVendaSpec extends IntegrationSpec {
         then:
             controller.response.redirectedUrl.startsWith('https://pagseguro.uol.com.br/v2/checkout/payment.html?code=')
 
-            Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade == 7
+            // so tira depois que confirma, o estoque nao deve ser alterado
+            Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade == 10
             Venda.count() == 1
             ItemVenda.count() == 1
 

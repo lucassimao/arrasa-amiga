@@ -52,9 +52,12 @@ class Venda {
 
     def afterInsert() {
 
-        log.debug("Venda #${this.id} removendo itens ")
-        Estoque.withNewSession { session ->
-            Estoque.removerItens(this.itensVenda)
+        if (this.formaPagamento.equals(FormaPagamento.AVista)) {
+
+            log.debug("Venda #${this.id} removendo itens ")
+            Estoque.withNewSession { session ->
+                Estoque.removerItens(this.itensVenda)
+            }
         }
     }
 
@@ -62,8 +65,9 @@ class Venda {
 
         Estoque.withNewSession { session ->
 
-            // se ja tiver sido cancelada pelo pagseguro, o PagSeguroController ja repõe os items
-            if (this.status != StatusVenda.Cancelada) {
+            if (this.formaPagamento.equals(FormaPagamento.AVista) ||
+                    ( formaPagamento.equals(FormaPagamento.PagSeguro) && this.status == StatusVenda.PagamentoRecebido)) {
+
                 log.debug("Venda #${this.id} repondo itens ")
                 Estoque.reporItens(this.itensVenda)
             }
