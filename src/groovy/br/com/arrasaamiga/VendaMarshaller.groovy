@@ -14,6 +14,7 @@ class VendaMarshaller {
     void registerMarshaller() {
         // TODO descomentar na versao 2.4.4
 /*        JSON.registerObjectMarshaller(Venda) { Venda venda ->
+
             def map = [:]
             map['id'] = venda.id
             map['vendedor'] = venda.vendedor?.username
@@ -52,5 +53,6 @@ class VendaMarshaller {
 
             return map
         }*/
+
     }
 }

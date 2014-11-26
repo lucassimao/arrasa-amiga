@@ -47,14 +47,14 @@
 
         <li>
             <a style="${(controllerName.equals('estoque')) ? 'background-color:#666;color:white;' : ''}"
-               href="${createLink(controller: 'estoque')}">
+               href="${createLink(controller: 'estoque',action: 'index')}">
                 Estoque
             </a>
         </li>
 
         <li>
             <a style="${(controllerName.equals('venda')) ? 'background-color:#666;color:white;' : ''}"
-               href="${createLink(controller: 'venda')}">
+               href="${createLink(controller: 'venda',action:'list')}">
                 Vendas
             </a>
         </li>

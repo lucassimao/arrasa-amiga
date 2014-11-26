@@ -1,16 +1,9 @@
 package br.com.arrasaamiga
 
-import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
 import grails.rest.RestfulController
-import grails.transaction.*
-import org.codehaus.groovy.grails.web.servlet.HttpHeaders
 
-import static org.springframework.http.HttpStatus.CREATED
-import static org.springframework.http.HttpStatus.NOT_FOUND
-import static org.springframework.http.HttpStatus.OK
-
-@Secured(['IS_AUTHENTICATED_FULLY'])
+@Secured(['ROLE_ADMIN'])
 class VendaController extends RestfulController {
 
     static responseFormats = ['html', 'json']
@@ -68,7 +61,6 @@ class VendaController extends RestfulController {
 
     def cancelada() { }
     def aguardandoPagamento() { }
-
 
 
     def index() {

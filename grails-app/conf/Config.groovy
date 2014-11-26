@@ -146,6 +146,8 @@ grails.plugin.springsecurity.logout.postOnly = false
 
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
         '/'                     : ['permitAll'],
+        '/api/login'            : ['permitAll'],
+        '/api/logout'           : ['permitAll'],
         '/home/**'              : ['permitAll'],
         '/index.gsp'            : ['permitAll'],
         '/assets/**'            : ['permitAll'],
