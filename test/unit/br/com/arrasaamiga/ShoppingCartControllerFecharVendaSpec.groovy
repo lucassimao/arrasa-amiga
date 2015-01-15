@@ -239,7 +239,7 @@ class ShoppingCartControllerFecharVendaSpec extends Specification {
     void "testar fechar venda atraves do pagseguro"() {
         given:
             controller.springSecurityService = grailsApplication.mainContext.getBean('springSecurityService')
-            controller.emailService = grailsApplication.mainContext.getBean('emailService')
+            controller.emailService = Stub(EmailService)
 
             def paymentURLDeTeste = new URL("http://www.site.qualquer.de.teste")
 

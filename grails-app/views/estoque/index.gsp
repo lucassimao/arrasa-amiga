@@ -47,7 +47,7 @@
 				</tbody>
 			</table>
 			<div class="pagination">
-				<g:paginate total="${estoqueInstanceTotal}" />
+				<g:paginate action="index" controller="estoque" total="${estoqueInstanceTotal}" />
 			</div>
 		</div>
 

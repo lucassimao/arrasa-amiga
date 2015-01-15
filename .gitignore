@@ -8,6 +8,10 @@ target/*
 layout v1.1/*
 projectFilesBackup/*
 *.log*
+.gradle
+gradle/
+gradlew
+gradlew.bat
 arrasa-amiga.sublime-workspace
 web-app/images/produtos/*
 web-app/images/banners/*

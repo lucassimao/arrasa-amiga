@@ -14,12 +14,12 @@
         <div class="collapse navbar-collapse" id="clotheshop-navbar">
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="${createLink(controller: 'produto')}">PRODUTOS</a></li>
-                <li><a href="${createLink(controller: 'venda')}">VENDAS</a></li>
+                <li><a href="${createLink(controller: 'venda',action:'list')}">VENDAS</a></li>
                 <li class="divider-vertical"></li>
                 <li class="dropdown">
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">MAIS <b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li><a href="${createLink(controller: 'estoque')}">ESTOQUE</a></li>
+                        <li><a href="${createLink(controller: 'estoque',action:'index')}">ESTOQUE</a></li>
                         <li><a href="${createLink(controller: 'banner')}">BANNERS</a></li>
                         <li><a href="${createLink(controller: 'aviso')}">AVISOS</a></li>
                         <li class="divider"></li>

@@ -4,6 +4,9 @@ import grails.plugin.springsecurity.annotation.Secured
 import org.apache.commons.logging.LogFactory
 import static org.springframework.http.HttpStatus.*
 
+import static org.springframework.http.HttpStatus.NOT_FOUND
+import static org.springframework.http.HttpStatus.OK
+
 @Secured(['permitAll'])
 class PagSeguroController {
 
@@ -14,18 +17,17 @@ class PagSeguroController {
 
     def index() {
 
-    	redirect(uri:'/')
+        redirect(uri: '/')
     }
 
     @Secured(['isAuthenticated()'])
-    def retorno(){
+    def retorno() {
 
-    	def codigoTransacao = params.transacao
+        def codigoTransacao = params.transacao
         def transacaoPagSeguro = pagSeguroService.getTransaction(codigoTransacao)
 
         def venda = Venda.get(params.id)
         boolean vendaJaEstavaCancelada = ( venda.status == StatusVenda.Cancelada ) // ja recebeu a notificacao de cancelamento
-
 
         vendaLogger.debug " * retorno: venda ${venda.id}; transacaoPagSeguro ${transacaoPagSeguro} "
         vendaLogger.debug " ** retorno: status anterior ${venda.status} "
@@ -34,30 +36,33 @@ class PagSeguroController {
         venda.status = pagSeguroService.getStatusTransacao(transacaoPagSeguro.status)
         venda.descontoPagSeguroEmCentavos = transacaoPagSeguro.getDiscountAmount() * 100
         venda.taxasPagSeguroEmCentavos = transacaoPagSeguro.getFeeAmount() * 100
-        venda.save(flush:true)
+        venda.save(flush: true)
 
         vendaLogger.debug " *** retorno: novo status ${venda.status} "
 
+        switch (venda.status) {
+            case StatusVenda.PagamentoRecebido:
 
+                vendaLogger.debug("**** retorno: venda/show/${venda.id} e apagando carrinho")
+                session.shoppingCart = null
+                redirect(controller: 'venda', action: 'show', id: venda.id)
 
-        if (venda.status != StatusVenda.Cancelada){
+                break
+            case StatusVenda.Cancelada:
+                redirect(controller: 'venda', action: 'cancelada')
 
-            vendaLogger.debug("**** retorno: venda/show/${venda.id} e apagando carrinho")
-            session.shoppingCart = null
-            redirect(controller:'venda',action:'show',id:venda.id)
-            return
-
-        }else{
-
-            redirect(controller:'venda',action:'cancelada')
-            return           
+                break
+            default: // AguardandoPagamento ou EmAnalise
+                redirect(controller: 'venda', action: 'aguardandoPagamento')
         }
+
     }
 
-    def notificacoes(){
+    def notificacoes() {
         def venda = Venda.get(params.id)
 
-        if (venda == null){
+
+        if (venda == null) {
             render status: NOT_FOUND
             return
         }
@@ -78,18 +83,23 @@ class PagSeguroController {
         venda.save(flush:true)
 
 
-        switch(venda.status){
+        switch (venda.status) {
             case StatusVenda.PagamentoRecebido:
 
                 vendaLogger.debug "***** notificacoes - confirmacao de pagamento da venda ${venda.id}"
 
                 emailService.notificarAdministradores(venda)
                 emailService.notificarCliente(venda)
-                Estoque.removerItens(venda.itensVenda)
-                break
-        }
 
-        vendaLogger.debug "Status da venda #${venda.id} alterado para ${venda.status}"
+                break
+            case StatusVenda.Cancelada:
+
+                vendaLogger.debug "***** notificacoes - cancelando venda ${venda.id}"
+                Estoque.reporItens(venda.itensVenda)
+                //TODO enviar email avisando cancelamento cancelando
+                break
+
+        }
 
         render status: OK
         return

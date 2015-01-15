@@ -146,6 +146,8 @@ grails.plugin.springsecurity.logout.postOnly = false
 
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
         '/'                     : ['permitAll'],
+        '/api/login'            : ['permitAll'],
+        '/api/logout'           : ['permitAll'],
         '/home/**'              : ['permitAll'],
         '/index.gsp'            : ['permitAll'],
         '/assets/**'            : ['permitAll'],
@@ -154,6 +156,18 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
         '/plugins/**'           : ['permitAll'],
         '/console/**'           : ['ROLE_ADMIN']
 ]
+
+grails.plugin.springsecurity.filterChain.chainMap = [
+        '/api/vendas/**': 'JOINED_FILTERS,-exceptionTranslationFilter,-authenticationProcessingFilter,-securityContextPersistenceFilter,-rememberMeAuthenticationFilter',  // Stateless chain
+        '/api/estoque': 'JOINED_FILTERS,-exceptionTranslationFilter,-authenticationProcessingFilter,-securityContextPersistenceFilter,-rememberMeAuthenticationFilter',  // Stateless chain
+        '/**': 'JOINED_FILTERS,-restTokenValidationFilter,-restExceptionTranslationFilter'                                                                          // Traditional chain
+]
+
+grails.plugin.springsecurity.rest.token.storage.useGorm=true
+grails.plugin.springsecurity.rest.token.storage.gorm.tokenDomainClassName='br.com.arrasaamiga.AuthenticationToken'
+grails.plugin.springsecurity.rest.token.storage.gorm.tokenValuePropertyName='tokenValue'
+grails.plugin.springsecurity.rest.token.storage.gorm.usernamePropertyName='username'
+
 
 grails {
     mail {

@@ -52,26 +52,23 @@ class Venda {
 
     def afterInsert() {
 
-        if (this.formaPagamento.equals(FormaPagamento.AVista)) {
+        log.debug("Venda #${this.id} removendo itens ")
 
-            log.debug("Venda #${this.id} removendo itens ")
-            Estoque.withNewSession { session ->
-                Estoque.removerItens(this.itensVenda)
-            }
+        Estoque.withNewSession { session ->
+            Estoque.removerItens(this.itensVenda)
         }
+
     }
 
     def afterDelete() {
 
         Estoque.withNewSession { session ->
 
-            if (this.formaPagamento.equals(FormaPagamento.AVista) ||
-                    ( formaPagamento.equals(FormaPagamento.PagSeguro) && this.status == StatusVenda.PagamentoRecebido)) {
-
-                log.debug("Venda #${this.id} repondo itens ")
-                Estoque.reporItens(this.itensVenda)
-            }
+            log.debug("Venda #${this.id} repondo itens ")
+            Estoque.reporItens(this.itensVenda)
         }
+
+
     }
 
     public Double getValorTotal() {

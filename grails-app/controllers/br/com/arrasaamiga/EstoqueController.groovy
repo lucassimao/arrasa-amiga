@@ -2,20 +2,20 @@ package br.com.arrasaamiga
 
 import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
+import grails.rest.RestfulController
+
 
 @Secured(['ROLE_ADMIN'])
-class EstoqueController {
+class EstoqueController extends RestfulController {
 
-    static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+    static responseFormats = ['html', 'json']
 
 
-    def index() {
-        redirect(action: "list", params: params)
+    EstoqueController() {
+        super(Estoque)
     }
 
-    @Secured(['permitAll'])
-    def list(Integer max) {
-
+    def index(Integer max) {
         withFormat {
 
             html {
@@ -60,18 +60,6 @@ class EstoqueController {
             }
 
         }
-
-    }
-
-    def show(Long id) {
-        def estoqueInstance = Estoque.get(id)
-        if (!estoqueInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'estoque.label', default: 'Estoque'), id])
-            redirect(action: "list")
-            return
-        }
-
-        [estoqueInstance: estoqueInstance]
     }
 
     def entrada(Long id) {
@@ -85,7 +73,6 @@ class EstoqueController {
 
         [estoqueInstance: estoqueInstance, pedidosEmAberto: Pedido.findAllByStatus(StatusPedido.Aguardando)]
     }
-
 
     def update(Long id, Long version) {
         def estoqueInstance = Estoque.get(id)

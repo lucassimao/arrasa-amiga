@@ -1,16 +1,9 @@
 package br.com.arrasaamiga
 
-import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
 import grails.rest.RestfulController
-import grails.transaction.*
-import org.codehaus.groovy.grails.web.servlet.HttpHeaders
 
-import static org.springframework.http.HttpStatus.CREATED
-import static org.springframework.http.HttpStatus.NOT_FOUND
-import static org.springframework.http.HttpStatus.OK
-
-@Secured(['permitAll'])
+@Secured(['ROLE_ADMIN'])
 class VendaController extends RestfulController {
 
     static responseFormats = ['html', 'json']
@@ -20,7 +13,6 @@ class VendaController extends RestfulController {
         super(Venda)
     }
 
-    @Secured(['IS_AUTHENTICATED_FULLY'])
     def setTrackingCode(Long id, String trackingCode) {
 
         if (trackingCode) {
@@ -35,7 +27,6 @@ class VendaController extends RestfulController {
     }
 
 
-    @Secured(['IS_AUTHENTICATED_FULLY'])
     def showFull(Long id) {
 
         def venda = Venda.get(id)
@@ -50,7 +41,6 @@ class VendaController extends RestfulController {
 
     }
 
-    @Secured(['IS_AUTHENTICATED_FULLY'])
     def marcarComoEntregue(Long id) {
         def v = Venda.get(id)
         v.status = StatusVenda.Entregue
@@ -69,10 +59,8 @@ class VendaController extends RestfulController {
     }
 
 
-    def cancelada() {
-
-    }
-
+    def cancelada() { }
+    def aguardandoPagamento() { }
 
 
     def index() {
@@ -84,7 +72,6 @@ class VendaController extends RestfulController {
         }
     }
 
-    @Secured(['IS_AUTHENTICATED_FULLY'])
     def list(Integer max) {
         params.max = Math.min(max ?: 10, 1000)
         params.sort = 'dateCreated'

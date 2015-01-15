@@ -182,8 +182,7 @@ class FecharVendaSpec extends IntegrationSpec {
         then:
             controller.response.redirectedUrl.startsWith('https://pagseguro.uol.com.br/v2/checkout/payment.html?code=')
 
-            // so tira depois que confirma, o estoque nao deve ser alterado
-            Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade == 10
+            Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade == 7
             Venda.count() == 1
             ItemVenda.count() == 1
 
@@ -195,7 +194,7 @@ class FecharVendaSpec extends IntegrationSpec {
             assertNotNull Venda.first().itensVenda.find{item-> item.unidade == 'un' && item.produto.id == produto1.id}
 
             // garantindo que o cliente e a loja so sao avisados quando o cliente efetivamente concui a compra
-            0 * mockEmailService.notificarAdministradores(_)
+            1 * mockEmailService.notificarAdministradores(_)
             0 * mockEmailService.notificarCliente(_)
 
             // o carrinho nao eh esvaziado, p/ caso nao dê certo da primeira vez e assim o cliente pode tentar novamente

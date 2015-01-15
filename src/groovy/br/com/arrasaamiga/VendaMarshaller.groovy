@@ -1,52 +1,20 @@
-import br.com.arrasaamiga.GrupoDeUsuario
-import br.com.arrasaamiga.TurnoEntrega
-import br.com.arrasaamiga.Usuario
-import br.com.arrasaamiga.UsuarioGrupoDeUsuario
-import br.com.arrasaamiga.Venda
+package br.com.arrasaamiga
+
 import grails.converters.JSON
-import grails.util.BuildSettingsHolder
-import grails.util.Environment
 
-class BootStrap {
+import javax.annotation.PostConstruct
 
-    def grailsApplication
+/**
+ * Created by lsimaocosta on 26/11/14.
+ */
 
-    def init = { servletContext ->
+class VendaMarshaller {
 
-        File uploadDir = grailsApplication.mainContext.getResource('images/produtos').file
-        if (!uploadDir.exists()) {
+    @PostConstruct
+    void registerMarshaller() {
+        // TODO descomentar na versao 2.4.4
+/*        JSON.registerObjectMarshaller(Venda) { Venda venda ->
 
-            boolean dirCreated = uploadDir.mkdirs()
-            if (!dirCreated)
-                throw new Error('Diretorio de imagens de produtos não foi criado')
-        }
-
-
-        File bannersDir = grailsApplication.mainContext.getResource('images/banners').file
-        if (!bannersDir.exists()) {
-
-            boolean dirCreated = bannersDir.mkdirs()
-            if (!dirCreated)
-                throw new Error('Diretorio de banners não foi criado')
-        }
-
-
-
-        Environment.executeForCurrentEnvironment {
-
-            development {
-
-                def adminRole = new GrupoDeUsuario(authority: 'ROLE_ADMIN').save(flush: true)
-                def userRole = new GrupoDeUsuario(authority: 'ROLE_CLIENTE').save(flush: true)
-
-                def testUser = new Usuario(username: 'me', enabled: true, password: '123')
-                testUser.save(flush: true)
-
-                UsuarioGrupoDeUsuario.create testUser, adminRole, true
-            }
-        }
-
-        JSON.registerObjectMarshaller(Venda) { Venda venda ->
             def map = [:]
             map['id'] = venda.id
             map['vendedor'] = venda.vendedor?.username
@@ -84,11 +52,7 @@ class BootStrap {
             }
 
             return map
-        }
+        }*/
 
-
-    }
-
-    def destroy = {
     }
 }
