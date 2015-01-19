@@ -71,4 +71,27 @@ class EmailService {
         }
     }
 
+    def notificarCancelamento(Venda venda) {
+        mailService.sendMail {
+
+            to venda.cliente.email
+            async true
+            subject "Arrasa Amiga - Aviso de cancelamento de pedido"
+            html '<body> ' +
+                    '<p> ${venda.cliente.nome}, </p> ' +
+                    '<p></p>'+
+                    "<p> Seu pedido #${venda.id} foi cancelado devido a um problema com a forma de pagamento escolhida. " +
+                    "Caso tenha utilizado cartão de crédito, tente novamente informando corretamente os dados do mesmo. " +
+                    "Caso tenha escolhido boleto bancário, o mesmo deve ter vencimento e sua compra foi automaticamente cancelada. </p> " +
+                    "</body>"
+        }
+
+        mailService.sendMail {
+
+            to administradores
+            async true
+            subject "Arrasa Amiga - Aviso de cancelamento de pedido"
+            html "<body> <p> Pedido #${venda.id} foi cancelado </p> </body>"
+        }
+    }
 }

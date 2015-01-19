@@ -4,6 +4,7 @@ import br.com.uol.pagseguro.domain.Sender
 import br.com.uol.pagseguro.domain.Transaction
 import br.com.uol.pagseguro.domain.TransactionStatus
 import grails.plugin.springsecurity.SpringSecurityUtils
+import org.springframework.http.HttpStatus
 import spock.lang.Specification
 
 import static org.junit.Assert.assertNotNull
@@ -134,7 +135,7 @@ class PagSeguroControllerCancelamentoSpec extends Specification {
 
             assertNotNull Venda.first().itensVenda.find{item-> item.unidade == 'un' && item.produto.id == produto1.id}
 
-            // garantindo que o cliente e a loja so sao avisados quando o cliente efetivamente concui a compra
+            // garantindo que os administradores sao avisados quando o cliente é redirecionado para o pagseguro
             1 * mockEmailService.notificarAdministradores(_)
             0 * mockEmailService.notificarCliente(_)
 
@@ -160,7 +161,8 @@ class PagSeguroControllerCancelamentoSpec extends Specification {
             venda.transacaoPagSeguro == transacaoPagSeguro
             Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade == 10
 
-            0 * mockEmailService.notificarAdministradores(_)
-            0 * mockEmailService.notificarCliente(_)
+            1 * mockEmailService.notificarCancelamento(_)
+            shoppingCartController.response.status == HttpStatus.OK.value()
+
     }
 }

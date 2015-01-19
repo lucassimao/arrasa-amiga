@@ -38,6 +38,7 @@
         <div style="background-color:#F29BF2;color:white;border:1px solid white;text-align:center;">
 
             <h2>  Nova Venda </h2>
+            <h5> ${venda.status?.toString()} </h5>
 
         </div>
 
@@ -125,7 +126,7 @@
                         <g:img absolute="true" dir="images/produtos" style="float:left;" file="${produto.fotoMiniatura}"/>
 
                         <div>
-                            <label>${produto.nome }</label>
+                            <label>${produto.nome}</label>
 
                             <g:if test="${produto.isMultiUnidade()}">
                                 <p> <small> ${produto.tipoUnitario}: ${itemVenda.unidade} </small> </p>

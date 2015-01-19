@@ -27,7 +27,6 @@ class PagSeguroController {
         def transacaoPagSeguro = pagSeguroService.getTransaction(codigoTransacao)
 
         def venda = Venda.get(params.id)
-        boolean vendaJaEstavaCancelada = ( venda.status == StatusVenda.Cancelada ) // ja recebeu a notificacao de cancelamento
 
         vendaLogger.debug " * retorno: venda ${venda.id}; transacaoPagSeguro ${transacaoPagSeguro} "
         vendaLogger.debug " ** retorno: status anterior ${venda.status} "
@@ -42,6 +41,7 @@ class PagSeguroController {
 
         switch (venda.status) {
             case StatusVenda.PagamentoRecebido:
+                emailService.notificarCliente(venda)
 
                 vendaLogger.debug("**** retorno: venda/show/${venda.id} e apagando carrinho")
                 session.shoppingCart = null
@@ -49,11 +49,20 @@ class PagSeguroController {
 
                 break
             case StatusVenda.Cancelada:
+                vendaLogger.debug("**** Cancelamento de venda ${venda.id} e devolvendo itens")
+
+                emailService.notificarCancelamento(venda)
+                Estoque.reporItens(this.itensVenda)
+
                 redirect(controller: 'venda', action: 'cancelada')
 
                 break
-            default: // AguardandoPagamento ou EmAnalise
+            case StatusVenda.AguardandoPagamento:
+            case StatusVenda.EmAnalise:
                 redirect(controller: 'venda', action: 'aguardandoPagamento')
+                break
+            default:
+                break
         }
 
     }
@@ -96,7 +105,7 @@ class PagSeguroController {
 
                 vendaLogger.debug "***** notificacoes - cancelando venda ${venda.id}"
                 Estoque.reporItens(venda.itensVenda)
-                //TODO enviar email avisando cancelamento cancelando
+                emailService.notificarCancelamento(venda)
                 break
 
         }

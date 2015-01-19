@@ -7,6 +7,7 @@ import grails.test.mixin.TestFor
 import grails.test.mixin.TestMixin
 import grails.test.mixin.support.GrailsUnitTestMixin
 import org.codehaus.groovy.grails.commons.InstanceFactoryBean
+import org.hibernate.validator.constraints.Email
 import spock.lang.Specification
 
 /**
@@ -206,9 +207,10 @@ class ShoppingCartControllerFecharVendaSpec extends Specification {
 
 
     void "testar fechar venda a vista"() {
+
         given:
             controller.springSecurityService = grailsApplication.mainContext.getBean('springSecurityService')
-            controller.emailService = grailsApplication.mainContext.getBean('emailService')
+            controller.emailService = Mock(EmailService)
 
         expect:
             Estoque.findByProdutoAndUnidade(Produto.load(1L),'un1').quantidade == 10
@@ -233,13 +235,15 @@ class ShoppingCartControllerFecharVendaSpec extends Specification {
 
         then:
             response.redirectedUrl == '/venda/show/' + Venda.first().id
+            1 * controller.emailService.notificarAdministradores(_)
+            1 * controller.emailService.notificarCliente(_)
 
     }
 
     void "testar fechar venda atraves do pagseguro"() {
         given:
             controller.springSecurityService = grailsApplication.mainContext.getBean('springSecurityService')
-            controller.emailService = Stub(EmailService)
+            controller.emailService = Mock(EmailService)
 
             def paymentURLDeTeste = new URL("http://www.site.qualquer.de.teste")
 
@@ -271,6 +275,7 @@ class ShoppingCartControllerFecharVendaSpec extends Specification {
 
         then:
             response.redirectedUrl == paymentURLDeTeste.toString()
-
+            1 * controller.emailService.notificarAdministradores(_)
+            0 * controller.emailService.notificarCliente(_)
     }
 }

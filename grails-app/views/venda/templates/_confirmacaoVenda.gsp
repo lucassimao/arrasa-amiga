@@ -131,7 +131,7 @@
 
 
         <table  style="background-color:white;width:100%;">
-            <thead >
+            <thead>
                 <tr>
                     <th> Descrição </th>
                     <th> Quantidade </th>
@@ -149,7 +149,7 @@
                         <g:img absolute="true" dir="images/produtos" style="float:left;" file="${produto.fotoMiniatura}"/>
 
                         <div>
-                            <label>${produto.nome }</label>
+                            <label>${produto.nome}</label>
 
                             <g:if test="${produto.isMultiUnidade()}">
                                 <p> <small> ${produto.tipoUnitario}: ${itemVenda.unidade} </small> </p>
