@@ -42,6 +42,7 @@ class PagSeguroController {
         switch (venda.status) {
             case StatusVenda.PagamentoRecebido:
                 emailService.notificarCliente(venda)
+                emailService.notificarAdministradores(venda)
 
                 vendaLogger.debug("**** retorno: venda/show/${venda.id} e apagando carrinho")
                 session.shoppingCart = null
