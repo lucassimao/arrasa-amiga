@@ -26,35 +26,18 @@ class PagSeguroController {
         def codigoTransacao = params.transacao
         def transacaoPagSeguro = pagSeguroService.getTransaction(codigoTransacao)
 
-        def venda = Venda.get(params.id)
+        vendaLogger.debug " * retorno: venda ${params.id}; transacaoPagSeguro ${transacaoPagSeguro} "
+        def status = pagSeguroService.getStatusTransacao(transacaoPagSeguro.status)
 
-        vendaLogger.debug " * retorno: venda ${venda.id}; transacaoPagSeguro ${transacaoPagSeguro} "
-        vendaLogger.debug " ** retorno: status anterior ${venda.status} "
-
-        venda.transacaoPagSeguro = codigoTransacao
-        venda.status = pagSeguroService.getStatusTransacao(transacaoPagSeguro.status)
-        venda.descontoPagSeguroEmCentavos = transacaoPagSeguro.getDiscountAmount() * 100
-        venda.taxasPagSeguroEmCentavos = transacaoPagSeguro.getFeeAmount() * 100
-        venda.save(flush: true)
-
-        vendaLogger.debug " *** retorno: novo status ${venda.status} "
-
-        switch (venda.status) {
+        switch (status) {
             case StatusVenda.PagamentoRecebido:
-                emailService.notificarCliente(venda)
-                emailService.notificarAdministradores(venda)
-
-                vendaLogger.debug("**** retorno: venda/show/${venda.id} e apagando carrinho")
+                vendaLogger.debug("**** retorno: venda/show/${params.id} e apagando carrinho")
                 session.shoppingCart = null
-                redirect(controller: 'venda', action: 'show', id: venda.id)
+                redirect(controller: 'venda', action: 'show', id: params.id)
 
                 break
             case StatusVenda.Cancelada:
-                vendaLogger.debug("**** Cancelamento de venda ${venda.id} e devolvendo itens")
-
-                emailService.notificarCancelamento(venda)
-                Estoque.reporItens(this.itensVenda)
-
+                vendaLogger.debug("**** retorno: Vena ${params.id} cancelada")
                 redirect(controller: 'venda', action: 'cancelada')
 
                 break
@@ -82,11 +65,13 @@ class PagSeguroController {
         def notificationCode = params.notificationCode
         vendaLogger.debug("** notificacoes notificationCode ${notificationCode}")
 
-        def transaction = pagSeguroService.checkTransaction(notificationCode)
-        vendaLogger.debug("*** notificacoes transaction ${transaction.code} transacaoPagSeguro ${venda.transacaoPagSeguro}")
+        def transacaoPagSeguro = pagSeguroService.checkTransaction(notificationCode)
+        vendaLogger.debug("*** notificacoes transacaoPagSeguro ${transacaoPagSeguro.code} transacaoPagSeguro ${venda.transacaoPagSeguro}")
 
-        venda.transacaoPagSeguro = transaction.code
-        venda.status = pagSeguroService.getStatusTransacao(transaction.status)
+        venda.transacaoPagSeguro = transacaoPagSeguro.code
+        venda.status = pagSeguroService.getStatusTransacao(transacaoPagSeguro.status)
+        venda.descontoPagSeguroEmCentavos = transacaoPagSeguro.getDiscountAmount() * 100
+        venda.taxasPagSeguroEmCentavos = transacaoPagSeguro.getFeeAmount() * 100
 
         vendaLogger.debug "**** notificacoes novo status ${venda.status}"
 

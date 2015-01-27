@@ -104,6 +104,12 @@ class ShoppingCartController {
     @Secured(['isAuthenticated()'])
     def recalcularTotais() {
 
+        println "** recalcular totais **"
+        println params
+        println springSecurityService.currentUser
+        println "forma pagamento: " + params.formaPagamento
+        println "forma pagamento: " + params.servicoCorreio
+
         def venda = new Venda()
         venda.carrinho = getShoppingCart()
         venda.cliente = Cliente.findByUsuario(springSecurityService.currentUser)
