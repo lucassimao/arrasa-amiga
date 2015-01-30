@@ -15,25 +15,14 @@ class EstoqueController extends RestfulController {
         super(Estoque)
     }
 
-    def index(Integer max) {
+    /**
+     * So é acessado se tiver o token de autenticação incluido no request
+     *
+     * @return
+     */
+    def index(int max) {
+
         withFormat {
-
-            html {
-                params.max = Math.min(max ?: 10, 100)
-                def c = Estoque.createCriteria()
-
-                def results = c.list(params) {
-                    produto {
-                        and {
-                            eq('visivel', true)
-                            order('nome')
-                        }
-                    }
-                }
-
-                [estoqueInstanceList: results, estoqueInstanceTotal: Estoque.count()]
-            }
-
             json{
                 def c = Estoque.createCriteria()
 
@@ -58,8 +47,22 @@ class EstoqueController extends RestfulController {
                 }
                 render results as JSON
             }
+            '*'{
+                params.max = Math.min(max ?: 10, 100)
+                def c = Estoque.createCriteria()
 
+                def results = c.list(params) {
+                    produto {
+                        and {
+                            eq('visivel', true)
+                            order('nome')
+                        }
+                    }
+                }
+                respond results, model: [estoqueInstanceTotal: Estoque.count()]
+            }
         }
+
     }
 
     def entrada(Long id) {

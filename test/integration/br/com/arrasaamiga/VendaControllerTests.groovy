@@ -174,7 +174,7 @@ class VendaControllerTests extends GroovyTestCase {
         // atualizando o nome do cliente
         controller.request.method = 'POST'
         controller.params.id = Venda.first().id
-        controller.marcarComoEntregue()
+        controller.marcarEntregue()
 
         sessionFactory.currentSession.flush()
         sessionFactory.currentSession.clear()
