@@ -47,6 +47,7 @@ class HomeController {
 		def criteria = Produto.createCriteria()
 		def produtos = criteria.listDistinct {
 		    eq("visivel", true)
+            eq("foraDeLinha",false)
 		    order("ordem", "asc")
 		    
 		    if(grupoDeProduto){
@@ -131,6 +132,7 @@ class HomeController {
 		def criteria = Produto.createCriteria()
 		def produtos = criteria.list {
 		    eq("visivel", true)
+            eq("foraDeLinha",false)
 		    order("ordem", "asc")
 		}
 

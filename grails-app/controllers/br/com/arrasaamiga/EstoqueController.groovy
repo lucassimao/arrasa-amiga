@@ -23,13 +23,13 @@ class EstoqueController extends RestfulController {
     def index(int max) {
 
         withFormat {
-            json{
+            json {
                 def c = Estoque.createCriteria()
 
                 def results = c.list() {
 
                     produto {
-                        eq('visivel', true)
+                        eq('foraDeLinha', false)
                         order('nome')
                     }
 
@@ -47,16 +47,14 @@ class EstoqueController extends RestfulController {
                 }
                 render results as JSON
             }
-            '*'{
+            '*' {
                 params.max = Math.min(max ?: 10, 100)
                 def c = Estoque.createCriteria()
 
                 def results = c.list(params) {
                     produto {
-                        and {
-                            eq('visivel', true)
-                            order('nome')
-                        }
+                        eq('foraDeLinha', false)
+                        order('nome')
                     }
                 }
                 respond results, model: [estoqueInstanceTotal: Estoque.count()]

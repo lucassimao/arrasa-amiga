@@ -16,8 +16,10 @@ class Produto {
     int precoAPrazoEmCentavos
 
     int ordem
-    Boolean visivel
     double stars
+
+    boolean foraDeLinha
+    Boolean visivel
 
     Date dateCreated
     Date lastUpdated
