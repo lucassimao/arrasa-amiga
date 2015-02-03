@@ -98,6 +98,7 @@ environments {
         //grails.serverURL = "http://localhost:8080/${appName}"
     }
     production {
+        grails.plugin.console.enabled=true
         grails.logging.jul.usebridge = false
         grails.serverURL = "http://www.arrasaamiga.com.br"
     }
