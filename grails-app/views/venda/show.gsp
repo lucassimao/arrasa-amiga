@@ -238,7 +238,7 @@
     <div class="row-fluid">
 
         <div class="span6">
-            ${vendaInstance.detalhesPagamento}
+            ${vendaInstance.status} - ${vendaInstance.detalhesPagamento}
         </div>
 
     </div>
