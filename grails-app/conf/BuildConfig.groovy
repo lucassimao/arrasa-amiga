@@ -83,12 +83,12 @@ grails.project.dependency.resolution = {
         compile ":browser-detection:0.4.3"
         compile ":quartz:1.0.2"
         compile ":asynchronous-mail:1.1"
+        compile ":console:1.5.3"
         //compile ":mail:1.0.6"
 
         // plugins needed at runtime but not for compilation
         runtime ":hibernate4:4.3.5.5"
         runtime ":database-migration:1.4.0"
-        runtime ":console:1.3"
         runtime ":jquery:1.11.1"
 
 
