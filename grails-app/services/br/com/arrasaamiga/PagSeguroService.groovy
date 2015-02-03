@@ -139,7 +139,7 @@ class PagSeguroService {
         venda.itensVenda.each { item ->
             Double valorUnitario = item.precoAPrazoEmReais
 
-            paymentRequest.addItem( item.id.toString(), item.produto.nome, item.quantidade,
+            paymentRequest.addItem( item.id.toString(), item.produto.nome + "-" + item.unidade, item.quantidade,
                                     new BigDecimal(formatter.format(valorUnitario)),   null,   null )
         }
 
