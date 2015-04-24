@@ -77,7 +77,7 @@ class PagSeguroControllerAprovacaoSpec extends Specification {
             def mockEmailService = Mock(EmailService)
 
             def shoppingCartController = new ShoppingCartController()
-            shoppingCartController.emailService = mockEmailService
+            shoppingCartController.vendaService.emailService = mockEmailService
 
             def pagSeguroServiceSpy = Spy(PagSeguroService)
 
@@ -112,7 +112,7 @@ class PagSeguroControllerAprovacaoSpec extends Specification {
             shoppingCartController.response.reset()
 
         when: " venda vai ser fechada "
-            shoppingCartController.params.dataEntrega = shoppingCartController.proximosDiasDeEntrega[0].time
+            shoppingCartController.params.dataEntrega = shoppingCartController.vendaService.proximosDiasDeEntrega[0].time
             shoppingCartController.params.formaPagamento = FormaPagamento.PagSeguro.name()
             shoppingCartController.fecharVenda()
 

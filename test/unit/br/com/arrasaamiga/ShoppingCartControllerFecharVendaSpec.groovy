@@ -1,13 +1,9 @@
 package br.com.arrasaamiga
 
-import grails.plugin.mail.MailService
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
-import grails.test.mixin.TestMixin
-import grails.test.mixin.support.GrailsUnitTestMixin
 import org.codehaus.groovy.grails.commons.InstanceFactoryBean
-import org.hibernate.validator.constraints.Email
 import spock.lang.Specification
 
 /**
@@ -25,8 +21,12 @@ class ShoppingCartControllerFecharVendaSpec extends Specification {
         emailServiceMock.demandExplicit.notificarAdministradores(1){->  }
         emailServiceMock.demandExplicit.notificarCliente(1){->  }
 
+        def vendaServiceMock = mockFor(VendaService)
+        vendaServiceMock.demandExplicit.salvarVenda(1){->  }
+
         springSecurityService(InstanceFactoryBean, springSecurityServiceMock.createMock(), SpringSecurityService)
         emailService(InstanceFactoryBean, emailServiceMock.createMock(), EmailService)
+        vendaService(InstanceFactoryBean, vendaServiceMock.createMock(),VendaService)
     }
 
     def setup() {
@@ -68,7 +68,6 @@ class ShoppingCartControllerFecharVendaSpec extends Specification {
         given:
             String menssagemTeste = '<< Carrinho Vazio >>'
             messageSource.addMessage 'shoppingCart.empty', request.locale, menssagemTeste
-            controller.springSecurityService = grailsApplication.mainContext.getBean('springSecurityService')
         when:
             controller.fecharVenda()
 
@@ -82,7 +81,7 @@ class ShoppingCartControllerFecharVendaSpec extends Specification {
         given:
             String menssagemTeste = '<< DATA NAO INFORMADA >>'
             messageSource.addMessage 'shoppingCart.dataEntrega.invalida', request.locale, menssagemTeste
-            controller.springSecurityService = grailsApplication.mainContext.getBean('springSecurityService')
+            controller.vendaService = Mock(VendaService)
         when:
             request.method = 'POST'
             params.id = 1
@@ -111,7 +110,7 @@ class ShoppingCartControllerFecharVendaSpec extends Specification {
         given:
             String menssagemTeste = '<< DATA NO FORMATO INVALIDO >>'
             messageSource.addMessage 'shoppingCart.dataEntrega.invalida', request.locale, menssagemTeste
-            controller.springSecurityService = grailsApplication.mainContext.getBean('springSecurityService')
+            controller.vendaService = Mock(VendaService)
         when:
             request.method = 'POST'
             params.id = 1
@@ -146,6 +145,7 @@ class ShoppingCartControllerFecharVendaSpec extends Specification {
             springSecurityServiceMock.demandExplicit.getCurrentUser(1..10){-> return Usuario.load(2) }
 
             controller.springSecurityService = springSecurityServiceMock.createMock()
+            controller.vendaService = Mock(VendaService)
         when:
             request.method = 'POST'
             params.id = 1
@@ -177,7 +177,7 @@ class ShoppingCartControllerFecharVendaSpec extends Specification {
         given:
             String menssagemTeste = '<< DATA NÃO FOI ACEITA >>'
             messageSource.addMessage 'shoppingCart.dataEntrega.naoPermitida', request.locale, menssagemTeste
-            controller.springSecurityService = grailsApplication.mainContext.getBean('springSecurityService')
+            controller.vendaService = Mock(VendaService)
         when:
             request.method = 'POST'
             params.id = 1
@@ -210,7 +210,12 @@ class ShoppingCartControllerFecharVendaSpec extends Specification {
 
         given:
             controller.springSecurityService = grailsApplication.mainContext.getBean('springSecurityService')
-            controller.emailService = Mock(EmailService)
+            def vendaServiceMock = Mock(VendaService)
+            vendaServiceMock.isDataEntregaValida(_) >> true
+
+            final arraylistOfDates = [new Date()]
+            vendaServiceMock.getProximosDiasDeEntrega() >> arraylistOfDates
+            controller.vendaService= vendaServiceMock
 
         expect:
             Estoque.findByProdutoAndUnidade(Produto.load(1L),'un1').quantidade == 10
@@ -229,21 +234,26 @@ class ShoppingCartControllerFecharVendaSpec extends Specification {
             flash.clear()
 
         when:
-            params.dataEntrega = controller.proximosDiasDeEntrega[0].time
+            params.dataEntrega = arraylistOfDates[0].time
             params.formaPagamento = FormaPagamento.AVista.name()
             controller.fecharVenda()
 
         then:
-            response.redirectedUrl == '/venda/show/' + Venda.first().id
-            1 * controller.emailService.notificarAdministradores(_)
-            1 * controller.emailService.notificarCliente(_)
+            response.redirectedUrl.endsWith('/venda/show')
+            1 * vendaServiceMock.salvarVenda(_)
 
     }
 
     void "testar fechar venda atraves do pagseguro"() {
         given:
             controller.springSecurityService = grailsApplication.mainContext.getBean('springSecurityService')
-            controller.emailService = Mock(EmailService)
+
+            def vendaServiceMock = Mock(VendaService)
+            vendaServiceMock.isDataEntregaValida(_) >> true
+
+            final arraylistOfDates = [new Date()]
+            vendaServiceMock.getProximosDiasDeEntrega() >> arraylistOfDates
+            controller.vendaService= vendaServiceMock
 
             def paymentURLDeTeste = new URL("http://www.site.qualquer.de.teste")
 
@@ -269,13 +279,12 @@ class ShoppingCartControllerFecharVendaSpec extends Specification {
             flash.clear()
 
         when:
-            params.dataEntrega = controller.proximosDiasDeEntrega[0].time
+            params.dataEntrega = arraylistOfDates[0].time
             params.formaPagamento = FormaPagamento.PagSeguro.name()
             controller.fecharVenda()
 
         then:
             response.redirectedUrl == paymentURLDeTeste.toString()
-            1 * controller.emailService.notificarAdministradores(_)
-            0 * controller.emailService.notificarCliente(_)
+            1 * vendaServiceMock.salvarVenda(_)
     }
 }

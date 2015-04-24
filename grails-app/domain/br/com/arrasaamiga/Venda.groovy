@@ -53,21 +53,13 @@ class Venda {
     def afterInsert() {
 
         log.debug("Venda #${this.id} removendo itens ")
-
-        Estoque.withNewSession { session ->
-            Estoque.removerItens(this.itensVenda)
-        }
-
+        Estoque.removerItens(this.itensVenda)
     }
 
     def afterDelete() {
 
-        Estoque.withNewSession { session ->
-
-            log.debug("Venda #${this.id} repondo itens ")
-            Estoque.reporItens(this.itensVenda)
-        }
-
+        log.debug("Venda #${this.id} repondo itens ")
+        Estoque.reporItens(this.itensVenda)
 
     }
 

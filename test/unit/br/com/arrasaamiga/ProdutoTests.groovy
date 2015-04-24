@@ -101,6 +101,7 @@ class ProdutoTests {
 
         }
 
+        // produto recebe nova unidade mas o sistema nao adiciona uma entrada de estoque pra esssa nova unidade
         shouldFail(IllegalStateException){
 
             p1.addToUnidades('unidade-xpto')
@@ -112,6 +113,7 @@ class ProdutoTests {
             
         }
 
+        // nova entrada de estoque é adicionada
         def e2 = new Estoque(produto: p1, unidade: 'unidade-xpto', quantidade:100)
         assertNotNull e2.save(failOnError:true)
 

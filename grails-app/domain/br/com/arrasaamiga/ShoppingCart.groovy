@@ -45,6 +45,14 @@ class ShoppingCart {
 
     }
 
+    public void remove(Produto produto, String unidade){
+        def itemVenda = this.itens.find { itemVenda ->
+            itemVenda.produto.id == produto.id && itemVenda.unidade.equals(unidade)
+        }
+
+        if(itemVenda) this.removeFromItens(itemVenda)
+
+    }
 
     public void remove(Produto produto, String unidade, Integer quantidade) {
 

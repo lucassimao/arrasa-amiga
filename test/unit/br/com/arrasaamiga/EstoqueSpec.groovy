@@ -1,5 +1,6 @@
 package br.com.arrasaamiga
 
+import br.com.arrasaamiga.excecoes.EstoqueException
 import grails.test.mixin.TestMixin
 import grails.test.mixin.domain.DomainClassUnitTestMixin
 import spock.lang.Shared
@@ -82,7 +83,7 @@ class EstoqueSpec extends Specification {
             Estoque.removerItens([item1] as Set)
 
         then:
-            thrown(IllegalArgumentException)
+            thrown(EstoqueException)
             def e1 = Estoque.findByProdutoAndUnidade(Produto.load(1), 'un-1a')
             10 == e1.quantidade
     }
@@ -95,7 +96,7 @@ class EstoqueSpec extends Specification {
             Estoque.removerItens([item1] as Set)
 
         then:
-            thrown(IllegalArgumentException)
+            thrown(EstoqueException)
     }
 
     void "testando reposição de itens que nao existem no estoque"() {
@@ -106,6 +107,6 @@ class EstoqueSpec extends Specification {
             Estoque.reporItens([item1] as Set)
 
         then:
-            thrown(IllegalArgumentException)
+            thrown(EstoqueException)
     }
 }

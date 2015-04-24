@@ -78,7 +78,7 @@ class PagSeguroControllerCancelamentoSpec extends Specification {
             def mockEmailService = Mock(EmailService)
 
             def shoppingCartController = new ShoppingCartController()
-            shoppingCartController.emailService = mockEmailService
+            shoppingCartController.vendaService.emailService = mockEmailService
 
             def pagSeguroServiceSpy = Spy(PagSeguroService)
 
@@ -113,7 +113,7 @@ class PagSeguroControllerCancelamentoSpec extends Specification {
             shoppingCartController.response.reset()
 
         when: " venda vai ser fechada "
-            shoppingCartController.params.dataEntrega = shoppingCartController.proximosDiasDeEntrega[0].time
+            shoppingCartController.params.dataEntrega = shoppingCartController.vendaService.proximosDiasDeEntrega[0].time
             shoppingCartController.params.formaPagamento = FormaPagamento.PagSeguro.name()
             shoppingCartController.fecharVenda()
 
@@ -135,7 +135,7 @@ class PagSeguroControllerCancelamentoSpec extends Specification {
 
             assertNotNull Venda.first().itensVenda.find{item-> item.unidade == 'un' && item.produto.id == produto1.id}
 
-            // garantindo que os administradores sao avisados quando o cliente é redirecionado para o pagseguro
+            // garantindo que somente os administradores sao avisados quando o cliente é redirecionado para o pagseguro
             1 * mockEmailService.notificarAdministradores(_)
             0 * mockEmailService.notificarCliente(_)
 

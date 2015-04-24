@@ -64,7 +64,14 @@ class ShoppingCartControllerCheckoutSpec extends Specification {
 
     void "testar checkout com itens no carrinho"() {
         given:
+            def proximosDiasDeEntrega = [new Date()]
             controller.springSecurityService = grailsApplication.mainContext.getBean('springSecurityService')
+
+            def mockService = Mock(VendaService)
+            mockService.getProximosDiasDeEntrega() >> proximosDiasDeEntrega
+
+            controller.vendaService = mockService
+
         when:
             request.method = 'POST'
             params.id = 1
@@ -96,6 +103,7 @@ class ShoppingCartControllerCheckoutSpec extends Specification {
             assertEquals 3, session.shoppingCart.getQuantidade(Produto.load(1L),'un1')
             assertEquals 2, session.shoppingCart.getQuantidade(Produto.load(2L),'un2-b')
             assertNotNull(model.diasDeEntrega)
+            assertEquals proximosDiasDeEntrega, model.diasDeEntrega
 
 
 

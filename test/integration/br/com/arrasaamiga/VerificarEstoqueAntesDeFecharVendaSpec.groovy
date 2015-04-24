@@ -1,18 +1,18 @@
 package br.com.arrasaamiga
 
+import br.com.arrasaamiga.excecoes.EstoqueException
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.test.spock.IntegrationSpec
-import org.springframework.transaction.TransactionDefinition
-import org.springframework.transaction.TransactionStatus
 
+import static org.junit.Assert.assertEquals
+import static org.junit.Assert.assertNotNull
 import static org.junit.Assert.assertNotNull
 import static org.junit.Assert.assertNull
 
 /**
- *
+ * Created by lsimaocosta on 11/05/15.
  */
-class FecharVendaSpec extends IntegrationSpec {
-
+class VerificarEstoqueAntesDeFecharVendaSpec extends IntegrationSpec {
 
     def sessionFactory
 
@@ -44,11 +44,11 @@ class FecharVendaSpec extends IntegrationSpec {
         assert 1 == Cliente.count()
 
         def produto1 = new Produto(descricao: 'Produto 1', nome: 'P1', tipoUnitario: 'un', unidades: ['un'] as List,
-                                        precoAPrazoEmCentavos: 1100,precoAVistaEmCentavos: 1000)
+                precoAPrazoEmCentavos: 1100,precoAVistaEmCentavos: 1000)
         produto1.save(flush: true)
 
         def produto2 = new Produto(descricao: 'Produto 2', nome: 'P2', tipoUnitario: 'un', unidades: ['un'] as List,
-                                    precoAPrazoEmCentavos: 2200,precoAVistaEmCentavos: 2000)
+                precoAPrazoEmCentavos: 2200,precoAVistaEmCentavos: 2000)
         produto2.save(flush: true)
 
         assert 2 == Produto.count()
@@ -59,8 +59,12 @@ class FecharVendaSpec extends IntegrationSpec {
         assert 2 == Estoque.count()
     }
 
-
-    void "test fechar venda a vista "() {
+    /**
+     * este teste garante que caso um cliente inicie um pedido e nao finalize,
+     * caso um outro cliente venha e esgote o stoque do mesmo item, o 1º cliente
+     * não consegue mais fechar a compra devido a indisponibilidade do item
+     */
+    void "test cliente adiciona itens no carrinho, demora pra finalizar e outro cliente compra antes"(){
         given:
             def produto1 = Produto.findByNome('P1')
             def produto2 = Produto.findByNome('P2')
@@ -76,22 +80,22 @@ class FecharVendaSpec extends IntegrationSpec {
             ItemVenda.count() == 0
             Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade == 10
 
-        when:
+        when: "adicionando 5 unid do produto 1"
 
             controller.request.method = 'POST'
 
             controller.params.id = produto1.id
             controller.params.unidade = 'un'
-            controller.params.quantidade = 3
+            controller.params.quantidade = 5
 
             controller.add()
 
-            then:
-            controller.session.shoppingCart.getQuantidade(produto1, 'un') == 3
+        then:
+            controller.session.shoppingCart.getQuantidade(produto1, 'un') == 5
             controller.response.reset()
 
 
-        when: "adicionando produto 2"
+        when: "adicionando 4 unidades do produto 2"
 
             controller.request.method = 'POST'
 
@@ -101,105 +105,75 @@ class FecharVendaSpec extends IntegrationSpec {
 
             controller.add()
 
-            then:
-            controller.session.shoppingCart.getQuantidade(produto1, 'un') == 3
+        then:
+            controller.session.shoppingCart.getQuantidade(produto1, 'un') == 5
             controller.session.shoppingCart.getQuantidade(produto2, 'un') == 4
+
+            // venda ao cliente 1 ainda nao finalizada
+            10 == Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade
+            5 == Estoque.findByProdutoAndUnidade(produto2, 'un').quantidade
+
             controller.response.reset()
 
+        when: " um 2º cliente vem e finaliza um pedido com todas as unidade do Produto 11disponiveis em estoque"
+            def e1 = Estoque.findByProduto(produto1)
+            e1.quantidade = 0
+            e1.save(flush:true)
 
-        when:
+        then:
+            Estoque.findByProduto(produto1).quantidade==0
+
+        when: " 1º cliente finalmente vem finalizar o pedido"
             controller.params.dataEntrega = controller.vendaService.proximosDiasDeEntrega[0].time
             controller.params.formaPagamento = FormaPagamento.AVista.name()
 
             controller.fecharVenda()
+            sessionFactory.currentSession.clear()
 
         then:
-            Venda.count() == 1
-            ItemVenda.count() == 2
+            controller.modelAndView.viewName.endsWith("/checkout")
+            controller.flash.message.contains(produto1.nome) // garantido que a msg exibira o produto em falta no estoque
 
-            def venda = Venda.first()
+            assertEquals 0,Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade;
+            assertEquals 5,  Estoque.findByProdutoAndUnidade(produto2, 'un').quantidade;
 
-            controller.response.redirectedUrl == "/venda/show/${venda.id}"
+            0 * mockEmailService.notificarAdministradores(_)
+            0 * mockEmailService.notificarCliente(_)
 
-            Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade == 7
-            Estoque.findByProdutoAndUnidade(produto2, 'un').quantidade == 1
+            assertNotNull controller.session.shoppingCart
+            controller.session.shoppingCart.getQuantidade(produto1, 'un') == 0
+            controller.session.shoppingCart.getQuantidade(produto2, 'un') == 4
 
-            venda.formaPagamento == FormaPagamento.AVista
-            venda.status == StatusVenda.AguardandoPagamento
+        when: " um 3º cliente vem e finaliza um pedido com todas as unidade do Produto 2 disponiveis em estoque"
 
-            assertNotNull Venda.first().itensVenda.find{item-> item.unidade == 'un' && item.produto.id == produto1.id}
-            assertNotNull Venda.first().itensVenda.find{item-> item.unidade == 'un' && item.produto.id == produto2.id}
-
-            1 * mockEmailService.notificarAdministradores(_)
-            1 * mockEmailService.notificarCliente(_)
-
-            assertNull controller.session.shoppingCart
-
-
-    }
-
-
-    void "test fechar venda pagseguro "() {
-        given:
-            def produto1 = Produto.findByNome('P1')
-            SpringSecurityUtils.reauthenticate 'cliente1@gmail.com', '12345'
-
-            def mockEmailService = Mock(EmailService)
-
-            def controller = new ShoppingCartController()
-            controller.vendaService.emailService = mockEmailService
-
-        expect:
-            Venda.count() == 0
-            ItemVenda.count() == 0
-            Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade == 10
-
-        when:
-            controller.request.method = 'POST'
-
-            controller.params.id = produto1.id
-            controller.params.unidade = 'un'
-            controller.params.quantidade = 3
-
-            controller.add()
+            def e2 = Estoque.findByProduto(produto2);
+            e2.quantidade = 0;
+            e2.save(flush: true);
 
         then:
-            controller.session.shoppingCart.getQuantidade(produto1, 'un') == 3
-            controller.response.reset()
+            Estoque.findByProduto(produto2).quantidade==0
 
-
-        when:
+        when: " 1º cliente tenta comprar somente o 2º produto, mudando forma de pagamento, mas tb n consegue "
             controller.params.dataEntrega = controller.vendaService.proximosDiasDeEntrega[0].time
             controller.params.formaPagamento = FormaPagamento.PagSeguro.name()
 
             controller.fecharVenda()
-
-            sessionFactory.currentSession.flush()
             sessionFactory.currentSession.clear()
 
         then:
-            controller.response.redirectedUrl.startsWith('https://pagseguro.uol.com.br/v2/checkout/payment.html?code=')
+            controller.modelAndView.viewName.endsWith("/checkout")
+            controller.flash.message.contains(produto2.nome) // garantido que a msg exibira o produto em falta no estoque
 
-            Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade == 7
-            Venda.count() == 1
-            ItemVenda.count() == 1
+            Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade == 0;
+            Estoque.findByProdutoAndUnidade(produto2, 'un').quantidade == 0;
 
-            def venda = Venda.first()
-
-            venda.formaPagamento == FormaPagamento.PagSeguro
-            venda.status == StatusVenda.AguardandoPagamento
-
-            assertNotNull Venda.first().itensVenda.find{item-> item.unidade == 'un' && item.produto.id == produto1.id}
-
-            // garantindo que o cliente e a loja so sao avisados quando o cliente efetivamente concui a compra
-            1 * mockEmailService.notificarAdministradores(_)
+            0 * mockEmailService.notificarAdministradores(_)
             0 * mockEmailService.notificarCliente(_)
 
-            // o carrinho nao eh esvaziado, p/ caso nao dê certo da primeira vez e assim o cliente pode tentar novamente
             assertNotNull controller.session.shoppingCart
+            controller.session.shoppingCart.getQuantidade(produto1, 'un') == 0
+            controller.session.shoppingCart.getQuantidade(produto2, 'un') == 0
 
 
     }
-
-
 }

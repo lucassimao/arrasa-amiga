@@ -62,7 +62,7 @@ class ProdutoControllerSpec extends IntegrationSpec {
             assertEquals updatedProduto.id, produto.id
 
 
-        def estoques = Estoque.findAllByProduto(updatedProduto)
+            def estoques = Estoque.findAllByProduto(updatedProduto)
             assertEquals  novasUnidades.size() , estoques.size()
 
             unidadesAnteriores.each{unidade->

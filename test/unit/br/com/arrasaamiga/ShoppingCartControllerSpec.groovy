@@ -25,7 +25,7 @@ class ShoppingCartControllerSpec extends Specification {
     void "teste adicionar produto inexistente"(){
         when:
             request.method = 'POST'
-            params.id = 1000
+            params.id = -1000
             params.unidade = 'un1'
             params.quantidade = 5
             controller.add()

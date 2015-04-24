@@ -1,5 +1,6 @@
 package br.com.arrasaamiga
 
+import br.com.arrasaamiga.excecoes.EstoqueException
 import org.apache.commons.logging.LogFactory
 
 class Estoque {
@@ -15,6 +16,7 @@ class Estoque {
 
     static mapping = {
         entradas cascade: 'all-delete-orphan'
+        unidade sqlType: 'varchar(200) BINARY' //TODO dar um jeito de implementar comparação case sensitive das unidades
     }
 
     static constraints = {
@@ -33,14 +35,14 @@ class Estoque {
             def estoque = Estoque.findByProdutoAndUnidade(item.produto, item.unidade)
 
             if (estoque == null)
-                throw new IllegalArgumentException("Estoque inexistente para produto ${item.produto} e unidade ${item.unidade} ")
+                throw new EstoqueException("Estoque inexistente para produto ${item.produto} e unidade ${item.unidade} ",item.produto,item.unidade)
 
             if (estoque.quantidade < item.quantidade)
-                throw new IllegalArgumentException("Tentativa de retirar ${item.quantidade} itens, mas so existe ${estoque.quantidade} ")
+                throw new EstoqueException("Estoque insuficiente: há apenas ${estoque.quantidade} ${item.produto.nome}(${item.unidade}) em estoque ",item.produto,item.unidade)
 
             vendaLogger.debug "Removendo ${item.quantidade} de ${item.produto.nome} - ${item.unidade} ... "
             estoque.quantidade -= item.quantidade
-            estoque.save(flush: true)
+            estoque.save()
         }
     }
 
@@ -48,16 +50,16 @@ class Estoque {
 
         def vendaLogger = LogFactory.getLog('grails.app.domain.br.com.arrasaamiga.Venda')
 
-        itens.each { item ->
+        itens.each {ItemVenda item ->
 
             def estoque = Estoque.findByProdutoAndUnidade(item.produto, item.unidade)
 
             if (estoque == null)
-                throw new IllegalArgumentException("Estoque inexistente para produto ${item.produto} e unidade ${item.unidade} ")
+                throw new EstoqueException("Estoque inexistente para produto ${item.produto} e unidade ${item.unidade} ",item.produto,item.unidade)
 
             vendaLogger.debug "Repondo ${item.quantidade} de ${item.produto.nome} - ${item.unidade} ... "
             estoque.quantidade += item.quantidade
-            estoque.save(flush: true)
+            estoque.save()
         }
     }
 
