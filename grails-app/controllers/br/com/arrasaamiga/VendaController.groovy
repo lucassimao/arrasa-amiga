@@ -26,7 +26,7 @@ class VendaController extends RestfulController {
             flash.message = 'Código de rastreio atualizado com sucesso'
         }
 
-        redirect(action: 'list', params: [offset: params.offset, max: params.max])
+        redirect(action: 'index', params: [offset: params.offset, max: params.max])
 
     }
 
