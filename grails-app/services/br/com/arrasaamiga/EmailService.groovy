@@ -7,7 +7,9 @@ class EmailService {
     boolean transactional = false
 
     def mailService
+    def correiosService
     PageRenderer groovyPageRenderer
+
     def administradores = ['lsimaocosta@gmail.com','arrasaamiga@gmail.com'].toArray()
 
     
@@ -68,6 +70,20 @@ class EmailService {
             subject " Nova mensagem para Arrasa Amiga ! "
             html "<body> <p> De: ${nome} </p><p> Email: ${email}</p><p> Telefone: ${telefone}</p> <p>Mensagem: ${msg}</p> </body>"
 
+        }
+    }
+
+    def notificarCodigoDeRastreio(Venda venda){
+        mailService.sendMail {
+
+            to venda.cliente.email
+            async true
+            subject "Arrasa Amiga - Seu pedido #${venda.id} foi enviado!"
+            html '<body> ' +
+                    '<p> ${venda.cliente.nome}, </p> ' +
+                    "<p> seu pedido #${venda.id} foi enviado através dos correios. O código de rastreio do seu pedido é ${venda.codigoRastreio.toUpperCase()}. </p>" +
+                    "<p>  <a href='${correiosService.getTrackingURL(venda.codigoRastreio)}' target='_blank'> Click aqui para acompanhar o andamento da sua entrega </a>  </p> " +
+                    "</body>"
         }
     }
 
