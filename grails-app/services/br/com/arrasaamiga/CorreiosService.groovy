@@ -18,6 +18,8 @@ class CorreiosService {
     public Double calcularFrete(String cepDestino,ServicoCorreio servico){
 
     	def http = new HTTPBuilder( "http://ws.correios.com.br" )
+		int valorEmbalagem = 3.5
+
     	cepDestino = cepDestino?.replace('-','')
 
     	try{
@@ -38,7 +40,9 @@ class CorreiosService {
 					if (!xml.cServico.Erro.text()?.equals('0'))
 						throw new Exception(xml.cServico.MsgErro.text())
 
-					return new BigDecimal(xml.cServico.Valor.toString().replace(',','.')).doubleValue()
+
+                    def valorFrete = new BigDecimal(xml.cServico.Valor.toString().replace(',', '.')).doubleValue()
+                    return valorFrete+valorEmbalagem
 				}
 			 
 			}
@@ -48,9 +52,9 @@ class CorreiosService {
 
 			// caso haja algum erro durante a comunicaçao com os correios, devolve um valor padrao 
 			if ( servico.equals(ServicoCorreio.PAC) )
-				return 20.15
+				return 21.15 + valorEmbalagem
 			else
-				return 35.55
+				return 33.55 + valorEmbalagem
 		}
 
 
