@@ -106,22 +106,10 @@ class ShoppingCartController {
         def venda = new Venda()
         venda.carrinho = getShoppingCart()
         venda.cliente = Cliente.findByUsuario(springSecurityService.currentUser)
-        venda.formaPagamento = FormaPagamento.valueOf(params.formaPagamento)
-
-        println "** recalcular totais **"
-        println params
-        println springSecurityService.currentUser
-        println "forma pagamento: " + params.formaPagamento
-        println "servico correio: " + params.servicoCorreio
-        println "isDentroDaAreaDeEntregaRapida: " + venda.cliente.isDentroDaAreaDeEntregaRapida()
+        venda.formaPagamento = (params.formaPagamento)?FormaPagamento.valueOf(params.formaPagamento):FormaPagamento.PagSeguro
 
         if (!venda.cliente.isDentroDaAreaDeEntregaRapida()) {
-            if (params.servicoCorreio)
-                venda.servicoCorreio = ServicoCorreio.valueOf(params.servicoCorreio)
-            else {
-                println "** serviço de correio nao foi citado! **"
-                venda.servicoCorreio = ServicoCorreio.PAC
-            }
+            venda.servicoCorreio = (params.servicoCorreio)?ServicoCorreio.valueOf(params.servicoCorreio):ServicoCorreio.PAC
         }
 
         render(template: 'totalVendaDetalhes', model: [venda: venda])
