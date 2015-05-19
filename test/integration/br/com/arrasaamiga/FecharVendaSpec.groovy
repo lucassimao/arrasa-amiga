@@ -40,7 +40,7 @@ class FecharVendaSpec extends IntegrationSpec {
                 accountExpired: false, accountLocked: false, passwordExpired: false).save(flush: true)
         assert 1 == Usuario.count()
 
-        def cliente = new Cliente(nome: 'Cliente teste', usuario: user1, endereco: new Endereco(cidade: Cidade.teresina, uf: Uf.piaui)).save(flush: true)
+        def cliente = new Cliente(nome: 'Cliente teste', usuario: user1, endereco: new Endereco(cidade: Cidade.teresina, uf: Uf.piaui),telefone: '98182840',dddTelefone: '22').save(flush: true)
         assert 1 == Cliente.count()
 
         def produto1 = new Produto(descricao: 'Produto 1', nome: 'P1', tipoUnitario: 'un', unidades: ['un'] as List,

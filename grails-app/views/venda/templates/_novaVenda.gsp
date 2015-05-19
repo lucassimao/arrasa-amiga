@@ -123,7 +123,13 @@
 
                 <tr>
                     <td style="text-align:left !important;">
-                        <g:img absolute="true" dir="images/produtos" style="float:left;" file="${produto.fotoMiniatura}"/>
+                        <g:if env="production">
+                            <g:img absolute="true" dir="images/produtos" style="float:left;" file="${produto.fotoMiniatura}"/>
+                        </g:if>
+                        <g:else>
+                            <g:img base="http://www.arrasaamiga.com.br" dir="images/produtos" style="float:left;" file="${produto.fotoMiniatura}"/>
+                        </g:else>
+
 
                         <div>
                             <label>${produto.nome}</label>

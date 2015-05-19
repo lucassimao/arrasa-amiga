@@ -1,8 +1,6 @@
 package br.com.arrasaamiga
 
 import br.com.arrasaamiga.excecoes.EstoqueException
-import br.com.uol.pagseguro.domain.Error
-import br.com.uol.pagseguro.exception.PagSeguroServiceException
 import grails.transaction.Transactional
 import org.apache.commons.logging.LogFactory
 
@@ -10,10 +8,9 @@ import org.apache.commons.logging.LogFactory
 class VendaService {
 
     def emailService
-    def pagSeguroService
     def vendaLogger = LogFactory.getLog('grails.app.domain.br.com.arrasaamiga.Venda')
 
-    def salvarVenda(Venda venda) throws EstoqueException, PagSeguroServiceException, Exception {
+    def salvarVenda(Venda venda) throws EstoqueException, Exception {
 
         def vendaLogger = LogFactory.getLog('grails.app.domain.br.com.arrasaamiga.Venda')
 
@@ -25,20 +22,6 @@ class VendaService {
             if (venda.formaPagamento.equals(FormaPagamento.AVista)) {
                 emailService.notificarCliente(venda)
             }
-
-        } catch (PagSeguroServiceException e) {
-
-            vendaLogger.debug "Erro ao tentar ir para o pagseguro : cliente ${venda.cliente.id} "
-            Iterator itr = e.getErrorList().iterator();
-
-            while (itr.hasNext()) {
-                Error error = (Error) itr.next();
-                vendaLogger.debug "Código do erro: ${error.getCode()}";
-                vendaLogger.debug "Msg do erro: ${error.getMessage()}";
-            }
-
-            venda.delete(flush: true) // não deu pra mandar pro pag seguro ... exclui venda
-            throw e
 
         } catch (EstoqueException e) {
             vendaLogger.error("Erro ao salvar venda pelo pagseguro", e)
@@ -112,7 +95,7 @@ class VendaService {
         return diasDeEntraga.sort()
     }
 
-    def  isDataEntregaValida(Date dataEscolhida) {
+    def isDataEntregaValida(Date dataEscolhida) {
         List datasDeEntrega = getProximosDiasDeEntrega()
 
         def calDiaEntrega = Calendar.getInstance()

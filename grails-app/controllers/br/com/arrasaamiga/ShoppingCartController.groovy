@@ -1,6 +1,7 @@
 package br.com.arrasaamiga
 
 import br.com.arrasaamiga.excecoes.EstoqueException
+import br.com.uol.pagseguro.domain.Error
 import br.com.uol.pagseguro.exception.PagSeguroServiceException
 import grails.plugin.springsecurity.annotation.Secured
 import org.apache.commons.logging.LogFactory
@@ -206,28 +207,40 @@ class ShoppingCartController {
             switch (venda.formaPagamento) {
                 case FormaPagamento.AVista:
                     session.shoppingCart = null
-
                     redirect(action: 'show', controller: 'venda', id: venda.id)
-                    break;
+                    break
+
                 case FormaPagamento.PagSeguro:
                     def paymentURL = pagSeguroService.getPaymentURL(venda)
-                    vendaLogger.debug("venda pelo pagseguro #${venda.id} salva e redirecionando para ${paymentURL.toString()} ...")
-
+                    vendaLogger.debug("venda pelo pagseguro #${venda.id} salva e redirecionando para ${paymentURL} ...")
                     redirect(url: paymentURL)
             }
 
         } catch (EstoqueException e) {
+            e.printStackTrace()
             session.shoppingCart.remove(e.produto, e.unidade)
             session.shoppingCart.id = null
             flash.message = e.message
             render(view: "checkout", model: model)
 
-        } catch (PagSeguroServiceException e1) {
+        } catch (PagSeguroServiceException e) {
+            e.printStackTrace()
             flash.message = e.toString()
+
+            vendaLogger.debug "Erro ao tentar ir para o pagseguro : cliente ${venda.cliente.id} "
+            Iterator itr = e.getErrorList().iterator();
+
+            while (itr.hasNext()) {
+                Error error = (Error) itr.next();
+                vendaLogger.debug "Código do erro: ${error.getCode()}";
+                vendaLogger.debug "Msg do erro: ${error.getMessage()}";
+            }
+
             render(view: "checkout", model: model)
 
-        } catch (Exception e3) {
-            session.session.shoppingCart = null
+        } catch (Exception e) {
+            e.printStackTrace()
+            session.shoppingCart = null
             flash.message = e.toString()
             render(view: "checkout", model: model)
         }

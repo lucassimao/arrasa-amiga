@@ -2,7 +2,7 @@ package br.com.arrasaamiga
 
 import br.com.uol.pagseguro.domain.Sender
 import br.com.uol.pagseguro.domain.Transaction
-import br.com.uol.pagseguro.domain.TransactionStatus
+import br.com.uol.pagseguro.enums.TransactionStatus
 import grails.plugin.springsecurity.SpringSecurityUtils
 import spock.lang.Specification
 
@@ -42,8 +42,8 @@ class PagSeguroControllerAprovacaoSpec extends Specification {
 
         assert 2 == Usuario.count()
 
-        new Cliente(nome: 'Cliente de parnaiba', usuario: user1, endereco: new Endereco(cidade: parnaiba, uf: Uf.piaui,cep:'64023620')).save(flush: true)
-        new Cliente(nome: 'Cliente de Teresina', usuario: user2, endereco: new Endereco(cidade: Cidade.teresina, uf: Uf.piaui)).save(flush: true)
+        new Cliente(nome: 'Cliente de parnaiba', usuario: user1,dddTelefone: '86',telefone: '32206522', endereco: new Endereco(cidade: parnaiba, uf: Uf.piaui,cep:'64023620')).save(flush: true)
+        new Cliente(nome: 'Cliente de Teresina', usuario: user2,dddTelefone: '86',telefone: '32206522',endereco: new Endereco(cidade: Cidade.teresina, uf: Uf.piaui)).save(flush: true)
 
         assert 2 == Cliente.count()
 
