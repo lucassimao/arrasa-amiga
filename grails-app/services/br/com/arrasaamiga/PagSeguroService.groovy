@@ -25,18 +25,11 @@ class PagSeguroService {
 
     public Transaction getTransaction(String transacaoPagSeguro) {
 
-        if (transacaoPagSeguro) {
-            try {
-                // Realiza a busca
-                return TransactionSearchService.searchByCode(getAccountCredentials(), transacaoPagSeguro)
-
-            } catch (PagSeguroServiceException e) {
-                e.printStackTrace()
-                return null
-            }
-
-        } else {
-            throw new IllegalArgumentException('Transação inválida')
+        try {
+            return TransactionSearchService.searchByCode(getAccountCredentials(), transacaoPagSeguro)
+        } catch (PagSeguroServiceException e) {
+            e.printStackTrace()
+            return null
         }
     }
 
@@ -71,7 +64,10 @@ class PagSeguroService {
 
     public String getDetalhesPagamento(String transacaoPagSeguro) {
         Transaction transaction = getTransaction(transacaoPagSeguro)
-        return getDetalhesPagamento(transaction)
+        if (transaction)
+            return getDetalhesPagamento(transaction)
+        else
+            return 'Indisponível'
     }
 
 

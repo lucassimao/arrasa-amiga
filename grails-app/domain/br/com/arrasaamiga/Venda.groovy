@@ -116,6 +116,7 @@ class Venda {
         } else {
 
             if (this.transacaoPagSeguro) {
+                log.debug("Consultando detalhes de pagamento da venda ${this.id} com transação ${this.transacaoPagSeguro}")
                 return pagSeguroService.getDetalhesPagamento(transacaoPagSeguro)
             } else {
                 return 'Transação não foi finalizada. Cliente não concluiu compra'
