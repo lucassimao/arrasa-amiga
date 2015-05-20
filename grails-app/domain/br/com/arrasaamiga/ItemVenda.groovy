@@ -43,6 +43,8 @@ class ItemVenda {
     public Double getSubTotalAPrazo(){
         return ( this.precoAPrazoEmCentavos * quantidade ) / 100.0
     }
+
+
 }
 
      

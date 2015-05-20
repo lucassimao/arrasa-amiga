@@ -116,7 +116,7 @@ class PagSeguroService {
         return NotificationService.checkTransaction(getAccountCredentials(), notificationCode)
     }
 
-    public String getPaymentURL(Venda venda) {
+    public String getPaymentURL(Venda venda) throws PagSeguroServiceException {
 
         if (!venda.id)
             throw new IllegalStateException("A venda deve estar salva!")

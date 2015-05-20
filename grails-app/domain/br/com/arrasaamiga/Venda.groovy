@@ -45,22 +45,7 @@ class Venda {
     static mapping = {
         autoTimestamp true
         cliente cascade: 'save-update'
-        carrinho cascade: 'save-update'
-    }
-
-    /* Atualizando o estoque dos itens comprados */
-
-    def afterInsert() {
-
-        log.debug("Venda #${this.id} removendo itens ")
-        Estoque.removerItens(this.itensVenda)
-    }
-
-    def afterDelete() {
-
-        log.debug("Venda #${this.id} repondo itens ")
-        Estoque.reporItens(this.itensVenda)
-
+        carrinho cascade: 'all'
     }
 
     public Double getValorTotal() {

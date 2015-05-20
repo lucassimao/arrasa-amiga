@@ -22,7 +22,7 @@ class ShoppingCartControllerFecharVendaSpec extends Specification {
         emailServiceMock.demandExplicit.notificarCliente(1){->  }
 
         def vendaServiceMock = mockFor(VendaService)
-        vendaServiceMock.demandExplicit.salvarVenda(1){->  }
+        vendaServiceMock.demandExplicit.salvarVenda(1){Venda v,boolean b->  }
 
         springSecurityService(InstanceFactoryBean, springSecurityServiceMock.createMock(), SpringSecurityService)
         emailService(InstanceFactoryBean, emailServiceMock.createMock(), EmailService)

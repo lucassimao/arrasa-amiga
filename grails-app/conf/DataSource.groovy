@@ -17,6 +17,7 @@ environments {
     development {
         dataSource {
             dbCreate = "update"
+            dialect= org.hibernate.dialect.MySQL5InnoDBDialect
             driverClassName = "com.mysql.jdbc.Driver"
             url = "jdbc:mysql://localhost/arrasaamigadev"
             username= 'root'
@@ -36,6 +37,7 @@ environments {
     }
     test {
         dataSource {
+            //slogSql=true
             dialect= org.hibernate.dialect.MySQL5InnoDBDialect
             dbCreate = "update"
             driverClassName = "com.mysql.jdbc.Driver"
@@ -46,6 +48,7 @@ environments {
     }
     production {
         dataSource {
+            dialect= org.hibernate.dialect.MySQL5InnoDBDialect
             dbCreate = "update"
             driverClassName = "com.mysql.jdbc.Driver"
             url = "jdbc:mysql://localhost/arrasaamiga"

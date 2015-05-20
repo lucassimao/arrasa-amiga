@@ -3,36 +3,38 @@ package br.com.arrasaamiga
 import br.com.arrasaamiga.excecoes.EstoqueException
 import grails.transaction.Transactional
 import org.apache.commons.logging.LogFactory
+import org.springframework.transaction.TransactionStatus
+import org.springframework.transaction.annotation.Propagation
 
 @Transactional
 class VendaService {
 
     def emailService
-    def vendaLogger = LogFactory.getLog('grails.app.domain.br.com.arrasaamiga.Venda')
+    def estoqueService
 
-    def salvarVenda(Venda venda) throws EstoqueException, Exception {
+    def salvarVenda(Venda venda, boolean notificarPorEmail = true) {
 
         def vendaLogger = LogFactory.getLog('grails.app.domain.br.com.arrasaamiga.Venda')
 
-        try {
-            venda.save(failOnError: true)
-            vendaLogger.debug("venda pagseguro #${venda.id} salva")
+        venda.save(failOnError: true)
+        vendaLogger.debug("venda #${venda.id} salva! removendo itens do estoque ...")
+
+        estoqueService.removerItens(venda.itensVenda)
+
+        if (notificarPorEmail) {
             emailService.notificarAdministradores(venda)
 
             if (venda.formaPagamento.equals(FormaPagamento.AVista)) {
                 emailService.notificarCliente(venda)
             }
-
-        } catch (EstoqueException e) {
-            vendaLogger.error("Erro ao salvar venda pelo pagseguro", e)
-            throw e
-        } catch (Exception e) {
-
-            vendaLogger.debug "Erro ao tentar ir para o pagseguro : venda #${venda.id} ", e
-            venda.delete(flush: true) // não deu pra mandar pro pag seguro ... exclui venda
-            throw e
         }
 
+    }
+
+    def excluirVenda(Venda venda) {
+        venda.delete()
+        log.debug("Venda #${venda.id} repondo itens ")
+        estoqueService.reporItens(venda.itensVenda)
     }
 
     def getProximosDiasDeEntrega() {
@@ -112,5 +114,7 @@ class VendaService {
 
             return sameDay
         }
+
+        return dataSelecionadaCorretamente
     }
 }

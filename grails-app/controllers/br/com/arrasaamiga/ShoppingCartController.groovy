@@ -4,7 +4,10 @@ import br.com.arrasaamiga.excecoes.EstoqueException
 import br.com.uol.pagseguro.domain.Error
 import br.com.uol.pagseguro.exception.PagSeguroServiceException
 import grails.plugin.springsecurity.annotation.Secured
+import grails.transaction.Transactional
 import org.apache.commons.logging.LogFactory
+import org.springframework.transaction.TransactionDefinition
+import org.springframework.transaction.annotation.Propagation
 
 @Secured(['permitAll'])
 class ShoppingCartController {
@@ -218,33 +221,26 @@ class ShoppingCartController {
 
         } catch (EstoqueException e) {
             e.printStackTrace()
-            session.shoppingCart.remove(e.produto, e.unidade)
-            session.shoppingCart.id = null
+            session.shoppingCart = new ShoppingCart()
+            venda.itensVenda.each {item->
+                    if (!(item.produto.equals(e.produto) && item.unidade.equals(e.unidade)))
+                        session.shoppingCart.add(item.produto, item.unidade, item.quantidade)
+            }
+            venda.carrinho = session.shoppingCart
             flash.message = e.message
             render(view: "checkout", model: model)
 
         } catch (PagSeguroServiceException e) {
             e.printStackTrace()
-            flash.message = e.toString()
-
-            vendaLogger.debug "Erro ao tentar ir para o pagseguro : cliente ${venda.cliente.id} "
-            Iterator itr = e.getErrorList().iterator();
-
-            while (itr.hasNext()) {
-                Error error = (Error) itr.next();
-                vendaLogger.debug "Código do erro: ${error.getCode()}";
-                vendaLogger.debug "Msg do erro: ${error.getMessage()}";
-            }
-
+            flash.message = e.message
+            vendaLogger.debug "Erro ao tentar ir para o pagseguro : cliente ${venda.cliente.id} ", e
             render(view: "checkout", model: model)
 
-        } catch (Exception e) {
+        }catch (Exception e) {
             e.printStackTrace()
-            session.shoppingCart = null
-            flash.message = e.toString()
+            flash.message = e.message
             render(view: "checkout", model: model)
         }
-
 
     }
 

@@ -1,6 +1,7 @@
 package br.com.arrasaamiga
 
 import grails.converters.JSON
+import grails.test.mixin.Mock
 import org.codehaus.groovy.grails.web.mime.MimeType
 
 import javax.servlet.http.HttpServletResponse
@@ -54,7 +55,6 @@ class VendaControllerTests extends GroovyTestCase {
         Date amanha = new Date() + 1
 
         def controller = new VendaController()
-
         controller.request.method = 'POST'
         controller.request.contentType = MimeType.JSON
         //controller.response.format = 'json'
@@ -181,8 +181,48 @@ class VendaControllerTests extends GroovyTestCase {
 
         assertEquals 1, Venda.count()
         assertEquals StatusVenda.Entregue, Venda.first().status
+    }
 
+    void testExcluirVenda() {
+        def produto1 = Produto.findByNome('P1')
+        assertEquals 10, Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade
 
+        def produto2 = Produto.findByNome('P2')
+        assertEquals 5, Estoque.findByProdutoAndUnidade(produto2, 'un').quantidade
+
+        Date amanha = new Date() + 1
+
+        def controller = new VendaController()
+        controller.request.method = 'POST'
+        controller.request.contentType = MimeType.JSON
+        //controller.response.format = 'json'
+        def carrinho = [itens: [[produto: [id: produto1.id], unidade: 'un', quantidade: 2],
+                                [produto: [id: produto2.id], unidade: 'un', quantidade: 4]]]
+
+        controller.request.json = [formaPagamento: 'AVista', status: 'AguardandoPagamento', carrinho: carrinho,
+                                   dataEntrega   : amanha.format("yyyy-MM-dd'T'hh:mm:ss'Z'"), cliente: [nome: 'Cliente Teste']] as JSON
+        controller.save()
+
+        sessionFactory.currentSession.flush()
+        sessionFactory.currentSession.clear()
+
+        assertEquals controller.response.contentAsString, HttpServletResponse.SC_CREATED, controller.response.status
+        assertEquals 1, Venda.count()
+        assertEquals 2, Venda.first().itensVenda.size()
+        assertEquals 8, Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade
+        assertEquals 1, Estoque.findByProdutoAndUnidade(produto2, 'un').quantidade
+
+        controller = new VendaController()
+        controller.request.method = 'DELETE'
+        controller.params.id = Venda.first().id
+        controller.delete()
+
+        sessionFactory.currentSession.flush()
+        sessionFactory.currentSession.clear()
+
+        assertEquals 0, Venda.count()
+        assertEquals 10, Estoque.findByProduto(produto1).quantidade
+        assertEquals 5, Estoque.findByProduto(produto2).quantidade
     }
 
 

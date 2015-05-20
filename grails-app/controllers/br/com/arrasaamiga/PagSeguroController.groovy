@@ -12,6 +12,7 @@ class PagSeguroController {
 
     def pagSeguroService
     def emailService
+    def estoqueService
 
     private static final vendaLogger = LogFactory.getLog('grails.app.domain.br.com.arrasaamiga.Venda')
 
@@ -90,7 +91,7 @@ class PagSeguroController {
             case StatusVenda.Cancelada:
 
                 vendaLogger.debug "***** notificacoes - cancelando venda ${venda.id}"
-                Estoque.reporItens(venda.itensVenda)
+                estoqueService.reporItens(venda.itensVenda)
                 emailService.notificarCancelamento(venda)
                 break
 

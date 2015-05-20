@@ -1,13 +1,10 @@
 package br.com.arrasaamiga
 
-import br.com.arrasaamiga.excecoes.EstoqueException
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.test.spock.IntegrationSpec
 
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertNotNull
-import static org.junit.Assert.assertNotNull
-import static org.junit.Assert.assertNull
 
 /**
  * Created by lsimaocosta on 11/05/15.
@@ -16,6 +13,7 @@ class VerificarEstoqueAntesDeFecharVendaSpec extends IntegrationSpec {
 
     def sessionFactory
 
+    static transactional=false
 
     def setup() {
 
@@ -79,6 +77,7 @@ class VerificarEstoqueAntesDeFecharVendaSpec extends IntegrationSpec {
             Venda.count() == 0
             ItemVenda.count() == 0
             Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade == 10
+            Estoque.findByProdutoAndUnidade(produto2, 'un').quantidade == 5
 
         when: "adicionando 5 unid do produto 1"
 
@@ -109,13 +108,13 @@ class VerificarEstoqueAntesDeFecharVendaSpec extends IntegrationSpec {
             controller.session.shoppingCart.getQuantidade(produto1, 'un') == 5
             controller.session.shoppingCart.getQuantidade(produto2, 'un') == 4
 
-            // venda ao cliente 1 ainda nao finalizada
+            // produtos ainda estao em estoque pq a venda ao cliente 1 ainda nao finalizada
             10 == Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade
             5 == Estoque.findByProdutoAndUnidade(produto2, 'un').quantidade
 
             controller.response.reset()
 
-        when: " um 2º cliente vem e finaliza um pedido com todas as unidade do Produto 11disponiveis em estoque"
+        when: " um 2º cliente vem e finaliza um pedido com todas as unidade do Produto 1 disponiveis em estoque"
             def e1 = Estoque.findByProduto(produto1)
             e1.quantidade = 0
             e1.save(flush:true)
@@ -128,8 +127,6 @@ class VerificarEstoqueAntesDeFecharVendaSpec extends IntegrationSpec {
             controller.params.formaPagamento = FormaPagamento.AVista.name()
 
             controller.fecharVenda()
-            sessionFactory.currentSession.clear()
-
         then:
             controller.modelAndView.viewName.endsWith("/checkout")
             controller.flash.message.contains(produto1.nome) // garantido que a msg exibira o produto em falta no estoque
@@ -146,9 +143,9 @@ class VerificarEstoqueAntesDeFecharVendaSpec extends IntegrationSpec {
 
         when: " um 3º cliente vem e finaliza um pedido com todas as unidade do Produto 2 disponiveis em estoque"
 
-            def e2 = Estoque.findByProduto(produto2);
-            e2.quantidade = 0;
-            e2.save(flush: true);
+            def e2 = Estoque.findByProduto(produto2)
+            e2.quantidade = 0
+            e2.save(flush: true)
 
         then:
             Estoque.findByProduto(produto2).quantidade==0

@@ -146,8 +146,7 @@
 
                 <tr>
                     <td style="text-align:left !important;">
-                        <g:img absolute="true" dir="images/produtos" style="float:left;" file="${produto.fotoMiniatura}"/>
-
+                            <g:img absolute="true" dir="images/produtos" style="float:left;" file="${produto.fotoMiniatura}"/>
                         <div>
                             <label>${produto.nome}</label>
 
