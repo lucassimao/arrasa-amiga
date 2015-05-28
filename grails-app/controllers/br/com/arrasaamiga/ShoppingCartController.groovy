@@ -8,6 +8,7 @@ import grails.transaction.Transactional
 import org.apache.commons.logging.LogFactory
 import org.springframework.transaction.TransactionDefinition
 import org.springframework.transaction.annotation.Propagation
+import org.springframework.validation.FieldError
 
 @Secured(['permitAll'])
 class ShoppingCartController {
@@ -127,14 +128,36 @@ class ShoppingCartController {
 
 
     @Secured(['isAuthenticated()'])
-    def checkout() {
+    def checkout(ClienteCommand command) {
+
 
         def user = springSecurityService.currentUser
         def cliente = Cliente.findByUsuario(user)
         cliente.properties = params
 
-        // verifica se foi enviada alguma atualização nos dados do cliente pois ele pode ter vindo de /shoppingCart/confirmAddress
-        if (cliente.isDirty() && !cliente.save(flush: true)) {
+        command.validate()
+        command.endereco.validate()
+
+        if (command.hasErrors() || command.endereco.hasErrors()) {
+
+            command.errors.allErrors.each { FieldError error ->
+                String field = error.field
+                String code = error.code
+                cliente.errors.rejectValue(field, code)
+            }
+
+            command.endereco.errors.allErrors.each { FieldError error ->
+                String field = error.field
+                String code = error.code
+                cliente.endereco.errors.rejectValue(field, code)
+            }
+
+        }
+
+        // verifica se foi enviada alguma atualização nos dados do cliente, pois ele esta vindo de /shoppingCart/confirmAddress
+        if ( !cliente.hasErrors() && !cliente.endereco.hasErrors() ) {
+            cliente.save(flush:true)
+        }else{
             render view: 'confirmAddress', model: [cliente: cliente]
             return
         }

@@ -118,12 +118,14 @@ class ClienteController {
             command.errors.allErrors.each { FieldError error ->
                 String field = error.field
                 String code = error.code
+                println field
                 cliente.errors.rejectValue(field, code)
             }
 
             command.endereco.errors.allErrors.each { FieldError error ->
                 String field = error.field
                 String code = error.code
+                println field
                 cliente.endereco.errors.rejectValue(field, code)
             }
 

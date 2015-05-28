@@ -28,8 +28,11 @@ class ShoppingCartControllerCheckoutSpec extends Specification {
         Usuario.metaClass.encodePassword = { null }
         Cliente.metaClass.reautenticar = { null }
 
-        mockDomain(Usuario,[[id:1,username:'xpto@gmail.com',password:'123']])
-        mockDomain(Cliente,[[id:1, usuario: Usuario.load(1),nome: 'Cliente XPTO']])
+        mockDomain(Uf,[[id:1,nome:'Piaui',sigla:'PI'], [id:2,nome:'Maranhao',sigla:'MA']])
+        mockDomain(Cidade,[[id:1,nome:'Teresina',uf:Uf.piaui], [id:2,nome:'Sao Luis', uf:Uf.get(2)]])
+
+        mockDomain(Usuario,[[id:1L,username:'xpto@gmail.com',password:'123']])
+        mockDomain(Cliente,[[id:1, usuario: Usuario.load(1L),nome: 'Cliente XPTO',endereco: new Endereco(cidade: Cidade.teresina,uf: Uf.piaui)]])
 
         mockDomain(Produto, [
                 [nome: "Produto1", id: 1L, descricao: 'Produto 1', tipoUnitario: 'un',unidades:['un1']],
@@ -55,7 +58,16 @@ class ShoppingCartControllerCheckoutSpec extends Specification {
             messageSource.addMessage 'shoppingCart.empty', request.locale, menssagemTeste
             controller.springSecurityService = grailsApplication.mainContext.getBean('springSecurityService')
         when:
-            controller.checkout()
+
+
+            def enderecoStub = Stub(EnderecoCommand)
+            enderecoStub.hasErrors() >> false
+
+            def command = Stub(ClienteCommand)
+            command.hasErrors() >> false
+            command.getEndereco() >> enderecoStub
+
+            controller.checkout(command)
 
         then:
             flash.message == menssagemTeste
@@ -97,7 +109,12 @@ class ShoppingCartControllerCheckoutSpec extends Specification {
             response.reset()
 
         when:
-            def model = controller.checkout()
+            def command = Stub(ClienteCommand)
+            command.hasErrors() >> false
+            command.getEndereco() >> Stub(EnderecoCommand)
+            command.getEndereco().hasErrors() >> false
+
+            def model = controller.checkout(command)
         then:
             assertNotNull(model.venda.carrinho)
             assertEquals 3, session.shoppingCart.getQuantidade(Produto.load(1L),'un1')

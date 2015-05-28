@@ -81,14 +81,13 @@
 
 <g:set var="ocultarRodape" value="${false}" scope="request"/>
 
-
-<g:hasErrors bean="${cliente}">
+<g:if test="${cliente.hasErrors() || cliente.endereco.hasErrors()}">
     <div class="alert alert-danger" style="margin-top:10px;">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <i class="icon-edit"></i>
+        <i class="fa fa-exclamation-triangle"></i>
         Amiga, você esqueceu de preencher algumas informações!
     </div>
-</g:hasErrors>
+</g:if>
 
 
 <div class="col-md-10" style="float: none; margin: 0 auto;">
@@ -98,6 +97,9 @@
         <h3>Endereço de entrega</h3>
         <hr/>
 
+        <g:hiddenField name="id" value="${cliente.id}"/>
+        <g:hiddenField name="nome" value="${cliente.nome}"/>
+        <g:hiddenField name="usuario.id" value="${cliente.usuario.id}"/>
 
         <div class="form-group">
 
@@ -158,7 +160,7 @@
             <label class="col-sm-2 control-label">Bairro</label>
 
             <div class="col-sm-10">
-                <input type="text" class="form-control ${hasErrors(bean: cliente, field: 'endereco.bairro', 'error')}"
+                <input type="text" class="form-control ${hasErrors(bean: cliente.endereco, field: 'bairro', 'error')}"
                        value="${cliente.endereco?.bairro}" name="endereco.bairro">
             </div>
         </div>
@@ -168,7 +170,7 @@
 
             <div class="col-sm-10">
                 <input type="text"
-                       class="form-control ${hasErrors(bean: cliente, field: 'endereco.complemento', 'error')}"
+                       class="form-control ${hasErrors(bean: cliente.endereco, field: 'complemento', 'error')}"
                        value="${cliente.endereco?.complemento}" name="endereco.complemento">
                 <span class="help-block">Casa, quadra, apartamento, rua, número, ponto de referência ...</span>
             </div>
@@ -178,7 +180,7 @@
             <label class="col-sm-2 control-label">Cep</label>
 
             <div class="col-sm-10">
-                <input type="text" class="form-control ${hasErrors(bean: cliente, field: 'endereco.cep', 'error')}"
+                <input type="text" class="form-control ${hasErrors(bean: cliente.endereco, field: 'cep', 'error')}"
                        value="${cliente.endereco?.cep}" name="endereco.cep" style="max-width:100px;">
             </div>
         </div>
