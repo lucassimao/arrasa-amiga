@@ -82,7 +82,6 @@ class ClienteController {
 
 
     def springSecurityService
-    def log
 
     def index() {
         def user = springSecurityService.currentUser
