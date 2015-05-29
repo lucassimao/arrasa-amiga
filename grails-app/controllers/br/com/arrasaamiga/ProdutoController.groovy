@@ -1,5 +1,6 @@
 package br.com.arrasaamiga
 
+import org.apache.http.HttpStatus
 import org.springframework.dao.DataIntegrityViolationException
 import grails.plugin.springsecurity.annotation.Secured
 import grails.converters.*
@@ -367,7 +368,13 @@ class ProdutoController {
 
 
     def salvarAviso(Long id){
-        
+
+        if (!params.signed_request){
+            render status:org.springframework.http.HttpStatus.BAD_REQUEST
+            return
+        }
+
+
         //Facebook App info
         String fbSecretKey;
         String fbAppId;
