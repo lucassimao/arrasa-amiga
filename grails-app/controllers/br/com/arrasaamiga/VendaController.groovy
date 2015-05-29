@@ -125,6 +125,10 @@ class VendaController extends RestfulController {
     @Secured(['permitAll'])
     def aguardandoPagamento() {}
 
+    @Secured(['isAuthenticated()'])
+    def show(long id){
+        respond Venda.get(id)
+    }
 
     def index(int max) {
 

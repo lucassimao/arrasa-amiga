@@ -82,6 +82,7 @@ class ClienteController {
 
 
     def springSecurityService
+    def log
 
     def index() {
         def user = springSecurityService.currentUser
@@ -118,14 +119,12 @@ class ClienteController {
             command.errors.allErrors.each { FieldError error ->
                 String field = error.field
                 String code = error.code
-                println field
                 cliente.errors.rejectValue(field, code)
             }
 
             command.endereco.errors.allErrors.each { FieldError error ->
                 String field = error.field
                 String code = error.code
-                println field
                 cliente.endereco.errors.rejectValue(field, code)
             }
 
@@ -133,13 +132,16 @@ class ClienteController {
             return
         }
 
+
         cliente.save(flush: true, failOnError: true)
+        log.info "Cliente #${cliente.id} ${cliente.nome} salvo com sucesso"
 
         SavedRequest savedRequest = new HttpSessionRequestCache().getRequest(request, response)
         flash.message = 'Bem vinda amiga! Sua conta foi criada com sucesso.'
         springSecurityService.reauthenticate cliente.email
 
         if (savedRequest) {
+            log.info "redirecionando ${cliente.nome} ${savedRequest.redirectUrl}"
             redirect(url: savedRequest.redirectUrl)
         } else {
             redirect(url: '/')
