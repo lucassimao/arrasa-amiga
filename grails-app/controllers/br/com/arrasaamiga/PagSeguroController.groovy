@@ -53,24 +53,39 @@ class PagSeguroController {
     }
 
     def notificacoes() {
+
+
+        def notificationCode = params.notificationCode
+        vendaLogger.debug("* notificacoes notificationCode ${notificationCode}")
+
+        def transacaoPagSeguro = pagSeguroService.checkTransaction(notificationCode)
+        vendaLogger.debug("** notificacoes transacaoPagSeguro ${transacaoPagSeguro.code} ")
+
         def venda = Venda.get(params.id)
-
-
         if (venda == null) {
             render status: NOT_FOUND
             return
         }
 
-        vendaLogger.debug("* notificacoes p/ venda ${venda.id} com status ${venda.status}")
 
-        def notificationCode = params.notificationCode
-        vendaLogger.debug("** notificacoes notificationCode ${notificationCode}")
+        StatusVenda statusTransacao = pagSeguroService.getStatusTransacao(transacaoPagSeguro.status)
+        /**
+         * controlando o caso em que notificações concorrentes atualizam o status da Venda
+         *
+         * Somente prosegue com a atualização do status da venda se a notificação
+         * trouxer algum status novo, mais avançado do que o atuals
+         */
+        if (venda.status.ordinal() > statusTransacao.ordinal() ) {
+            render status: OK
+            return
+        }else{
+            vendaLogger.debug "!! PagSeguro enviou notificação com status ${statusTransacao}, mas venda #${venda.id} ja tem status ${venda.status}"
+        }
 
-        def transacaoPagSeguro = pagSeguroService.checkTransaction(notificationCode)
-        vendaLogger.debug("*** notificacoes transacaoPagSeguro ${transacaoPagSeguro.code} transacaoPagSeguro ${venda.transacaoPagSeguro}")
+        vendaLogger.debug("*** notificacoes p/ venda ${venda.id} com status ${venda.status}")
 
         venda.transacaoPagSeguro = transacaoPagSeguro.code
-        venda.status = pagSeguroService.getStatusTransacao(transacaoPagSeguro.status)
+        venda.status = statusTransacao
         venda.descontoPagSeguroEmCentavos = transacaoPagSeguro.getDiscountAmount() * 100
         venda.taxasPagSeguroEmCentavos = transacaoPagSeguro.getFeeAmount() * 100
 
