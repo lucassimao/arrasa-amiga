@@ -18,7 +18,7 @@ class ShoppingCartController {
     def pagSeguroService
 
 
-    static allowedMethods = [add: "POST", removerProduto: "POST"]
+    static allowedMethods = [add: "POST", removerProduto: "POST",updateDeliveryAddress:'POST']
 
     def index() {
         def shoppingCart = getShoppingCart()
@@ -128,8 +128,7 @@ class ShoppingCartController {
 
 
     @Secured(['isAuthenticated()'])
-    def checkout(ClienteCommand command) {
-
+    def updateDeliveryAddress(ClienteCommand command) {
 
         def user = springSecurityService.currentUser
         def cliente = Cliente.findByUsuario(user)
@@ -151,16 +150,22 @@ class ShoppingCartController {
                 String code = error.code
                 cliente.endereco.errors.rejectValue(field, code)
             }
-
         }
 
         // verifica se foi enviada alguma atualização nos dados do cliente, pois ele esta vindo de /shoppingCart/confirmAddress
         if ( !cliente.hasErrors() && !cliente.endereco.hasErrors() ) {
             cliente.save(flush:true)
+            redirect(action: 'checkout')
+
         }else{
             render view: 'confirmAddress', model: [cliente: cliente]
             return
         }
+    }
+
+
+    @Secured(['isAuthenticated()'])
+    def checkout() {
 
         def shoppingCart = getShoppingCart()
         def itens = shoppingCart.itens
@@ -170,6 +175,9 @@ class ShoppingCartController {
             redirect(action: 'index')
             return
         }
+
+        def user = springSecurityService.currentUser
+        def cliente = Cliente.findByUsuario(user)
 
         def venda = new Venda()
         venda.carrinho = shoppingCart
@@ -214,7 +222,7 @@ class ShoppingCartController {
                 venda.clearErrors()
             } catch (Exception e) {
                 flash.messageDataEntrega = message(code: 'shoppingCart.dataEntrega.invalida')
-                render(view: "checkout", model: model)
+                redirect(action: 'checkout')
                 return
             }
 
@@ -244,25 +252,26 @@ class ShoppingCartController {
 
         } catch (EstoqueException e) {
             e.printStackTrace()
-            session.shoppingCart = new ShoppingCart()
+            // cria um novo carrinho e atualiza a sessão
+            def novoShoppingCart = new ShoppingCart()
             venda.itensVenda.each {item->
-                    if (!(item.produto.equals(e.produto) && item.unidade.equals(e.unidade)))
-                        session.shoppingCart.add(item.produto, item.unidade, item.quantidade)
+                if (!( item.produto.equals(e.produto) && item.unidade.equals(e.unidade)))
+                    novoShoppingCart.add(item.produto, item.unidade, item.quantidade)
             }
-            venda.carrinho = session.shoppingCart
+            session.shoppingCart = novoShoppingCart
             flash.message = e.message
-            render(view: "checkout", model: model)
+            redirect(action: 'checkout')
+            return
 
         } catch (PagSeguroServiceException e) {
             e.printStackTrace()
             flash.message = e.message
             vendaLogger.debug "Erro ao tentar ir para o pagseguro : cliente ${venda.cliente.id} ", e
-            render(view: "checkout", model: model)
-
+            redirect(action: 'checkout')
         }catch (Exception e) {
             e.printStackTrace()
             flash.message = e.message
-            render(view: "checkout", model: model)
+            redirect(action: 'checkout')
         }
 
     }

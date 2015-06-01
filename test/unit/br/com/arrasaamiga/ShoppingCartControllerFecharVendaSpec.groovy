@@ -99,10 +99,7 @@ class ShoppingCartControllerFecharVendaSpec extends Specification {
 
         then:
             flash.messageDataEntrega == menssagemTeste
-            view == '/shoppingCart/checkout'
-            model.containsKey('venda')
-            model.containsKey('diasDeEntrega')
-
+            controller.response.redirectedUrl == '/shoppingCart/checkout'
     }
 
 
@@ -129,10 +126,7 @@ class ShoppingCartControllerFecharVendaSpec extends Specification {
 
         then:
             flash.messageDataEntrega == menssagemTeste
-            view == '/shoppingCart/checkout'
-            model.containsKey('venda')
-            model.containsKey('diasDeEntrega')
-
+            controller.response.redirectedUrl == '/shoppingCart/checkout'
     }
 
 

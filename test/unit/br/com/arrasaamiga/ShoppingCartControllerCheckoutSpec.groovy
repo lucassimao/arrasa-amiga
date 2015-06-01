@@ -59,15 +59,7 @@ class ShoppingCartControllerCheckoutSpec extends Specification {
             controller.springSecurityService = grailsApplication.mainContext.getBean('springSecurityService')
         when:
 
-
-            def enderecoStub = Stub(EnderecoCommand)
-            enderecoStub.hasErrors() >> false
-
-            def command = Stub(ClienteCommand)
-            command.hasErrors() >> false
-            command.getEndereco() >> enderecoStub
-
-            controller.checkout(command)
+            controller.checkout()
 
         then:
             flash.message == menssagemTeste
@@ -109,12 +101,7 @@ class ShoppingCartControllerCheckoutSpec extends Specification {
             response.reset()
 
         when:
-            def command = Stub(ClienteCommand)
-            command.hasErrors() >> false
-            command.getEndereco() >> Stub(EnderecoCommand)
-            command.getEndereco().hasErrors() >> false
-
-            def model = controller.checkout(command)
+            def model = controller.checkout()
         then:
             assertNotNull(model.venda.carrinho)
             assertEquals 3, session.shoppingCart.getQuantidade(Produto.load(1L),'un1')

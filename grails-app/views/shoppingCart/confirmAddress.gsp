@@ -92,7 +92,7 @@
 
 <div class="col-md-10" style="float: none; margin: 0 auto;">
 
-    <g:form class="form-horizontal" action='checkout'>
+    <g:form class="form-horizontal" action='updateDeliveryAddress'>
 
         <h3>Endereço de entrega</h3>
         <hr/>

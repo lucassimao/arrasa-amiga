@@ -128,7 +128,7 @@ class VerificarEstoqueAntesDeFecharVendaSpec extends IntegrationSpec {
 
             controller.fecharVenda()
         then:
-            controller.modelAndView.viewName.endsWith("/checkout")
+            controller.response.redirectedUrl.endsWith("/checkout")
             controller.flash.message.contains(produto1.nome) // garantido que a msg exibira o produto em falta no estoque
 
             assertEquals 0,Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade;
@@ -147,6 +147,8 @@ class VerificarEstoqueAntesDeFecharVendaSpec extends IntegrationSpec {
             e2.quantidade = 0
             e2.save(flush: true)
 
+            controller.response.reset()
+
         then:
             Estoque.findByProduto(produto2).quantidade==0
 
@@ -158,7 +160,7 @@ class VerificarEstoqueAntesDeFecharVendaSpec extends IntegrationSpec {
             sessionFactory.currentSession.clear()
 
         then:
-            controller.modelAndView.viewName.endsWith("/checkout")
+            controller.response.redirectedUrl.endsWith("/checkout")
             controller.flash.message.contains(produto2.nome) // garantido que a msg exibira o produto em falta no estoque
 
             Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade == 0;
