@@ -15,7 +15,6 @@ class VendaService {
     def salvarVenda(Venda venda, boolean notificarPorEmail = true) {
 
         def vendaLogger = LogFactory.getLog('grails.app.domain.br.com.arrasaamiga.Venda')
-
         venda.save(failOnError: true)
         vendaLogger.debug("venda #${venda.id} salva! removendo itens do estoque ...")
 

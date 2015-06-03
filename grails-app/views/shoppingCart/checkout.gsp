@@ -53,6 +53,10 @@
         $(function(){
 
 
+            $('form').submit(function(){
+                $('#btn-fechar-pedido').button('loading');
+            });
+
             $("input[name='dataEntrega']").click(function(){
 
                 $("span.data-entrega-selecionada").toggleClass("data-entrega-selecionada");
@@ -281,7 +285,7 @@
         <a href="${createLink(uri: '/', absolute: true)}" class="btn btn-primary">
             <i class="fa fa-angle-double-left"></i> Escolher + produtos
         </a>
-        <button type="submit" class="btn btn-success pull-right">Fechar pedido</button>
+        <button type="submit" data-loading-text="Aguarde ..." id="btn-fechar-pedido" class="btn btn-success pull-right">Fechar pedido</button>
 
     </g:form>
 

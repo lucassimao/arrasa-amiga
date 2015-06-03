@@ -18,7 +18,7 @@ class ShoppingCartController {
     def pagSeguroService
 
 
-    static allowedMethods = [add: "POST", removerProduto: "POST",updateDeliveryAddress:'POST']
+    static allowedMethods = [add: "POST", removerProduto: "POST", updateDeliveryAddress: 'POST']
 
     def index() {
         def shoppingCart = getShoppingCart()
@@ -111,10 +111,10 @@ class ShoppingCartController {
         def venda = new Venda()
         venda.carrinho = getShoppingCart()
         venda.cliente = Cliente.findByUsuario(springSecurityService.currentUser)
-        venda.formaPagamento = (params.formaPagamento)?FormaPagamento.valueOf(params.formaPagamento):FormaPagamento.PagSeguro
+        venda.formaPagamento = (params.formaPagamento) ? FormaPagamento.valueOf(params.formaPagamento) : FormaPagamento.PagSeguro
 
         if (!venda.cliente.isDentroDaAreaDeEntregaRapida()) {
-            venda.servicoCorreio = (params.servicoCorreio)?ServicoCorreio.valueOf(params.servicoCorreio):ServicoCorreio.PAC
+            venda.servicoCorreio = (params.servicoCorreio) ? ServicoCorreio.valueOf(params.servicoCorreio) : ServicoCorreio.PAC
         }
 
         render(template: 'totalVendaDetalhes', model: [venda: venda])
@@ -153,11 +153,11 @@ class ShoppingCartController {
         }
 
         // verifica se foi enviada alguma atualização nos dados do cliente, pois ele esta vindo de /shoppingCart/confirmAddress
-        if ( !cliente.hasErrors() && !cliente.endereco.hasErrors() ) {
-            cliente.save(flush:true)
+        if (!cliente.hasErrors() && !cliente.endereco.hasErrors()) {
+            cliente.save(flush: true)
             redirect(action: 'checkout')
 
-        }else{
+        } else {
             render view: 'confirmAddress', model: [cliente: cliente]
             return
         }
@@ -191,17 +191,22 @@ class ShoppingCartController {
     @Secured(['isAuthenticated()'])
     def fecharVenda() {
 
-        def shoppingCart = getShoppingCart()
-        def vendaLogger = LogFactory.getLog('grails.app.domain.br.com.arrasaamiga.Venda')
 
-        if (!shoppingCart.itens) {
+        def vendaLogger = LogFactory.getLog('grails.app.domain.br.com.arrasaamiga.Venda')
+        def sessionShoppingCart = getShoppingCart()
+
+        if (!sessionShoppingCart.itens) {
             flash.message = message(code: "shoppingCart.empty")
             redirect(action: 'index')
             return
         }
 
         def venda = new Venda(params)
-        venda.carrinho = shoppingCart
+        venda.carrinho = new ShoppingCart()
+        // clonando o carrinho da sessão antes de salvar, p/ evitar que submissões sucessivas da mesma venda
+        sessionShoppingCart.itens.each { ItemVenda item ->
+            venda.carrinho.add(item.produto, item.unidade, item.quantidade)
+        }
         venda.status = StatusVenda.AguardandoPagamento
         venda.cliente = Cliente.findByUsuario(springSecurityService.currentUser)
 
@@ -254,8 +259,8 @@ class ShoppingCartController {
             e.printStackTrace()
             // cria um novo carrinho e atualiza a sessão
             def novoShoppingCart = new ShoppingCart()
-            venda.itensVenda.each {item->
-                if (!( item.produto.equals(e.produto) && item.unidade.equals(e.unidade)))
+            venda.itensVenda.each { item ->
+                if (!(item.produto.equals(e.produto) && item.unidade.equals(e.unidade)))
                     novoShoppingCart.add(item.produto, item.unidade, item.quantidade)
             }
             session.shoppingCart = novoShoppingCart
@@ -268,7 +273,7 @@ class ShoppingCartController {
             flash.message = e.message
             vendaLogger.debug "Erro ao tentar ir para o pagseguro : cliente ${venda.cliente.id} ", e
             redirect(action: 'checkout')
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace()
             flash.message = e.message
             redirect(action: 'checkout')
