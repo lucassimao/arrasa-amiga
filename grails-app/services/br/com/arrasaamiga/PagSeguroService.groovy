@@ -15,7 +15,7 @@ import java.text.NumberFormat
 
 class PagSeguroService {
 
-    boolean transactional = true
+    boolean transactional = false
 
     def getAccountCredentials() {
         String token = '9A9DE1A43A2045DEBBD66D629FC4F76B'

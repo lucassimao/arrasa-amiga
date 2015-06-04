@@ -1,10 +1,8 @@
 package br.com.arrasaamiga
 
-import br.com.arrasaamiga.excecoes.EstoqueException
+import grails.transaction.NotTransactional
 import grails.transaction.Transactional
 import org.apache.commons.logging.LogFactory
-import org.springframework.transaction.TransactionStatus
-import org.springframework.transaction.annotation.Propagation
 
 @Transactional
 class VendaService {
@@ -36,6 +34,7 @@ class VendaService {
         estoqueService.reporItens(venda.itensVenda)
     }
 
+    @NotTransactional
     def getProximosDiasDeEntrega() {
 
         def hoje = new Date()
@@ -96,6 +95,7 @@ class VendaService {
         return diasDeEntraga.sort()
     }
 
+    @NotTransactional
     def isDataEntregaValida(Date dataEscolhida) {
         List datasDeEntrega = getProximosDiasDeEntrega()
 
