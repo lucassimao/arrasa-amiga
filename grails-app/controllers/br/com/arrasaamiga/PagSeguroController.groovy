@@ -76,10 +76,9 @@ class PagSeguroController {
          * trouxer algum status novo, mais avançado do que o atuals
          */
         if (venda.status.ordinal() > statusTransacao.ordinal() ) {
+            vendaLogger.debug "!! PagSeguro enviou notificação com status ${statusTransacao}, mas venda #${venda.id} ja tem status ${venda.status} . Status não atualizado"
             render status: OK
             return
-        }else{
-            vendaLogger.debug "!! PagSeguro enviou notificação com status ${statusTransacao}, mas venda #${venda.id} ja tem status ${venda.status}"
         }
 
         vendaLogger.debug("*** notificacoes p/ venda ${venda.id} com status ${venda.status}")
