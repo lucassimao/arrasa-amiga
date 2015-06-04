@@ -19,6 +19,7 @@ class ShoppingCartController {
 
 
     static allowedMethods = [add: "POST", removerProduto: "POST", updateDeliveryAddress: 'POST']
+    def beforeInterceptor = [action: this.&apagarPedidosNaoConcluidos, only: ['add','fecharVenda']]
 
     def index() {
         def shoppingCart = getShoppingCart()
@@ -286,6 +287,20 @@ class ShoppingCartController {
             session.shoppingCart = new ShoppingCart()
         }
         return session.shoppingCart
+    }
+
+    /**
+     * Este método é um interceptor executado antes das actions add e fecharVenda.
+     * Isso é necessário pra evitar que tentativas prévias de compra feitas
+     * por um cliente impeça o mesmo de adquirir um produto
+     */
+    private void apagarPedidosNaoConcluidos() {
+        def user = springSecurityService.currentUser
+
+        if (user != null) {
+            def cliente = Cliente.findByUsuario(user)
+            vendaService.excluirVendasNaoFinalizadas(cliente)
+        }
     }
 
 

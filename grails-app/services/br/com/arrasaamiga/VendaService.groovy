@@ -9,13 +9,12 @@ class VendaService {
 
     def emailService
     def estoqueService
+    def vendaLogger = LogFactory.getLog('grails.app.domain.br.com.arrasaamiga.Venda')
 
     def salvarVenda(Venda venda, boolean notificarPorEmail = true) {
 
-        def vendaLogger = LogFactory.getLog('grails.app.domain.br.com.arrasaamiga.Venda')
         venda.save(failOnError: true)
         vendaLogger.debug("venda #${venda.id} salva! removendo itens do estoque ...")
-
         estoqueService.removerItens(venda.itensVenda)
 
         if (notificarPorEmail) {
@@ -28,9 +27,16 @@ class VendaService {
 
     }
 
+    private void excluirVendasNaoFinalizadas(Cliente cliente) {
+        def result = Venda.findAllByClienteAndStatusAndFormaPagamento(cliente, StatusVenda.AguardandoPagamento, FormaPagamento.PagSeguro)
+        result?.each { Venda venda ->
+            excluirVenda(venda)
+        }
+    }
+
     def excluirVenda(Venda venda) {
         venda.delete()
-        log.debug("Venda #${venda.id} repondo itens ")
+        vendaLogger.debug("Excluido venda #${venda.id}:  repondo itens ")
         estoqueService.reporItens(venda.itensVenda)
     }
 
