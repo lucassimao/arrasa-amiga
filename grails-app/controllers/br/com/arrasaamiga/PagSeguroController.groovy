@@ -1,8 +1,8 @@
 package br.com.arrasaamiga
 
+import br.com.uol.pagseguro.domain.Transaction
 import grails.plugin.springsecurity.annotation.Secured
 import org.apache.commons.logging.LogFactory
-import static org.springframework.http.HttpStatus.*
 
 import static org.springframework.http.HttpStatus.NOT_FOUND
 import static org.springframework.http.HttpStatus.OK
@@ -58,7 +58,7 @@ class PagSeguroController {
         def notificationCode = params.notificationCode
         vendaLogger.debug("* notificacoes notificationCode ${notificationCode}")
 
-        def transacaoPagSeguro = pagSeguroService.checkTransaction(notificationCode)
+        Transaction transacaoPagSeguro = pagSeguroService.checkTransaction(notificationCode)
         vendaLogger.debug("** notificacoes transacaoPagSeguro ${transacaoPagSeguro.code} ")
 
         def venda = Venda.get(params.id)
@@ -75,7 +75,7 @@ class PagSeguroController {
          * Somente prosegue com a atualização do status da venda se a notificação
          * trouxer algum status novo, mais avançado do que o atuals
          */
-        if (venda.status.ordinal() > statusTransacao.ordinal() ) {
+        if (venda.status.ordinal() > statusTransacao.ordinal()) {
             vendaLogger.debug "!! PagSeguro enviou notificação com status ${statusTransacao}, mas venda #${venda.id} ja tem status ${venda.status} . Status não atualizado"
             render status: OK
             return
@@ -84,13 +84,14 @@ class PagSeguroController {
         vendaLogger.debug("*** notificacoes p/ venda ${venda.id} com status ${venda.status}")
 
         venda.transacaoPagSeguro = transacaoPagSeguro.code
+        venda.detalhesPagamento = pagSeguroService.getDetalhesPagamento(transacaoPagSeguro)
         venda.status = statusTransacao
         venda.descontoPagSeguroEmCentavos = transacaoPagSeguro.getDiscountAmount() * 100
         venda.taxasPagSeguroEmCentavos = transacaoPagSeguro.getFeeAmount() * 100
 
         vendaLogger.debug "**** notificacoes novo status ${venda.status}"
 
-        venda.save(flush:true)
+        venda.save(flush: true)
 
 
         switch (venda.status) {

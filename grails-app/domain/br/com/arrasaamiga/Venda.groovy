@@ -17,14 +17,14 @@ class Venda {
     String codigoRastreio
     Usuario vendedor
     TurnoEntrega turnoEntrega
+    String detalhesPagamento
 
     transient def pagSeguroService
     transient def correiosService
 
 
     static transients = ['urlRastreioCorreios', 'valorTotal', 'valorItensAPrazo', 'valorItensAVista',
-                         'descontoEmReais', 'freteEmReais', 'descontoParaCompraAVista', 'descontoPagSeguroEmReais',
-                         'detalhesPagamento', 'itensVenda']
+                         'descontoEmReais', 'freteEmReais', 'descontoParaCompraAVista', 'descontoPagSeguroEmReais','itensVenda']
 
     static constraints = {
         freteEmCentavos(min: 0)
@@ -40,12 +40,21 @@ class Venda {
         servicoCorreio(nullable: true)
         vendedor(nullable: true)
         turnoEntrega(nullable: true)
+        detalhesPagamento(blank: true,nullable: true,maxSize:100000)
     }
 
     static mapping = {
         autoTimestamp true
         cliente cascade: 'save-update'
         carrinho cascade: 'all'
+    }
+
+    def beforeInsert(){
+        if (this.formaPagamento == FormaPagamento.AVista) {
+            this.detalhesPagamento = 'Pagamento em dinheiro no momento do recebimento do produto'
+        }else{
+            this.detalhesPagamento = 'Transação não foi finalizada. Cliente ainda não concluiu a compra'
+        }
     }
 
     public Double getValorTotal() {
@@ -93,21 +102,6 @@ class Venda {
         }
     }
 
-    public String getDetalhesPagamento() {
-
-        if (this.formaPagamento == FormaPagamento.AVista) {
-            return 'Pagamento em dinheiro no momento do recebimento do produto'
-
-        } else {
-
-            if (this.transacaoPagSeguro) {
-                log.debug("Consultando detalhes de pagamento da venda ${this.id} com transação ${this.transacaoPagSeguro}")
-                return pagSeguroService.getDetalhesPagamento(transacaoPagSeguro)
-            } else {
-                return 'Transação não foi finalizada. Cliente não concluiu compra'
-            }
-        }
-    }
     /*
      *  Esse desconto existe para pagamentos via boleto
      *

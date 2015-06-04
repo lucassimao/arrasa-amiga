@@ -1,5 +1,7 @@
 package br.com.arrasaamiga
 
+import br.com.uol.pagseguro.domain.Transaction
+
 import static org.junit.Assert.*
 
 import grails.test.mixin.*
@@ -139,31 +141,6 @@ class VendaTests {
     	assertEquals freteDentroDaAreaDeEntrega, vendaDentroDaAreaDeEntrega.freteEmReais, 0
    	
     }
-
-
-    void testGetDetalhes(){
-    	String expectedDetalhesMsg = '** MSG XPTO RETORNADA PELO PAGSEGURO **'
-
-    	def pagSeguroServiceMock = mockFor(PagSeguroService)
-    	pagSeguroServiceMock.demand.getDetalhesPagamento(0..1){String transacao-> return expectedDetalhesMsg }
-
-    	def vendaAVista = new Venda(formaPagamento: FormaPagamento.AVista)
-    	vendaAVista.pagSeguroService = pagSeguroServiceMock.createMock()
-
-
-    	assertFalse vendaAVista.detalhesPagamento?.equals(expectedDetalhesMsg)
-
-
-
-    	def vendaPagSeguro = new Venda(formaPagamento: FormaPagamento.PagSeguro, transacaoPagSeguro: '123')
-    	vendaPagSeguro.pagSeguroService = pagSeguroServiceMock.createMock()
-
-
-    	assertEquals vendaPagSeguro.detalhesPagamento, expectedDetalhesMsg
-
-
-    }
-
 
     void testValorTotalAVistaDentroDaAreaDeEntrega(){
       	def clienteDentroDaAreaDeEntregaMock = mockFor(Cliente,true)

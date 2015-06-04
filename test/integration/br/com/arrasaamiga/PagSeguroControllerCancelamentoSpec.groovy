@@ -7,6 +7,8 @@ import grails.plugin.springsecurity.SpringSecurityUtils
 import org.springframework.http.HttpStatus
 import spock.lang.Specification
 
+import static org.junit.Assert.assertEquals
+import static org.junit.Assert.assertNotEquals
 import static org.junit.Assert.assertNotNull
 import static org.junit.Assert.assertNull
 
@@ -71,6 +73,7 @@ class PagSeguroControllerCancelamentoSpec extends Specification {
         given:
             def transacaoPagSeguro = 'CODIGO-TRANSACAO-PAGSEGURO'
             def notificationCode = 'CODIGO-DE-NOTIFICACAO-PAG-SEGURO'
+            def detalhesPagamento = 'CANCELADA'
             def produto1 = Produto.findByNome('P1')
 
             SpringSecurityUtils.reauthenticate 'cliente2@gmail.com', '123456'
@@ -82,11 +85,12 @@ class PagSeguroControllerCancelamentoSpec extends Specification {
 
             def pagSeguroServiceSpy = Spy(PagSeguroService)
 
-            def transaction = new Transaction(status: TransactionStatus.CANCELLED, discountAmount: 0,code:transacaoPagSeguro,
+            Transaction transaction = new Transaction(status: TransactionStatus.CANCELLED, discountAmount: 0,code:transacaoPagSeguro,
                 feeAmount: 1, sender: new Sender(email: 'cliente2@gmail.com'))
 
             pagSeguroServiceSpy.checkTransaction(notificationCode) >> transaction
             pagSeguroServiceSpy.getTransaction(transacaoPagSeguro) >> transaction
+            pagSeguroServiceSpy.getDetalhesPagamento(transaction) >> detalhesPagamento
 
             def pagSeguroController = new PagSeguroController()
             pagSeguroController.emailService = mockEmailService
@@ -131,6 +135,7 @@ class PagSeguroControllerCancelamentoSpec extends Specification {
 
             venda.formaPagamento == FormaPagamento.PagSeguro
             venda.status == StatusVenda.AguardandoPagamento
+            assertNotEquals detalhesPagamento, venda.detalhesPagamento
             assertNull venda.transacaoPagSeguro
 
             assertNotNull Venda.first().itensVenda.find{item-> item.unidade == 'un' && item.produto.id == produto1.id}
@@ -159,6 +164,7 @@ class PagSeguroControllerCancelamentoSpec extends Specification {
         then:
             venda.status == StatusVenda.Cancelada
             venda.transacaoPagSeguro == transacaoPagSeguro
+            assertEquals detalhesPagamento, venda.detalhesPagamento
             Estoque.findByProdutoAndUnidade(produto1, 'un').quantidade == 10
 
             1 * mockEmailService.notificarCancelamento(_)

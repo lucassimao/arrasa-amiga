@@ -61,16 +61,6 @@ class PagSeguroService {
 
     }
 
-
-    public String getDetalhesPagamento(String transacaoPagSeguro) {
-        Transaction transaction = getTransaction(transacaoPagSeguro)
-        if (transaction)
-            return getDetalhesPagamento(transaction)
-        else
-            return 'Indisponível'
-    }
-
-
     public String getDetalhesPagamento(Transaction transaction) {
         int numParcelas = transaction.getInstallmentCount()
         PaymentMethodCode paymentMethodCode = transaction.getPaymentMethod().getCode()

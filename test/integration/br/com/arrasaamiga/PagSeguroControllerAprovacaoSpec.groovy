@@ -86,6 +86,7 @@ class PagSeguroControllerAprovacaoSpec extends Specification {
 
             pagSeguroServiceSpy.checkTransaction(notificationCode) >> transaction
             pagSeguroServiceSpy.getTransaction(transacaoPagSeguro) >> transaction
+            pagSeguroServiceSpy.getDetalhesPagamento(transaction) >> 'PAGO'
 
             def pagSeguroController = new PagSeguroController()
             pagSeguroController.emailService = mockEmailService
