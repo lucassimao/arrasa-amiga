@@ -73,6 +73,13 @@
             </a>
         </li>
 
+        <li>
+            <a style="${(controllerName.equals('feriado')) ? 'background-color:#666;color:white;' : ''}"
+               href="${createLink(controller: 'feriado')}">
+                Feriados
+            </a>
+        </li>
+
     </ul>
 </div>
 

@@ -22,6 +22,7 @@
                         <li><a href="${createLink(controller: 'estoque',action:'index')}">ESTOQUE</a></li>
                         <li><a href="${createLink(controller: 'banner')}">BANNERS</a></li>
                         <li><a href="${createLink(controller: 'aviso')}">AVISOS</a></li>
+                        <li><a href="${createLink(controller: 'feriado')}">FERIADOS</a></li>
                         <li class="divider"></li>
                         <li><a href="${createLink(controller: 'logout')}">SAIR</a></li>
                     </ul>
