@@ -108,12 +108,12 @@ class ClienteController {
     def save(ClienteCommand command) {
 
         def cliente = new Cliente(params)
-        cliente.usuario.enabled = true
+        cliente.usuario?.enabled = true
 
         command.validate()
-        command.endereco.validate()
+        command.endereco?.validate()
 
-        if (command.hasErrors() || command.endereco.hasErrors()) {
+        if (command.hasErrors() || command.endereco?.hasErrors()) {
 
             command.errors.allErrors.each { FieldError error ->
                 String field = error.field
@@ -121,7 +121,7 @@ class ClienteController {
                 cliente.errors.rejectValue(field, code)
             }
 
-            command.endereco.errors.allErrors.each { FieldError error ->
+            command.endereco?.errors?.allErrors.each { FieldError error ->
                 String field = error.field
                 String code = error.code
                 cliente.endereco.errors.rejectValue(field, code)
