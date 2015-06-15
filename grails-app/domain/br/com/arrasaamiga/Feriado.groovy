@@ -11,4 +11,14 @@ class Feriado {
         inicio nullable: false
         fim nullable: false
     }
+
+
+    @Override
+    public String toString() {
+        return "Feriado{" +
+                "descricao='" + descricao + '\'' +
+                ", fim=" + fim +
+                ", inicio=" + inicio +
+                '}';
+    }
 }

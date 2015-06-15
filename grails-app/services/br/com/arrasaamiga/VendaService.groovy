@@ -44,6 +44,8 @@ class VendaService {
     def getProximosDiasDeEntrega() {
 
         def hoje = new Date()
+        hoje.clearTime()
+
         def diasDeEntraga = []
 
         Date segunda, quarta, sexta
@@ -94,9 +96,18 @@ class VendaService {
 
         }
 
-        diasDeEntraga.add(segunda)
-        diasDeEntraga.add(quarta)
-        diasDeEntraga.add(sexta)
+        def proximosFeriados = Feriado.findAllByInicioGreaterThan(hoje)
+
+        for(Date data : [segunda,quarta,sexta]) {
+
+            while( proximosFeriados.any{feriado-> data in (feriado.inicio..feriado.fim) } ||
+                    diasDeEntraga.contains(data) ||
+                    data[Calendar.DAY_OF_WEEK] in [Calendar.SATURDAY,Calendar.SUNDAY] ){
+                ++data
+            }
+
+            diasDeEntraga << data
+        }
 
         return diasDeEntraga.sort()
     }
