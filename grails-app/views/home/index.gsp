@@ -3,7 +3,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-
     <title>Arrasa Amiga: Produtos para maquiagem à pronta entrega</title>
     <parameter name="description" value="Produtos para maquiagem à pronta entrega"/>
     <parameter name="keywords" value="Maquiagem, blushes, NYX, batom, sombra, paleta,Teresina, Piauí, maquiadora"/>
@@ -11,10 +10,25 @@
     <meta name="layout" content="main"/>
     <asset:stylesheet href="jquery.raty.css"/>
 
+    <asset:script>
+        window.setTimeout(function() {
+            $(".alert").fadeTo(1000, 0).slideUp(500, function(){
+                $(this).alert('close');
+            });
+        }, 2000);
+    </asset:script>
+
 </head>
 
 
 <body>
+
+<g:if test="${flash.message}">
+    <div class="alert alert-success">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <i class="fa fa-check-circle"></i> ${flash.message}
+    </div>
+</g:if>
 
 <g:if test="${banners}">
     <!-- begin:home-slider -->

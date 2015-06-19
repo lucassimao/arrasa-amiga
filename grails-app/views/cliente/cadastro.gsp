@@ -87,6 +87,7 @@
 
         });
     </asset:script>
+
 </head>
 
 <body>
@@ -98,7 +99,7 @@
     <div class="alert alert-danger" style="margin-top:10px;">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         <i class="icon-edit"></i>
-        Amiga, você esqueceu de preencher algumas informações!
+        Amiga, informe corretamente os campos em destaque!
     </div>
 </g:hasErrors>
 
@@ -124,6 +125,7 @@
                                 <input id="input-nome" type="text" value="${cliente.nome}" name="nome"
                                        class="form-control ${hasErrors(bean: cliente, field: 'nome', 'error')}"
                                        placeholder="Nome Completo">
+                                <span style="color: red;"> ${fieldError(bean:cliente,field:'nome')} </span>
                             </div>
                         </div>
 
@@ -142,6 +144,7 @@
                                        class="form-control ${hasErrors(bean: cliente, field: 'telefone', 'error')}"
                                        placeholder="Número"/>
                             </div>
+
                         </div>
 
                         <div class="form-group">
@@ -171,7 +174,9 @@
                             <div class="col-sm-9">
                                 <input type="email" value="${cliente.email}" name="email" placeholder="Email"
                                        class="form-control ${hasErrors(bean: cliente, field: 'email', 'error')}">
+                                <span style="color: red;"> ${fieldError(bean:cliente,field:'email')} </span>
                             </div>
+
                         </div>
 
                         <div class="form-group">
@@ -227,7 +232,7 @@
                                 <input type="text"
                                        class="form-control ${hasErrors(bean: cliente.endereco, field: 'complemento', 'error')}"
                                        value="${cliente.endereco?.complemento}" name="endereco.complemento">
-                                <span class="help-block">Casa, quadra, apartamento, rua, número, ponto de referência ...</span>
+                                <span class="help-block">Casa, quadra, apartamento,bloco, rua, número, ponto de referência ...</span>
                             </div>
                         </div>
 

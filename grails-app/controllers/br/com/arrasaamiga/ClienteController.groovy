@@ -48,23 +48,23 @@ class ClienteCommand {
     EnderecoCommand endereco
 
     static constraints = {
-        nome(blank: false, nullable: false)
-        email(nullable: true, blank: true, validator: { val, obj ->
+        nome(blank: false, nullable: false,validator: {val,command->
+            if (val.trim().split(" ").length == 1)
+                return 'incompleto'
+        })
+        email(nullable: false, blank: false, email: true, validator: { val, obj ->
 
             if (obj.usuario?.id) {
                 return true
             } else {
-                if (val) {
-                    int count = Usuario.countByUsername(val)
-                    return count == 0
-                } else
-                    return false
+                int count = Usuario.countByUsername(val)
+                (count == 0)?true:'emailJaExiste'
             }
 
         })
-        celular(blank: false, nullable: false, maxSize: 9)
+        celular(blank: false, nullable: false, maxSize: 9,minSize: 8)
         dddCelular(blank: false, nullable: false, maxSize: 2)
-        telefone(blank: false, nullable: false, maxSize: 9)
+        telefone(blank: false, nullable: false, maxSize: 9,minSize: 8)
         dddTelefone(blank: false, nullable: false, maxSize: 2)
         endereco(nullable: false)
         usuario(nullable: true)
@@ -127,6 +127,7 @@ class ClienteController {
             command.endereco?.errors?.allErrors.each { FieldError error ->
                 String field = error.field
                 String code = error.code
+
                 cliente.endereco.errors.rejectValue(field, code)
             }
 

@@ -241,7 +241,7 @@
                       <input type="text"
                              class="form-control ${hasErrors(bean: cliente.endereco, field: 'complemento', 'error')}"
                           value="${cliente.endereco?.complemento}" name="endereco.complemento">
-                    <span class="help-block">Casa, quadra, apartamento, rua, número, ponto de referência ... </span>
+                    <span class="help-block">Casa, quadra, apartamento,bl rua, número, ponto de referência ... </span>
                   </div>
                 </div>
                 <div class="form-group" id="div-cep">

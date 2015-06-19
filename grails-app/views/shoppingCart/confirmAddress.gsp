@@ -99,6 +99,7 @@
 
         <g:hiddenField name="id" value="${cliente.id}"/>
         <g:hiddenField name="nome" value="${cliente.nome}"/>
+        <g:hiddenField name="email" value="${cliente.email}"/>
         <g:hiddenField name="usuario.id" value="${cliente.usuario.id}"/>
 
         <div class="form-group">
