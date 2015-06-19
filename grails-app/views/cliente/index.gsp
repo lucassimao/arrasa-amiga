@@ -68,6 +68,9 @@
         			<br>${cliente.email}
         			<br>${cliente.endereco.bairro}, ${cliente.endereco.complemento}
         			<br>${cliente.endereco.cidade.nome}, ${cliente.endereco.uf.nome}
+					<g:if test="${!cliente.isDentroDaAreaDeEntregaRapida()}">
+						,${cliente.endereco.cep}
+					</g:if>
         			<br> (${cliente.dddCelular}) ${cliente.celular} / (${cliente.dddTelefone}) ${cliente.telefone}
         		</address>
 

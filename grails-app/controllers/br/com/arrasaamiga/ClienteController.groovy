@@ -1,6 +1,7 @@
 package br.com.arrasaamiga
 
 import grails.plugin.springsecurity.annotation.Secured
+import grails.util.Holders
 import grails.validation.Validateable
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache
 import org.springframework.security.web.savedrequest.SavedRequest
@@ -18,7 +19,9 @@ class EnderecoCommand {
         cep(blank: true, nullable: true, validator: { val, obj ->
 
             if (obj.cidade?.id != Cidade.teresina.id) {
-                return val?.trim()?.size() > 0
+                def ctx = Holders.getApplicationContext()
+                def correiosService = ctx.getBean("correiosService");
+                return ( val?.trim()?.size() > 0 && correiosService.isCepValido(val) )
             }
 
             return true

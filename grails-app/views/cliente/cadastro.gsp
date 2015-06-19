@@ -236,7 +236,7 @@
 
                             <div class="col-sm-9">
                                 <input type="text"
-                                       class="form-control ${hasErrors(bean: cliente, field: 'endereco.cep', 'error')}"
+                                       class="form-control ${hasErrors(bean: cliente.endereco, field: 'cep', 'error')}"
                                        value="${cliente.endereco?.cep}" name="endereco.cep" style="max-width:100px;">
                             </div>
                         </div>

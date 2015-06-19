@@ -136,11 +136,12 @@ class PagSeguroService {
         // país, estado, cidade, bairro, CEP, rua, número, complemento
         Endereco endereco = cliente.endereco
         String complemento =  endereco.complemento
+        String cep = (cliente.isDentroDaAreaDeEntregaRapida())?'':cliente.endereco.cep
         if (complemento?.length() > 60)
             complemento = complemento[0..<60]
 
-        paymentRequest.setShippingAddress("BRA", endereco.uf.sigla, endereco.cidade.nome, endereco.bairro,
-                endereco.cep, complemento, "0", '')
+        paymentRequest.setShippingAddress("BRA", endereco.uf.sigla, endereco.cidade.nome,
+                endereco.bairro,cep, complemento, "0", '')
 
         paymentRequest.shippingCost = new BigDecimal(formatter.format(venda.freteEmReais))
         paymentRequest.setReference(venda.id.toString())
