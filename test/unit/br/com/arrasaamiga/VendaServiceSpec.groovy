@@ -14,11 +14,10 @@ class VendaServiceSpec extends Specification {
 
     def setup() {
 
-        hoje = new GregorianCalendar(2015, Calendar.JUNE, 14).time // eh um domingo
-        assertEquals hoje[Calendar.DAY_OF_WEEK], Calendar.SUNDAY
+        hoje = new Date()
 
-        mockDomain(Feriado, [[descricao: 'feriado 1', inicio: hoje + 1, fim: hoje + 1], // segunda feira
-                             [descricao: 'feriado 2', inicio: hoje + 3, fim: hoje + 5]]) // quarta, quinta e sexta
+        mockDomain(Feriado, [[descricao: 'feriado 1', inicio: hoje + 1, fim: hoje + 1],
+                             [descricao: 'feriado 2', inicio: hoje + 3, fim: hoje + 5]])
 
         assertEquals Feriado.count(), 2
     }
@@ -28,15 +27,18 @@ class VendaServiceSpec extends Specification {
 
     void "teste getProximosDiasDeEntrega"() {
         given:
-        def expectDay1 = hoje + 2 // terça
-        def expectDay2 = hoje + 8 // segunda da outra semana
-        def expectDay3 = hoje + 9 // terça da outra semana
-
+            def proximosDiasDeEntrega = null
         when:
-            def expectedDeliveryDates = [expectDay1, expectDay2, expectDay3]
-
+            proximosDiasDeEntrega = service.getProximosDiasDeEntrega()
         then:
-            expectedDeliveryDates.equals( service.getProximosDiasDeEntrega() )
+            proximosDiasDeEntrega.each {Date dia->
+                assertFalse dia[Calendar.DAY_OF_WEEK] in [Calendar.SATURDAY,Calendar.SUNDAY]
+
+                Feriado.list().each{feriado->
+                    assertFalse dia in (feriado.inicio..feriado.fim)
+                }
+            }
+
 
     }
 }

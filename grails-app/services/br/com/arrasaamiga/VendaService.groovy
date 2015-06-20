@@ -98,11 +98,12 @@ class VendaService {
 
         def proximosFeriados = Feriado.findAllByInicioGreaterThan(hoje)
 
-        for(Date data : [segunda,quarta,sexta]) {
+        for (Date data : [segunda, quarta, sexta]) {
 
-            while( proximosFeriados.any{feriado-> data in (feriado.inicio..feriado.fim) } ||
+            while (proximosFeriados.any { feriado -> data in (feriado.inicio..feriado.fim) } ||
                     diasDeEntraga.contains(data) ||
-                    data[Calendar.DAY_OF_WEEK] in [Calendar.SATURDAY,Calendar.SUNDAY] ){
+                    data[Calendar.DAY_OF_WEEK] in [Calendar.SATURDAY, Calendar.SUNDAY]) {
+
                 ++data
             }
 
