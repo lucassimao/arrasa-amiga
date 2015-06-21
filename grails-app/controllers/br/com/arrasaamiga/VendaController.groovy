@@ -33,22 +33,40 @@ class VendaController extends RestfulController {
 
     }
 
+    def showPedidosEnviadosPelosCorreios(int max) {
+        params.max = Math.min(max ?: 10, 1000)
+        params.sort = 'dateCreated'
+        params.order = 'desc'
+
+        respond Venda.findAllByServicoCorreioIsNotNullAndStatus(StatusVenda.PagamentoRecebido, params),
+                model: [vendaInstanceTotal: Venda.countByServicoCorreioIsNotNullAndStatus(StatusVenda.PagamentoRecebido)]
+    }
+
+    def setEncomendaEntregue(int id){
+        def venda = Venda.get(id)
+        if (venda){
+            venda.status = StatusVenda.Entregue
+            venda.save(flush:true)
+            render(text:"Venda #${venda.id} entregue!")
+        }
+    }
+
 
     @Transactional
     @Override
     def save() {
-        if(handleReadOnly()) {
+        if (handleReadOnly()) {
             return
         }
         def instance = createResource()
 
         instance.validate()
         if (instance.hasErrors()) {
-            respond instance.errors, view:'create' // STATUS CODE 422
+            respond instance.errors, view: 'create' // STATUS CODE 422
             return
         }
 
-        vendaService.salvarVenda(instance,false)
+        vendaService.salvarVenda(instance, false)
 
         request.withFormat {
             form multipartForm {
@@ -58,8 +76,8 @@ class VendaController extends RestfulController {
             '*' {
                 response.addHeader(HttpHeaders.LOCATION,
                         g.createLink(
-                                resource: this.controllerName, action: 'show',id: instance.id, absolute: true,
-                                namespace: hasProperty('namespace') ? this.namespace : null ))
+                                resource: this.controllerName, action: 'show', id: instance.id, absolute: true,
+                                namespace: hasProperty('namespace') ? this.namespace : null))
                 respond instance, [status: CREATED]
             }
         }
@@ -68,7 +86,7 @@ class VendaController extends RestfulController {
     @Transactional
     @Override
     def delete() {
-        if(handleReadOnly()) {
+        if (handleReadOnly()) {
             return
         }
 
@@ -83,9 +101,9 @@ class VendaController extends RestfulController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: "${resourceClassName}.label".toString(), default: resourceClassName), instance.id])
-                redirect action:"index", method:"GET"
+                redirect action: "index", method: "GET"
             }
-            '*'{ render status: NO_CONTENT } // NO CONTENT STATUS CODE
+            '*' { render status: NO_CONTENT } // NO CONTENT STATUS CODE
         }
     }
 
@@ -105,7 +123,7 @@ class VendaController extends RestfulController {
     }
 
     def marcarEntregue(Long id) {
-       def v = Venda.get(id)
+        def v = Venda.get(id)
         v.status = StatusVenda.Entregue
 
         v.save(flush: true)
@@ -126,7 +144,7 @@ class VendaController extends RestfulController {
     def aguardandoPagamento() {}
 
     @Secured(['isAuthenticated()'])
-    def show(long id){
+    def show(long id) {
         respond Venda.get(id)
     }
 

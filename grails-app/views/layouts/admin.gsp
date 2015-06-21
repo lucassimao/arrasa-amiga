@@ -55,7 +55,7 @@
 
     #primary_nav_wrap ul ul li {
         float: none;
-        width: 200px
+        width: 210px
     }
 
     #primary_nav_wrap ul ul a {
@@ -113,12 +113,12 @@
                href="${createLink(controller: 'venda', action: 'index')}">
                 Vendas
             </a>
-      %{--      <ul>
-                <li><a href="#">Sub Deep 1</a></li>
-                <li><a href="#">Sub Deep 2</a></li>
-                <li><a href="#">Sub Deep 3</a></li>
-                <li><a href="#">Sub Deep 4</a></li>
-            </ul>--}%
+            <ul>
+                <li>
+                    <a href="${createLink(controller: 'venda', action: 'showPedidosEnviadosPelosCorreios')}">
+                        Enviados pelos Correios
+                    </a></li>
+            </ul>
         </li>
 
         <li>

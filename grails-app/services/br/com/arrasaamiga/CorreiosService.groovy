@@ -1,5 +1,6 @@
 package br.com.arrasaamiga
 
+import groovyx.net.http.ContentType
 import groovyx.net.http.HTTPBuilder
 import static groovyx.net.http.Method.GET
 import static groovyx.net.http.ContentType.XML
@@ -15,11 +16,11 @@ class CorreiosService {
         return "http://websro.correios.com.br/sro_bin/txect01\$.Inexistente?P_LINGUA=001&P_TIPO=002&P_COD_LIS=${trackingCode}"
     }
 
-    public boolean isCepValido(String cep){
-        try{
-            Double frete = calcularFrete(cep,ServicoCorreio.PAC)
+    public boolean isCepValido(String cep) {
+        try {
+            Double frete = calcularFrete(cep, ServicoCorreio.PAC)
             return (frete > 0)
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace()
             return false
         }
@@ -57,6 +58,29 @@ class CorreiosService {
         }
 
 
+    }
+
+    public String getTranckingHistory(String codigoRastreio) {
+        /*String trackingURL= getTrackingURL(codigoRastreio)
+         def page = new XmlSlurper(new org.cyberneko.html.parsers.SAXParser()).parse(trackingURL)
+         def tableData = page.'**'.findAll{ it.name().toLowerCase().equals("table")}
+ */
+
+        def http = new HTTPBuilder("http://websro.correios.com.br")
+        http.request(GET, ContentType.TEXT) { req ->
+
+            uri.path = '/sro_bin/txect01\$.Inexistente'
+            uri.query = [P_LINGUA : '001', P_TIPO   : '002', P_COD_LIS: codigoRastreio]
+
+            response.success = { resp, reader ->
+                assert resp.status == 200
+
+                String html = reader.text
+                def group = (html =~ /(?msi)<table(.+)<\/table>/) // retirando apenas a tabela do conteudo HTML
+                return group[0][0]
+            }
+
+        }
     }
 
 }

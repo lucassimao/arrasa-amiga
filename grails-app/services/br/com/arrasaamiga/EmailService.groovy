@@ -110,4 +110,16 @@ class EmailService {
             html "<body> <p> Pedido #${venda.id} foi cancelado </p> </body>"
         }
     }
+
+    def enviarRelatorioDePedidosEnviadosPorCorreios(List<TrackingHistory> histories) {
+
+        mailService.sendMail {
+            to administradores
+            async true
+            subject "Arrasa Amiga - Relatório de Pedidos Enviados pelos Correios"
+            html groovyPageRenderer.render(template:'/venda/templates/trackingHistoryReport',
+                   model:[histories: histories])
+        }
+    }
+
 }
