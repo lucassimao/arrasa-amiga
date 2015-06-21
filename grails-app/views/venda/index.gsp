@@ -26,13 +26,16 @@
 
         });
     </asset:script>
+
 </head>
 
 <body>
+
 <a href="#list-venda" class="skip" tabindex="-1"><g:message code="default.link.skip.label"
                                                             default="Skip to content&hellip;"/></a>
 
 <div id="list-venda" class="content scaffold-list" role="main">
+
     <h1>Vendas</h1>
     <g:if test="${flash.message}">
         <div class="message" role="status">${flash.message}</div>

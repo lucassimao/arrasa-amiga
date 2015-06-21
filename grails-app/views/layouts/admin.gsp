@@ -17,10 +17,66 @@
 
     <g:layoutHead/>
 
+    <style type="text/css">
+
+
+    #primary_nav_wrap {
+        height: 25px;
+    }
+
+    #primary_nav_wrap ul {
+        list-style: none;
+        position: relative;
+        float: left;
+        overflow: visible;
+        margin: 0;
+        padding: 0;
+    }
+
+    #primary_nav_wrap ul li {
+        position: relative;
+        float: left;
+        margin: 0;
+        padding: 0
+    }
+
+    #primary_nav_wrap ul li:hover {
+        background: #f6f6f6
+    }
+
+    #primary_nav_wrap ul ul {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: #fff;
+        padding: 0
+    }
+
+    #primary_nav_wrap ul ul li {
+        float: none;
+        width: 200px
+    }
+
+    #primary_nav_wrap ul ul a {
+        line-height: 120%;
+        padding: 10px 15px
+    }
+
+    #primary_nav_wrap ul ul ul {
+        top: 0;
+        left: 100%
+    }
+
+    #primary_nav_wrap ul li:hover > ul {
+        display: block
+    }
+    </style>
+
 </head>
 
 <body>
-<div class="nav" role="navigation" style="margin-bottom:40px;">
+<div class="nav" id="primary_nav_wrap" role="navigation">
     <ul>
         <li><a class="home" href="${createLink(uri: '/')}">Home</a></li>
         <li>
@@ -47,16 +103,22 @@
 
         <li>
             <a style="${(controllerName.equals('estoque')) ? 'background-color:#666;color:white;' : ''}"
-               href="${createLink(controller: 'estoque',action: 'index')}">
+               href="${createLink(controller: 'estoque', action: 'index')}">
                 Estoque
             </a>
         </li>
 
         <li>
             <a style="${(controllerName.equals('venda')) ? 'background-color:#666;color:white;' : ''}"
-               href="${createLink(controller: 'venda',action:'index')}">
+               href="${createLink(controller: 'venda', action: 'index')}">
                 Vendas
             </a>
+      %{--      <ul>
+                <li><a href="#">Sub Deep 1</a></li>
+                <li><a href="#">Sub Deep 2</a></li>
+                <li><a href="#">Sub Deep 3</a></li>
+                <li><a href="#">Sub Deep 4</a></li>
+            </ul>--}%
         </li>
 
         <li>
