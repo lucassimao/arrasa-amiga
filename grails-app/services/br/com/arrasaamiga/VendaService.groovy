@@ -126,8 +126,8 @@ class VendaService {
             def cal2 = Calendar.getInstance()
             cal2.time = dia
 
-            boolean sameDay = calDiaEntrega.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-                    calDiaEntrega.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
+            boolean sameDay = calDiaEntrega[Calendar.YEAR] == cal2[Calendar.YEAR] &&
+                              calDiaEntrega[Calendar.DAY_OF_YEAR] == cal2[Calendar.DAY_OF_YEAR]
 
             return sameDay
         }
