@@ -196,8 +196,9 @@ class FecharVendaSpec extends IntegrationSpec {
             // o carrinho nao eh esvaziado, p/ caso nao dê certo da primeira vez e assim o cliente pode tentar novamente
             assertNotNull controller.session.shoppingCart
 
-
     }
+
+
 
 
 }

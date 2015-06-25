@@ -19,7 +19,7 @@ class ShoppingCartController {
 
 
     static allowedMethods = [add: "POST", removerProduto: "POST", updateDeliveryAddress: 'POST']
-    def beforeInterceptor = [action: this.&apagarPedidosNaoConcluidos, only: ['add','fecharVenda']]
+    def beforeInterceptor = [action: this.&apagarPedidosNaoConcluidos, only: ['add','fecharVenda','removerProduto']]
 
     def index() {
         def shoppingCart = getShoppingCart()
@@ -294,7 +294,7 @@ class ShoppingCartController {
      * Isso é necessário pra evitar que tentativas prévias de compra feitas
      * por um cliente impeça o mesmo de adquirir um produto
      */
-    private void apagarPedidosNaoConcluidos() {
+    protected void apagarPedidosNaoConcluidos() {
         def user = springSecurityService.currentUser
 
         if (user != null) {
