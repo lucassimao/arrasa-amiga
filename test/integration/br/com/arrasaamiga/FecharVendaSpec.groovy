@@ -2,8 +2,6 @@ package br.com.arrasaamiga
 
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.test.spock.IntegrationSpec
-import org.springframework.transaction.TransactionDefinition
-import org.springframework.transaction.TransactionStatus
 
 import static org.junit.Assert.assertNotNull
 import static org.junit.Assert.assertNull

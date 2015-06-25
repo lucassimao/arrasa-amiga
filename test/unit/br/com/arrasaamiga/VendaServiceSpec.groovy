@@ -113,4 +113,16 @@ class VendaServiceSpec extends Specification {
             hoje+7  | false
     }
 
+    void "test excluir venda"(){
+        given:
+            def venda = Mock(Venda)
+            venda.itensVenda >> ( [new ItemVenda(id:3),new ItemVenda(id:4)] as Set)
+            def estoqueService = Mock(EstoqueService)
+            service.estoqueService= estoqueService
+        when:
+            service.excluirVenda(venda)
+        then:
+            1 * venda.delete()
+            1 * estoqueService.reporItens(venda.itensVenda)
+    }
 }
