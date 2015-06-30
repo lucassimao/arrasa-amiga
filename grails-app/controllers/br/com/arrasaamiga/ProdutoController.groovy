@@ -23,7 +23,6 @@ class ProdutoController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
-    def grailsApplication
     def springSecurityService
     def dataSource
 
@@ -480,7 +479,7 @@ class ProdutoController {
     }
 
     private String getUploadDir() {
-        return grailsApplication.mainContext.getResource('images/produtos').file.absolutePath
+        return new File('web-app/images/produtos').absolutePath
     }
 
 }
