@@ -18,13 +18,15 @@ class PedidosEnviadosPelosCorreiosStatusCheckerJob {
     def execute() {
         def pedidosEnviados = Venda.findAllByServicoCorreioIsNotNullAndCodigoRastreioIsNotNullAndStatus(StatusVenda.PagamentoRecebido)
 
-        List histories = []
-        pedidosEnviados.each {Venda v->
-            def history = correiosService.getTranckingHistory(v.codigoRastreio)
-            def trackingHistory = new TrackingHistory(venda: v, history: history)
-            histories << trackingHistory
-        }
+        if (pedidosEnviados) {
 
-        emailService.enviarRelatorioDePedidosEnviadosPorCorreios(histories)
+            List histories = []
+            pedidosEnviados.each { Venda v ->
+                def history = correiosService.getTranckingHistory(v.codigoRastreio)
+                def trackingHistory = new TrackingHistory(venda: v, history: history)
+                histories << trackingHistory
+            }
+            emailService.enviarRelatorioDePedidosEnviadosPorCorreios(histories)
+        }
     }
 }
