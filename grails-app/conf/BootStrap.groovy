@@ -1,3 +1,4 @@
+import br.com.arrasaamiga.Estoque
 import br.com.arrasaamiga.GrupoDeUsuario
 import br.com.arrasaamiga.TurnoEntrega
 import br.com.arrasaamiga.Usuario
@@ -44,6 +45,20 @@ class BootStrap {
 
                 UsuarioGrupoDeUsuario.create testUser, adminRole, true
             }
+        }
+
+        JSON.registerObjectMarshaller(Estoque){Estoque estoque->
+            def map = [:]
+            map['produto_id'] = estoque.produto.id
+            map['unidade'] = estoque.unidade
+            map['quantidade'] = estoque.quantidade
+            map['produto_nome'] = estoque.produto.nome
+            map['produto_precoAVistaEmCentavos'] = estoque.produto.precoAVistaEmCentavos
+            map['produto_precoAPrazoEmCentavos'] = estoque.produto.precoAPrazoEmCentavos
+            def fotosDaUnidadeDoProduto = estoque.produto.fotos.findAll{fotoProduto-> fotoProduto.unidade?.equals(estoque.unidade) }
+            map['produto_fotos'] = fotosDaUnidadeDoProduto.collect{fotoProduto-> fotoProduto.arquivo}
+
+            return map
         }
 
         JSON.registerObjectMarshaller(Venda) { Venda venda ->

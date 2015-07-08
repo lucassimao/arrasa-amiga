@@ -27,25 +27,12 @@ class EstoqueController extends RestfulController {
                 def c = Estoque.createCriteria()
 
                 def results = c.list() {
-
                     produto {
                         eq('foraDeLinha', false)
                         order('nome')
                     }
-
-                    projections {
-                        produto {
-                            property('id')
-                            property('nome')
-                            property('precoAVistaEmCentavos')
-                            property('precoAPrazoEmCentavos')
-                        }
-
-                        property('unidade')
-                        property('quantidade')
-                    }
                 }
-                render results as JSON
+                respond results
             }
             '*' {
                 params.max = Math.min(max ?: 10, 100)
