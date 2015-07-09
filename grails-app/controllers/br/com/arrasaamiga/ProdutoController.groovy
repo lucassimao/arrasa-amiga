@@ -478,7 +478,7 @@ class ProdutoController {
 
     }
 
-    private String getUploadDir() {
+    protected String getUploadDir() {
         return grailsApplication.mainContext.getResource("images/produtos").getFile().absolutePath
     }
 
