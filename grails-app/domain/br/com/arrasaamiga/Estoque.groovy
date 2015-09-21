@@ -1,8 +1,5 @@
 package br.com.arrasaamiga
 
-import br.com.arrasaamiga.excecoes.EstoqueException
-import org.apache.commons.logging.LogFactory
-
 class Estoque {
 
     Produto produto

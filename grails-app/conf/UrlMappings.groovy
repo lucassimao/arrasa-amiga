@@ -13,7 +13,7 @@ class UrlMappings {
         "/$produto-$id"(controller: "produto", action: "detalhes")
         "/produtos/$grupoDeProduto"(controller: "home", action: "index")
         "/api/vendas"(resources: 'venda',includes:['index','save','delete','update'])
-        "/api/estoque"(resources: 'estoque',includes:['index'])
+        "/api/estoque"(resources: 'estoque',includes:['index','update'])
         "500"(view: '/error')
     }
 }

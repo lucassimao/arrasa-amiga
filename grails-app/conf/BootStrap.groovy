@@ -50,6 +50,7 @@ class BootStrap {
         JSON.registerObjectMarshaller(Estoque){Estoque estoque->
             def map = [:]
             map['produto_id'] = estoque.produto.id
+            map['estoque_id'] = estoque.id
             map['unidade'] = estoque.unidade
             map['quantidade'] = estoque.quantidade
             map['produto_nome'] = estoque.produto.nome
