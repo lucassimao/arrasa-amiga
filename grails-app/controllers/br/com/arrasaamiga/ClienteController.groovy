@@ -2,6 +2,7 @@ package br.com.arrasaamiga
 
 import grails.plugin.springsecurity.annotation.Secured
 import grails.util.Holders
+import groovy.sql.Sql
 import grails.validation.Validateable
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache
 import org.springframework.security.web.savedrequest.SavedRequest
@@ -85,6 +86,7 @@ class ClienteController {
 
 
     def springSecurityService
+    def dataSource
 
     def index() {
         def user = springSecurityService.currentUser
@@ -196,6 +198,60 @@ class ClienteController {
         def cliente = Cliente.findByUsuario(user)
 
         [pedidos: Venda.findAllByCliente(cliente, [sort: 'dateCreated', order: 'desc'])]
+    }
+
+    def enderecos(Long lastDownloadedTimestamp){
+
+        Date date = null
+        def sql = new Sql(dataSource)
+        if (lastDownloadedTimestamp == null)
+            lastDownloadedTimestamp = 0
+
+     /*    mysql>
+     select c1.id,c1.nome,c1.celular,c1.telefone,c1.endereco_complemento,c1.endereco_uf_id,c1.endereco_cidade_id,
+          c1.date_created from cliente c1 JOIN (SELECT celular,MAX(id)
+         id from cliente group by celular having celular is not null) c2 on c1.celular = c2.celular and c1.id=c2.id
+         UNION
+         select c1.id,c1.nome,c1.celular, c1.telefone,c1.endereco_complemento,c1.endereco_uf_id,c1.endereco_cidade_id,
+         c1.date_created from cliente c1 JOIN (SELECT telefone,MAX(id)
+         id from cliente group by telefone having telefone is not null) c2 on c1.telefone = c2.telefone and c1.id=c2.id
+
+
+          create view celulares_mais_recentes as select celular, max(id) id
+          from cliente group by celular having celular is not null;
+
+          create view telefones_mais_recentes as select telefone, max(id) id from
+          cliente group by telefone having telefone is not null;
+
+          create view clientes_enderecos_recentes as
+                select c1.nome,c1.celular,c1.telefone,c1.endereco_complemento,
+                c1.endereco_uf_id,c1.endereco_cidade_id,c1.endereco_bairro,c1.date_created
+          from cliente c1 JOIN celulares_mais_recentes c2 on c1.celular = c2.celular and
+          c1.id=c2.id          UNION
+                select c1.nome,c1.celular,c1.telefone,c1.endereco_complemento,c1.endereco_uf_id,
+                c1.endereco_cidade_id,c1.endereco_bairro,c1.date_created
+          from cliente c1 JOIN telefones_mais_recentes c2 on c1.telefone = c2.telefone and c1.id=c2.id;
+
+         */
+
+        def results = sql.rows('select * from clientes_enderecos_recentes where date_created > ?',[lastDownloadedTimestamp])
+
+        def list = results.collect{row->
+
+            def map = [:]
+
+            map['nome'] = row[0]
+            map['celular'] = row[1]
+            map['telefone'] = row[2]
+            map['complemento'] = row[3]
+            map['uf'] = row[4]
+            map['cidade'] = row[5]
+            map['bairro'] = row[6]
+
+            return map
+        }
+
+        respond results, [formats:['json']]
     }
 
 }
