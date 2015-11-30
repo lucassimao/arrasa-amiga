@@ -7,7 +7,7 @@ class ShoppingCart {
     Date lastUpdated
 
     static mapping = {
-        itens lazy: false, cascade: 'all'
+        itens lazy: false, cascade: 'all-delete-orphan'
     }
 
     static transients = ['valorTotalAPrazo', 'valorTotalAVista']

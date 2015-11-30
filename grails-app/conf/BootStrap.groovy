@@ -1,3 +1,4 @@
+import br.com.arrasaamiga.Endereco
 import br.com.arrasaamiga.Estoque
 import br.com.arrasaamiga.GrupoDeUsuario
 import br.com.arrasaamiga.TurnoEntrega
@@ -89,6 +90,7 @@ class BootStrap {
 
             venda.itensVenda.each {
                 def item = [:]
+                item['id'] = it.id
                 item['produto_id'] = it.produto.id
                 item['produto_nome'] = it.produto.nome
                 item['quantidade'] = it.quantidade

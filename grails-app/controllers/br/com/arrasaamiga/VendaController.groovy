@@ -7,6 +7,7 @@ import org.codehaus.groovy.grails.web.servlet.HttpHeaders
 
 import static org.springframework.http.HttpStatus.CREATED
 import static org.springframework.http.HttpStatus.NO_CONTENT
+import static org.springframework.http.HttpStatus.OK
 
 @Secured(['ROLE_ADMIN'])
 class VendaController extends RestfulController {
@@ -14,6 +15,7 @@ class VendaController extends RestfulController {
     static responseFormats = ['html', 'json']
     static allowedMethods = [marcarEntregue: 'POST']
     def vendaService
+    def estoqueService
 
 
     VendaController() {
@@ -48,6 +50,58 @@ class VendaController extends RestfulController {
             venda.status = StatusVenda.Entregue
             venda.save(flush:true)
             render(text:"Venda #${venda.id} entregue!")
+        }
+    }
+
+    @Transactional
+    @Override
+    def update() {
+        if(handleReadOnly()) {
+            return
+        }
+
+        Venda instance = queryForResource(params.id)
+        def itensBeforeUpdate = instance.itensVenda.collect {item-> item}
+
+        if (instance == null) {
+            transactionStatus.setRollbackOnly()
+            notFound()
+            return
+        }
+        def json = getObjectToBind().JSON
+        /* verificando se a atualização envolve os itens da venda
+         * caso contenha alterações no atributo, devolve os itens atuais para
+         * mais tarde remover os itens enviados pela requisição
+         */
+        def updateShoppingCart = json.containsKey('carrinho')
+        if(updateShoppingCart)
+            estoqueService.reporItens(instance.itensVenda)
+
+        instance.properties = json
+
+        if (instance.hasErrors()) {
+            transactionStatus.setRollbackOnly()
+            respond instance.errors, view:'edit' // STATUS CODE 422
+            return
+        }
+
+        instance.save flush:true
+
+        if(updateShoppingCart)
+            estoqueService.removerItens(instance.itensVenda)
+
+        request.withFormat {
+            form multipartForm {
+                flash.message = message(code: 'default.updated.message', args: [message(code: "${resourceClassName}.label".toString(), default: resourceClassName), instance.id])
+                redirect instance
+            }
+            '*'{
+                response.addHeader(HttpHeaders.LOCATION,
+                        g.createLink(
+                                resource: this.controllerName, action: 'show',id: instance.id, absolute: true,
+                                namespace: hasProperty('namespace') ? this.namespace : null ))
+                respond instance, [status: OK]
+            }
         }
     }
 
