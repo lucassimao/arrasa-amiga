@@ -200,12 +200,12 @@ class ClienteController {
         [pedidos: Venda.findAllByCliente(cliente, [sort: 'dateCreated', order: 'desc'])]
     }
 
+    @Secured(['ROLE_ADMIN'])
     def enderecos(Long lastDownloadedTimestamp){
 
-        Date date = null
         def sql = new Sql(dataSource)
-        if (lastDownloadedTimestamp == null)
-            lastDownloadedTimestamp = 0
+        lastDownloadedTimestamp = (lastDownloadedTimestamp != null)?:0
+        def date = new Date(lastDownloadedTimestamp)
 
      /*    mysql>
      select c1.id,c1.nome,c1.celular,c1.telefone,c1.endereco_complemento,c1.endereco_uf_id,c1.endereco_cidade_id,
@@ -234,7 +234,7 @@ class ClienteController {
 
          */
 
-        def results = sql.rows('select * from clientes_enderecos_recentes where date_created > ?',[lastDownloadedTimestamp])
+        def results = sql.rows('select * from clientes_enderecos_recentes where date_created > ?',[date])
 
         def list = results.collect{row->
 

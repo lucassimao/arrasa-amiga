@@ -14,6 +14,7 @@ class UrlMappings {
         "/produtos/$grupoDeProduto"(controller: "home", action: "index")
         "/api/vendas"(resources: 'venda',includes:['index','save','delete','update'])
         "/api/estoque"(resources: 'estoque',includes:['index','update'])
+        "/api/enderecos"(controller:'cliente',action: 'enderecos')
         "500"(view: '/error')
     }
 }
