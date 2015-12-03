@@ -10,6 +10,7 @@ class Cliente {
 	Endereco endereco
 	Usuario usuario
     Date dateCreated
+    Date lastUpdated
 
     transient springSecurityService
 
@@ -21,6 +22,7 @@ class Cliente {
         usuario cascade: 'all'
         endereco cascade: 'all'
         autoTimestamp true
+       // lastUpdated type:'timestamp'
     }
 
 
@@ -34,6 +36,7 @@ class Cliente {
         endereco(nullable: true)
         usuario(nullable: true)
         dateCreated(nullable: true)
+        lastUpdated(nullable:true)
 
     }
 
@@ -53,7 +56,6 @@ class Cliente {
             }
         }
     }
-
 
     public boolean isFromTeresina(){
 

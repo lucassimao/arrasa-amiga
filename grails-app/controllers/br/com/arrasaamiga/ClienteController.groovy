@@ -204,54 +204,87 @@ class ClienteController {
     def enderecos(Long lastDownloadedTimestamp){
 
         def sql = new Sql(dataSource)
-        lastDownloadedTimestamp = (lastDownloadedTimestamp != null)?:0
-        def date = new Date(lastDownloadedTimestamp)
+        if (lastDownloadedTimestamp == null)
+            lastDownloadedTimestamp = 0
 
-     /*    mysql>
-     select c1.id,c1.nome,c1.celular,c1.telefone,c1.endereco_complemento,c1.endereco_uf_id,c1.endereco_cidade_id,
-          c1.date_created from cliente c1 JOIN (SELECT celular,MAX(id)
-         id from cliente group by celular having celular is not null) c2 on c1.celular = c2.celular and c1.id=c2.id
-         UNION
-         select c1.id,c1.nome,c1.celular, c1.telefone,c1.endereco_complemento,c1.endereco_uf_id,c1.endereco_cidade_id,
-         c1.date_created from cliente c1 JOIN (SELECT telefone,MAX(id)
-         id from cliente group by telefone having telefone is not null) c2 on c1.telefone = c2.telefone and c1.id=c2.id
+     /*    
+            -- Gerar datas aleatorias para teste
+                insert into cliente(celular,telefone,nome,endereco_complemento) 
+                    select celular,telefone,nome,endereco_complemento from cliente;
 
+                update cliente set date_created=( SELECT NOW() - INTERVAL id SECOND);
+                
+                update cliente set last_updated=date_created;
+                
+                select last_updated_unix_timestamp,count(*) qtde from cliente group by last_updated_unix_timestamp order by qtde asc;
+                
+                --as trigger abaixo vao atualizar o campo last_updated_unix_timestamp
+            ------------------------------------------------------------------------
 
-          create view celulares_mais_recentes as select celular, max(id) id
-          from cliente group by celular having celular is not null;
+            alter table cliente add last_updated_unix_timestamp bigint(20);
 
-          create view telefones_mais_recentes as select telefone, max(id) id from
-          cliente group by telefone having telefone is not null;
+            create trigger convert_last_updated_2_unix_timestamp BEFORE UPDATE ON cliente for each row set 
+                NEW.last_updated_unix_timestamp=unix_timestamp(new.last_updated);
+
+            create trigger convert_last_updated_2_unix_timestamp_before_insert BEFORE INSERT ON cliente for 
+                each row set NEW.last_updated_unix_timestamp=unix_timestamp(new.last_updated);
+
+        -- depois de criar a coluna last_updated, atualizar com o valor de date_created
+            update cliente c JOIN cliente c2 on c.id=c2.id set c.last_updated=c2.date_created;
+
+            alter table cliente add index(last_updated_unix_timestamp);
+            alter table cliente add index(telefone);
+            alter table cliente add index(celular);
+
+            create view celulares_mais_recentes as select celular, max(last_updated_unix_timestamp) last_updated_unix_timestamp
+                from cliente group by celular having celular is not null;
+
+            create view telefones_mais_recentes as select telefone, max(last_updated_unix_timestamp) last_updated_unix_timestamp from
+                cliente group by telefone having telefone is not null;
 
           create view clientes_enderecos_recentes as
-                select c1.nome,c1.celular,c1.telefone,c1.endereco_complemento,
-                c1.endereco_uf_id,c1.endereco_cidade_id,c1.endereco_bairro,c1.date_created
-          from cliente c1 JOIN celulares_mais_recentes c2 on c1.celular = c2.celular and
-          c1.id=c2.id          UNION
-                select c1.nome,c1.celular,c1.telefone,c1.endereco_complemento,c1.endereco_uf_id,
-                c1.endereco_cidade_id,c1.endereco_bairro,c1.date_created
-          from cliente c1 JOIN telefones_mais_recentes c2 on c1.telefone = c2.telefone and c1.id=c2.id;
+                select c1.id,c1.nome,c1.celular,c1.ddd_celular,c1.telefone,c1.ddd_telefone,c1.endereco_complemento,
+                c1.endereco_uf_id,c1.endereco_cidade_id,c1.endereco_bairro,c1.last_updated_unix_timestamp
+            from cliente c1 JOIN celulares_mais_recentes c2 on c1.celular = c2.celular and c1.last_updated_unix_timestamp=c2.last_updated_unix_timestamp    
+          UNION
+                select c1.id,c1.nome,c1.celular,c1.ddd_celular,c1.telefone,c1.ddd_telefone,c1.endereco_complemento,c1.endereco_uf_id,
+                c1.endereco_cidade_id,c1.endereco_bairro,c1.last_updated_unix_timestamp
+          from cliente c1 JOIN telefones_mais_recentes c2 on c1.telefone = c2.telefone and c1.last_updated_unix_timestamp=c2.last_updated_unix_timestamp;
 
          */
 
-        def results = sql.rows('select * from clientes_enderecos_recentes where date_created > ?',[date])
+        def results = sql.rows('select * from clientes_enderecos_recentes where last_updated_unix_timestamp>?',[lastDownloadedTimestamp])
 
         def list = results.collect{row->
 
             def map = [:]
 
-            map['nome'] = row[0]
-            map['celular'] = row[1]
-            map['telefone'] = row[2]
-            map['complemento'] = row[3]
-            map['uf'] = row[4]
-            map['cidade'] = row[5]
-            map['bairro'] = row[6]
+            map['id']=row['id'] 
+            map['cliente'] = row['nome']
+            map['celular'] = row['celular']?:''
+            map['ddd_celular'] = row['ddd_celular']?:''
+            map['telefone'] = row['telefone']?:''
+            map['ddd_telefone'] = row['ddd_telefone']?:''
+            map['endereco'] = row['endereco_complemento']
+            
+
+            def uf = (row['endereco_uf_id'])?Uf.get(row['endereco_uf_id']):Uf.piaui
+
+            map['uf'] = uf.sigla
+            map['id_uf'] = uf.id
+
+            def cidade = (row['endereco_cidade_id'])?(Cidade.get(row['endereco_cidade_id'])):Cidade.teresina
+
+            map['cidade'] = cidade.nome
+            map['id_cidade'] = cidade.id
+            map['bairro'] = row['endereco_bairro']
+
+            map['last_updated_unix_timestamp'] = row['last_updated_unix_timestamp']
 
             return map
         }
 
-        respond results, [formats:['json']]
+        respond list, [formats:['json']]
     }
 
 }
