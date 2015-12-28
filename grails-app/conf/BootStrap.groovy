@@ -32,6 +32,14 @@ class BootStrap {
                 throw new Error('Diretorio de banners não foi criado')
         }
 
+        File anexosDir = grailsApplication.mainContext.getResource('images/anexos').file
+        if (!anexosDir.exists()) {
+
+            boolean dirCreated = anexosDir.mkdirs()
+            if (!dirCreated)
+                throw new Error('Diretorio de anexos não foi criado')
+        }
+
 
 
         Environment.executeForCurrentEnvironment {
@@ -73,6 +81,7 @@ class BootStrap {
             map['dataEntrega'] = venda.dataEntrega?.time
             map['turnoEntrega'] = (venda.turnoEntrega) ? venda.turnoEntrega.name() : TurnoEntrega.Manha.name()
             map['servicoCorreio'] = venda.servicoCorreio?.name()
+            map['anexos_json_array'] = (venda.anexos)?:[]
             map['cliente'] = [:]
             map['cliente']['id'] = venda.cliente?.id
             map['cliente']['nome'] = venda.cliente?.nome

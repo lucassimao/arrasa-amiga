@@ -12,7 +12,10 @@ class UrlMappings {
         "/pwdrecovery"(view: '/home/pwdRecovery')
         "/$produto-$id"(controller: "produto", action: "detalhes")
         "/produtos/$grupoDeProduto"(controller: "home", action: "index")
-        "/api/vendas"(resources: 'venda',includes:['index','save','delete','update'])
+        "/api/vendas"(resources: 'venda',includes:['index','save','delete','update']){
+            "/anexo"(controller:'anexo', action: 'save', method:'POST')
+            "/anexo"(controller:'anexo', action: 'delete', method:'DELETE')
+        }
         "/api/estoque"(resources: 'estoque',includes:['index','update'])
         "/api/enderecos"(controller:'cliente',action: 'enderecos')
         "500"(view: '/error')

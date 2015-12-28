@@ -26,6 +26,8 @@ class Venda {
     static transients = ['urlRastreioCorreios', 'valorTotal', 'valorItensAPrazo', 'valorItensAVista',
                          'descontoEmReais', 'freteEmReais', 'descontoParaCompraAVista', 'descontoPagSeguroEmReais','itensVenda']
 
+    static hasMany = ['anexos':String]
+
     static constraints = {
         freteEmCentavos(min: 0)
         codigoRastreio(blank: true, nullable: true)

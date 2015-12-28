@@ -15,5 +15,6 @@ gradlew.bat
 arrasa-amiga.sublime-workspace
 web-app/images/produtos/*
 web-app/images/banners/*
+web-app/images/anexos/*
 grails-app/assets/images/produtos/*
 grails-app/assets/images/banners/*.*

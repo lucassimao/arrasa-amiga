@@ -7,16 +7,17 @@ import org.codehaus.groovy.grails.web.servlet.HttpHeaders
 
 import static org.springframework.http.HttpStatus.CREATED
 import static org.springframework.http.HttpStatus.NO_CONTENT
+import static org.springframework.http.HttpStatus.BAD_REQUEST
 import static org.springframework.http.HttpStatus.OK
 
 @Secured(['ROLE_ADMIN'])
 class VendaController extends RestfulController {
 
     static responseFormats = ['html', 'json']
-    static allowedMethods = [marcarEntregue: 'POST']
+    static allowedMethods = [marcarEntregue: 'POST',addAnexo:'POST']
+
     def vendaService
     def estoqueService
-
 
     VendaController() {
         super(Venda)
@@ -61,18 +62,17 @@ class VendaController extends RestfulController {
         }
 
         Venda instance = queryForResource(params.id)
-        def itensBeforeUpdate = instance.itensVenda.collect {item-> item}
 
         if (instance == null) {
             transactionStatus.setRollbackOnly()
             notFound()
             return
         }
-        def json = getObjectToBind().JSON
         /* verificando se a atualização envolve os itens da venda
          * caso contenha alterações no atributo, devolve os itens atuais para
          * mais tarde remover os itens enviados pela requisição
          */
+        def json = getObjectToBind().JSON
         def updateShoppingCart = json.containsKey('carrinho')
         if(updateShoppingCart)
             estoqueService.reporItens(instance.itensVenda)
@@ -92,7 +92,8 @@ class VendaController extends RestfulController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: "${resourceClassName}.label".toString(), default: resourceClassName), instance.id])
+                flash.message = message(code: 'default.updated.message', args: [message(code: "${resourceClassName}.label".toString(), 
+                                default: resourceClassName), instance.id])
                 redirect instance
             }
             '*'{
