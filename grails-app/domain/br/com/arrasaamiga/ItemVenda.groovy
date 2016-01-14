@@ -7,8 +7,7 @@ class ItemVenda {
 	int quantidade
 
     int precoAVistaEmCentavos
-    int precoAPrazoEmCentavos   
-
+    int precoAPrazoEmCentavos  
 
 	static transients = ['subTotalAVista','subTotalAPrazo','precoAVistaEmReais','precoAPrazoEmReais']
 

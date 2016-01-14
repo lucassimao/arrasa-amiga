@@ -11,6 +11,8 @@ class Usuario {
 	boolean accountLocked
 	boolean passwordExpired
 
+	static transients = ['admin']
+
 	static constraints = {
 		username blank: false, unique: true
 		password blank: false
@@ -22,6 +24,10 @@ class Usuario {
 
 	Set<GrupoDeUsuario> getAuthorities() {
 		UsuarioGrupoDeUsuario.findAllByUsuario(this).collect { it.grupoDeUsuario } as Set
+	}
+
+	boolean isAdmin(){
+		return this.authorities.any{ GrupoDeUsuario grupo-> grupo.authority.equals('ROLE_ADMIN') }
 	}
 
 	def beforeInsert() {

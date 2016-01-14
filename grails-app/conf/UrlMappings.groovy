@@ -17,6 +17,7 @@ class UrlMappings {
             "/anexo"(controller:'anexo', action: 'delete', method:'DELETE')
         }
         "/api/estoque"(resources: 'estoque',includes:['index','update'])
+        "/api/caixa"(controller: 'caixa')
         "/api/enderecos"(controller:'cliente',action: 'enderecos')
         "500"(view: '/error')
     }

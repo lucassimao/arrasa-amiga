@@ -21,6 +21,7 @@ class ShoppingCart {
         return set.sum(0) { it.quantidade }
     }
 
+    @Deprecated
     public Double getValorTotalAPrazo() {
         int total = 0
 
@@ -33,7 +34,7 @@ class ShoppingCart {
 
     }
 
-
+    @Deprecated
     public Double getValorTotalAVista() {
         int total = 0
 
@@ -86,6 +87,32 @@ class ShoppingCart {
 
             this.addToItens(itemVenda)
         }
+
+    }
+
+
+    /** metodos novos, tratam valores monetarios como centavos */
+
+    public long _getValorTotalAPrazo() {
+        long total = 0
+
+        this.itens?.each { itemVenda ->
+
+            total += itemVenda.precoAPrazoEmCentavos * itemVenda.quantidade
+        }
+
+        return total
+
+    }
+
+    public long _getValorTotalAVista() {
+        int total = 0
+
+        this.itens?.each { itemVenda ->
+            total += itemVenda.precoAVistaEmCentavos * itemVenda.quantidade
+        }
+
+        return total
 
     }
 

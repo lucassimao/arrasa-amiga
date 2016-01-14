@@ -1,5 +1,6 @@
 import br.com.arrasaamiga.Endereco
 import br.com.arrasaamiga.Estoque
+import br.com.arrasaamiga.caixa.Bonus
 import br.com.arrasaamiga.GrupoDeUsuario
 import br.com.arrasaamiga.TurnoEntrega
 import br.com.arrasaamiga.Usuario
@@ -41,19 +42,26 @@ class BootStrap {
         }
 
 
+        if (!GrupoDeUsuario.findByAuthority('ROLE_ADMIN'))
+            new GrupoDeUsuario(authority: 'ROLE_ADMIN').save(flush: true)
 
-        Environment.executeForCurrentEnvironment {
 
-            development {
+        if (!GrupoDeUsuario.findByAuthority('ROLE_VENDEDOR'))
+            new GrupoDeUsuario(authority: 'ROLE_VENDEDOR').save(flush: true)
 
-                def adminRole = new GrupoDeUsuario(authority: 'ROLE_ADMIN').save(flush: true)
-                def userRole = new GrupoDeUsuario(authority: 'ROLE_CLIENTE').save(flush: true)
+        if (!GrupoDeUsuario.findByAuthority('ROLE_CLIENTE'))
+            new GrupoDeUsuario(authority: 'ROLE_CLIENTE').save(flush: true)            
 
-                def testUser = new Usuario(username: 'me', enabled: true, password: '123')
-                testUser.save(flush: true)
 
-                UsuarioGrupoDeUsuario.create testUser, adminRole, true
-            }
+        JSON.registerObjectMarshaller(Bonus){Bonus bonus->
+            String pattern = 'dd/MM/yyyy'
+
+            def map = [:]
+            map['week_start'] = bonus.weekStart.format(pattern)
+            map['week_end'] = bonus.weekEnd.format(pattern)
+            map['strike_dates'] = bonus.strikeDates.collect{date-> date.format(pattern)}
+
+            return map
         }
 
         JSON.registerObjectMarshaller(Estoque){Estoque estoque->

@@ -7,7 +7,7 @@ class Venda {
     Cliente cliente
     int freteEmCentavos = 0
     int descontoPagSeguroEmCentavos = 0
-    int taxasPagSeguroEmCentavos = 0
+    int taxasPagSeguroEmCentavos = 0 // taxa de parcelamento
     FormaPagamento formaPagamento
     StatusVenda status
     Date dataEntrega
@@ -24,7 +24,8 @@ class Venda {
 
 
     static transients = ['urlRastreioCorreios', 'valorTotal', 'valorItensAPrazo', 'valorItensAVista',
-                         'descontoEmReais', 'freteEmReais', 'descontoParaCompraAVista', 'descontoPagSeguroEmReais','itensVenda']
+                         'descontoEmReais', 'freteEmReais', 'descontoParaCompraAVista', 
+                         'descontoPagSeguroEmReais','itensVenda','taxasPagSeguroEmReais','desconto','frete']
 
     static hasMany = ['anexos':String]
 
@@ -52,6 +53,7 @@ class Venda {
     }
 
     def beforeInsert(){
+
         if (this.formaPagamento == FormaPagamento.AVista) {
             this.detalhesPagamento = 'Pagamento em dinheiro no momento do recebimento do produto'
         }else{
@@ -59,6 +61,11 @@ class Venda {
         }
     }
 
+    /**
+     * Retorna o valor total que o cliente pagará pelo pedido
+     *
+     */
+    @Deprecated     
     public Double getValorTotal() {
         BigDecimal valorItensAPrazo = new BigDecimal(getValorItensAPrazo().toString())
         BigDecimal freteEmReais = new BigDecimal(getFreteEmReais().toString())
@@ -67,15 +74,7 @@ class Venda {
         return (valorItensAPrazo + freteEmReais - descontoEmReais).doubleValue()
     }
 
-    public Double getValorItensAPrazo() {
-        return this.carrinho.getValorTotalAPrazo()
-    }
-
-    public Double getValorItensAVista() {
-        return this.carrinho.getValorTotalAVista()
-    }
-
-
+    @Deprecated
     public Double getFreteEmReais() {
         if (cliente.isDentroDaAreaDeEntregaRapida())
             return 2d
@@ -89,6 +88,7 @@ class Venda {
         }
     }
 
+    @Deprecated 
     public Double getDescontoEmReais() {
 
         if (this.formaPagamento.equals(FormaPagamento.AVista)) {
@@ -104,8 +104,19 @@ class Venda {
         }
     }
 
+    @Deprecated
+    public Double getDescontoParaCompraAVista() {
+        def valorItensAPrazo = new BigDecimal(getValorItensAPrazo().toString())
+        def valorItensAVista = new BigDecimal(getValorItensAVista().toString())
+
+        def descontoEmReais = valorItensAPrazo - valorItensAVista
+        return descontoEmReais.doubleValue()
+    }    
+
     /*
      *  Esse desconto existe para pagamentos via boleto
+     *  @Deprecated deve ser removido
+     *
      *
      */
 
@@ -117,25 +128,50 @@ class Venda {
         return this.carrinho.itens
     }
 
-    /*
-     *
-     * método utilitário
-     *
-     */
-
-    public Double getDescontoParaCompraAVista() {
-        def valorItensAPrazo = new BigDecimal(getValorItensAPrazo().toString())
-        def valorItensAVista = new BigDecimal(getValorItensAVista().toString())
-
-        def descontoEmCentavos = valorItensAPrazo - valorItensAVista
-
-        return descontoEmCentavos.doubleValue()
+    @Deprecated
+    public Double getValorItensAPrazo() {
+        return this.carrinho.getValorTotalAPrazo()
     }
 
+    @Deprecated
+    public Double getValorItensAVista() {
+        return this.carrinho.getValorTotalAVista()
+    }    
 
     public String getUrlRastreioCorreios() {
         return correiosService.getTrackingURL(codigoRastreio)
     }
 
+    /* novos metodos que tratam de moeda com tipo inteiro, tudo em centavos */
+
+
+    public long getDesconto() {
+
+        if (this.formaPagamento.equals(FormaPagamento.AVista))
+            return _getDescontoParaCompraAVista()
+         else
+            return descontoPagSeguroEmCentavos
+        
+    }
+
+    public long _getValorItensAPrazo() {
+        return this.carrinho._getValorTotalAPrazo()
+    }    
+
+    public Double _getValorItensAVista() {
+        return this.carrinho._getValorTotalAVista()
+    }    
+
+    public long _getDescontoParaCompraAVista() {
+        long valorItensAPrazo = _getValorItensAPrazo()
+        long valorItensAVista = _getValorItensAVista()
+        long descontoEmCentavos = valorItensAPrazo - valorItensAVista
+
+        return descontoEmCentavos
+    }  
+
+    public long _getValorTotal() {
+        return _getValorItensAPrazo() + this.freteEmCentavos - getDesconto()
+    }     
 
 }
