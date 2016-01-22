@@ -1,15 +1,10 @@
 package br.com.arrasaamiga
 
-import br.com.uol.pagseguro.domain.AccountCredentials
-import br.com.uol.pagseguro.domain.Transaction
-import br.com.uol.pagseguro.domain.checkout.Checkout
-import br.com.uol.pagseguro.enums.Currency
-import br.com.uol.pagseguro.enums.PaymentMethodCode
-import br.com.uol.pagseguro.enums.ShippingType
-import br.com.uol.pagseguro.enums.TransactionStatus
 import br.com.uol.pagseguro.exception.PagSeguroServiceException
-import br.com.uol.pagseguro.service.NotificationService
-import br.com.uol.pagseguro.service.TransactionSearchService
+import br.com.uol.pagseguro.service.*
+import br.com.uol.pagseguro.domain.*
+import br.com.uol.pagseguro.domain.checkout.Checkout
+import br.com.uol.pagseguro.enums.*
 
 import java.text.NumberFormat
 
@@ -31,6 +26,45 @@ class PagSeguroService {
             e.printStackTrace()
             return null
         }
+    }
+
+
+    public List<TransactionSummary> searchTransactions(Date inicio,Date fim) throws PagSeguroServiceException  {
+        TransactionSearchResult transactionSearchResult = TransactionSearchService.searchByDate(getAccountCredentials(),inicio,fim,1,100)
+        def transactions = []
+
+        if (!transactionSearchResult)
+            return transactions
+
+
+        int page = transactionSearchResult.page
+        int totalPages = transactionSearchResult.totalPages
+
+        (1..totalPages).each {
+
+            List<TransactionSummary> listTransactionSummaries = transactionSearchResult.transactionSummaries 
+            def transactionSummariesIterator = listTransactionSummaries.iterator() 
+
+            while (transactionSummariesIterator.hasNext()) {  
+                TransactionSummary currentTransactionSummary =  transactionSummariesIterator.next() 
+                
+                if (currentTransactionSummary.status.equals(TransactionStatus.CANCELLED))
+                    continue
+              
+                transactions << currentTransactionSummary
+           }  
+
+           if (page < totalPages){
+                ++page
+                transactionSearchResult = TransactionSearchService.searchByDate(getAccountCredentials(),inicio,fim,page,100)
+                if (!transactionSearchResult)
+                    return null
+           } 
+
+        }
+
+
+        return transactions
     }
 
     public StatusVenda getStatusTransacao(String transacaoPagSeguro) {

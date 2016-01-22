@@ -34,6 +34,8 @@ class CaixaSpec extends  Specification {
         return new Date().parse("dd/MM/yyyy H:m:s", data)
     }
 
+
+
     // metodo para desativar o autotimestamp das classes de dominio
     private void shouldTimestamp(Object domainObjectInstance, boolean shouldTimestamp) {
         ClosureEventTriggeringInterceptor closureInterceptor = grailsApplication.mainContext.getBean('eventTriggeringInterceptor')
@@ -50,8 +52,8 @@ class CaixaSpec extends  Specification {
 
         shouldTimestamp(new Venda(),false)
 
-        new Caixa(inicio: str2Date('01/12/2015 0:0:0'),
-                  fim: str2Date('31/12/2015 23:59:59')).save(flush:true,failOnError:true)
+        new Caixa(inicio: new Date().parse("dd/MM/yyyy", '01/12/2015'),
+                  fim: new Date().parse("dd/MM/yyyy", '31/12/2015')).save(flush:true,failOnError:true)
 
 
         // evitando que a codificação desnecessaria da senha
@@ -158,6 +160,23 @@ class CaixaSpec extends  Specification {
 
        shouldTimestamp(new Venda(),true)      
        fixtureOK = true
+
+    }
+
+
+    void "Garantindo que os horarios do inicio e fim do caixa estao corretos"() {
+        given:
+            def caixa =  Caixa.first()
+
+        expect: 
+
+            caixa.inicio[Calendar.HOUR_OF_DAY] == 0
+            caixa.inicio[Calendar.MINUTE] == 0
+            caixa.inicio[Calendar.SECOND] == 0
+
+            caixa.fim[Calendar.HOUR_OF_DAY] == 23
+            caixa.fim[Calendar.MINUTE] == 59
+            caixa.fim[Calendar.SECOND] == 59
 
     }
 

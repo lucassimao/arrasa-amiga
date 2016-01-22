@@ -1,6 +1,8 @@
 package br.com.arrasaamiga
 
 import  grails.gsp.PageRenderer
+import br.com.arrasaamiga.financeiro.TransactionSummary
+import org.codehaus.groovy.grails.web.mapping.LinkGenerator
 
 class EmailService {
 
@@ -9,6 +11,7 @@ class EmailService {
     def mailService
     def correiosService
     PageRenderer groovyPageRenderer
+    LinkGenerator grailsLinkGenerator
 
     def administradores = ['lsimaocosta@gmail.com','arrasaamiga@gmail.com'].toArray()
 
@@ -86,6 +89,21 @@ class EmailService {
                     "</body>"
         }
     }
+
+    def notificarTransacoesPagSeguroDesconhecidas(){
+        int qtdeTransacoes = TransactionSummary.count()
+        def link = grailsLinkGenerator.link(controller: 'transactionSummary', action: 'index', absolute: true)
+
+        mailService.sendMail {
+
+            to administradores
+            async true
+            subject "Arrasa Amiga - Transações PagSeguro"
+            html '<body> ' +
+                    "<p> Existem ${qtdeTransacoes} transações do pagseguro não associadas: " +
+                    "<a href='${link}'>Ver</a></p></body>"
+        }
+    }    
 
     def notificarCancelamento(Venda venda) {
         mailService.sendMail {

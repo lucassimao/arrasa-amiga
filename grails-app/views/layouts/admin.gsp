@@ -95,13 +95,6 @@
         </li>
 
         <li>
-            <a style="${(controllerName.equals('pedido')) ? 'background-color:#666;color:white;' : ''}"
-               href="${createLink(controller: 'pedido')}">
-                Pedidos
-            </a>
-        </li>
-
-        <li>
             <a style="${(controllerName.equals('estoque')) ? 'background-color:#666;color:white;' : ''}"
                href="${createLink(controller: 'estoque', action: 'index')}">
                 Estoque
@@ -122,8 +115,15 @@
         </li>
 
         <li>
+            <a style="${(controllerName.equals('transactionSummary')) ? 'background-color:#666;color:white;' : ''}"
+               href="${createLink(controller: 'transactionSummary')}">
+                Transações PagSeguro
+            </a>
+        </li>        
+
+        <li>
             <a style="${(controllerName.equals('aviso')) ? 'background-color:#666;color:white;' : ''}"
-               href="${createLink(controller: 'aviso')}">
+               href="${createLink(controller: 'aviso',action:'list')}">
                 Avisos
             </a>
         </li>

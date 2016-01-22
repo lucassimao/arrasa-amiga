@@ -23,7 +23,9 @@ class Caixa {
     }
 
     public void setFim(Date date){
-        this.fim = (date != null)?date.clearTime():null
+        this.fim = date
+        if (date)
+            this.fim.set(hourOfDay: 23, minute: 59, second: 59)
     }    
 
     /**
