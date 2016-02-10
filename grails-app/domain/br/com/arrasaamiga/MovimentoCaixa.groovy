@@ -1,13 +1,16 @@
 package br.com.arrasaamiga
 
-class MovimentoCaixa {
+import groovy.transform.ToString
 
+@ToString(includeNames=true)
+class MovimentoCaixa {
 
     Date dateCreated
     TipoMovimentoCaixa tipoMovimentoCaixa
     long valorEmCentavos
     FormaPagamento formaPagamento
-
+    String descricao
+    Date data
 
     static constraints = {
     	tipoMovimentoCaixa(nullable:true)

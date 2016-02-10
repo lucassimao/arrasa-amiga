@@ -7,12 +7,12 @@ import org.hibernate.ObjectNotFoundException
 import static org.springframework.http.HttpStatus.BAD_REQUEST
 import static org.springframework.http.HttpStatus.OK
 
-@Secured(['ROLE_ADMIN'])
+@Secured(['ROLE_ADMIN','ROLE_VENDEDOR'])
 class AnexoController {
 
 	def grailsApplication
 
-    static allowedMethods = [save: 'POST',delete:'DELETE']
+  static allowedMethods = [save: 'POST',delete:'DELETE']
 
 
 	def handleException(Exception e){
@@ -52,7 +52,7 @@ class AnexoController {
             def file = new File(uploadDir + File.separator + anexo)
             file.delete()
             venda.save(flush:true)
-	
+
 	        render status: OK,text:'Anexo removido'
 		}else{
 			render status: BAD_REQUEST,text:"Anexo ${anexo} inexistente"

@@ -6,10 +6,12 @@ import grails.test.mixin.*
 import spock.lang.*
 
 @TestFor(TransactionSummaryController)
-@Mock([TransactionSummary,Caixa,Venda])
+@Mock([TransactionSummary,Venda])
 class TransactionSummaryControllerSpec extends Specification {
 
     static Venda v1, v2
+    def caixaService
+
     def populateValidParams(params) {
         assert params != null
         params["code"] = '4543895843958904385094850984354'
@@ -23,8 +25,12 @@ class TransactionSummaryControllerSpec extends Specification {
     }
 
     void setup(){
-        new Caixa(inicio: new Date().parse('dd/MM/yyyy','01/12/2015'),
-                 fim:new Date().parse('dd/MM/yyyy','31/12/2015')).save(flush:true,failOnError:true)
+
+        caixaService = Mock(CaixaService)
+        caixaService.getInicioCaixaAtual() >> Date.parse('dd/MM/yyyy','01/12/2015')
+        caixaService.getFimCaixaAtual() >> Date.parse('dd/MM/yyyy','31/12/2015')
+
+        controller.caixaService = caixaService
 
 
         v1 = new Venda(dataEntrega: new Date().parse('dd/MM/yyyy','10/12/2015'),
@@ -36,7 +42,7 @@ class TransactionSummaryControllerSpec extends Specification {
         v2 = new Venda(dataEntrega: new Date().parse('dd/MM/yyyy','12/12/2015'),
                 transacaoPagSeguro:null,
                  formaPagamento:FormaPagamento.PagSeguro,status:StatusVenda.PagamentoRecebido,
-                 cliente:new Cliente(nome:'Cliente 3')).save(flush:true,failOnError:true)        
+                 cliente:new Cliente(nome:'Cliente 3')).save(flush:true,failOnError:true)
 
         // não conta: é a vista
         new Venda(dataEntrega: new Date().parse('dd/MM/yyyy','11/12/2015'),
@@ -48,13 +54,13 @@ class TransactionSummaryControllerSpec extends Specification {
         new Venda(dataEntrega: new Date().parse('dd/MM/yyyy','10/12/2015'),
                 transacaoPagSeguro:'dfjkldjfkldjfkldsjks',
                  formaPagamento:FormaPagamento.PagSeguro,status:StatusVenda.Entregue,
-                 cliente:new Cliente(nome:'Cliente 4')).save(flush:true,failOnError:true)       
+                 cliente:new Cliente(nome:'Cliente 4')).save(flush:true,failOnError:true)
 
         // não conta, ainda nao passou cartao
         new Venda(dataEntrega: new Date().parse('dd/MM/yyyy','10/12/2015'),
                 transacaoPagSeguro:null,
                  formaPagamento:FormaPagamento.PagSeguro,status:StatusVenda.AguardandoPagamento,
-                 cliente:new Cliente(nome:'Cliente 41')).save(flush:true,failOnError:true)                     
+                 cliente:new Cliente(nome:'Cliente 41')).save(flush:true,failOnError:true)
 
     }
 
@@ -138,7 +144,7 @@ class TransactionSummaryControllerSpec extends Specification {
             v1.descontoPagSeguroEmCentavos == 0L
             v1.taxasPagSeguroEmCentavos == 0L
 
-        when:        
+        when:
             controller.update(transactionSummary, v1)
 
         then:"A redirect is issues to the show action"

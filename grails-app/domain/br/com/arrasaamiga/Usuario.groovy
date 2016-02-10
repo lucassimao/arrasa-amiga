@@ -12,6 +12,7 @@ class Usuario {
 	boolean passwordExpired
 
 	static transients = ['admin']
+	static hasMany = ['usuarioGrupoDeUsuarios':UsuarioGrupoDeUsuario]
 
 	static constraints = {
 		username blank: false, unique: true
@@ -20,6 +21,16 @@ class Usuario {
 
 	static mapping = {
 		password column: '`password`'
+	}
+
+	static namedQueries = {
+		vendedores {
+			usuarioGrupoDeUsuarios{
+				grupoDeUsuario{
+					'in'('authority',['ROLE_ADMIN','ROLE_VENDEDOR'])
+				}
+			}
+		}
 	}
 
 	Set<GrupoDeUsuario> getAuthorities() {

@@ -4,99 +4,142 @@ import grails.plugin.springsecurity.annotation.Secured
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 import grails.converters.*
+import java.text.ParseException
 import br.com.arrasaamiga.caixa.Bonus
 
 @Transactional(readOnly = true)
-@Secured(['ROLE_ADMIN','ROLE_VENDEDOR'])
+@Secured(['ROLE_ADMIN'])
 class CaixaController {
 
-    static allowedMethods = [show: "GET"]
-    
-    def springSecurityService   
+    static allowedMethods = [index: 'GET']
+    static responseFormats = ['json']
 
-    def show() {
+    def springSecurityService
+    def caixaService
 
-        def caixaAtual = Caixa.last()
-        if (caixaAtual == null)
-            notFound()
+    @Secured(['ROLE_ADMIN','ROLE_VENDEDOR'])
+    def index(String _inicio,String _fim) {
+
+        Date start = null, end = null
+        try{
+            start = (_inicio)? Date.parse('dd/MM/yyyy',_inicio):caixaService.getInicioCaixaAtual()
+            start.clearTime()
+
+            end = (_fim)?  Date.parse('dd/MM/yyyy',_fim) : caixaService.getFimCaixaAtual()
+            end.set(hourOfDay: 23, minute: 59, second: 59)
+
+        }catch(ParseException e){
+            render(status: BAD_REQUEST, text: e.message)
+            return
+        }
 
         def currentUser = springSecurityService.currentUser
         def vendedor = null
         // se o usuario atual nao for admin, consulta apenas as vendas feitas por ele
         // caso contrario consulta vendas de todos os vendedores
-        if (!currentUser.isAdmin()) 
+        if (!currentUser.isAdmin())
             vendedor = currentUser
 
-        def vendas = caixaAtual.getVendas(vendedor)
-        long valorTotal=0, totalAVista=0,totalAPrazo=0
-        def mapResumoVendedores = [:]
+        def vendas = caixaService.getVendas(start,end,vendedor)
+        long valorTotal=0, totalAVista=0,totalAPrazo=0,totalTaxasPagSeguro=0
+
+
+        def totaisDiarios = [:] // vendedor -> [ [data ,dinheiro, cartao], ... ]
+        def mapResumoVendedores = [:] // username -> ['dinheiro':0L,'cartao':0L,'total':0L,'salario':0L]
         def resumoBonus = [:] // username -> [data: valor total vendido a vista]
 
-        vendas.each{v->
-            // se a venda for a vista, o desconto tira o acrescimo de 10%
-            long valorItensEmCentavos = 0
+        //inicializando os mapas
+        def vendedores = Usuario.vendedores.list()*.username + 'site'
 
-            def username = 'site'
-            if (v.vendedor)
-                username = v.vendedor.username
+        vendedores.each{username->
+            mapResumoVendedores[username] = ['dinheiro':0L,'cartao':0L,'total':0L,'salario':0L]
+            resumoBonus[username] = [:]
+            totaisDiarios[username] = [:]
+        }
 
-            if (!mapResumoVendedores[username]){
-                mapResumoVendedores[username] = ['dinheiro':0L,'cartao':0L,'total':0L,'salario':0L]
-                resumoBonus[username] = [:]
+
+
+        (start..end).each{dt->
+            resumoBonus.each{username,map->
+                map[dt]= 0
             }
+        }
+
+        (start..end).step(7){inicio->
+            Date fim = (inicio+6 < end)?inicio+6:end
+            String intervalo = inicio.format('dd/MM') + ' - ' + fim.format('dd/MM')
+
+            totaisDiarios.each{username,map->
+                map[intervalo] = ['dinheiro':0L,'cartao':0L]
+            }
+        }
+
+        vendas.each{ v->
+
+            String username = (v.vendedor)?v.vendedor.username:'site'
+
+            def data =  (v.dataEntrega)?: v.dateCreated
+            data = new Date(data.time).clearTime() // apagando informações de hora,minuto e segundos
+
+           // se a venda for a vista, o desconto tira o acrescimo de 10%
+           long valorItensEmCentavos = 0
+           String intervalo = getIntervalo(start,end,data)
 
            switch(v.formaPagamento) {
                 case FormaPagamento.AVista:
                     valorItensEmCentavos = v._getValorItensAVista()
-                    mapResumoVendedores[username]['dinheiro'] += valorItensEmCentavos
-                    
-                    def dataEntrega = new Date(v.dataEntrega.time).clearTime()
-                    if ( !resumoBonus[username][dataEntrega] )
-                        resumoBonus[username][dataEntrega] = 0
 
-                    resumoBonus[username][dataEntrega] += valorItensEmCentavos
+                    mapResumoVendedores[username]['dinheiro'] += valorItensEmCentavos
+                    resumoBonus[username][data] += valorItensEmCentavos
+                    totaisDiarios[username][intervalo]['dinheiro'] += valorItensEmCentavos
                     break
                 case FormaPagamento.PagSeguro:
                     valorItensEmCentavos = v._getValorItensAPrazo()
-                    long taxaDosProdutos = ( valorItensEmCentavos * v.taxasPagSeguroEmCentavos)/v._getValorTotal()
-                    valorItensEmCentavos -= taxaDosProdutos
+                    totalTaxasPagSeguro += v.taxasPagSeguroEmCentavos
+
+                    //long taxaDosProdutos = ( valorItensEmCentavos * v.taxasPagSeguroEmCentavos)/v._getValorTotal()
+                    //valorItensEmCentavos -= taxaDosProdutos
+
                     mapResumoVendedores[username]['cartao'] += valorItensEmCentavos
+                    totaisDiarios[username][intervalo]['cartao'] += valorItensEmCentavos
                     break
             }
 
             mapResumoVendedores[username]['total'] += valorItensEmCentavos
+            // a porcentagem do salario eh sempre calculado em cima do valor a vista
+            v.itensVenda.each{itemVenda->
+                def bonus = itemVenda._getSubTotalAVista()*itemVenda.produto.bonus
+                mapResumoVendedores[username]['salario'] += bonus
+            }
             valorTotal += valorItensEmCentavos
-
         }
 
         mapResumoVendedores.each{ username, map->
-            map['salario'] = map['total']*0.15 // porcentagem do vendedor
-            
             // removendo os dias que o vendedor vendeu menos de R$ 500
-            if (resumoBonus[username]){
-                def strikes = caixaAtual.calcularBonus(resumoBonus[username])
-                if (strikes){
-                    map['strikes'] = strikes
-                }
+            def strikes = caixaService.calcularBonus(start,end,resumoBonus[username])
+            if (strikes){
+                map['strikes'] = strikes
             }
+
+            map['historico'] = totaisDiarios[username]
         }
 
 
-        def map = [:]
+        def map = [vendedores:[:]]
 
         if (currentUser.isAdmin()){
             map['vendedores'] = mapResumoVendedores
             map['total'] = valorTotal
+            map['totalTaxasPagSeguro'] = totalTaxasPagSeguro
+            map['movimentos'] = MovimentoCaixa.findAllByDataBetween(start,end)
         }
         else if (mapResumoVendedores[currentUser.username])
-            map = ["${currentUser.username}": mapResumoVendedores[currentUser.username]]
+            map['vendedores']["${currentUser.username}"] =  mapResumoVendedores[currentUser.username]
         else
-            map = ["${currentUser.username}": ['dinheiro':0L,'cartao':0L,'total':0L,'salario':0L]]
+            map['vendedores']["${currentUser.username}"]= ['dinheiro':0L,'cartao':0L,'total':0L,'salario':0L]
 
         render map as JSON
     }
-
-
 
     protected void notFound() {
         request.withFormat {
@@ -107,4 +150,22 @@ class CaixaController {
             '*'{ render status: NOT_FOUND }
         }
     }
+
+    private String getIntervalo(Date start,Date end, Date dataVenda){
+        String intervalo = null
+
+        (start..end).step(7){inicio->
+            Date fim = (inicio+6 < end)?inicio+6:end
+
+            if (dataVenda in (inicio..fim)){
+                intervalo = inicio.format('dd/MM') + ' - ' + fim.format('dd/MM')
+                return
+            }
+        }
+        if (intervalo)
+            return intervalo
+        else
+            throw new IllegalArgumentException("${dataVenda} não esta entre ${start} e ${end}")
+    }
+
 }

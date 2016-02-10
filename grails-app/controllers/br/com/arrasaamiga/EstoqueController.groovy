@@ -5,7 +5,7 @@ import grails.plugin.springsecurity.annotation.Secured
 import grails.rest.RestfulController
 
 
-@Secured(['ROLE_ADMIN'])
+@Secured(['ROLE_ADMIN','ROLE_VENDEDOR'])
 class EstoqueController extends RestfulController {
 
     static responseFormats = ['html', 'json']

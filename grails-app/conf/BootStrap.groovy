@@ -1,4 +1,5 @@
 import br.com.arrasaamiga.Endereco
+import br.com.arrasaamiga.MovimentoCaixa
 import br.com.arrasaamiga.Estoque
 import br.com.arrasaamiga.caixa.Bonus
 import br.com.arrasaamiga.GrupoDeUsuario
@@ -50,8 +51,20 @@ class BootStrap {
             new GrupoDeUsuario(authority: 'ROLE_VENDEDOR').save(flush: true)
 
         if (!GrupoDeUsuario.findByAuthority('ROLE_CLIENTE'))
-            new GrupoDeUsuario(authority: 'ROLE_CLIENTE').save(flush: true)            
+            new GrupoDeUsuario(authority: 'ROLE_CLIENTE').save(flush: true)
 
+
+        JSON.registerObjectMarshaller(MovimentoCaixa){MovimentoCaixa mc->
+
+            def map = [:]
+            map['descricao'] = mc.descricao
+            map['tipoMovimentoCaixa'] = mc.tipoMovimentoCaixa.name()
+            map['valorEmCentavos'] = mc.valorEmCentavos
+            map['formaPagamento'] = mc.formaPagamento.name()
+            map['data'] = mc.data.format('dd/MM/yyyy')
+
+            return map
+        }
 
         JSON.registerObjectMarshaller(Bonus){Bonus bonus->
             String pattern = 'dd/MM/yyyy'

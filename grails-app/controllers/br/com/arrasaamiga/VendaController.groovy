@@ -10,7 +10,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT
 import static org.springframework.http.HttpStatus.BAD_REQUEST
 import static org.springframework.http.HttpStatus.OK
 
-@Secured(['ROLE_ADMIN'])
+@Secured(['ROLE_ADMIN','ROLE_VENDEDOR'])
 class VendaController extends RestfulController {
 
     static responseFormats = ['html', 'json']
@@ -92,7 +92,7 @@ class VendaController extends RestfulController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: "${resourceClassName}.label".toString(), 
+                flash.message = message(code: 'default.updated.message', args: [message(code: "${resourceClassName}.label".toString(),
                                 default: resourceClassName), instance.id])
                 redirect instance
             }

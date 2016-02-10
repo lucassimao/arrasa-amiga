@@ -15,21 +15,18 @@ class PagSeguroTransactionsSeekerJob {
     def emailService
 
     def execute() {
-
-        def caixa = Caixa.last()
-        def inicio = caixa.inicio
-        def fim = caixa.fim
-        def vendas = caixa.getVendas()
+        def inicio = (new Date() - 30)
+        def fim = new Date()
 
         try{
-            
+
             def listTransactionSummaries = pagSeguroService.searchTransactions(inicio,fim)
 
             // br.com.uol.pagseguro.domain.TransactionSummary
             for(def transactionSummary: listTransactionSummaries){
 
                 // ignorando transações ja identificadas pelo sistema
-                if (vendas.find{v-> v.transacaoPagSeguro?.equals(transactionSummary.code)})
+                if (Venda.findByTransacaoPagSeguro(transactionSummary.code))
                     continue
 
                 def transaction = TransactionSummary.findByCode(transactionSummary.code)

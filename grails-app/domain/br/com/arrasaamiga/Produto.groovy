@@ -17,6 +17,7 @@ class Produto {
 
     int ordem
     double stars
+    double bonus
 
     boolean foraDeLinha
     Boolean visivel

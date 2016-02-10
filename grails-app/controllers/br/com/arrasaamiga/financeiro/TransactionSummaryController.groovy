@@ -11,11 +11,11 @@ class TransactionSummaryController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
     def pagSeguroService
+    def caixaService
 
     private def getVendaSemTransacoes(){
-        def caixa = Caixa.last()
-        def inicio = caixa.inicio
-        def fim = caixa.fim
+        def inicio = caixaService.inicioCaixaAtual
+        def fim = caixaService.fimCaixaAtual
 
         def criteria = Venda.createCriteria()
         return criteria.list{
@@ -24,7 +24,7 @@ class TransactionSummaryController {
             eq('formaPagamento',FormaPagamento.PagSeguro)
             eq('status',StatusVenda.PagamentoRecebido)
 
-        }        
+        }
     }
 
     def index(Integer max) {

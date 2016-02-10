@@ -4,29 +4,31 @@ import static java.util.Calendar.*
 import br.com.arrasaamiga.caixa.Bonus
 
 
-class Caixa {
+class CaixaService {
 
+    def getInicioCaixaAtual(){
+        final int DIA_INICIAL = 4
+        def inicio = new Date()
+        inicio.clearTime()
 
-    Date inicio, fim
+        if (inicio[Calendar.DAY_OF_MONTH] < DIA_INICIAL){
+            inicio[Calendar.MONTH] -=1
+        }
 
-    static hasMany = [movimentos: MovimentoCaixa]
+        inicio[Calendar.DAY_OF_MONTH] = DIA_INICIAL
 
-    static constraints = {
-        inicio(nullable:false)
-        fim(nullable:false)
+        return inicio
     }
 
-    static mapping = {}
+    def getFimCaixaAtual(){
+        def inicio = getInicioCaixaAtual()
+        def fim = new Date(inicio.time)
+        fim[Calendar.MONTH] +=1
+        fim[Calendar.DAY_OF_MONTH] -= 1
+        fim.set(hourOfDay: 23, minute: 59, second: 59)
 
-    public void setInicio(Date date){
-        this.inicio = (date != null)?date.clearTime():null
+        return fim
     }
-
-    public void setFim(Date date){
-        this.fim = date
-        if (date)
-            this.fim.set(hourOfDay: 23, minute: 59, second: 59)
-    }    
 
     /**
      * @param _inicio data inicial
@@ -39,12 +41,12 @@ class Caixa {
      * @author Lucas Simao
      * @since 05/01/2016
      */
-    def getVendas(Usuario vendedor){
+    def getVendas(Date inicio, Date fim,Usuario vendedor){
 
         def criteria = Venda.createCriteria()
 
-        this.inicio.clearTime()
-        this.fim.set(hourOfDay: 23, minute: 59, second: 59)
+        inicio.clearTime()
+        fim.set(hourOfDay: 23, minute: 59, second: 59)
 
         def vendas = criteria.list{
 
@@ -77,7 +79,7 @@ class Caixa {
         }
 
         return vendas
-    } 
+    }
 
     /* dado um mapa associando um determinado dia ao total de vendas a vista feitas
      * retorna um objeto Bonus caso a meta tenha sido batido em alguma semana
@@ -89,15 +91,19 @@ class Caixa {
      *
      * @param resumo map<dia,quantidade vendida no dia>
      */
-    List<Bonus> calcularBonus(Map<Date,Long> resumo){
+    List<Bonus> calcularBonus(Date _inicio,Date _fim,Map<Date,Long> resumo){
 
         final long META = 150000L // R$ 1500
 
-        def weekStart = new Date(this.inicio.time)
-        def fim = new Date(this.fim.time)
+        def weekStart = new Date(_inicio.time)
+        weekStart.clearTime()
+
+        def fim = new Date(_fim.time)
+        fim.set(hourOfDay: 23, minute: 59, second: 59)
+
 
         Date weekEnd = weekStart + 6
-        List<Bonus> strikes = [] 
+        List<Bonus> strikes = []
 
         while (weekStart <= fim) {
             long total = 0L
@@ -113,7 +119,7 @@ class Caixa {
                     excedente = (total % (50000*dias.size()))
                 }
             }
-            
+
             if (total >= META)
                 strikes << new Bonus(weekStart: weekStart, weekEnd: weekEnd, strikeDates: dias)
 
@@ -125,7 +131,7 @@ class Caixa {
         }
 
         return strikes
-    }    
+    }
 
 
 }

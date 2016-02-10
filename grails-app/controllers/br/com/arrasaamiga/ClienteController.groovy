@@ -200,33 +200,33 @@ class ClienteController {
         [pedidos: Venda.findAllByCliente(cliente, [sort: 'dateCreated', order: 'desc'])]
     }
 
-    @Secured(['ROLE_ADMIN'])
+    @Secured(['ROLE_ADMIN','ROLE_VENDEDOR'])
     def enderecos(Long lastDownloadedTimestamp){
 
         def sql = new Sql(dataSource)
         if (lastDownloadedTimestamp == null)
             lastDownloadedTimestamp = 0
 
-     /*    
+     /*
             -- Gerar datas aleatorias para teste
-                insert into cliente(celular,telefone,nome,endereco_complemento) 
+                insert into cliente(celular,telefone,nome,endereco_complemento)
                     select celular,telefone,nome,endereco_complemento from cliente;
 
                 update cliente set date_created=( SELECT NOW() - INTERVAL id SECOND);
-                
+
                 update cliente set last_updated=date_created;
-                
+
                 select last_updated_unix_timestamp,count(*) qtde from cliente group by last_updated_unix_timestamp order by qtde asc;
-                
+
                 --as trigger abaixo vao atualizar o campo last_updated_unix_timestamp
             ------------------------------------------------------------------------
 
             alter table cliente add last_updated_unix_timestamp bigint(20);
 
-            create trigger convert_last_updated_2_unix_timestamp BEFORE UPDATE ON cliente for each row set 
+            create trigger convert_last_updated_2_unix_timestamp BEFORE UPDATE ON cliente for each row set
                 NEW.last_updated_unix_timestamp=unix_timestamp(new.last_updated);
 
-            create trigger convert_last_updated_2_unix_timestamp_before_insert BEFORE INSERT ON cliente for 
+            create trigger convert_last_updated_2_unix_timestamp_before_insert BEFORE INSERT ON cliente for
                 each row set NEW.last_updated_unix_timestamp=unix_timestamp(new.last_updated);
 
         -- depois de criar a coluna last_updated, atualizar com o valor de date_created
@@ -245,7 +245,7 @@ class ClienteController {
           create view clientes_enderecos_recentes as
                 select c1.id,c1.nome,c1.celular,c1.ddd_celular,c1.telefone,c1.ddd_telefone,c1.endereco_complemento,
                 c1.endereco_uf_id,c1.endereco_cidade_id,c1.endereco_bairro,c1.last_updated_unix_timestamp
-            from cliente c1 JOIN celulares_mais_recentes c2 on c1.celular = c2.celular and c1.last_updated_unix_timestamp=c2.last_updated_unix_timestamp    
+            from cliente c1 JOIN celulares_mais_recentes c2 on c1.celular = c2.celular and c1.last_updated_unix_timestamp=c2.last_updated_unix_timestamp
           UNION
                 select c1.id,c1.nome,c1.celular,c1.ddd_celular,c1.telefone,c1.ddd_telefone,c1.endereco_complemento,c1.endereco_uf_id,
                 c1.endereco_cidade_id,c1.endereco_bairro,c1.last_updated_unix_timestamp
@@ -259,14 +259,14 @@ class ClienteController {
 
             def map = [:]
 
-            map['id']=row['id'] 
+            map['id']=row['id']
             map['cliente'] = row['nome']
             map['celular'] = row['celular']?:''
             map['ddd_celular'] = row['ddd_celular']?:''
             map['telefone'] = row['telefone']?:''
             map['ddd_telefone'] = row['ddd_telefone']?:''
             map['endereco'] = row['endereco_complemento']
-            
+
 
             def uf = (row['endereco_uf_id'])?Uf.get(row['endereco_uf_id']):Uf.piaui
 

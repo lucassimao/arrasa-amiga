@@ -5,12 +5,12 @@ import static org.junit.Assert.*
 import grails.test.mixin.*
 import grails.test.mixin.hibernate.HibernateTestMixin
 import grails.test.mixin.gorm.Domain
+import spock.lang.*
 import static br.com.arrasaamiga.FormaPagamento.AVista
 import static br.com.arrasaamiga.FormaPagamento.PagSeguro
 import static br.com.arrasaamiga.ServicoCorreio.SEDEX
 import static br.com.arrasaamiga.ServicoCorreio.PAC
 import grails.plugin.springsecurity.SpringSecurityService
-
 import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes
 import org.codehaus.groovy.grails.commons.spring.GrailsWebApplicationContext
 import org.codehaus.groovy.grails.orm.hibernate.cfg.GrailsAnnotationConfiguration
@@ -23,9 +23,9 @@ import org.codehaus.groovy.grails.orm.hibernate.HibernateDatastore
  * See the API for {@link grails.test.mixin.support.GrailsUnitTestMixin} for usage instructions
  */
 @TestMixin(HibernateTestMixin)
-@Domain([Caixa,Cidade,Uf,Endereco,GrupoDeUsuario,MovimentoCaixa,Usuario,Produto,
+@Domain([Cidade,Uf,Endereco,GrupoDeUsuario,MovimentoCaixa,Usuario,Produto,UsuarioGrupoDeUsuario,
     FotoProduto,GrupoDeProduto,Venda,Cliente,ShoppingCart,ItemVenda,Produto,])
-class CaixaSpec extends  Specification {
+class CaixaServiceSpec extends  Specification {
 
     static Usuario vendedor1 = null, vendedor2 = null
     static boolean fixtureOK = false;
@@ -45,16 +45,12 @@ class CaixaSpec extends  Specification {
         listener.shouldTimestamp = shouldTimestamp
     }
 
-
+    // configurando vendas entre 1/12/2015 e 31/12/2015
     void setup() {
         if (fixtureOK)
             return
 
         shouldTimestamp(new Venda(),false)
-
-        new Caixa(inicio: new Date().parse("dd/MM/yyyy", '01/12/2015'),
-                  fim: new Date().parse("dd/MM/yyyy", '31/12/2015')).save(flush:true,failOnError:true)
-
 
         // evitando que a codificação desnecessaria da senha
         Usuario.metaClass.encodePassword = {}
@@ -62,103 +58,103 @@ class CaixaSpec extends  Specification {
         vendedor2 = new Usuario(username:'vendedor2',password:'123').save(flush:true,failOnError:true)
 
         // VALIDO: venda feita pelo site, pagamento em dinheiro a ser feita na entrega
-        def v1 = new Venda(status: StatusVenda.AguardandoPagamento, 
+        def v1 = new Venda(status: StatusVenda.AguardandoPagamento,
                                 dataEntrega: str2Date('05/12/2015 12:0:0'),cliente: new Cliente(nome:'Cliente 1'),
-                                formaPagamento: AVista,servicoCorreio:null,vendedor:null)     
-        
+                                formaPagamento: AVista,servicoCorreio:null,vendedor:null)
+
         v1.dateCreated = str2Date('1/12/2015 20:0:0')
         v1.save(flush:true,failOnError:true)
 
 
         // INVALIDA: Venda OK, mas deve ser entregue em data fora do intervalo do caixa
-        def v1a = new Venda(status: StatusVenda.AguardandoPagamento, 
+        def v1a = new Venda(status: StatusVenda.AguardandoPagamento,
                                 dataEntrega: str2Date('1/1/2016 12:0:0'),cliente: new Cliente(nome:'Cliente 1'),
-                                formaPagamento: AVista,servicoCorreio:null,vendedor:null)     
-        
+                                formaPagamento: AVista,servicoCorreio:null,vendedor:null)
+
         v1a.dateCreated = str2Date('25/12/2015 20:0:0')
         v1a.save(flush:true,failOnError:true)
 
         // VALIDO: venda feita pelo site, pagamento em cartao realizado com sucesso, mesma cidade da loja
-        def v2 = new Venda(status: StatusVenda.PagamentoRecebido, 
+        def v2 = new Venda(status: StatusVenda.PagamentoRecebido,
                             transacaoPagSeguro: 'sdhsjhfjskhfkjhsdfhkjsdh',dataEntrega: str2Date('06/12/2015 12:0:0'),
-                            cliente: new Cliente(nome:'Cliente 2'),formaPagamento: PagSeguro,servicoCorreio:null,vendedor:null)     
+                            cliente: new Cliente(nome:'Cliente 2'),formaPagamento: PagSeguro,servicoCorreio:null,vendedor:null)
         v2.dateCreated = str2Date('1/12/2015 12:0:0')
-        v2.save(flush:true,failOnError:true)       
+        v2.save(flush:true,failOnError:true)
 
         // INVALIDO: venda feita pelo site, pagamento em cartao NÃO  concluido, mesma cidade da loja
-        def v2a = new Venda(status: StatusVenda.AguardandoPagamento, 
-                            transacaoPagSeguro:null,dataEntrega: str2Date('08/12/2015 12:0:0'), 
-                            cliente: new Cliente(nome:'Cliente 2a'), formaPagamento: PagSeguro,servicoCorreio: null,vendedor:null)  
-        v2a.dateCreated=str2Date('4/12/2015 12:0:0')   
-        v2a.save(flush:true,failOnError:true)     
+        def v2a = new Venda(status: StatusVenda.AguardandoPagamento,
+                            transacaoPagSeguro:null,dataEntrega: str2Date('08/12/2015 12:0:0'),
+                            cliente: new Cliente(nome:'Cliente 2a'), formaPagamento: PagSeguro,servicoCorreio: null,vendedor:null)
+        v2a.dateCreated=str2Date('4/12/2015 12:0:0')
+        v2a.save(flush:true,failOnError:true)
 
 
         // INVALIDO: VENDA OK, pelo site porem fora do intervalo do caixa aberto, mesma cidade
-        def v2b = new Venda(status: StatusVenda.PagamentoRecebido, 
+        def v2b = new Venda(status: StatusVenda.PagamentoRecebido,
                             transacaoPagSeguro: 'sdhsjhfjskhfkjhsdfhkjsdh',dataEntrega: str2Date('06/1/2016 12:0:0'),
-                            cliente: new Cliente(nome:'Cliente 2'),formaPagamento: PagSeguro,servicoCorreio:null,vendedor:null)     
+                            cliente: new Cliente(nome:'Cliente 2'),formaPagamento: PagSeguro,servicoCorreio:null,vendedor:null)
 
         v2b.dateCreated = str2Date('31/12/2015 12:0:0')
-        v2b.save(flush:true,failOnError:true)   
+        v2b.save(flush:true,failOnError:true)
 
         // VALIDO: venda feita pelo site, para outra cidade, pagamento em cartao realizado com sucesso
-        def v3 = new Venda(status: StatusVenda.PagamentoRecebido, 
+        def v3 = new Venda(status: StatusVenda.PagamentoRecebido,
                             transacaoPagSeguro: 'sdhsjhfjskhfkjhsdfhkjsdh',dataEntrega: null,
                             cliente: new Cliente(nome:'Cliente 3'),formaPagamento: PagSeguro,
-                            servicoCorreio:SEDEX,vendedor:null)     
+                            servicoCorreio:SEDEX,vendedor:null)
 
         v3.dateCreated = str2Date('05/12/2015 12:0:0')
-        v3.save(flush:true,failOnError:true)       
+        v3.save(flush:true,failOnError:true)
 
         // INVALIDO: venda feita pelo site, para outra cidade, pagamento em cartao NÃO  concluido
-        def v3a = new Venda(status: StatusVenda.AguardandoPagamento, 
-                            transacaoPagSeguro:null, dataEntrega: null,cliente: new Cliente(nome:'Cliente 3a'), 
-                            formaPagamento: PagSeguro, servicoCorreio: PAC,vendedor:null)     
+        def v3a = new Venda(status: StatusVenda.AguardandoPagamento,
+                            transacaoPagSeguro:null, dataEntrega: null,cliente: new Cliente(nome:'Cliente 3a'),
+                            formaPagamento: PagSeguro, servicoCorreio: PAC,vendedor:null)
 
         v3a.dateCreated = str2Date('05/12/2015 20:0:0')
-        v3a.save(flush:true,failOnError:true)           
+        v3a.save(flush:true,failOnError:true)
 
 
         // VALIDA: venda feita por vendedor, pagamento em dinheiro no momento da entrega
-        def v4 = new Venda(status: StatusVenda.AguardandoPagamento, dataEntrega: str2Date('16/12/2015 12:0:0'), 
-                            cliente: new Cliente(nome:'Cliente 4'), formaPagamento: AVista,vendedor:vendedor1)    
+        def v4 = new Venda(status: StatusVenda.AguardandoPagamento, dataEntrega: str2Date('16/12/2015 12:0:0'),
+                            cliente: new Cliente(nome:'Cliente 4'), formaPagamento: AVista,vendedor:vendedor1)
 
         v4.dateCreated = str2Date('10/12/2015 12:0:0')
-        v4.save(flush:true,failOnError:true)    
+        v4.save(flush:true,failOnError:true)
 
         // VALIDA: venda feita por vendedor, pagamento realizado antecipadamente por transferencia
-        def v4a = new Venda(status: StatusVenda.PagamentoRecebido, 
+        def v4a = new Venda(status: StatusVenda.PagamentoRecebido,
                             dataEntrega: str2Date('16/12/2015 22:0:0'), cliente: new Cliente(nome:'Cliente 4a'),
-                            formaPagamento: AVista,vendedor:vendedor1)     
+                            formaPagamento: AVista,vendedor:vendedor1)
 
         v4a.dateCreated = str2Date('15/12/2015 12:0:0')
-        v4a.save(flush:true,failOnError:true)    
+        v4a.save(flush:true,failOnError:true)
 
         // INVALIDA: venda ok, mas fora do intervalo do caixa
-        def v4b = new Venda(status: StatusVenda.PagamentoRecebido, 
+        def v4b = new Venda(status: StatusVenda.PagamentoRecebido,
                             dataEntrega: str2Date('16/11/2015 22:0:0'), cliente: new Cliente(nome:'Cliente 4a'),
-                            formaPagamento: AVista,vendedor:vendedor1)     
+                            formaPagamento: AVista,vendedor:vendedor1)
 
         v4b.dateCreated = str2Date('10/11/2015 12:0:0')
-        v4b.save(flush:true,failOnError:true)    
+        v4b.save(flush:true,failOnError:true)
 
         // VALIDO: venda feita por vendedor, pagamento feito no cartao pela maquineta atraves da maquineta
-        def v5 = new Venda(status: StatusVenda.PagamentoRecebido, 
+        def v5 = new Venda(status: StatusVenda.PagamentoRecebido,
                            dataEntrega: str2Date('08/12/2015 12:0:0'), cliente: new Cliente(nome:'Cliente 5'),
-                            formaPagamento: PagSeguro,vendedor:vendedor2)     
+                            formaPagamento: PagSeguro,vendedor:vendedor2)
 
         v5.dateCreated = str2Date('1/12/2015 12:0:0')
-        v5.save(flush:true,failOnError:true)    
+        v5.save(flush:true,failOnError:true)
 
         // INVALIDO: venda feita por vendedor, clente pretende pagar no cartao mas ainda nao informou dados do cartao
-        def v5a = new Venda(status: StatusVenda.AguardandoPagamento, 
+        def v5a = new Venda(status: StatusVenda.AguardandoPagamento,
                           dataEntrega: str2Date('28/12/2015 12:0:0'), cliente: new Cliente(nome:'Cliente 5a'),
-                            formaPagamento: PagSeguro,vendedor:vendedor2)     
+                            formaPagamento: PagSeguro,vendedor:vendedor2)
 
         v5a.dateCreated=str2Date('20/12/2015 12:0:0')
-        v5a.save(flush:true,failOnError:true) 
+        v5a.save(flush:true,failOnError:true)
 
-       shouldTimestamp(new Venda(),true)      
+       shouldTimestamp(new Venda(),true)
        fixtureOK = true
 
     }
@@ -166,45 +162,48 @@ class CaixaSpec extends  Specification {
 
     void "Garantindo que os horarios do inicio e fim do caixa estao corretos"() {
         given:
-            def caixa =  Caixa.first()
+            def caixaService =  new CaixaService()
+            def inicio = caixaService.inicioCaixaAtual
+            def fim = caixaService.fimCaixaAtual
+        expect:
 
-        expect: 
+            inicio[Calendar.HOUR_OF_DAY] == 0
+            inicio[Calendar.MINUTE] == 0
+            inicio[Calendar.SECOND] == 0
 
-            caixa.inicio[Calendar.HOUR_OF_DAY] == 0
-            caixa.inicio[Calendar.MINUTE] == 0
-            caixa.inicio[Calendar.SECOND] == 0
-
-            caixa.fim[Calendar.HOUR_OF_DAY] == 23
-            caixa.fim[Calendar.MINUTE] == 59
-            caixa.fim[Calendar.SECOND] == 59
+            fim[Calendar.HOUR_OF_DAY] == 23
+            fim[Calendar.MINUTE] == 59
+            fim[Calendar.SECOND] == 59
 
     }
 
     void "Testando contagem de vendas validas no caixa"() {
-		given:
-			def caixa =  Caixa.first()
-			def vendas = caixa.getVendas(null)
+		    given:
+            def caixaService =  new CaixaService()
+            def inicio = str2Date('1/12/2015 0:0:0')
+            def fim = str2Date('31/12/2015 23:59:59')
+      			def vendas = caixaService.getVendas(inicio,fim,null)
 
         expect: "Test execute Hibernate count query"
             assert Venda.count() == 12
             assert vendas.size() == 6
-
     }
 
-
-    void "testando quantidade de vendas validas por vendedor"(){
+    @Unroll
+    void "testando quantidade de vendas #formaPagamento feitas por  #vendedor"(){
         given:
-            def caixa = Caixa.first()
-            def vendas = caixa.getVendas(vendedor)
-
+            def caixaService =  new CaixaService()
+            def inicio = str2Date('01/12/2015 0:0:0')
+            def fim = str2Date('31/12/2015 23:59:59')
         expect:
+            def vendas = caixaService.getVendas(inicio,fim,vendedor)
             vendas.findAll{venda-> venda.formaPagamento.equals(formaPagamento) }.size() == quantidade
         where:
             vendedor  | formaPagamento           | quantidade
-            vendedor1 | FormaPagamento.AVista    |  2 
+            vendedor1 | FormaPagamento.AVista    |  2
             vendedor1 | FormaPagamento.PagSeguro |  0
-            vendedor2 | FormaPagamento.AVista    |  0 
-            vendedor2 | FormaPagamento.PagSeguro |  1 
+            vendedor2 | FormaPagamento.AVista    |  0
+            vendedor2 | FormaPagamento.PagSeguro |  1
             null      | FormaPagamento.PagSeguro |  3
             null      | FormaPagamento.AVista    |  3
 
@@ -213,9 +212,10 @@ class CaixaSpec extends  Specification {
 
     void "testar calculo de bonus"(){
          given:
-            def caixa = Caixa.first()
-            Date inicio = new Date(caixa.inicio.time)//  inicio: 01/12/2015 
-            Date fim = new Date(caixa.fim.time) // fim: 31/12/2015
+            def caixaService =  new CaixaService()
+
+            def inicio = str2Date('1/12/2015 0:0:0')
+            def fim = str2Date('31/12/2015 23:59:59')
 
             Map<Date,Long> resumo = [:]
             (inicio..fim).each{data-> resumo[data] =0 }
@@ -240,15 +240,15 @@ class CaixaSpec extends  Specification {
 
             // testando limites alem do intervalo do caixa
             resumo[inicio+28] = 49900  // 29/12/2015 : R$ 499
-            resumo[inicio+29] = 50000  // 30/12/2015: R$ 500 
-            resumo[fim] = 58000        // 31/12/2015 :  R$ 580  
-            resumo[fim+1] = 42000      // 1/12/2016 :  R$ 420 // excedente do dia 31/12/2015 nao vale mais 
+            resumo[inicio+29] = 50000  // 30/12/2015: R$ 500
+            resumo[fim] = 58000        // 31/12/2015 :  R$ 580
+            resumo[fim+1] = 42000      // 1/12/2016 :  R$ 420 // excedente do dia 31/12/2015 nao vale mais
 
         expect:
-            def list = caixa.calcularBonus(resumo)
+            def list = caixaService.calcularBonus(inicio,fim,resumo)
             list.size() == 3 // nº de bonus no intervalo do caixa
-            
-            def res = list.findAll{bonus-> 
+
+            def res = list.findAll{bonus->
                     Date start = Date.parse('dd/MM/yyyy',weekStart)
                     Date end = Date.parse('dd/MM/yyyy',weekEnd)
 
@@ -263,7 +263,7 @@ class CaixaSpec extends  Specification {
             }else{
                 assert res.size() == 0
             }
-            
+
         where:
             weekStart   | weekEnd     | strikeDates
             '08/12/2015'| '14/12/2015'| ['08/12/2015','10/12/2015','12/12/2015']

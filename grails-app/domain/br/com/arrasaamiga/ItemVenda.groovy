@@ -35,9 +35,15 @@ class ItemVenda {
         this.precoAPrazoEmCentavos = 100*precoEmReais
     }
 
+    @Deprecated
     public Double getSubTotalAVista(){
     	return ( this.precoAVistaEmCentavos * quantidade )/ 100.0
     }
+
+    // retorna o subtotal em centavos
+    public int _getSubTotalAVista(){
+        return this.precoAVistaEmCentavos * quantidade
+    }    
 
     public Double getSubTotalAPrazo(){
         return ( this.precoAPrazoEmCentavos * quantidade ) / 100.0
