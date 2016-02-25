@@ -3,6 +3,8 @@ package br.com.arrasaamiga
 import grails.transaction.NotTransactional
 import grails.transaction.Transactional
 import org.apache.commons.logging.LogFactory
+import static br.com.arrasaamiga.StatusVenda.PagamentoRecebido
+import static br.com.arrasaamiga.StatusVenda.AguardandoPagamento
 
 @Transactional
 class VendaService {
@@ -36,6 +38,10 @@ class VendaService {
 
     def excluirVenda(Venda venda) {
         venda.delete()
+
+        String update = "update Venda v set v.lastUpdated=:lastUpdated where v.status in :statusList"
+        Venda.executeUpdate(update, [lastUpdated: new Date(),
+                                    statusList: [PagamentoRecebido, AguardandoPagamento] ])
         vendaLogger.debug("Excluido venda #${venda.id}:  repondo itens ")
         estoqueService.reporItens(venda.itensVenda)
     }

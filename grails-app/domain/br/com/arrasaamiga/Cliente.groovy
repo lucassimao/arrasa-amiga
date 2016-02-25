@@ -22,7 +22,6 @@ class Cliente {
         usuario cascade: 'all'
         endereco cascade: 'all'
         autoTimestamp true
-       // lastUpdated type:'timestamp'
     }
 
 
@@ -59,7 +58,7 @@ class Cliente {
 
     public boolean isFromTeresina(){
 
-        return this.endereco?.cidade?.id == Cidade.teresina.id  
+        return this.endereco?.cidade?.id == Cidade.teresina.id
     }
 
     public boolean isDentroDaAreaDeEntregaRapida(){

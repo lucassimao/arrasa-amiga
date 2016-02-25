@@ -33,6 +33,26 @@ class CaixaController {
             return
         }
 
+        if (params.lastUpdated){
+            Date lastUpdated = new Date(params.lastUpdated.toLong())
+
+            def c = Venda.createCriteria()
+            int qtdeVendas = c.count {
+                gt('lastUpdated',lastUpdated)
+            }
+
+            c = MovimentoCaixa.createCriteria()
+            int qtdeMovimentos = c.count {
+                gt('dateCreated',lastUpdated)
+            }
+
+            if (qtdeVendas == 0 && qtdeMovimentos==0){
+                render status: NO_CONTENT
+                return
+            }
+        }
+
+
         def currentUser = springSecurityService.currentUser
         def vendedor = null
         // se o usuario atual nao for admin, consulta apenas as vendas feitas por ele
@@ -126,6 +146,15 @@ class CaixaController {
 
 
         def map = [vendedores:[:]]
+
+        def c = Venda.createCriteria()
+        Date maxVendaLastUpdated = c.get{ projections{max 'lastUpdated'}}
+
+        c = MovimentoCaixa.createCriteria()
+        Date maxMovimentoDateCreated = c.get{ projections{max 'dateCreated'}}
+
+        map['last_updated'] = [maxVendaLastUpdated.time,
+                                maxMovimentoDateCreated.time].max()
 
         if (currentUser.isAdmin()){
             map['vendedores'] = mapResumoVendedores

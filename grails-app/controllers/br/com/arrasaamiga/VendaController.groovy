@@ -78,13 +78,13 @@ class VendaController extends RestfulController {
             estoqueService.reporItens(instance.itensVenda)
 
         instance.properties = json
-
         if (instance.hasErrors()) {
             transactionStatus.setRollbackOnly()
             respond instance.errors, view:'edit' // STATUS CODE 422
             return
         }
 
+        instance.lastUpdated = new Date()
         instance.save flush:true
 
         if(updateShoppingCart)
@@ -151,6 +151,9 @@ class VendaController extends RestfulController {
             return
         }
 
+        // assim que e venda eh excluida, o campo
+        // lastUpdated eh atualizado p/ refletir no cliente
+        // a exclusao recente
         vendaService.excluirVenda(instance)
 
         request.withFormat {
@@ -207,7 +210,17 @@ class VendaController extends RestfulController {
 
         withFormat {
             json {
-                respond Venda.findAllByStatusInList([StatusVenda.PagamentoRecebido, StatusVenda.AguardandoPagamento])
+                Date lastUpdated = null
+                if (params.lastUpdated)
+                    lastUpdated = new Date(params.lastUpdated.toLong())
+
+                if (lastUpdated==null || Venda.countByLastUpdatedGreaterThan(lastUpdated) > 0 ){
+                    def results = Venda.findAllByStatusInList([StatusVenda.PagamentoRecebido,
+                                                                StatusVenda.AguardandoPagamento])
+                    respond results
+                }else{
+                    render status:NO_CONTENT
+                }
             }
             '*' {
                 params.max = Math.min(max ?: 10, 1000)
