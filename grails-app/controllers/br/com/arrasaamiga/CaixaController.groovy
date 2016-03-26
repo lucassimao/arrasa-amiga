@@ -153,8 +153,8 @@ class CaixaController {
         c = MovimentoCaixa.createCriteria()
         Date maxMovimentoDateCreated = c.get{ projections{max 'dateCreated'}}
 
-        map['last_updated'] = [maxVendaLastUpdated.time,
-                                maxMovimentoDateCreated.time].max()
+        map['last_updated'] = [maxVendaLastUpdated?.time,
+                                maxMovimentoDateCreated?.time].max()
 
         if (currentUser.isAdmin()){
             map['vendedores'] = mapResumoVendedores

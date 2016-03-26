@@ -61,7 +61,8 @@ class BootStrap {
             map['tipoMovimentoCaixa'] = mc.tipoMovimentoCaixa.name()
             map['valorEmCentavos'] = mc.valorEmCentavos
             map['formaPagamento'] = mc.formaPagamento.name()
-            map['data'] = mc.data.format('dd/MM/yyyy')
+            map['lastUpdated'] = mc.lastUpdated.time
+            map['data'] = mc.data.format('MMddyyyy')
 
             return map
         }
@@ -98,12 +99,16 @@ class BootStrap {
             map['id'] = venda.id
             map['last_updated'] = venda.lastUpdated.time
             map['vendedor'] = venda.vendedor?.username
+            map['abatimentoEmCentavos'] = venda.abatimentoEmCentavos
             map['freteEmCentavos'] = venda.freteEmCentavos
+            map['flagClienteVaiBuscar'] = venda.flagClienteVaiBuscar
+            map['flagClienteJaBuscou'] = venda.flagClienteJaBuscou
             map['formaPagamento'] = venda.formaPagamento.name()
             map['status'] = venda.status.name()
             map['dataEntrega'] = venda.dataEntrega?.time
             map['turnoEntrega'] = (venda.turnoEntrega) ? venda.turnoEntrega.name() : TurnoEntrega.Manha.name()
-            map['servicoCorreio'] = venda.servicoCorreio?.name()
+            map['servicoCorreio'] = (venda.servicoCorreio)?venda.servicoCorreio.name():''
+            map['codigoRastreio'] = venda.codigoRastreio?:''
             map['anexos_json_array'] = (venda.anexos)?:[]
             map['cliente'] = [:]
             map['cliente']['id'] = venda.cliente?.id
@@ -116,8 +121,9 @@ class BootStrap {
             map['cliente']['endereco']['cep'] = (venda.cliente?.endereco?.cep) ?: ''
             map['cliente']['endereco']['complemento'] = (venda.cliente?.endereco?.complemento) ?: ''
             map['cliente']['endereco']['bairro'] = (venda.cliente?.endereco?.bairro) ?: ''
-            map['cliente']['endereco']['cidade'] = (venda.cliente?.endereco?.cidade?.nome) ?: ''
-            map['cliente']['endereco']['uf'] = (venda.cliente?.endereco?.uf?.nome) ?: ''
+            map['cliente']['endereco']['cidade'] = [:]
+            map['cliente']['endereco']['cidade']['id'] = (venda.cliente?.endereco?.cidade?.id) ?: ''
+            map['cliente']['endereco']['uf'] = (venda.cliente?.endereco?.uf?.sigla) ?: ''
             map['itens'] = []
 
             venda.itensVenda.each {

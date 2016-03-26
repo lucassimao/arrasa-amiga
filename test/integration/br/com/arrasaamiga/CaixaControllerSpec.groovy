@@ -173,6 +173,7 @@ class CaixaControllerSpec extends Specification {
         v1.carrinho.add(produto1,'un1',2)
         v1.carrinho.add(produto2,'un2',1)
         v1.dateCreated = str2Date('04/12/2015 12:0:0')
+        v1.lastUpdated = v1.dateCreated
 
         vendaService.salvarVenda(v1,false)
 
@@ -186,6 +187,7 @@ class CaixaControllerSpec extends Specification {
                             formaPagamento: PagSeguro,servicoCorreio:null,vendedor:null)
 
         v2.dateCreated = str2Date('8/12/2015 12:0:0')
+        v2.lastUpdated = v2.dateCreated
         v2.carrinho = new ShoppingCart()
         v2.carrinho.add(produto1,'un1',2)
 
@@ -199,6 +201,7 @@ class CaixaControllerSpec extends Specification {
                             cliente: new Cliente(nome:'Cliente 3',endereco: new Endereco(cidade: Cidade.teresina, uf: Uf.piaui)),
                             formaPagamento: AVista,vendedor:vendedor1)
         v3.dateCreated =str2Date('14/12/2015 20:0:0')
+        v3.lastUpdated = v3.dateCreated
         v3.carrinho = new ShoppingCart()
         v3.carrinho.add(produto1,'un1',3)
         v3.carrinho.add(produto2,'un2',2)
@@ -214,6 +217,7 @@ class CaixaControllerSpec extends Specification {
                             formaPagamento: AVista,vendedor:vendedor1)
 
         v4.dateCreated = str2Date('10/12/2015 20:0:0')
+        v4.lastUpdated = v4.dateCreated
         v4.carrinho = new ShoppingCart()
         v4.carrinho.add(produto2,'un2',1)
 
@@ -227,6 +231,7 @@ class CaixaControllerSpec extends Specification {
                            cliente: new Cliente(nome:'Cliente 5',endereco: new Endereco(cidade: Cidade.teresina, uf: Uf.piaui)))
 
         v5.dateCreated = str2Date('5/12/2015 20:0:0')
+        v5.lastUpdated = v5.dateCreated
         v5.carrinho = new ShoppingCart()
         v5.carrinho.add(produto2,'un2',1)
 
@@ -242,6 +247,7 @@ class CaixaControllerSpec extends Specification {
                            cliente: new Cliente(nome:'Cliente 6',endereco: new Endereco(cidade: Cidade.teresina, uf: Uf.piaui)))
 
         v6.dateCreated = str2Date('5/12/2015 20:0:0')
+        v6.lastUpdated = v6.dateCreated
         v6.carrinho = new ShoppingCart()
         v6.carrinho.add(produto3,'un3',9)
 
@@ -257,6 +263,7 @@ class CaixaControllerSpec extends Specification {
                            cliente: new Cliente(nome:'Cliente 7',endereco: new Endereco(cidade: Cidade.teresina, uf: Uf.piaui)))
 
         v7.dateCreated = str2Date('5/12/2015 20:0:0')
+        v7.lastUpdated = v7.dateCreated
         v7.carrinho = new ShoppingCart()
         v7.carrinho.add(produto3,'un3',5)
         v7.carrinho.add(produto1,'un1',3)
@@ -274,6 +281,7 @@ class CaixaControllerSpec extends Specification {
                            cliente: new Cliente(nome:'Cliente 8',endereco: new Endereco(cidade: saoRaimundo, uf: Uf.piaui)))
 
         v8.dateCreated = str2Date('30/12/2015 20:0:0')
+        v8.lastUpdated = v8.dateCreated
         v8.carrinho.add(produto3,'un3',6)
 
         vendaService.salvarVenda(v8,false)
@@ -283,7 +291,6 @@ class CaixaControllerSpec extends Specification {
 
 
         shouldTimestamp(new Venda(),true)
-
     }
 
 }

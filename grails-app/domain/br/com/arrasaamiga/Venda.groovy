@@ -5,6 +5,9 @@ class Venda {
 
     Date dateCreated,lastUpdated
     Cliente cliente
+    boolean flagClienteVaiBuscar = false
+    boolean flagClienteJaBuscou = false
+    int abatimentoEmCentavos = 0
     int freteEmCentavos = 0
     int descontoPagSeguroEmCentavos = 0
     int taxasPagSeguroEmCentavos = 0 // taxa de parcelamento
@@ -31,9 +34,11 @@ class Venda {
 
     static constraints = {
         freteEmCentavos(min: 0)
+        lastUpdated(nullable:true)
         codigoRastreio(blank: true, nullable: true)
         descontoPagSeguroEmCentavos(min: 0)
         taxasPagSeguroEmCentavos(min: 0)
+        abatimentoEmCentavos(min:0)
         formaPagamento(nullable: false)
         status(nullable: false)
         cliente(nullable: false)
@@ -116,10 +121,8 @@ class Venda {
     /*
      *  Esse desconto existe para pagamentos via boleto
      *  @Deprecated deve ser removido
-     *
-     *
      */
-
+    @Deprecated
     public Double getDescontoPagSeguroEmReais() {
         return this.descontoPagSeguroEmCentavos / 100.0
     }
@@ -148,10 +151,9 @@ class Venda {
     public long getDesconto() {
 
         if (this.formaPagamento.equals(FormaPagamento.AVista))
-            return _getDescontoParaCompraAVista()
+            return _getDescontoParaCompraAVista() + abatimentoEmCentavos
          else
             return descontoPagSeguroEmCentavos
-
     }
 
     public long _getValorItensAPrazo() {

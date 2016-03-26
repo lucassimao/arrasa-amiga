@@ -5,12 +5,14 @@ import grails.test.mixin.TestFor
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
-
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
 @TestFor(VendaService)
 @Mock([Feriado,Venda])
+// @TestMixin(HibernateTestMixin)
+// @Domain([Feriado,Uf,Cidade,UsuarioGrupoDeUsuario,GrupoDeUsuario,Usuario,Endereco,Cliente,
+    // FotoProduto,GrupoDeProduto,Produto,ShoppingCart,ItemVenda,Venda])
 class VendaServiceSpec extends Specification {
 
     @Shared Date hoje = new Date()
@@ -41,7 +43,6 @@ class VendaServiceSpec extends Specification {
                     assertFalse dia in (feriado.inicio..feriado.fim)
                 }
             }
-
 
     }
 
@@ -120,6 +121,8 @@ class VendaServiceSpec extends Specification {
             def estoqueService = Mock(EstoqueService)
             service.estoqueService= estoqueService
         when:
+            // ignorando o executeUpdate no metodo excluirVenda
+            Venda.metaClass.static.executeUpdate = {String query, Map args->}
             service.excluirVenda(venda)
         then:
             1 * venda.delete()

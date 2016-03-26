@@ -62,7 +62,7 @@ class VendaControllerTests extends GroovyTestCase {
                                 [produto: [id: produto2.id], unidade: 'un', quantidade: 4]]]
 
         controller.request.json = [formaPagamento: 'AVista', status: 'AguardandoPagamento', carrinho: carrinho,
-                                   dataEntrega   : amanha.format("yyyy-MM-dd'T'hh:mm:ss'Z'"), cliente: [nome: 'Cliente Teste']] as JSON
+                                   dataEntrega   : formatarData(amanha), cliente: [nome: 'Cliente Teste']] as JSON
         controller.save()
 
         sessionFactory.currentSession.flush()
@@ -200,7 +200,7 @@ class VendaControllerTests extends GroovyTestCase {
                                 [produto: [id: produto2.id], unidade: 'un', quantidade: 4]]]
 
         controller.request.json = [formaPagamento: 'AVista', status: 'AguardandoPagamento', carrinho: carrinho,
-                                   dataEntrega   : amanha.format("yyyy-MM-dd'T'hh:mm:ss'Z'"), cliente: [nome: 'Cliente Teste']] as JSON
+                                   dataEntrega   : formatarData(amanha), cliente: [nome: 'Cliente Teste']] as JSON
         controller.save()
 
         sessionFactory.currentSession.flush()
@@ -227,6 +227,9 @@ class VendaControllerTests extends GroovyTestCase {
 
 
     protected String formatarData(Date data) {
-        data.format("yyyy-MM-dd'T'hh:mm:ss'Z'")
+        // utilizando a formatacao padrao definida em Config.groovy
+        // na propriedade  grails.databinding.dateFormats = ['MMddyyyy']
+        return data.format('MMddyyyy')
+        // data.format("yyyy-MM-dd'T'hh:mm:ss'Z'")
     }
 }

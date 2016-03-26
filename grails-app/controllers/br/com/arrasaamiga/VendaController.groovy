@@ -4,11 +4,13 @@ import grails.plugin.springsecurity.annotation.Secured
 import grails.rest.RestfulController
 import grails.transaction.Transactional
 import org.codehaus.groovy.grails.web.servlet.HttpHeaders
-
+import org.apache.commons.logging.LogFactory
+import  br.com.arrasaamiga.excecoes.EstoqueException
 import static org.springframework.http.HttpStatus.CREATED
 import static org.springframework.http.HttpStatus.NO_CONTENT
 import static org.springframework.http.HttpStatus.BAD_REQUEST
 import static org.springframework.http.HttpStatus.OK
+
 
 @Secured(['ROLE_ADMIN','ROLE_VENDEDOR'])
 class VendaController extends RestfulController {
@@ -54,6 +56,13 @@ class VendaController extends RestfulController {
         }
     }
 
+    def handleEstoqueException(EstoqueException e){
+        def vendaLogger = LogFactory.getLog('grails.app.domain.br.com.arrasaamiga.Venda')
+
+        render text: e.message, status: BAD_REQUEST
+        vendaLogger.debug e
+    }
+
     @Transactional
     @Override
     def update() {
@@ -84,6 +93,9 @@ class VendaController extends RestfulController {
             return
         }
 
+        // forçando atualização, uma vez que
+        // atualizacoes no obj cliente nao atualizam
+        // o last_updated da venda
         instance.lastUpdated = new Date()
         instance.save flush:true
 
@@ -150,7 +162,6 @@ class VendaController extends RestfulController {
             notFound()
             return
         }
-
         // assim que e venda eh excluida, o campo
         // lastUpdated eh atualizado p/ refletir no cliente
         // a exclusao recente
@@ -161,7 +172,9 @@ class VendaController extends RestfulController {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: "${resourceClassName}.label".toString(), default: resourceClassName), instance.id])
                 redirect action: "index", method: "GET"
             }
-            '*' { render status: NO_CONTENT } // NO CONTENT STATUS CODE
+            '*' {
+                render status: NO_CONTENT
+            } // NO CONTENT STATUS CODE
         }
     }
 
