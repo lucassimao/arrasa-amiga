@@ -11,8 +11,9 @@ import static org.springframework.http.HttpStatus.OK
 class AnexoController {
 
 	def grailsApplication
+	def gcmService
 
-  static allowedMethods = [save: 'POST',delete:'DELETE']
+  	static allowedMethods = [save: 'POST',delete:'DELETE']
 
 
 	def handleException(Exception e){
@@ -35,6 +36,7 @@ class AnexoController {
             venda.addToAnexos(originalFilename)
             venda.save(flush:true)
 
+			gcmService.notificarNovoAnexo(venda,originalFilename)
             render status: OK,text:'Anexo adicionado'
         }else{
             render status: BAD_REQUEST,text:'O anexo deve ser enviado'

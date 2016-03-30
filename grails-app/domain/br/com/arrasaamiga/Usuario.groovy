@@ -31,6 +31,13 @@ class Usuario {
 				}
 			}
 		}
+		administradores {
+			usuarioGrupoDeUsuarios{
+				grupoDeUsuario{
+					'in'('authority',['ROLE_ADMIN'])
+				}
+			}
+		}
 	}
 
 	Set<GrupoDeUsuario> getAuthorities() {
