@@ -25,6 +25,7 @@ class ProdutoController {
 
     def springSecurityService
     def dataSource
+    def gcmService
 
     def getTags() {
         def sql = new Sql(dataSource)
@@ -168,7 +169,7 @@ class ProdutoController {
 
         }
 
-
+        gcmService.notificarNovoProduto(produtoInstance)
         flash.message = "Produto cadastrado"
         redirect(action: "show", id: produtoInstance.id)
 
@@ -429,7 +430,7 @@ class ProdutoController {
 
     }
 
-    //HmacSHA256 implementation 
+    //HmacSHA256 implementation
     private String hmacSHA256(String data, String key) throws Exception {
         SecretKeySpec secretKey = new SecretKeySpec(key.getBytes("UTF-8"), "HmacSHA256");
         Mac mac = Mac.getInstance("HmacSHA256");
