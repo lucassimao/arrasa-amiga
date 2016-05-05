@@ -119,6 +119,8 @@ log4j.main = {
     }
 
     all   vendaAppender: 'grails.app.domain.br.com.arrasaamiga.Venda'
+    all   'grails.app.jobs.br.com.arrasaamiga.VendasParaPegarCheckerJob'
+    all   'grails.app.services.br.com.arrasaamiga.GcmService'
 
     error 'org.codehaus.groovy.grails.web.servlet',        // controllers
             'org.codehaus.groovy.grails.web.pages',          // GSP
