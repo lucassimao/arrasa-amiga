@@ -13,6 +13,8 @@ class EstoqueServiceSpec extends Specification {
 
 
     def setup() {
+        Estoque.metaClass.notificarAtualizacaoEstoque = { null }
+
         mockDomain(Produto, [
                 [nome: "Produto1", id: 1, descricao: 'Produto 1', tipoUnitario: 'un'],
                 [nome: "Produto2", id: 2, descricao: 'Produto 2', tipoUnitario: 'un']])
@@ -35,8 +37,8 @@ class EstoqueServiceSpec extends Specification {
     void "Testando a retirada de produtos do estoque"() {
 
         setup:
-        def produto = Produto.get(idProduto)
-        def item = new ItemVenda(unidade: unidade, quantidade: quantidadeVendida, produto: produto)
+            def produto = Produto.get(idProduto)
+            def item = new ItemVenda(unidade: unidade, quantidade: quantidadeVendida, produto: produto)
 
         when:
             service.removerItens([item] as Set)

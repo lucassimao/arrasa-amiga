@@ -26,6 +26,10 @@ class Estoque {
     }
 
     def beforeUpdate(){
+        notificarAtualizacaoEstoque()
+    }
+
+    protected void notificarAtualizacaoEstoque(){
         if (isDirty('quantidade')){
             int oldQuantidade = getPersistentValue('quantidade')
             gcmService.notificarAtualizacaoEstoque(oldQuantidade,quantidade,unidade,produto)
