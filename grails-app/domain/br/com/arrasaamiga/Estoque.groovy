@@ -11,6 +11,8 @@ class Estoque {
     static belongsTo = Produto
     static hasMany = [entradas: EntradaEstoque]
 
+    transient def gcmService
+
     static mapping = {
         autoTimestamp true
         entradas cascade: 'all-delete-orphan'
@@ -23,4 +25,10 @@ class Estoque {
         quantidade(min: 0)
     }
 
+    def beforeUpdate(){
+        if (isDirty('quantidade')){
+            int oldQuantidade = getPersistentValue('quantidade')
+            gcmService.notificarAtualizacaoEstoque(oldQuantidade,quantidade,unidade,produto)
+        }
+    }
 }
