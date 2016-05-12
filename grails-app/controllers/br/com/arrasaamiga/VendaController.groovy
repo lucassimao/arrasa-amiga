@@ -219,30 +219,18 @@ class VendaController extends RestfulController {
         respond Venda.get(id)
     }
 
-    def index(int max) {
-
-        withFormat {
-            json {
-                Date lastUpdated = null
-                if (params.lastUpdated)
-                    lastUpdated = new Date(params.lastUpdated.toLong())
-
-                if (lastUpdated==null || Venda.countByLastUpdatedGreaterThan(lastUpdated) > 0 ){
-                    def results = Venda.findAllByStatusInList([StatusVenda.PagamentoRecebido,
-                                                                StatusVenda.AguardandoPagamento])
-                    respond results
-                }else{
-                    render status:NO_CONTENT
-                }
-            }
-            '*' {
-                params.max = Math.min(max ?: 10, 1000)
-                params.sort = 'dateCreated'
-                params.order = 'desc'
-
-                respond Venda.list(params), model: [vendaInstanceTotal: Venda.count()]
-            }
-        }
+    /**
+      * esse metodo eh chamado pela action index
+      * para listar todos os objetos a serem exibidos na view.
+      * Redefini para acrescentar a ordenação pela data de criação da venda
+      */
+    protected List<Venda> listAllResources(Map params){
+        if (!params['sort'])
+            params['sort'] = 'dateCreated'
+        if (!params['order'])
+            params['order'] = 'desc'
+        return super.listAllResources(params)
     }
+
 
 }

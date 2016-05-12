@@ -16,46 +16,32 @@ class EstoqueController extends RestfulController {
         super(Estoque)
     }
 
-    /**
-     * So é acessado se tiver o token de autenticação incluido no request
-     *
-     * @return
-     */
-    def index(int max) {
+    @Override
+    protected List<Estoque> listAllResources(Map params){
+        def c = Estoque.createCriteria()
 
-        withFormat {
-            json {
-                def c = Estoque.createCriteria()
-
-                Date lastUpdated = null
-                if (params.lastUpdated)
-                    lastUpdated =  new Date(params.lastUpdated.toLong())
-
-                if (lastUpdated == null || Estoque.countByLastUpdatedGreaterThan(lastUpdated) > 0 ){
-                    def results = c.list() {
-                        produto {
-                            eq('foraDeLinha', false)
-                            order('nome')
-                        }
-                    }
-                    respond results
-                }else{
-                    render status:NO_CONTENT
-                }
-            }
-            '*' {
-                params.max = Math.min(max ?: 10, 100)
-                def c = Estoque.createCriteria()
-
-                def results = c.list(params) {
-                    produto {
-                        eq('foraDeLinha', false)
-                        order('nome')
-                    }
-                }
-                respond results, model: [estoqueInstanceTotal: Estoque.count()]
+        def results = c.list(params) {
+            produto {
+                eq('foraDeLinha', false)
+                order('nome')
             }
         }
-
+        return results
     }
+
+    @Override
+    public Integer countResources(){
+        def c = Estoque.createCriteria()
+
+        return c.get {
+            projections {
+                count('id')
+            }
+            produto {
+                eq('foraDeLinha', false)
+                order('nome')
+            }
+        }
+    }
+
 }

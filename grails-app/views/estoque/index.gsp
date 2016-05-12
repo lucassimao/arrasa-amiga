@@ -18,36 +18,36 @@
 			<table>
 				<thead>
 					<tr>
-					
+
 						<th><g:message code="estoque.produto.label" default="Produto" /></th>
-					
+
 						<g:sortableColumn property="unidade" title="${message(code: 'estoque.unidade.label', default: 'Unidade')}" />
-					
+
 						<g:sortableColumn property="quantidade" title="${message(code: 'estoque.quantidade.label', default: 'Quantidade')}" />
-							
+
 						<th>  </th>
 					</tr>
 				</thead>
 				<tbody>
 				<g:each in="${estoqueInstanceList}" status="i" var="estoqueInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-					
+
 						<td><g:link action="show" id="${estoqueInstance.id}">
 							${estoqueInstance.produto.nome}
 							</g:link>
 						</td>
-					
+
 						<td>${fieldValue(bean: estoqueInstance, field: "unidade")}</td>
-					
+
 						<td>${fieldValue(bean: estoqueInstance, field: "quantidade")}</td>
-						
+
 						<td> <g:link action="entrada" id="${estoqueInstance?.id}"> Dar entrada </g:link> </td>
 					</tr>
 				</g:each>
 				</tbody>
 			</table>
 			<div class="pagination">
-				<g:paginate action="index" controller="estoque" total="${estoqueInstanceTotal}" />
+				<g:paginate action="index" controller="estoque" total="${estoqueCount?:0}" />
 			</div>
 		</div>
 

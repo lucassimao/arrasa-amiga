@@ -100,7 +100,7 @@
         </tbody>
     </table>
     <div class="pagination">
-        <g:paginate action="index" total="${vendaInstanceTotal ?: 0}" />
+        <g:paginate action="index" params="[sort:'dateCreated',order:'desc']" total="${vendaCount ?: 0}" />
     </div>
 </div>
 </body>
