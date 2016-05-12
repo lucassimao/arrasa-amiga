@@ -163,6 +163,7 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 ]
 
 grails.plugin.springsecurity.filterChain.chainMap = [
+        '/sync/**': 'JOINED_FILTERS,-anonymousAuthenticationFilter,-exceptionTranslationFilter,-authenticationProcessingFilter,-rememberMeAuthenticationFilter',  // Stateless chain
         '/api/movimentoCaixa/**': 'JOINED_FILTERS,-anonymousAuthenticationFilter,-exceptionTranslationFilter,-authenticationProcessingFilter,-rememberMeAuthenticationFilter',  // Stateless chain
         '/api/caixa/**': 'JOINED_FILTERS,-anonymousAuthenticationFilter,-exceptionTranslationFilter,-authenticationProcessingFilter,-rememberMeAuthenticationFilter',  // Stateless chain
         '/api/vendas/**': 'JOINED_FILTERS,-anonymousAuthenticationFilter,-exceptionTranslationFilter,-authenticationProcessingFilter,-rememberMeAuthenticationFilter',  // Stateless chain
