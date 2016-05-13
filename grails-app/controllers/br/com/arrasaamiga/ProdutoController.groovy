@@ -25,7 +25,6 @@ class ProdutoController {
 
     def springSecurityService
     def dataSource
-    def gcmService
 
     def getTags() {
         def sql = new Sql(dataSource)
@@ -169,7 +168,6 @@ class ProdutoController {
 
         }
 
-        gcmService.notificarNovoProduto(produtoInstance)
         flash.message = "Produto cadastrado"
         redirect(action: "show", id: produtoInstance.id)
 

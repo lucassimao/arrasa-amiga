@@ -1,5 +1,7 @@
 package br.com.arrasaamiga
 
+import grails.util.Holders
+
 class Estoque {
 
     Produto produto
@@ -25,8 +27,18 @@ class Estoque {
         quantidade(min: 0)
     }
 
-    def beforeUpdate(){
-        notificarAtualizacaoEstoque()
+    def afterUpdate(){
+        def config = Holders.config
+        if (config.useGcmService){
+            notificarAtualizacaoEstoque()
+            gcmService.notificarAtualizacao()
+        }
+    }
+
+    def afterInsert(){
+        def config = Holders.config
+        if (config.useGcmService)
+            gcmService.notificarAtualizacao()
     }
 
     protected void notificarAtualizacaoEstoque(){

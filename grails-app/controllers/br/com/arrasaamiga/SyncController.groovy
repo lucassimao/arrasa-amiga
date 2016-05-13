@@ -7,7 +7,6 @@ import static br.com.arrasaamiga.StatusVenda.*
 
 
 @Secured(['ROLE_ADMIN','ROLE_VENDEDOR'])
-@NotTransactional
 class SyncController  {
 
     def index() {

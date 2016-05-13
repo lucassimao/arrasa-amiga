@@ -38,10 +38,6 @@ class VendaService {
 
     def excluirVenda(Venda venda) {
         venda.delete()
-
-        String update = "update Venda v set v.lastUpdated=:lastUpdated where v.status in :statusList"
-        Venda.executeUpdate(update, [lastUpdated: new Date(),
-                                    statusList: [PagamentoRecebido, AguardandoPagamento] ])
         vendaLogger.debug("Excluido venda #${venda.id}:  repondo itens ")
         estoqueService.reporItens(venda.itensVenda)
     }

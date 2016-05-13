@@ -1,5 +1,7 @@
 package br.com.arrasaamiga
 
+import grails.util.Holders
+
 class Venda {
 
 
@@ -24,7 +26,7 @@ class Venda {
 
     transient def pagSeguroService
     transient def correiosService
-
+    transient def gcmService
 
     static transients = ['urlRastreioCorreios', 'valorTotal', 'valorItensAPrazo', 'valorItensAVista',
                          'descontoEmReais', 'freteEmReais', 'descontoParaCompraAVista',
@@ -51,6 +53,7 @@ class Venda {
         detalhesPagamento(blank: true,nullable: true,maxSize:100000)
     }
 
+
     static mapping = {
         autoTimestamp true
         cliente cascade: 'save-update'
@@ -58,12 +61,29 @@ class Venda {
     }
 
     def beforeInsert(){
-
         if (this.formaPagamento == FormaPagamento.AVista) {
             this.detalhesPagamento = 'Pagamento em dinheiro no momento do recebimento do produto'
         }else{
             this.detalhesPagamento = 'Transação não foi finalizada. Cliente ainda não concluiu a compra'
         }
+    }
+
+    def afterUpdate(){
+        def config = Holders.config
+        if (config.useGcmService)
+            gcmService.notificarAtualizacao()
+    }
+
+    def afterInsert(){
+        def config = Holders.config
+        if (config.useGcmService)
+            gcmService.notificarAtualizacao()
+    }
+
+    def afterDelete(){
+        def config = Holders.config
+        if (config.useGcmService)
+            gcmService.notificarExclusao(Venda.class,[this.id])
     }
 
     /**

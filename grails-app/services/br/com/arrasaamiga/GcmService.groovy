@@ -1,7 +1,7 @@
 package br.com.arrasaamiga
 
 import groovyx.net.http.ContentType
-import groovyx.net.http.HTTPBuilder
+import groovyx.net.http.AsyncHTTPBuilder
 import static groovyx.net.http.Method.GET
 import static groovyx.net.http.Method.POST
 import static groovyx.net.http.ContentType.JSON
@@ -16,8 +16,40 @@ class GcmService {
     final String url = 'https://gcm-http.googleapis.com/gcm/send'
     final String authHeader = 'key=AIzaSyBfpFMqawpVu1Uj3NqXSc3a3-S3acTHMCY'
 
+
+    def notificarExclusao(Class clazz, List ids){
+        def http = new AsyncHTTPBuilder(uri : url)
+
+        http.request(POST, JSON) { req ->
+            uri.path = '/gcm/send'
+            headers.'Authorization' = authHeader
+            body =  [data: [ids: ids.join(','), message:'DELETE', entity: clazz.simpleName],
+                    to :'/topics/all']
+
+            response.success = { resp, json ->
+                assert resp.status == 200
+                println json
+            }
+        }
+    }
+
+    def notificarAtualizacao(){
+        def http = new AsyncHTTPBuilder(uri : url)
+
+        http.request(POST, JSON) { req ->
+            uri.path = '/gcm/send'
+            headers.'Authorization' = authHeader
+            body =  [data: [ message:'UPDATE'],to :'/topics/all']
+
+            response.success = { resp, json ->
+                assert resp.status == 200
+                println json
+            }
+        }
+    }
+
     def notificarNovoAnexo(Venda venda,String anexo) {
-        def http = new HTTPBuilder(url)
+        def http = new AsyncHTTPBuilder(uri : url)
         def login = springSecurityService.authentication.name
         String message = "Anexo ${anexo} adicionado na Venda #${venda.id} por ${login}"
 
@@ -35,7 +67,7 @@ class GcmService {
     }
 
     def notificarNovoProduto(Produto produto){
-        def http = new HTTPBuilder(url)
+        def http = new AsyncHTTPBuilder(uri : url)
         String message = "${produto.nome} acaba de ser cadastrado."
         message +=" Valores: R\$ ${produto.precoAVistaEmReais} a vista e"
         message +=" R\$ ${produto.precoAPrazoEmReais} no cartão"
@@ -54,8 +86,9 @@ class GcmService {
     }
 
     def notificarAtualizacaoEstoque(int qtdeAnterior,int novaQtde,String unidade,Produto produto){
-        def http = new HTTPBuilder(url)
+        def http = new AsyncHTTPBuilder(uri : url)
         String message
+
         if (novaQtde > 0 && qtdeAnterior==0){
             message = "${produto.nome}"
             if (produto.isMultiUnidade())
@@ -84,7 +117,7 @@ class GcmService {
 
 
     def relembrarVendedorDeClienteIrBuscarProduto(Collection vendasParaBuscar){
-        def http = new HTTPBuilder(url)
+        def http = new AsyncHTTPBuilder(uri : url)
 
         Map<String,Set<Venda>> vendasPorVendedores = [:]
         vendasParaBuscar.each{Venda v->

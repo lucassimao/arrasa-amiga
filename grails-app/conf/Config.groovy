@@ -2,20 +2,41 @@
 // config files can be ConfigSlurper scripts, Java properties files, or classes
 // in the classpath in ConfigSlurper format
 
+
 environments {
+
+    String str = System.properties["useGcmService"]
+    test{
+        useGcmService= str?Boolean.valueOf(str):false
+    }
     production {
+        useGcmService= str?Boolean.valueOf(str):true
         grails.config.locations = [ "classpath:database-production-config.properties"]
-/*                             "classpath:${appName}-config.groovy",
-                             "file:${userHome}/.grails/${appName}-config.properties",
-                             "file:${userHome}/.grails/${appName}-config.groovy"]*/
+        grails.plugin.console.enabled=true
+        grails.logging.jul.usebridge = false
+        grails.serverURL = "http://www.arrasaamiga.com.br"
+    }
+    development {
+        useGcmService=str?Boolean.valueOf(str):true
+        grails.logging.jul.usebridge = true
+        grails.serverURL = "http://localhost:8080/${appName}"
     }
 }
 
+/* Outras opções p/ configuração
+
+  "classpath:${appName}-config.groovy",
+  "file:${userHome}/.grails/${appName}-config.properties",
+   "file:${userHome}/.grails/${appName}-config.groovy"]
+
+   if (System.properties["${appName}.config.location"]) {
+       grails.config.locations << "file:" + System.properties["${appName}.config.location"]
+   }
+
+*/
 
 
-// if (System.properties["${appName}.config.location"]) {
-//    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
-// }
+
 
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 
@@ -93,18 +114,6 @@ grails.hibernate.cache.queries = false
 grails.hibernate.pass.readonly = false
 // configure passing read-only to OSIV session by default, requires "singleSession = false" OSIV mode
 grails.hibernate.osiv.readonly = false
-
-environments {
-    development {
-        grails.logging.jul.usebridge = true
-        grails.serverURL = "http://localhost:8080/${appName}"
-    }
-    production {
-        grails.plugin.console.enabled=true
-        grails.logging.jul.usebridge = false
-        grails.serverURL = "http://www.arrasaamiga.com.br"
-    }
-}
 
 // log4j configuration
 log4j.main = {
