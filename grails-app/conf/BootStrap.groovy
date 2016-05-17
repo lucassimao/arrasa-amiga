@@ -95,6 +95,7 @@ class BootStrap {
         }
 
         JSON.registerObjectMarshaller(Venda) { Venda venda ->
+
             def map = [:]
             map['id'] = venda.id
             map['last_updated'] = venda.lastUpdated.time

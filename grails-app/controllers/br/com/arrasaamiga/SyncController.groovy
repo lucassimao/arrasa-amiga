@@ -3,6 +3,7 @@ package br.com.arrasaamiga
 import grails.plugin.springsecurity.annotation.Secured
 import grails.transaction.NotTransactional
 import static org.springframework.http.HttpStatus.OK
+import static org.springframework.http.HttpStatus.NO_CONTENT
 import static br.com.arrasaamiga.StatusVenda.*
 
 
@@ -15,18 +16,14 @@ class SyncController  {
             json {
                 def results = [:]
 
-                def criteria = Venda.createCriteria()
-                results['vendas'] = criteria.list{
-                    'in'('status',[PagamentoRecebido,AguardandoPagamento])
-                    if (params.vendaLastUpdated)
-                        gt('lastUpdated',new Date(params.vendaLastUpdated.toLong()))
-                }
+                def vendaLastUpdated = params.vendaLastUpdated?:0
+                def dt = new Date(Long.valueOf(vendaLastUpdated))
+                results['vendas'] = Venda.findAllByLastUpdatedGreaterThanAndStatusInList(dt,
+                                        [PagamentoRecebido,AguardandoPagamento])
 
-                criteria = Estoque.createCriteria()
-                results['estoques'] = criteria.list{
-                    if (params.estoqueLastUpdated)
-                        gt('lastUpdated',new Date(params.estoqueLastUpdated.toLong()))
-                }
+                def estoqueLastUpdated = params.estoqueLastUpdated?:0
+                dt = new Date(Long.valueOf(estoqueLastUpdated))
+                results['estoques'] = Estoque.findAllByLastUpdatedGreaterThan(dt)
 
                 if (results['vendas'] || results['estoques'] )
                     respond results

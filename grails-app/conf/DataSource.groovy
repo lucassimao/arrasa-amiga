@@ -22,7 +22,7 @@ environments {
             url = "jdbc:mysql://localhost/arrasaamigadev"
             username= 'root'
             password = 'root'
-            
+
             properties {
                maxActive = -1
                minEvictableIdleTimeMillis=1800000

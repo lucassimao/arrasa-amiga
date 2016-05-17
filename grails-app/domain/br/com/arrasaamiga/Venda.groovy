@@ -4,7 +4,6 @@ import grails.util.Holders
 
 class Venda {
 
-
     Date dateCreated,lastUpdated
     Cliente cliente
     boolean flagClienteVaiBuscar = false
@@ -53,7 +52,6 @@ class Venda {
         detalhesPagamento(blank: true,nullable: true,maxSize:100000)
     }
 
-
     static mapping = {
         autoTimestamp true
         cliente cascade: 'save-update'
@@ -84,6 +82,15 @@ class Venda {
         def config = Holders.config
         if (config.useGcmService)
             gcmService.notificarExclusao(Venda.class,[this.id])
+    }
+
+    def setLastUpdated(Date dt){
+        if (dt){
+            Calendar c = Calendar.getInstance();
+            c.setTime(dt);
+            c.set(Calendar.MILLISECOND, 0);
+            this.lastUpdated = c.time
+        } else this.lastUpdated=null
     }
 
     /**

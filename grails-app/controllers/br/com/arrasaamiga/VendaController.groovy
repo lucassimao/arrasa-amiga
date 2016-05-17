@@ -137,7 +137,8 @@ class VendaController extends RestfulController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: "${resourceName}.label".toString(), default: resourceClassName), instance.id])
+                flash.message = message(code: 'default.created.message',
+                args: [message(code: "${resourceName}.label".toString(), default: resourceClassName), instance.id])
                 redirect instance
             }
             '*' {

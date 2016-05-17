@@ -47,4 +47,14 @@ class Estoque {
             gcmService.notificarAtualizacaoEstoque(oldQuantidade,quantidade,unidade,produto)
         }
     }
+
+    def setLastUpdated(Date dt){
+        if (dt){
+            Calendar c = Calendar.getInstance();
+            c.setTime(dt);
+            c.set(Calendar.MILLISECOND, 0);
+            this.lastUpdated = c.time
+        } else
+            this.lastUpdated=null
+    }
 }

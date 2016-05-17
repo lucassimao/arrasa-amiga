@@ -60,12 +60,21 @@ grails.project.dependency.resolution = {
 
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
+        compile "org.codehaus.groovy.modules.http-builder:http-builder:0.7.1"
 
-         runtime 'mysql:mysql-connector-java:5.1.25'
-         runtime 'commons-codec:commons-codec:1.8'
-         compile "org.codehaus.groovy.modules.http-builder:http-builder:0.7"
-         test "org.grails:grails-datastore-test-support:1.0.2-grails-2.4"
-         test "cglib:cglib-nodep:2.2"
+        runtime 'mysql:mysql-connector-java:5.1.25'
+        runtime 'commons-codec:commons-codec:1.8'
+
+        test "org.grails:grails-datastore-test-support:1.0.2-grails-2.4"
+        test "cglib:cglib-nodep:2.2"
+        test "org.gebish:geb-spock:0.13.1"
+        test("org.seleniumhq.selenium:selenium-htmlunit-driver:2.52.0")
+        //test "org.seleniumhq.selenium:selenium-firefox-driver:2.52.0"
+        test 'org.apache.httpcomponents:httpcore:4.3'
+        test 'org.apache.httpcomponents:httpclient:4.3'
+        test 'xerces:xercesImpl:2.11.0'
+        test 'commons-io:commons-io:2.5'
+
     }
 
     plugins {
@@ -73,7 +82,9 @@ grails.project.dependency.resolution = {
         // plugins for the compile step
         build ":tomcat:7.0.55.2"
 
+        compile "org.grails.plugins:remote-control:2.0"
         compile ":scaffolding:2.1.2"
+        compile ":rest-client-builder:2.1.1"
         compile ":cache:1.1.8"
         compile ':asset-pipeline:2.1.5'
         compile ":spring-security-core:2.0-RC5"
@@ -90,6 +101,8 @@ grails.project.dependency.resolution = {
         runtime ":hibernate4:4.3.8.1"
         runtime ":database-migration:1.4.0"
         runtime ":jquery:1.11.1"
+
+        test ":geb:0.13.1"
 
     }
 }

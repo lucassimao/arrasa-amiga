@@ -110,8 +110,8 @@ class CaixaControllerSpec extends Specification {
 
     void setup() {
 
-        Estoque.executeUpdate('delete from ItemVenda')
         Estoque.executeUpdate('delete from Venda')
+        Estoque.executeUpdate('delete from ItemVenda')
         Estoque.executeUpdate('delete from Estoque')
         Produto.executeUpdate('delete from Produto')
         Produto.executeUpdate('delete from Cliente')

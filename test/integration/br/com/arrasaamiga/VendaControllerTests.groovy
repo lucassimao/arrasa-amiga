@@ -6,10 +6,6 @@ import org.codehaus.groovy.grails.web.mime.MimeType
 
 import javax.servlet.http.HttpServletResponse
 
-/**
- *
- */
-
 class VendaControllerTests extends GroovyTestCase {
 
     def sessionFactory
