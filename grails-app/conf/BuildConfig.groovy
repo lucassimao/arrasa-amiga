@@ -64,16 +64,16 @@ grails.project.dependency.resolution = {
 
         runtime 'mysql:mysql-connector-java:5.1.25'
         runtime 'commons-codec:commons-codec:1.8'
+        runtime 'org.apache.httpcomponents:httpclient:4.3'
+        runtime 'org.apache.httpcomponents:httpcore:4.3'
+        runtime 'commons-io:commons-io:2.5'
 
         test "org.grails:grails-datastore-test-support:1.0.2-grails-2.4"
         test "cglib:cglib-nodep:2.2"
         test "org.gebish:geb-spock:0.13.1"
         test("org.seleniumhq.selenium:selenium-htmlunit-driver:2.52.0")
         //test "org.seleniumhq.selenium:selenium-firefox-driver:2.52.0"
-        test 'org.apache.httpcomponents:httpcore:4.3'
-        test 'org.apache.httpcomponents:httpclient:4.3'
         test 'xerces:xercesImpl:2.11.0'
-        test 'commons-io:commons-io:2.5'
 
     }
 
