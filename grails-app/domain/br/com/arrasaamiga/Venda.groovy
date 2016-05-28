@@ -67,6 +67,7 @@ class Venda {
     }
 
     def afterUpdate(){
+        //TODO Verificar se continua sendo chamado mais de 1 vez em versoes > 2.5.4 do grails
         def config = Holders.config
         if (config.useGcmService)
             gcmService.notificarAtualizacao()

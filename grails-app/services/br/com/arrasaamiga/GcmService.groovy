@@ -13,8 +13,8 @@ class GcmService {
     boolean transactional = false
 
     def springSecurityService
-    final String url = 'https://gcm-http.googleapis.com/gcm/send'
-    final String authHeader = 'key=AIzaSyBfpFMqawpVu1Uj3NqXSc3a3-S3acTHMCY'
+    final static String url = 'https://gcm-http.googleapis.com/gcm/send'
+    final static String authHeader = 'key=AIzaSyBfpFMqawpVu1Uj3NqXSc3a3-S3acTHMCY'
 
 
     def notificarExclusao(Class clazz, List ids){

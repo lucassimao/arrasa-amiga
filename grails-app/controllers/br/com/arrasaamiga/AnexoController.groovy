@@ -6,6 +6,7 @@ import grails.transaction.Transactional
 import org.hibernate.ObjectNotFoundException
 import static org.springframework.http.HttpStatus.BAD_REQUEST
 import static org.springframework.http.HttpStatus.OK
+import grails.util.Holders
 
 @Secured(['ROLE_ADMIN','ROLE_VENDEDOR'])
 class AnexoController {
@@ -36,8 +37,11 @@ class AnexoController {
             venda.addToAnexos(originalFilename)
             venda.save(flush:true)
 
-			gcmService.notificarNovoAnexo(venda,originalFilename)
-            render status: OK,text:'Anexo adicionado'
+			def config = Holders.config
+			if (config.useGcmService)
+				gcmService.notificarNovoAnexo(venda,originalFilename)
+
+			render status: OK,text:'Anexo adicionado'
         }else{
             render status: BAD_REQUEST,text:'O anexo deve ser enviado'
         }
