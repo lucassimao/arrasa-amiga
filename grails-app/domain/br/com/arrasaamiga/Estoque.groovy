@@ -29,10 +29,14 @@ class Estoque {
 
     def afterUpdate(){
         def config = Holders.config
-        if (config.useGcmService){
-            notificarAtualizacaoEstoque()
+        if (config.useGcmService)
             gcmService.notificarAtualizacao()
-        }
+    }
+
+    def beforeUpdate(){
+        def config = Holders.config
+        if (config.useGcmService && validate())
+            notificarAtualizacaoEstoque()
     }
 
     def afterInsert(){
