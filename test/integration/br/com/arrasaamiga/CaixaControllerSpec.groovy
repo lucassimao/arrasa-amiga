@@ -23,7 +23,6 @@ class CaixaControllerSpec extends Specification {
 
     def sessionFactory
     def grailsApplication
-    def springSecurityService
     def vendaService
     def caixaService
 
@@ -48,7 +47,6 @@ class CaixaControllerSpec extends Specification {
         when:
             def controller = new CaixaController()
             controller.caixaService = caixaService
-            controller.springSecurityService = springSecurityService
 
             SpringSecurityUtils.reauthenticate username, '123'
             controller.request.method = 'GET'
@@ -81,7 +79,6 @@ class CaixaControllerSpec extends Specification {
         when:
             def controller = new CaixaController()
             controller.caixaService = caixaService
-            controller.springSecurityService = springSecurityService
 
             SpringSecurityUtils.reauthenticate 'admin', '123'
             controller.request.method = 'GET'

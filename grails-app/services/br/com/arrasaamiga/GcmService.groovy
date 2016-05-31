@@ -17,13 +17,13 @@ class GcmService {
     final static String authHeader = 'key=AIzaSyBfpFMqawpVu1Uj3NqXSc3a3-S3acTHMCY'
 
 
-    def notificarExclusao(Class clazz, List ids){
+    def notificarExclusao(Class clazz, long id){
         def http = new AsyncHTTPBuilder(uri : url)
 
         http.request(POST, JSON) { req ->
             uri.path = '/gcm/send'
             headers.'Authorization' = authHeader
-            body =  [data: [ids: ids.join(','), message:'DELETE', entity: clazz.simpleName],
+            body =  [data: ['id': id, message:'DELETE', entity: clazz.simpleName],
                     to :'/topics/all']
 
             response.success = { resp, json ->
@@ -33,17 +33,26 @@ class GcmService {
         }
     }
 
-    def notificarAtualizacao(){
+    def notificarAtualizacao(long timestamp, Object instance){
         def http = new AsyncHTTPBuilder(uri : url)
+        String timestampKey = (instance.class == Venda)?'vendaLastUpdated':'estoqueLastUpdated'
 
         http.request(POST, JSON) { req ->
             uri.path = '/gcm/send'
             headers.'Authorization' = authHeader
-            body =  [data: [ message:'UPDATE'],to :'/topics/all']
+            body =  [data: [ message:'UPDATE',
+                            "${timestampKey}": timestamp,
+                            'id': instance.id],
+                    to :'/topics/all']
 
             response.success = { resp, json ->
                 assert resp.status == 200
                 println json
+            }
+
+            response.failure = { resp ->
+              println 'request failed'
+              assert resp.status >= 400
             }
         }
     }

@@ -70,19 +70,19 @@ class Venda {
         //TODO Verificar se continua sendo chamado mais de 1 vez em versoes > 2.5.4 do grails
         def config = Holders.config
         if (config.useGcmService)
-            gcmService.notificarAtualizacao()
+            gcmService.notificarAtualizacao(lastUpdated.time,this)
     }
 
     def afterInsert(){
         def config = Holders.config
         if (config.useGcmService)
-            gcmService.notificarAtualizacao()
+            gcmService.notificarAtualizacao(lastUpdated.time,this)
     }
 
     def afterDelete(){
         def config = Holders.config
         if (config.useGcmService)
-            gcmService.notificarExclusao(Venda.class,[this.id])
+            gcmService.notificarExclusao(Venda.class,this.id)
     }
 
     def setLastUpdated(Date dt){

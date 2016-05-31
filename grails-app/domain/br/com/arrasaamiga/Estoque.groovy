@@ -30,7 +30,7 @@ class Estoque {
     def afterUpdate(){
         def config = Holders.config
         if (config.useGcmService)
-            gcmService.notificarAtualizacao()
+            gcmService.notificarAtualizacao(lastUpdated.time,this)
     }
 
     def beforeUpdate(){
@@ -42,7 +42,7 @@ class Estoque {
     def afterInsert(){
         def config = Holders.config
         if (config.useGcmService)
-            gcmService.notificarAtualizacao()
+            gcmService.notificarAtualizacao(lastUpdated.time,this)
     }
 
     protected void notificarAtualizacaoEstoque(){

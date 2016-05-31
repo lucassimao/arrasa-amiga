@@ -87,8 +87,8 @@ grails.project.dependency.resolution = {
         compile ":rest-client-builder:2.1.1"
         compile ":cache:1.1.8"
         compile ':asset-pipeline:2.1.5'
-        compile ":spring-security-core:2.0-RC5"
-        compile ":spring-security-rest:1.5.1", {
+        compile ":spring-security-core:2.0.0"
+        compile ":spring-security-rest:1.5.3", {
             excludes: 'spring-security-core'
         }
         compile ":browser-detection:0.4.3"

@@ -83,11 +83,22 @@ class SyncControllerFunctionalSpec extends GebReportingSpec    {
         }
     }
 
-    def "Consultar SyncController sem vendas realizadas"() {
-        given: 'checando o SynController sem nenhuma Venda feita e 2 estoques cadastrados'
-            def a = ""//${grailsApplication.metadata.'app.name'}"
+    def "Consultar SyncController sem parametros: Não deve retornar porra nenhuma "() {
         when: ' requisitar do SyncController '
             RestResponse response = rest.get("http://localhost:8080/arrasa-amiga/sync") {
+                accept 'application/json'
+                header 'Authorization', 'Bearer ' + authToken
+            }
+        then:
+            SC_NO_CONTENT == response.status
+    }
+
+    def "Verificando o estado original do SyncController enviando timestamps zerados"() {
+        given: 'checando o SynController sem nenhuma Venda feita e 2 estoques cadastrados'
+            def queryString = buildQueryString('vendaLastUpdated': 0,'estoqueLastUpdated':0)
+
+        when: ' requisitar do SyncController '
+            RestResponse response = rest.get("http://localhost:8080/arrasa-amiga/sync?${queryString}") {
                 accept 'application/json'
                 header 'Authorization', 'Bearer ' + authToken
             }
@@ -102,8 +113,7 @@ class SyncControllerFunctionalSpec extends GebReportingSpec    {
 
         given: 'checando o SynController sem nenhuma Venda feita e com timestamp do ultimo estoque cadastrado'
             long lastUpdated = remote.exec{  Estoque.last().lastUpdated.time }
-            def params = ['vendaLastUpdated':0,'estoqueLastUpdated':lastUpdated]
-            def queryString = params.collect { k, v -> "$k=$v" }.join(/&/)
+            def queryString = buildQueryString('vendaLastUpdated': 0,'estoqueLastUpdated':lastUpdated)
 
         when: 'requisitar do SyncController'
             RestResponse response = rest.get("http://localhost:8080/arrasa-amiga/sync?${queryString}") {
@@ -138,6 +148,8 @@ class SyncControllerFunctionalSpec extends GebReportingSpec    {
 
            Thread.sleep(1000) // aguardando o hibernate fazer o commit
 
+        and: "cadastrando a 2ª venda"
+
            String venda2 = [formaPagamento: 'AVista', status: 'Entregue',
                                      carrinho: carrinho,   dataEntrega   : formatarData(amanha),
                                       cliente: [nome: 'Cliente Teste 2']] as JSON
@@ -150,25 +162,26 @@ class SyncControllerFunctionalSpec extends GebReportingSpec    {
            assert SC_CREATED == response.status
            Thread.sleep(1000) // aguardando o hibernate fazer o commit
 
-        when: "sync controller requisitado sem timestamp"
-            response = rest.get('http://localhost:8080/arrasa-amiga/sync') {
+        and:
+            def queryString = buildQueryString('vendaLastUpdated': 0,'estoqueLastUpdated':0)
+
+        when: "sync controller requisitado com timestamp zerado"
+            response = rest.get("http://localhost:8080/arrasa-amiga/sync?${queryString}") {
                 accept 'application/json'
                 header 'Authorization', 'Bearer ' + authToken
             }
 
-        then:"o syncontroller nao vai retornar nenhuma venda"
+        then:"o syncontroller nao vai retornar nenhuma venda, pq so traz vendas ainda não entregues"
             SC_OK == response.status
             def json = response.json
-            def vendas = json.vendas
-            def estoques = json.estoques
-
-            vendas.size() == 0
-            estoques.size() == 2
-
+            json.vendas.size() == 0
+            json.estoques.size() == 2
     }
+
 
     void "Salvar venda e consultar SyncController"(){
         setup:
+            def queryString = ''
             def produto1Id = remote.exec{ Produto.findByNome('P1').id }
             def produto2Id = remote.exec{ Produto.findByNome('P2').id }
 
@@ -208,7 +221,8 @@ class SyncControllerFunctionalSpec extends GebReportingSpec    {
             Thread.sleep(500) // aguardando o hibernate concluir o commit da venda anterior
 
         when: "SyncController deve retornar venda previamente cadastrada e os estoques com os timestamps atualizados"
-            response = rest.get('http://localhost:8080/arrasa-amiga/sync') {
+            queryString = buildQueryString('vendaLastUpdated':0,'estoqueLastUpdated':0)
+            response = rest.get("http://localhost:8080/arrasa-amiga/sync?${queryString}") {
                 accept 'application/json'
                 header 'Authorization', 'Bearer ' + authToken
             }
@@ -254,8 +268,7 @@ class SyncControllerFunctionalSpec extends GebReportingSpec    {
             long idVenda2 = jsonVenda2.id
 
         when: 'Cosultando novamente o synccontroller com o timestamp da 1ª venda'
-            def params = ['vendaLastUpdated':lastUpdated,'estoqueLastUpdated':0]
-            def queryString = params.collect { k, v -> "$k=$v" }.join(/&/)
+            queryString = buildQueryString('vendaLastUpdated': lastUpdated,'estoqueLastUpdated':0)
             response = rest.get("http://localhost:8080/arrasa-amiga/sync?${queryString}") {
                 accept 'application/json'
                 header 'Authorization', 'Bearer ' + authToken
@@ -273,7 +286,8 @@ class SyncControllerFunctionalSpec extends GebReportingSpec    {
             lastUpdatedVenda2 == _vendas[0].last_updated
 
         when: 'Cosultando novamente o synccontroller sem o timestamps'
-            response = rest.get("http://localhost:8080/arrasa-amiga/sync") {
+            queryString = buildQueryString('vendaLastUpdated': 0,'estoqueLastUpdated':0)
+            response = rest.get("http://localhost:8080/arrasa-amiga/sync?${queryString}") {
                 accept 'application/json'
                 header 'Authorization', 'Bearer ' + authToken
             }
@@ -282,6 +296,10 @@ class SyncControllerFunctionalSpec extends GebReportingSpec    {
             SC_OK == response.status
             def json3 = response.json
             json3.vendas.size() == 2
+    }
+
+    def buildQueryString(Map params){
+        return params.collect { k, v -> "$k=$v" }.join(/&/)
     }
 
     protected String formatarData(Date data) {
