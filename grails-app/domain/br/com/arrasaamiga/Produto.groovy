@@ -59,13 +59,7 @@ class Produto {
 		def afterUpdate(){
 				def config = Holders.config
 				if (config.useGcmService)
-					gcmService.notificarAtualizacao()
-    }
-
-    def afterInsert(){
-				def config = Holders.config
-				if (config.useGcmService)
-					gcmService.notificarAtualizacao()
+					gcmService.notificarAtualizacao(0, Estoque.findByProduto(this))
     }
 
     public Double getPrecoAVistaEmReais(){
