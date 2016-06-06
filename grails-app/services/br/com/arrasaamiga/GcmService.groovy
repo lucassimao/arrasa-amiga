@@ -35,13 +35,13 @@ class GcmService {
 
     def notificarAtualizacao(long timestamp, Object instance){
         def http = new AsyncHTTPBuilder(uri : url)
-        String timestampKey = (instance.class == Venda)?'vendaLastUpdated':'estoqueLastUpdated'
+        String timestampKey = (instance.class == Venda)?'vendasLastUpdated':'estoquesLastUpdated'
 
         http.request(POST, JSON) { req ->
             uri.path = '/gcm/send'
             headers.'Authorization' = authHeader
             body =  [data: [ message:'UPDATE',
-                            "${timestampKey}": timestamp,
+                            (timestampKey): timestamp,
                             'id': instance.id],
                     to :'/topics/all']
 

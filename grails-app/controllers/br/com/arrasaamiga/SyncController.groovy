@@ -25,13 +25,13 @@ class SyncController  {
                     results['caixa'] = caixaService.getResumo(start,end)
 
                     def dt = new Date(Long.valueOf(params.vendaLastUpdated))
-                    results['vendas'] = Venda.findAllByLastUpdatedGreaterThanAndStatusInList(dt,
+                    results['vendas'] = Venda.findAllByLastUpdatedGreaterThanEqualsAndStatusInList(dt,
                                             [PagamentoRecebido,AguardandoPagamento])
                 }
 
                 if (params.estoqueLastUpdated){
                     def dt = new Date(Long.valueOf(params.estoqueLastUpdated))
-                    results['estoques'] = Estoque.findAllByLastUpdatedGreaterThan(dt)
+                    results['estoques'] = Estoque.findAllByLastUpdatedGreaterThanEquals(dt)
                 }
 
                 if (results['vendas'] || results['estoques'] )
