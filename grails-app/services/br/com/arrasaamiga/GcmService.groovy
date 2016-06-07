@@ -35,6 +35,8 @@ class GcmService {
 
     def notificarAtualizacao(long timestamp, Object instance){
         def http = new AsyncHTTPBuilder(uri : url)
+        def principal = springSecurityService.principal
+        println principal.clienteId
         String timestampKey = (instance.class == Venda)?'vendasLastUpdated':'estoquesLastUpdated'
 
         http.request(POST, JSON) { req ->

@@ -18,19 +18,19 @@ class SyncController  {
             json {
                 def results = [:]
 
-                if (params.vendaLastUpdated){
+                if (params.vendasLastUpdated){
                     def start = caixaService.inicioCaixaAtual
                     def end = caixaService.fimCaixaAtual
 
                     results['caixa'] = caixaService.getResumo(start,end)
 
-                    def dt = new Date(Long.valueOf(params.vendaLastUpdated))
+                    def dt = new Date(Long.valueOf(params.vendasLastUpdated))
                     results['vendas'] = Venda.findAllByLastUpdatedGreaterThanEqualsAndStatusInList(dt,
                                             [PagamentoRecebido,AguardandoPagamento])
                 }
 
-                if (params.estoqueLastUpdated){
-                    def dt = new Date(Long.valueOf(params.estoqueLastUpdated))
+                if (params.estoquesLastUpdated){
+                    def dt = new Date(Long.valueOf(params.estoquesLastUpdated))
                     results['estoques'] = Estoque.findAllByLastUpdatedGreaterThanEquals(dt)
                 }
 

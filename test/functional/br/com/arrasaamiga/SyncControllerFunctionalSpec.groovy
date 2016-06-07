@@ -68,6 +68,7 @@ class SyncControllerFunctionalSpec extends GebReportingSpec    {
             def e1 = new Estoque(produto: produto1, unidade: 'un', quantidade: 10)
             e1.save(flush: true)
 
+            Thread.sleep(1500)
             def e2 = new Estoque(produto: produto2, unidade: 'un', quantidade: 5)
             e2.save(flush: true)
 
@@ -95,7 +96,7 @@ class SyncControllerFunctionalSpec extends GebReportingSpec    {
 
     def "Verificando o estado original do SyncController enviando timestamps zerados"() {
         given: 'checando o SynController sem nenhuma Venda feita e 2 estoques cadastrados'
-            def queryString = buildQueryString('vendaLastUpdated': 0,'estoqueLastUpdated':0)
+            def queryString = buildQueryString('vendasLastUpdated': 0,'estoquesLastUpdated':0)
 
         when: ' requisitar do SyncController '
             RestResponse response = rest.get("http://localhost:8080/arrasa-amiga/sync?${queryString}") {
@@ -113,15 +114,19 @@ class SyncControllerFunctionalSpec extends GebReportingSpec    {
 
         given: 'checando o SynController sem nenhuma Venda feita e com timestamp do ultimo estoque cadastrado'
             long lastUpdated = remote.exec{  Estoque.last().lastUpdated.time }
-            def queryString = buildQueryString('vendaLastUpdated': 0,'estoqueLastUpdated':lastUpdated)
+            def queryString = buildQueryString('vendasLastUpdated': 0,'estoquesLastUpdated':lastUpdated)
 
         when: 'requisitar do SyncController'
             RestResponse response = rest.get("http://localhost:8080/arrasa-amiga/sync?${queryString}") {
                 accept 'application/json'
                 header 'Authorization', 'Bearer ' + authToken
             }
-        then:
-            SC_NO_CONTENT == response.status
+        then: 'deve retornar o  timestamp do ultimo estoque'
+            SC_OK == response.status
+            def json = response.json
+            json.vendas.size() == 0
+            json.estoques.size() == 1
+
     }
 
     void "Salvar venda já entregue e consultar pelo SyncController"(){
@@ -163,7 +168,7 @@ class SyncControllerFunctionalSpec extends GebReportingSpec    {
            Thread.sleep(1000) // aguardando o hibernate fazer o commit
 
         and:
-            def queryString = buildQueryString('vendaLastUpdated': 0,'estoqueLastUpdated':0)
+            def queryString = buildQueryString('vendasLastUpdated': 0,'estoquesLastUpdated':0)
 
         when: "sync controller requisitado com timestamp zerado"
             response = rest.get("http://localhost:8080/arrasa-amiga/sync?${queryString}") {
@@ -203,8 +208,7 @@ class SyncControllerFunctionalSpec extends GebReportingSpec    {
                                       carrinho: carrinho,   dataEntrega   : formatarData(amanha),
                                        cliente: [nome: 'Cliente Teste']] as JSON
 
-           // problemas do timestamp que o mysql não
-           // armazena milisegundos
+           // problemas do timestamp que o mysql não armazena milisegundos
             Thread.sleep(1000)
             RestResponse response = rest.post('http://localhost:8080/arrasa-amiga/api/vendas') {
                accept 'application/json'
@@ -221,7 +225,7 @@ class SyncControllerFunctionalSpec extends GebReportingSpec    {
             Thread.sleep(500) // aguardando o hibernate concluir o commit da venda anterior
 
         when: "SyncController deve retornar venda previamente cadastrada e os estoques com os timestamps atualizados"
-            queryString = buildQueryString('vendaLastUpdated':0,'estoqueLastUpdated':0)
+            queryString = buildQueryString('vendasLastUpdated':0,'estoquesLastUpdated':0)
             response = rest.get("http://localhost:8080/arrasa-amiga/sync?${queryString}") {
                 accept 'application/json'
                 header 'Authorization', 'Bearer ' + authToken
@@ -267,8 +271,8 @@ class SyncControllerFunctionalSpec extends GebReportingSpec    {
             long lastUpdatedVenda2 = jsonVenda2.last_updated
             long idVenda2 = jsonVenda2.id
 
-        when: 'Cosultando novamente o synccontroller com o timestamp da 1ª venda'
-            queryString = buildQueryString('vendaLastUpdated': lastUpdated,'estoqueLastUpdated':0)
+        when: 'Cosultando novamente o syncController com o timestamp da 2ª venda'
+            queryString = buildQueryString('vendasLastUpdated': lastUpdatedVenda2,'estoquesLastUpdated':0)
             response = rest.get("http://localhost:8080/arrasa-amiga/sync?${queryString}") {
                 accept 'application/json'
                 header 'Authorization', 'Bearer ' + authToken
@@ -286,7 +290,7 @@ class SyncControllerFunctionalSpec extends GebReportingSpec    {
             lastUpdatedVenda2 == _vendas[0].last_updated
 
         when: 'Cosultando novamente o synccontroller sem o timestamps'
-            queryString = buildQueryString('vendaLastUpdated': 0,'estoqueLastUpdated':0)
+            queryString = buildQueryString('vendasLastUpdated': 0,'estoquesLastUpdated':0)
             response = rest.get("http://localhost:8080/arrasa-amiga/sync?${queryString}") {
                 accept 'application/json'
                 header 'Authorization', 'Bearer ' + authToken
