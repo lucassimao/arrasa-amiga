@@ -18,12 +18,15 @@ class GcmService {
 
 
     def notificarExclusao(Class clazz, long id){
+        def principal = springSecurityService.principal
         def http = new AsyncHTTPBuilder(uri : url)
 
         http.request(POST, JSON) { req ->
             uri.path = '/gcm/send'
             headers.'Authorization' = authHeader
-            body =  [data: ['id': id, message:'DELETE', entity: clazz.simpleName],
+            body =  [data: ['id': id, 'message':'DELETE',
+                          'clienteId': principal.clienteId,
+                           'entity': clazz.simpleName],
                     to :'/topics/all']
 
             response.success = { resp, json ->
@@ -34,15 +37,15 @@ class GcmService {
     }
 
     def notificarAtualizacao(long timestamp, Object instance){
-        def http = new AsyncHTTPBuilder(uri : url)
         def principal = springSecurityService.principal
-        println principal.clienteId
+        def http = new AsyncHTTPBuilder(uri : url)
         String timestampKey = (instance.class == Venda)?'vendasLastUpdated':'estoquesLastUpdated'
 
         http.request(POST, JSON) { req ->
             uri.path = '/gcm/send'
             headers.'Authorization' = authHeader
-            body =  [data: [ message:'UPDATE',
+            body =  [data: [ 'message':'UPDATE',
+                            'clienteId': principal.clienteId,
                             (timestampKey): timestamp,
                             'id': instance.id],
                     to :'/topics/all']

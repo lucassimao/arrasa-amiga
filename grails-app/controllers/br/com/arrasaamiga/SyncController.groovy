@@ -25,8 +25,12 @@ class SyncController  {
                     results['caixa'] = caixaService.getResumo(start,end)
 
                     def dt = new Date(Long.valueOf(params.vendasLastUpdated))
-                    results['vendas'] = Venda.findAllByLastUpdatedGreaterThanEqualsAndStatusInList(dt,
-                                            [PagamentoRecebido,AguardandoPagamento])
+                    def criteria = Venda.createCriteria()
+                    
+                    results['vendas'] = criteria.list{
+                        ge('lastUpdated',dt)
+                        'in'('status',[PagamentoRecebido,AguardandoPagamento])
+                    }
                 }
 
                 if (params.estoquesLastUpdated){
